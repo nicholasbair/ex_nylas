@@ -27,3 +27,4 @@ ex_nylas-*.tar
 /tmp
 
 *.DS_Store
+.elixir_ls
