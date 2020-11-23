@@ -14,7 +14,6 @@ Unofficial Elixir bindings for the Nylas API.
 [ ] Free busy - check req/res  
 [ ] Validate all models/structs vs the API  
 [ ] Support build - convert raw requests (post/put) into request structs for validation  
-[ ] Add Docs to readme  
 [ ] Tests  
 [ ] Push to Hex  
 
@@ -40,7 +39,7 @@ end
 ```
 
 1. Connection is a struct that stores your Nylas API credentials.
-2. Each function supports returning an ok/error tuple or raising an exception, for example
+2. Each function supports returning an ok/error tuple or raising an exception, for example:
 ```elixir
 conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
 
@@ -50,7 +49,15 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 # Returns result or raises an exception
 messages = ExNylas.Messages.first!(conn)
 ```
-3. The results of each function call are transformed into a struct, with the exception of `Messages.get_raw/1`, which returns the raw content of a message, as well as any other functions that return raw data, like the files/download APIs (not yet supported).
+3. The results of each function call are transformed into a struct, with the exception of `Messages.get_raw/1`, which returns the raw content of a message, as well as any other functions that return raw data, like the `Files.download/2` and `Contacts.get_picture/2`.
+4. Queries and filters are typically expected as a map:
+```elixir
+conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
+{:ok, threads} = ExNylas.Threads.list(%{limit: 5})
+
+# Searching is the exception
+{:ok, threads} = ExNylas.Threads.search("nylas")
+```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
