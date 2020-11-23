@@ -47,7 +47,7 @@ end
 
 defmodule ExNylas.Calendars do
   @moduledoc """
-  Interface for Nylas calendar.
+  Interface for Nylas calendars.
   """
 
   alias ExNylas.API

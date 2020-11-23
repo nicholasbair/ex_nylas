@@ -9,7 +9,6 @@ Unofficial Elixir bindings for the Nylas API.
 - It is my first attempt at metaprogramming
 
 ## TODO
-[ ] Add docs to generated functions
 [ ] Events RSVPing - check req/res  
 [ ] Availability  - check req/res  
 [ ] Free busy - check req/res  

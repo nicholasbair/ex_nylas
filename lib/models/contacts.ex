@@ -51,7 +51,7 @@ end
 
 defmodule ExNylas.Contacts do
   @moduledoc """
-  Interface for Nylas contact.
+  Interface for Nylas contacts.
   """
 
   alias ExNylas.API

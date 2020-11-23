@@ -1,4 +1,8 @@
 defmodule ExNylasError do
+  @moduledoc """
+  Standard error wrapper
+  """
+
   defexception [:message]
 
   @impl true
