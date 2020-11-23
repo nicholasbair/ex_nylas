@@ -51,6 +51,12 @@ defmodule ExNylas.Events do
 
   use ExNylas, object: "events", struct: ExNylas.Event, except: [:search, :send]
 
+  @doc """
+  Send an RSVP for a given event
+
+  Example
+      {:ok, binary} = conn |> ExNylas.Events.rsvp(`body`)
+  """
   def rsvp(%Conn{} = conn, body) do
     res =
       API.post(
@@ -71,6 +77,12 @@ defmodule ExNylas.Events do
     end
   end
 
+  @doc """
+  Send an RSVP for a given event
+
+  Example
+      binary = conn |> ExNylas.Events.rsvp!(`body`)
+  """
   def rsvp!(%Conn{} = conn, body) do
     case rsvp(conn, body) do
       {:ok, res} -> res

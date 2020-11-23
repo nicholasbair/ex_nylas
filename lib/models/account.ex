@@ -21,6 +21,12 @@ defmodule ExNylas.Account do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
 
+  @doc """
+  Get the account associated with the `access_token`.
+
+  Example
+      {:ok, result} = conn |> ExNylas.Account.get()
+  """
   def get(%Conn{} = conn) do
     res =
       API.get(
@@ -40,6 +46,12 @@ defmodule ExNylas.Account do
     end
   end
 
+  @doc """
+  Get the account associated with the `access_token`.
+
+  Example
+      result = conn |> ExNylas.Account.get!()
+  """
   def get!(%Conn{} = conn) do
     case get(conn) do
       {:ok, res} -> res

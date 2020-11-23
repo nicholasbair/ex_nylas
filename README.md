@@ -13,8 +13,6 @@ Unofficial Elixir bindings for the Nylas API.
 [ ] Availability  - check req/res  
 [ ] Free busy - check req/res  
 [ ] Deltas  
-[ ] Files upload/download  
-[ ] Contacts pictures  
 [ ] Validate all models/structs vs the API  
 [ ] Support build - convert raw requests (post/put) into request structs for validation  
 [ ] Add Docs to readme  

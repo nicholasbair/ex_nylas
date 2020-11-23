@@ -61,6 +61,12 @@ defmodule ExNylas.Contacts do
 
   use ExNylas, object: "contacts", struct: ExNylas.Contact, except: [:search, :send]
 
+  @doc """
+  Get contacts groups.
+
+  Example
+      {:ok, result} = conn |> ExNylas.Contacts.groups()
+  """
   def groups(%Conn{} = conn) do
     res =
       API.get(
@@ -80,8 +86,52 @@ defmodule ExNylas.Contacts do
     end
   end
 
+  @doc """
+  Get contacts groups.
+
+  Example
+      result = conn |> ExNylas.Contacts.groups!()
+  """
   def groups!(%Conn{} = conn) do
     case groups(conn) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
+  Get a contact's picture.
+
+  Example
+      {:ok, binary} = conn |> ExNylas.Contacts.get_picture(`id`)
+  """
+  def get_picture(%Conn{} = conn, id) do
+    res =
+      API.get(
+        "#{conn.api_server}/contacts/#{id}/picture",
+        API.header_bearer(conn)
+      )
+
+    case res do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, body}
+
+      {:ok, %HTTPoison.Response{body: body}} ->
+        {:error, body}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
+    end
+  end
+
+  @doc """
+  Get a contact's picture.
+
+  Example
+      binary = conn |> ExNylas.Contacts.get_picture!(`id`)
+  """
+  def get_picture!(%Conn{} = conn, id) do
+    case get_picture(conn, id) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end

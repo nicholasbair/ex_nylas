@@ -102,6 +102,12 @@ defmodule ExNylas.ManagementAccounts do
     header_type: :header_basic,
     use_client_url: true
 
+  @doc """
+  Downgrade the management account.
+
+  Example
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.downgrade()
+  """
   def downgrade(%Conn{} = conn) do
     res =
       API.post(
@@ -121,6 +127,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Downgrade the management account.
+
+  Example
+      result = conn |> ExNylas.ManagementAccounts.downgrade!()
+  """
   def downgrade!(%Conn{} = conn) do
     case downgrade(conn) do
       {:ok, res} -> res
@@ -128,6 +140,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Upgrade the management account.
+
+  Example
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.upgrade()
+  """
   def upgrade(%Conn{} = conn) do
     res =
       API.post(
@@ -147,6 +165,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Upgrade the management account.
+
+  Example
+      result = conn |> ExNylas.ManagementAccounts.upgrade!()
+  """
   def upgrade!(%Conn{} = conn) do
     case upgrade(conn) do
       {:ok, res} -> res
@@ -154,6 +178,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Revoke all tokens for a given account.
+
+  Example
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.revoke_all(`id`)
+  """
   def revoke_all(%Conn{} = conn, id) do
     res =
       API.post(
@@ -173,6 +203,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Revoke all tokens for a given account.
+
+  Example
+      result = conn |> ExNylas.ManagementAccounts.revoke_all!(`id`)
+  """
   def revoke_all!(%Conn{} = conn, id) do
     case revoke_all(conn, id) do
       {:ok, res} -> res
@@ -180,6 +216,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Get IP Addresses.
+
+  Example
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.ip_addresses()
+  """
   def ip_addresses(%Conn{} = conn) do
     res =
       API.get(
@@ -199,6 +241,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Get IP Addresses.
+
+  Example
+      result = conn |> ExNylas.ManagementAccounts.ip_addresses!()
+  """
   def ip_addresses!(%Conn{} = conn) do
     case ip_addresses(conn) do
       {:ok, res} -> res
@@ -206,6 +254,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Get token information for a given account.
+
+  Example
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.token_info(`id`)
+  """
   def token_info(%Conn{} = conn, id) do
     res =
       API.post(
@@ -226,6 +280,12 @@ defmodule ExNylas.ManagementAccounts do
     end
   end
 
+  @doc """
+  Get token information for a given account.
+
+  Example
+      result = conn |> ExNylas.ManagementAccounts.token_info!(`id`)
+  """
   def token_info!(%Conn{} = conn, id) do
     case token_info(conn, id) do
       {:ok, res} -> res

@@ -14,6 +14,12 @@ defmodule ExNylas.Application do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
 
+  @doc """
+  Get the application.
+
+  Example
+      {:ok, result} = conn |> ExNylas.Application.get()
+  """
   def get(%Conn{} = conn) do
     res =
       API.get(
@@ -33,6 +39,12 @@ defmodule ExNylas.Application do
     end
   end
 
+  @doc """
+  Get the application.
+
+  Example
+      result = conn |> ExNylas.Application.get!()
+  """
   def get!(%Conn{} = conn) do
     case get(conn) do
       {:ok, res} -> res
@@ -40,6 +52,12 @@ defmodule ExNylas.Application do
     end
   end
 
+  @doc """
+  Update the application.
+
+  Example
+      {:ok, result} = conn |> ExNylas.Application.update(`body`)
+  """
   def update(%Conn{} = conn, body) do
     res =
       API.put(
@@ -60,6 +78,12 @@ defmodule ExNylas.Application do
     end
   end
 
+  @doc """
+  Update the application.
+
+  Example
+      result = conn |> ExNylas.Application.update!(`body`)
+  """
   def update!(%Conn{} = conn, body) do
     case update(conn, body) do
       {:ok, res} -> res

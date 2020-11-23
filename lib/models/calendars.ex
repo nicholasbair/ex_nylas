@@ -58,6 +58,12 @@ defmodule ExNylas.Calendars do
 
   use ExNylas, object: "calendars", struct: ExNylas.Calendar, except: [:search, :send]
 
+  @doc """
+  Get calendar availability.
+
+  Example
+      {:ok, result} = conn |> ExNylas.Calendars.availability(`body`)
+  """
   def availability(%Conn{} = conn, body) do
     res =
       API.post(
@@ -78,6 +84,12 @@ defmodule ExNylas.Calendars do
     end
   end
 
+  @doc """
+  Get calendar availability.
+
+  Example
+      result = conn |> ExNylas.Calendars.availability!(`body`)
+  """
   def availability!(%Conn{} = conn, body) do
     case availability(conn, body) do
       {:ok, res} -> res
@@ -85,6 +97,12 @@ defmodule ExNylas.Calendars do
     end
   end
 
+  @doc """
+  Get calendar free/busy.
+
+  Example
+      {:ok, result} = conn |> ExNylas.Calendars.free_busy(`body`)
+  """
   def free_busy(%Conn{} = conn, body) do
     res =
       API.post(
@@ -105,6 +123,12 @@ defmodule ExNylas.Calendars do
     end
   end
 
+  @doc """
+  Get calendar free/busy.
+
+  Example
+      result = conn |> ExNylas.Calendars.free_busy!(`body`)
+  """
   def free_busy!(%Conn{} = conn, body) do
     case free_busy(conn, body) do
       {:ok, res} -> res

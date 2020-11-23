@@ -42,6 +42,12 @@ defmodule ExNylas.Messages do
 
   use ExNylas, object: @object, struct: @struct, except: [:build, :delete, :create, :send]
 
+  @doc """
+  Get the raw content for a message.
+
+  Example
+      {:ok, raw} = conn |> ExNylas.Messages.get_raw(`id`)
+  """
   def get_raw(%Conn{} = conn, id) do
     headers = API.header_bearer(conn) ++ [accept: "message/rfc822"]
     res = API.get("#{conn.api_server}/#{@object}/#{id}", headers)
@@ -58,6 +64,12 @@ defmodule ExNylas.Messages do
     end
   end
 
+  @doc """
+  Get the raw content for a message.
+
+  Example
+      raw = conn |> ExNylas.Messages.get_raw!(`id`)
+  """
   def get_raw!(%Conn{} = conn, id) do
     case get_raw(conn, id) do
       {:ok, message} -> message
