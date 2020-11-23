@@ -67,7 +67,7 @@ defmodule ExNylas.Events do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, Event)}
+        {:ok, TF.transform(body, RSVP)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}

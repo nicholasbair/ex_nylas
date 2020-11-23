@@ -12,7 +12,6 @@ Unofficial Elixir bindings for the Nylas API.
 [ ] Events RSVPing - check req/res  
 [ ] Availability  - check req/res  
 [ ] Free busy - check req/res  
-[ ] Deltas  
 [ ] Validate all models/structs vs the API  
 [ ] Support build - convert raw requests (post/put) into request structs for validation  
 [ ] Add Docs to readme  
