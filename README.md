@@ -6,13 +6,12 @@ Unofficial Elixir bindings for the Nylas API.
 
 *Caveat Emptor*
 - I am building this while learning the Nylas platform/API
-- It is my first attempt at metaprogramming
+- This is my first attempt at metaprogramming
 
 ## TODO
 [ ] Events RSVPing - check req/res  
 [ ] Availability  - check req/res  
 [ ] Free busy - check req/res  
-[ ] Accounts  
 [ ] Deltas  
 [ ] Files upload/download  
 [ ] Contacts pictures  
