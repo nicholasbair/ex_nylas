@@ -1,6 +1,6 @@
 defmodule ExNylas.Delta do
   @moduledoc """
-  A struct representing a delta.
+  A struct representing a delta & interface for Nylas delta.
   """
   use TypedStruct
 
@@ -8,12 +8,6 @@ defmodule ExNylas.Delta do
     @typedoc "A delta/cursor"
     field :cursor, String.t()
   end
-end
-
-defmodule ExNylas.Deltas do
-  @moduledoc """
-  Interface for Nylas delta.
-  """
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
@@ -23,7 +17,7 @@ defmodule ExNylas.Deltas do
   Get the latest delta cursor.
 
   Example
-      {:ok, result} = conn |> ExNylas.Deltas.latest_cursor()
+      {:ok, result} = conn |> ExNylas.Delta.latest_cursor()
   """
   def latest_cursor(%Conn{} = conn) do
     res =
@@ -48,7 +42,7 @@ defmodule ExNylas.Deltas do
   Get the latest delta cursor.
 
   Example
-      result = conn |> ExNylas.Deltas.latest_cursor!()
+      result = conn |> ExNylas.Delta.latest_cursor!()
   """
   def latest_cursor!(%Conn{} = conn) do
     case latest_cursor(conn) do
@@ -61,7 +55,7 @@ defmodule ExNylas.Deltas do
   Start a delta stream, where `stream_to` is the name of a GenServer that implements `handle_info/2`.
 
   Example
-      start_stream(conn, `cursor`, `stream_to`)
+      ExNylas.Delta.start_stream(conn, `cursor`, `stream_to`)
   """
   def start_stream(%Conn{} = conn, cursor, stream_to) do
     API.get(
