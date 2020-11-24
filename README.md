@@ -6,6 +6,7 @@ Unofficial Elixir bindings for the Nylas API.
 
 *Caveat Emptor*
 - I am building this while learning the Nylas platform/API
+- VERY much a work in progress
 - This is my first attempt at metaprogramming
 
 ## TODO
@@ -18,7 +19,7 @@ Unofficial Elixir bindings for the Nylas API.
 
 ## Installation
 
-Note - not available on Hex (yet).
+*Note* - not available on Hex (yet).
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `ex_nylas` to your list of dependencies in `mix.exs`:
