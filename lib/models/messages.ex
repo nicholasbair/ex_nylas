@@ -24,7 +24,6 @@ defmodule ExNylas.Message do
     field :thread_id,  String.t()
     field :to,         list()
     field :unread,     boolean()
-    field :headers,    map()
   end
 
 end

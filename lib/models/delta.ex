@@ -22,7 +22,8 @@ defmodule ExNylas.Delta do
   def latest_cursor(%Conn{} = conn) do
     res =
       API.post(
-        "#{conn.api_server}/latest_cursor",
+        "#{conn.api_server}/delta/latest_cursor",
+        %{},
         API.header_bearer(conn)
       )
 
@@ -59,7 +60,7 @@ defmodule ExNylas.Delta do
   """
   def start_stream(%Conn{} = conn, cursor, stream_to) do
     API.get(
-      "#{conn.api_server}/streaming?cursor=#{cursor}",
+      "#{conn.api_server}/delta/streaming?cursor=#{cursor}",
       API.header_bearer(conn),
       [
         stream_to: stream_to,

@@ -101,6 +101,7 @@ defmodule ExNylas do
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            IO.inspect body
             {:ok, List.first(body) |> TF.transform(unquote(struct_name))}
 
           {:ok, %HTTPoison.Response{body: body}} ->
@@ -157,6 +158,7 @@ defmodule ExNylas do
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            IO.inspect body
             {:ok, TF.transform(body, unquote(struct_name))}
 
           {:ok, %HTTPoison.Response{body: body}} ->
@@ -212,6 +214,7 @@ defmodule ExNylas do
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            IO.inspect body
             {:ok, TF.transform(body, unquote(struct_name))}
 
           {:ok, %HTTPoison.Response{body: body}} ->
@@ -268,6 +271,7 @@ defmodule ExNylas do
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            IO.inspect body
             {:ok, TF.transform(body, unquote(struct_name))}
 
           {:ok, %HTTPoison.Response{body: body}} ->
@@ -324,6 +328,7 @@ defmodule ExNylas do
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            IO.inspect body
             {:ok, TF.transform(body, unquote(struct_name))}
 
           {:ok, %HTTPoison.Response{body: body}} ->
@@ -380,6 +385,7 @@ defmodule ExNylas do
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+            IO.inspect body
             {:ok, TF.transform(body, unquote(struct_name))}
 
           {:ok, %HTTPoison.Response{body: body}} ->

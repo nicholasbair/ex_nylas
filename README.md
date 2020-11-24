@@ -13,7 +13,7 @@ Unofficial Elixir bindings for the Nylas API.
 [ ] Events RSVPing - check req/res  
 [ ] Availability  - check req/res  
 [ ] Free busy - check req/res  
-[ ] Validate all models/structs vs the API  
+[ ] Validate all models/structs vs the API  (responses done, need to check get by ID)  
 [ ] Tests  
 [ ] Push to Hex  
 
