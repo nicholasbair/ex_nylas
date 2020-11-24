@@ -33,9 +33,6 @@ defmodule ExNylas.Event.Build do
   """
   use TypedStruct
 
-  # TODO:
-  # Includes a query param for notify participants
-
   typedstruct do
     @typedoc "A event"
     field :calendar_id,  String.t(), enforce: true
