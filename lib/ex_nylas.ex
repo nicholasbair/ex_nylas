@@ -12,11 +12,12 @@ defmodule ExNylas do
     search: %{name: :search, http_method: :get},
     find: %{name: :find, http_method: :get},
     delete: %{name: :delete, http_method: :delete},
+    send: %{name: :send, http_method: :post},
+    build: %{name: :build},
     # Not all objects support both put and post
     # Thus need to differentiate using the update/create key here
     update: %{name: :save, http_method: :put},
     create: %{name: :save, http_method: :post},
-    send: %{name: :send, http_method: :post},
   }
 
   defp generate_funcs(opts) do
@@ -34,6 +35,39 @@ defmodule ExNylas do
       Map.get(@funcs, k)
       |> generate_api(object, struct_name, header_type, use_client_url)
     end)
+  end
+
+  defp generate_api(%{name: :build} = config, _object, struct_name, _header_type, _use_client_url) do
+    quote do
+      @doc """
+      Create and validate a #{unquote(struct_name)}, use the save function to send to Nylas.
+
+      Example
+        {:ok, result} = ExNylas.#{__MODULE__}.build(`payload`)
+      """
+      def unquote(config.name)(payload) do
+        try do
+          res = apply(__MODULE__, "#{unquote(config.name)}!" |> String.to_atom(), [payload])
+          {:ok, res}
+        rescue
+          e in _ -> {:error, e}
+        end
+      end
+
+      @doc """
+      Create and validate a #{unquote(struct_name)}, use the save function to send to Nylas.
+
+      Example
+        result = ExNylas.#{__MODULE__}.build(`payload`)!
+      """
+      def unquote("#{config.name}!" |> String.to_atom())(payload) do
+        unquote(struct_name)
+        |> to_string()
+        |> Kernel.<>(".Build")
+        |> String.to_atom()
+        |> struct!(payload)
+      end
+    end
   end
 
   defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, header_type, use_client_url) do
@@ -283,8 +317,8 @@ defmodule ExNylas do
             unquote(config.http_method),
             [
               url,
-              headers,
-              changeset
+              changeset,
+              headers
             ]
           )
 
@@ -339,8 +373,8 @@ defmodule ExNylas do
             unquote(config.http_method),
             [
               url,
-              headers,
-              body
+              body,
+              headers
             ]
           )
 

@@ -27,6 +27,29 @@ defmodule ExNylas.Event do
 
 end
 
+defmodule ExNylas.Event.Build do
+  @moduledoc """
+  A struct representing a event.
+  """
+  use TypedStruct
+
+  # TODO:
+  # Includes a query param for notify participants
+
+  typedstruct do
+    @typedoc "A event"
+    field :calendar_id,  String.t(), enforce: true
+    field :when,         map(),      enforce: true
+    field :title,        String.t()
+    field :description,  String.t()
+    field :location,     String.t()
+    field :participants, list()
+    field :busy,         boolean()
+    field :recurrance,   map()
+  end
+
+end
+
 defmodule ExNylas.Event.RSVP do
   @moduledoc """
   A struct representing an event RSVP.
@@ -35,6 +58,7 @@ defmodule ExNylas.Event.RSVP do
 
   typedstruct do
     @typedoc "An event RSVP"
+    field :id, String.t()
   end
 
 end

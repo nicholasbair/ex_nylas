@@ -24,7 +24,7 @@ defmodule ExNylas.Files do
   Interface for Nylas file.
   """
 
-  use ExNylas, object: "files", struct: ExNylas.File, except: [:search, :send]
+  use ExNylas, object: "files", struct: ExNylas.File, except: [:search, :send, :build]
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn

@@ -13,7 +13,6 @@ Unofficial Elixir bindings for the Nylas API.
 [ ] Availability  - check req/res  
 [ ] Free busy - check req/res  
 [ ] Validate all models/structs vs the API  
-[ ] Support build - convert raw requests (post/put) into request structs for validation  
 [ ] Tests  
 [ ] Push to Hex  
 
@@ -57,6 +56,17 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 
 # Searching is the exception
 {:ok, threads} = ExNylas.Threads.search("nylas")
+```
+5. Where `save/1`, `save!/1`, `save/2`, or `save!/2` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes--so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
+```elixir
+{:ok, label} = ExNylas.Labels.build(%{display_name: "Hello World"})
+# label is %ExNylas.Label.Build{display_name: "Hello World"}
+
+# This will return {:error, message} because 'name' is not part of the struct
+ExNylas.Labels.build(%{display_name: "Hello World", name: "My Label"})
+
+# This will also return {:error, message} because 'display_name' is a required field
+ExNylas.Labels.build(%{})
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)

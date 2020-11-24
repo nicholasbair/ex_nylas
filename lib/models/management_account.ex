@@ -112,6 +112,7 @@ defmodule ExNylas.ManagementAccounts do
     res =
       API.post(
         "#{conn.api_server}/a/#{conn.client_id}/downgrade",
+        %{},
         API.header_basic(conn)
       )
 
@@ -150,6 +151,7 @@ defmodule ExNylas.ManagementAccounts do
     res =
       API.post(
         "#{conn.api_server}/a/#{conn.client_id}/upgrade",
+        %{},
         API.header_basic(conn)
       )
 
@@ -188,6 +190,7 @@ defmodule ExNylas.ManagementAccounts do
     res =
       API.post(
         "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/revoke-all",
+        %{},
         API.header_basic(conn)
       )
 
@@ -264,13 +267,13 @@ defmodule ExNylas.ManagementAccounts do
     res =
       API.post(
         "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/token-info",
-        API.header_basic(conn),
-        %{access_token: conn.access_token}
+        %{access_token: conn.access_token},
+        API.header_basic(conn)
       )
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.ManagementAccount.IPAddresses)}
+        {:ok, TF.transform(body, ExNylas.ManagementAccount.TokenInfo)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}

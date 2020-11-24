@@ -16,6 +16,26 @@ defmodule ExNylas.Webhook do
 
 end
 
+defmodule ExNylas.Webhook.Build do
+  @moduledoc """
+  A struct representing a webhook.
+  """
+  use TypedStruct
+
+  # Payload for build webhook
+  # callback_url (required)
+  # triggers (required)
+  # state
+
+  typedstruct do
+    @typedoc "A webhook"
+    field :state,        String.t()
+    field :callback_url, String.t(), enforce: true
+    field :triggers,     list(),     enforce: true
+  end
+
+end
+
 defmodule ExNylas.Webhooks do
   @moduledoc """
   Interface for Nylas webhook.

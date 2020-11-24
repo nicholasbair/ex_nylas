@@ -32,6 +32,35 @@ defmodule ExNylas.Contact do
 
 end
 
+defmodule ExNylas.Contact.Build do
+  @moduledoc """
+  A struct representing a contact.
+  """
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "A contact"
+    field :given_name,         String.t()
+    field :middle_name,        String.t()
+    field :surname,            String.t()
+    field :suffix,             String.t()
+    field :nickname,           String.t()
+    field :birthday,           String.t()
+    field :company_name,       String.t()
+    field :job_title,          String.t()
+    field :manager_name,       String.t()
+    field :office_location,    String.t()
+    field :notes,              String.t()
+    field :emails,             String.t()
+    field :im_addresses,       list()
+    field :physical_addresses, list()
+    field :phone_numbers,      list()
+    field :web_pages,          list()
+    field :group,              String.t()
+  end
+
+end
+
 defmodule ExNylas.Contact.Group do
   @moduledoc """
   A struct representing a contact group.

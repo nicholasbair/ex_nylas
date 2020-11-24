@@ -15,6 +15,19 @@ defmodule ExNylas.Label do
 
 end
 
+defmodule ExNylas.Label.Build do
+  @moduledoc """
+  A struct representing a label.
+  """
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "A label"
+    field :display_name, String.t(), enforce: true
+  end
+
+end
+
 defmodule ExNylas.Labels do
   @moduledoc """
   Interface for Nylas label.

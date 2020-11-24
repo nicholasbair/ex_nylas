@@ -16,6 +16,22 @@ defmodule ExNylas.Calendar do
 
 end
 
+defmodule ExNylas.Calendar.Build do
+  @moduledoc """
+  A struct representing a calendar.
+  """
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "A calendar"
+    field :name,         String.t(), enforce: true
+    field :description,  String.t()
+    field :location,     String.t()
+    field :timezone,     String.t()
+  end
+
+end
+
 defmodule ExNylas.Calendar.Availability do
   @moduledoc """
   A struct representing availability.

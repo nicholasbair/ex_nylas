@@ -15,6 +15,19 @@ defmodule ExNylas.Folder do
 
 end
 
+defmodule ExNylas.Folder.Build do
+  @moduledoc """
+  A struct representing a folder.
+  """
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "A folder"
+    field :display_name, String.t(), enforce: true
+  end
+
+end
+
 defmodule ExNylas.Folders do
   @moduledoc """
   Interface for Nylas folders.

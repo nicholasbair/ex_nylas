@@ -6,6 +6,14 @@ defmodule ExNylas.API do
   use HTTPoison.Base
   alias ExNylas.Connection, as: Conn
 
+  def process_request_body(body) when is_map(body), do: Jason.encode!(body)
+  def process_request_body(body) when is_struct(body) do
+    body
+    |> Map.from_struct()
+    |> Jason.encode!()
+  end
+  def process_request_body(body), do: body
+
   def process_response_body(body) do
     case Jason.decode(body) do
       {:ok, res} -> res

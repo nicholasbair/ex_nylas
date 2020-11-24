@@ -11,7 +11,7 @@ defmodule ExNylas.Draft do
     field :account_id,          String.t()
     field :subject,             String.t()
     field :from,                list()
-    field :replyTo,             list()
+    field :reply_to,            list()
     field :to,                  list()
     field :cc,                  list()
     field :bcc,                 list()
@@ -26,6 +26,26 @@ defmodule ExNylas.Draft do
     field :labels,              list()
     field :version,             String.t()
     field :reply_to_message_id, String.t()
+  end
+
+end
+
+defmodule ExNylas.Draft.Build do
+  @moduledoc """
+  A struct representing a draft.
+  """
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "A draft"
+    field :subject,             String.t()
+    field :to,                  list()
+    field :cc,                  list()
+    field :bcc,                 list()
+    field :from,                list()
+    field :reply_to,            list()
+    field :reply_to_message_id, String.t()
+    field :file_ids,            list()
   end
 
 end
