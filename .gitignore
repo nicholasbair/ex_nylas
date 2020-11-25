@@ -28,3 +28,4 @@ ex_nylas-*.tar
 
 *.DS_Store
 .elixir_ls
+.env

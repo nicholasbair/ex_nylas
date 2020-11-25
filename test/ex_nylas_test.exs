@@ -1,8 +1,57 @@
 defmodule ExNylasTest do
-  use ExUnit.Case
+  # Use async == false to avoid API limits
+  use ExUnit.Case, async: false
   doctest ExNylas
 
-  test "greets the world" do
-    assert ExNylas.hello() == :world
+  # Stored as strings to avoid additional parsing
+  @modules [
+    "Account",
+    "Application",
+    "Calendars",
+    "Contacts",
+    "Delta",
+    "Drafts",
+    "Events",
+    "Files",
+    "Folders",
+    "Labels",
+    "ManagementAccounts",
+    "Messages",
+    "Threads",
+    "Webhooks",
+  ]
+
+  defp build_conn do
+    %ExNylas.Connection{
+      client_id: System.fetch_env!("NYLAS_CLIENT_ID"),
+      client_secret: System.fetch_env!("NYLAS_CLIENT_SECRET"),
+      access_token: System.fetch_env!("NYLAS_ACCESS_TOKEN")
+    }
   end
+
+  # Test for list/2
+  @modules
+  |> Enum.filter(fn m ->
+    Module.concat([ExNylas, String.to_atom(m)])
+    |> apply(:__info__, [:functions])
+    |> Enum.any?(fn {name, arity} -> name == :list and arity == 2 end)
+  end)
+  |> Enum.each(fn m ->
+    test "List for #{m}" do
+      {ok, res} =
+        apply(
+          Module.concat([ExNylas, String.to_atom(unquote(m))]),
+          :list,
+          [build_conn(), %{limit: 1}]
+        )
+
+      if ok == :error do
+        IO.puts "Error on #{unquote(m)}, message printed below"
+        IO.inspect res
+      end
+
+      assert ok == :ok
+    end
+  end)
+
 end

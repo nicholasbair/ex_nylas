@@ -37,9 +37,8 @@ defmodule ExNylas.Messages do
   alias ExNylas.Connection, as: Conn
 
   @object "messages"
-  @struct ExNylas.Message
 
-  use ExNylas, object: @object, struct: @struct, except: [:build, :delete, :create, :send]
+  use ExNylas, object: @object, struct: ExNylas.Message, except: [:build, :delete, :create, :send]
 
   @doc """
   Get the raw content for a message.
