@@ -71,21 +71,68 @@ defmodule ExNylas.Events do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
   alias ExNylas.Event.RSVP
+  alias ExNylas.Event
 
-  use ExNylas, object: "events", struct: ExNylas.Event, except: [:search, :send]
+  use ExNylas, object: "events", struct: ExNylas.Event, except: [:search, :send, :create, :update]
 
   @doc """
-  Send an RSVP for a given event
+  Create/update for an event, include `notify_participants` in the params map (optional)
+
+  Example
+      {:ok, binary} = conn |> ExNylas.Events.save(`body`)
+  """
+  def save(%Conn{} = conn, body, params \\ %{}) do
+    {method, url} =
+      case body.id do
+        nil -> {:post, "#{conn.api_server}/events"}
+        _ -> {:put, "#{conn.api_server}/events/#{body.id}"}
+      end
+
+    res =
+      apply(
+        API,
+        method,
+        [url, API.header_bearer(conn), body, [params: params]]
+      )
+
+    case res do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, TF.transform(body, Event)}
+
+      {:ok, %HTTPoison.Response{body: body}} ->
+        {:error, body}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
+    end
+  end
+
+  @doc """
+  Create/update for an event, include `notify_participants` in the params map (optional)
+
+  Example
+      binary = conn |> ExNylas.Events.save!(`body`)
+  """
+  def save!(%Conn{} = conn, body, params \\ %{}) do
+    case save(conn, body, params) do
+      {:ok, res} -> res
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
+  Send an RSVP for a given event, include `notify_participants` in the params map (optional)
 
   Example
       {:ok, binary} = conn |> ExNylas.Events.rsvp(`body`)
   """
-  def rsvp(%Conn{} = conn, body) do
+  def rsvp(%Conn{} = conn, body, params \\ %{}) do
     res =
       API.post(
         "#{conn.api_server}/send-rsvp",
         API.header_bearer(conn),
-        body
+        body,
+        [params: params]
       )
 
     case res do
@@ -101,13 +148,13 @@ defmodule ExNylas.Events do
   end
 
   @doc """
-  Send an RSVP for a given event
+  Send an RSVP for a given event, include `notify_participants` in the params map (optional)
 
   Example
       binary = conn |> ExNylas.Events.rsvp!(`body`)
   """
-  def rsvp!(%Conn{} = conn, body) do
-    case rsvp(conn, body) do
+  def rsvp!(%Conn{} = conn, body, params \\ %{}) do
+    case rsvp(conn, body, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
