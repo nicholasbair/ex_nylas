@@ -33,6 +33,9 @@ defmodule ExNylas.Folders do
   Interface for Nylas folders.
   """
 
-  use ExNylas, object: "folders", struct: ExNylas.Folder, except: [:search, :send]
+  use ExNylas,
+    object: "folders",
+    struct: ExNylas.Folder,
+    include: [:list, :first, :find, :delete, :build, :update, :create]
 
 end

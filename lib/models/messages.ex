@@ -38,7 +38,10 @@ defmodule ExNylas.Messages do
 
   @object "messages"
 
-  use ExNylas, object: @object, struct: ExNylas.Message, except: [:build, :delete, :create, :send]
+  use ExNylas,
+    object: @object,
+    struct: ExNylas.Message,
+    include: [:list, :first, :search, :find, :update]
 
   @doc """
   Get the raw content for a message.

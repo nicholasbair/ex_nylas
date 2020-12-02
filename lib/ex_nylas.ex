@@ -21,8 +21,7 @@ defmodule ExNylas do
   }
 
   defp generate_funcs(opts) do
-    only = Keyword.get(opts, :only, Map.keys(@funcs))
-    except = Keyword.get(opts, :except, [])
+    include = Keyword.get(opts, :include, [])
     object = Keyword.get(opts, :object)
     struct_name = Keyword.get(opts, :struct)
     header_type = Keyword.get(opts, :header_type, :header_bearer)
@@ -30,7 +29,7 @@ defmodule ExNylas do
 
     @funcs
     |> Map.keys()
-    |> Enum.filter(&(&1 in only && &1 not in except))
+    |> Enum.filter(fn k -> k in include end)
     |> Enum.map(fn k ->
       Map.get(@funcs, k)
       |> generate_api(object, struct_name, header_type, use_client_url)

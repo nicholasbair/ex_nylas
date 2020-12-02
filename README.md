@@ -34,11 +34,18 @@ end
 
 ## Usage
 ```elixir
+# Get 5 messages
 %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
 |> ExNylas.Messages.list(%{limit: 5})
 ```
 
 1. Connection is a struct that stores your Nylas API credentials.
+```elixir
+conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
+
+# Or
+conn = ExNylas.Connection.new("1234", "1234", "1234")
+```
 2. Each function supports returning an ok/error tuple or raising an exception, for example:
 ```elixir
 conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
@@ -61,7 +68,7 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 5. Where `save/1`, `save!/1`, `save/2`, or `save!/2` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes--so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
 ```elixir
 {:ok, label} = ExNylas.Labels.build(%{display_name: "Hello World"})
-# label is %ExNylas.Label.Build{display_name: "Hello World"}
+# label == %ExNylas.Label.Build{display_name: "Hello World"}
 
 # This will return {:error, message} because 'name' is not part of the struct
 ExNylas.Labels.build(%{display_name: "Hello World", name: "My Label"})

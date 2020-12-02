@@ -35,6 +35,9 @@ defmodule ExNylas.Threads do
   Interface for Nylas threads.
   """
 
-  use ExNylas, object: "threads", struct: ExNylas.Thread, except: [:build, :delete, :create, :send]
+  use ExNylas,
+    object: "threads",
+    struct: ExNylas.Thread,
+    include: [:list, :first, :search, :find, :update]
 
 end

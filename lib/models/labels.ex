@@ -33,6 +33,9 @@ defmodule ExNylas.Labels do
   Interface for Nylas label.
   """
 
-  use ExNylas, object: "labels", struct: ExNylas.Label, except: [:search, :send]
+  use ExNylas,
+    object: "labels",
+    struct: ExNylas.Label,
+    include: [:list, :first, :find, :delete, :build, :update, :create]
 
 end

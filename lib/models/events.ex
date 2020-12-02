@@ -73,7 +73,10 @@ defmodule ExNylas.Events do
   alias ExNylas.Event.RSVP
   alias ExNylas.Event
 
-  use ExNylas, object: "events", struct: ExNylas.Event, except: [:search, :send, :create, :update]
+  use ExNylas,
+    object: "events",
+    struct: ExNylas.Event,
+    include: [:list, :first, :find, :build]
 
   @doc """
   Create/update for an event, include `notify_participants` in the params map (optional)
@@ -92,7 +95,7 @@ defmodule ExNylas.Events do
       apply(
         API,
         method,
-        [url, API.header_bearer(conn), body, [params: params]]
+        [url, body, API.header_bearer(conn), [params: params]]
       )
 
     case res do
@@ -130,8 +133,8 @@ defmodule ExNylas.Events do
     res =
       API.post(
         "#{conn.api_server}/send-rsvp",
-        API.header_bearer(conn),
         body,
+        API.header_bearer(conn),
         [params: params]
       )
 

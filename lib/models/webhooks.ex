@@ -39,8 +39,8 @@ defmodule ExNylas.Webhooks do
   use ExNylas,
     object: "webhooks",
     struct: ExNylas.Webhook,
-    except: [:search, :send],
     header_type: :header_basic,
-    use_client_url: true
+    use_client_url: true,
+    include: [:list, :first, :find, :delete, :build, :update, :create]
 
 end

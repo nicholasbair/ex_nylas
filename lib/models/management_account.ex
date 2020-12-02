@@ -98,7 +98,7 @@ defmodule ExNylas.ManagementAccounts do
   use ExNylas,
     object: "accounts",
     struct: ExNylas.ManagementAccount,
-    only: [:list, :find],
+    include: [:list, :find],
     header_type: :header_basic,
     use_client_url: true
 

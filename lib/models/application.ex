@@ -62,8 +62,8 @@ defmodule ExNylas.Application do
     res =
       API.put(
         "#{conn.api_server}/a/#{conn.client_id}",
-        API.header_basic(conn),
-        body
+        body,
+        API.header_basic(conn)
       )
 
     case res do

@@ -72,7 +72,10 @@ defmodule ExNylas.Calendars do
   alias ExNylas.Calendar.Availability
   alias ExNylas.Calendar.FreeBusy
 
-  use ExNylas, object: "calendars", struct: ExNylas.Calendar, except: [:search, :send]
+  use ExNylas,
+    object: "calendars",
+    struct: ExNylas.Calendar,
+    include: [:list, :first, :find, :delete, :build, :create, :update]
 
   @doc """
   Get calendar availability.
@@ -84,8 +87,8 @@ defmodule ExNylas.Calendars do
     res =
       API.post(
         "#{conn.api_server}/calendars/availability",
-        API.header_bearer(conn),
-        body
+        body,
+        API.header_bearer(conn)
       )
 
     case res do
@@ -123,8 +126,8 @@ defmodule ExNylas.Calendars do
     res =
       API.post(
         "#{conn.api_server}/calendars/free-busy",
-        API.header_bearer(conn),
-        body
+        body,
+        API.header_bearer(conn)
       )
 
     case res do

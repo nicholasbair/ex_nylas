@@ -58,6 +58,9 @@ defmodule ExNylas.Drafts do
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]
 
-  use ExNylas, object: "drafts", struct: ExNylas.Draft, except: [:search]
+  use ExNylas,
+    object: "drafts",
+    struct: ExNylas.Draft,
+    include: [:list, :first, :find, :delete, :send, :build, :create, :update]
 
 end

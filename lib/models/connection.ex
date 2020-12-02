@@ -4,7 +4,7 @@ defmodule ExNylas.Connection do
 
   The client_id, client_secret and access_token are all optional when creating the connection struct.
   The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API, the access_token is needed.
-  For calls to account management and webhooks, the client_id and client_secret is required.
+  For calls to application, account management and webhooks, the client_id and client_secret is required.
   """
 
   @api_server "https://api.nylas.com"

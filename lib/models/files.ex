@@ -24,7 +24,10 @@ defmodule ExNylas.Files do
   Interface for Nylas file.
   """
 
-  use ExNylas, object: "files", struct: ExNylas.File, except: [:search, :send, :build]
+  use ExNylas,
+    object: "files",
+    struct: ExNylas.File,
+    include: [:list, :first, :find, :delete, :update, :create]
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
@@ -45,7 +48,7 @@ defmodule ExNylas.Files do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body, ExNylas.File}
+        {:ok, body}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}

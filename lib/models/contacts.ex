@@ -88,7 +88,10 @@ defmodule ExNylas.Contacts do
   alias ExNylas.Transform, as: TF
   alias ExNylas.Contact.Group
 
-  use ExNylas, object: "contacts", struct: ExNylas.Contact, except: [:search, :send]
+  use ExNylas,
+    object: "contacts",
+    struct: ExNylas.Contact,
+    include: [:list, :first, :find, :delete, :build, :create, :update]
 
   @doc """
   Get contacts groups.
