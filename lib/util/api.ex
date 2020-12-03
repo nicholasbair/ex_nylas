@@ -22,9 +22,15 @@ defmodule ExNylas.API do
   end
 
   def header_bearer(%Conn{} = conn), do: [authorization: "Bearer #{conn.access_token}", "Nylas-API-Version": conn.api_version]
-  def header_basic(%Conn{} = conn) do
+
+  def header_basic(%Conn{} = conn) when is_struct(conn) do
     encoded = Base.encode64("#{conn.client_secret}:")
     [authorization: "Basic #{encoded}", "Nylas-API-Version": conn.api_version]
+  end
+
+  def header_basic(auth_val, api_version) do
+    encoded = Base.encode64("#{auth_val}:")
+    [authorization: "Basic #{encoded}", "Nylas-API-Version": api_version]
   end
 
 end
