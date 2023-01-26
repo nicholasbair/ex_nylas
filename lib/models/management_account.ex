@@ -6,13 +6,14 @@ defmodule ExNylas.ManagementAccount do
 
   typedstruct do
     @typedoc "A management account"
-    field :id, String.t()
-    field :billing_state, String.t()
-    field :email_address, String.t()
-    field :namespace_id, String.t()
-    field :provider, String.t()
-    field :sync_state, String.t()
-    field :trial, boolean()
+    field :id,                  String.t()
+    field :billing_state,       String.t()
+    field :email_address,       String.t()
+    field :namespace_id,        String.t()
+    field :provider,            String.t()
+    field :sync_state,          String.t()
+    field :trial,               boolean()
+    field :authentication_type, String.t()
   end
 
 end
