@@ -14,7 +14,7 @@ defmodule ExNylas.Account do
     field :provider,          String.t()
     field :organization_unit, String.t()
     field :sync_state,        String.t()
-    field :linked_at,         String.t()
+    field :linked_at,         integer()
   end
 
   alias ExNylas.API

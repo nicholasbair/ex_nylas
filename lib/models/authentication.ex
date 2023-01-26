@@ -6,10 +6,13 @@ defmodule ExNylas.Authentication do
 
   typedstruct do
     @typedoc "Authentication options"
-    field :login_hint,   String.t()
-    field :redirect_uri, String.t()
-    field :state,        String.t()
-    field :scopes,       list()
+    field :login_hint,         String.t()
+    field :redirect_uri,       String.t(), enforce: true
+    field :state,              String.t()
+    field :scopes,             list()
+    field :response_type,      String.t(), default: "code"
+    field :provider,           String.t()
+    field :redirect_on_error?, boolean()
   end
 
   alias ExNylas.API
@@ -20,8 +23,7 @@ defmodule ExNylas.Authentication do
 
   Notes:
     1. `client_id` is required (on the connection struct)
-    2. `login_hint` is required (on the options map) and should be an email
-    3. `redirect_uri is required (on the options map) and must be registered in the Nylas dashboard
+    2. `redirect_uri` is required (on the options map) and must be registered in the Nylas dashboard
 
   Example
       options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random string", scopes: ["email.read_only", "contacts.read_only", "calendar.read_only"]}
@@ -29,16 +31,12 @@ defmodule ExNylas.Authentication do
   """
   def get_auth_url(%Conn{} = conn, options) do
     url =
-      "#{conn.api_server}/oauth/authorize?client_id=#{Map.get(conn, :client_id)}&response_type=code&login_hint=#{Map.get(options, :login_hint)}&redirect_uri=#{Map.get(options, :redirect_uri)}"
-      |> parse_state(options)
-      |> parse_scopes(options)
+      "#{conn.api_server}/oauth/authorize?client_id=#{Map.get(conn, :client_id)}"
+      |> parse_options(options)
 
     cond do
       Map.get(conn, :client_id) |> is_nil() ->
         {:error, "client_id on the connection struct is required for this call"}
-
-      Map.get(options, :login_hint) |> is_nil() ->
-        {:error, "login_hint was not found in the options map"}
 
       Map.get(options, :redirect_uri) |> is_nil() ->
         {:error, "redirect_uri was not found in the options map"}
@@ -53,8 +51,7 @@ defmodule ExNylas.Authentication do
 
   Notes:
     1. `client_id` is required (on the connection struct)
-    2. `login_hint` is required (on the options map) and should be an email
-    3. `redirect_uri is required (on the options map) and must be registered in the Nylas dashboard
+    2. `redirect_uri` is required (on the options map) and must be registered in the Nylas dashboard
 
   Example
       options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random string", scopes: ["email.read_only", "contacts.read_only", "calendar.read_only"]}
@@ -90,12 +87,11 @@ defmodule ExNylas.Authentication do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
         {:ok, body}
 
-      # The API returns HTML here
-      {:ok, %HTTPoison.Response{body: _body}} ->
-        {:error, "An error occurred, did not recieve an access token"}
+      {:ok, %HTTPoison.Response{body: body}} ->
+        {:error, body}
 
-      {:error, %HTTPoison.Error{reason: _reason}} ->
-        {:error, "An error occurred, did not recieve an access token"}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
     end
   end
 
@@ -108,7 +104,7 @@ defmodule ExNylas.Authentication do
   def exchange_code_for_token!(%Conn{} = conn, code) do
     case exchange_code_for_token(conn, code) do
       {:ok, res} -> res
-      {:error, _reason} -> raise ExNylasError, "An error occurred, did not recieve an access token"
+      {:error, reason} -> raise ExNylasError, reason
     end
   end
 
@@ -128,7 +124,7 @@ defmodule ExNylas.Authentication do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, Group)}
+        {:ok, body}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}
@@ -152,12 +148,16 @@ defmodule ExNylas.Authentication do
   end
 
   # -- Private --
-  defp parse_state(url, %{state: nil}), do: url
-  defp parse_state(url, %{state: state}), do: url <> "&state=#{state}"
-  defp parse_state(url, _), do: url
+  defp parse_options(url, options) do
+    res =
+      options
+      |> Enum.map(fn {k, v} -> parse_options({k, v}) end)
+      |> Enum.join()
 
-  defp parse_scopes(url, %{scopes: nil}), do: url
-  defp parse_scopes(url, %{scopes: scopes}) when is_list(scopes), do: url <> "&scopes=#{Enum.join(scopes, ",")}"
-  defp parse_scopes(url, %{scopes: scopes}), do: url <> "&scopes=#{scopes}"
+    url <> res
+  end
 
+  defp parse_options({_key, nil}), do: ""
+  defp parse_options({:scopes, scopes}) when is_list(scopes), do: "&scopes=#{Enum.join(scopes, ",")}"
+  defp parse_options({key, val}), do: "&#{key}=#{val}"
 end
