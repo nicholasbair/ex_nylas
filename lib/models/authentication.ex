@@ -21,7 +21,6 @@ defmodule ExNylas.Authentication do
   Notes:
     1. `client_id` is required (on the connection struct)
     2. `login_hint` is required (on the options map) and should be an email
-    3. `redirect_uri is required (on the options map) and must be registered in the Nylas dashboard
 
   Example
       options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random string", scopes: ["email.read_only", "contacts.read_only", "calendar.read_only"]}
@@ -40,9 +39,6 @@ defmodule ExNylas.Authentication do
       Map.get(options, :login_hint) |> is_nil() ->
         {:error, "login_hint was not found in the options map"}
 
-      Map.get(options, :redirect_uri) |> is_nil() ->
-        {:error, "redirect_uri was not found in the options map"}
-
       true ->
         {:ok, url}
     end
@@ -54,7 +50,6 @@ defmodule ExNylas.Authentication do
   Notes:
     1. `client_id` is required (on the connection struct)
     2. `login_hint` is required (on the options map) and should be an email
-    3. `redirect_uri is required (on the options map) and must be registered in the Nylas dashboard
 
   Example
       options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random string", scopes: ["email.read_only", "contacts.read_only", "calendar.read_only"]}
