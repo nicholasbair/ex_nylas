@@ -6,59 +6,58 @@ defmodule ExNylas.Contact do
 
   typedstruct do
     @typedoc "A contact"
-    field :id,                 String.t()
-    field :object,             String.t()
-    field :account_id,         String.t()
-    field :given_name,         String.t()
-    field :middle_name,        String.t()
-    field :surname,            String.t()
-    field :suffix,             String.t()
-    field :nickname,           String.t()
-    field :birthday,           String.t()
-    field :company_name,       String.t()
-    field :job_title,          String.t()
-    field :manager_name,       String.t()
-    field :office_location,    String.t()
-    field :notes,              String.t()
-    field :picture_url,        String.t()
-    field :email_addresses,    String.t()
-    field :im_addresses,       list()
-    field :physical_addresses, list()
-    field :phone_numbers,      list()
-    field :web_pages,          list()
-    field :groups,             list()
-    field :source,             String.t()
+    field(:id, String.t())
+    field(:object, String.t())
+    field(:account_id, String.t())
+    field(:given_name, String.t())
+    field(:middle_name, String.t())
+    field(:surname, String.t())
+    field(:suffix, String.t())
+    field(:nickname, String.t())
+    field(:birthday, String.t())
+    field(:company_name, String.t())
+    field(:job_title, String.t())
+    field(:manager_name, String.t())
+    field(:office_location, String.t())
+    field(:notes, String.t())
+    field(:picture_url, String.t())
+    field(:email_addresses, String.t())
+    field(:im_addresses, list())
+    field(:physical_addresses, list())
+    field(:phone_numbers, list())
+    field(:web_pages, list())
+    field(:groups, list())
+    field(:source, String.t())
   end
 
-end
+  defmodule Build do
+    @moduledoc """
+    A struct representing a contact.
+    """
+    use TypedStruct
 
-defmodule ExNylas.Contact.Build do
-  @moduledoc """
-  A struct representing a contact.
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "A contact"
-    field :given_name,         String.t()
-    field :middle_name,        String.t()
-    field :surname,            String.t()
-    field :suffix,             String.t()
-    field :nickname,           String.t()
-    field :birthday,           String.t()
-    field :company_name,       String.t()
-    field :job_title,          String.t()
-    field :manager_name,       String.t()
-    field :office_location,    String.t()
-    field :notes,              String.t()
-    field :emails,             String.t()
-    field :im_addresses,       list()
-    field :physical_addresses, list()
-    field :phone_numbers,      list()
-    field :web_pages,          list()
-    field :group,              String.t()
+    @derive Jason.Encoder
+    typedstruct do
+      @typedoc "A contact"
+      field(:given_name, String.t())
+      field(:middle_name, String.t())
+      field(:surname, String.t())
+      field(:suffix, String.t())
+      field(:nickname, String.t())
+      field(:birthday, String.t())
+      field(:company_name, String.t())
+      field(:job_title, String.t())
+      field(:manager_name, String.t())
+      field(:office_location, String.t())
+      field(:notes, String.t())
+      field(:emails, String.t())
+      field(:im_addresses, list())
+      field(:physical_addresses, list())
+      field(:phone_numbers, list())
+      field(:web_pages, list())
+      field(:group, String.t())
+    end
   end
-
 end
 
 defmodule ExNylas.Contact.Group do
@@ -69,13 +68,12 @@ defmodule ExNylas.Contact.Group do
 
   typedstruct do
     @typedoc "A contact group"
-    field :id,         String.t()
-    field :object,     String.t()
-    field :account_id, String.t()
-    field :name,       String.t()
-    field :path,       String.t()
+    field(:id, String.t())
+    field(:object, String.t())
+    field(:account_id, String.t())
+    field(:name, String.t())
+    field(:path, String.t())
   end
-
 end
 
 defmodule ExNylas.Contacts do
@@ -168,5 +166,4 @@ defmodule ExNylas.Contacts do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

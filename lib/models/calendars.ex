@@ -6,30 +6,29 @@ defmodule ExNylas.Calendar do
 
   typedstruct do
     @typedoc "A calendar"
-    field :id,           String.t()
-    field :object,       String.t()
-    field :account_id,   String.t()
-    field :name,         String.t()
-    field :description,  String.t()
-    field :read_only,    boolean()
+    field(:id, String.t())
+    field(:object, String.t())
+    field(:account_id, String.t())
+    field(:name, String.t())
+    field(:description, String.t())
+    field(:read_only?, boolean())
   end
 
-end
+  defmodule Build do
+    @moduledoc """
+    A struct representing a calendar.
+    """
+    use TypedStruct
 
-defmodule ExNylas.Calendar.Build do
-  @moduledoc """
-  A struct representing a calendar.
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "A calendar"
-    field :name,         String.t(), enforce: true
-    field :description,  String.t()
-    field :location,     String.t()
-    field :timezone,     String.t()
+    @derive Jason.Encoder
+    typedstruct do
+      @typedoc "A calendar"
+      field(:name, String.t(), enforce: true)
+      field(:description, String.t())
+      field(:location, String.t())
+      field(:timezone, String.t())
+    end
   end
-
 end
 
 defmodule ExNylas.Calendar.Availability do
@@ -40,10 +39,9 @@ defmodule ExNylas.Calendar.Availability do
 
   typedstruct do
     @typedoc "Calendar availability"
-    field :object,    String.t()
-    field :timeslots, list()
+    field(:object, String.t())
+    field(:timeslots, list())
   end
-
 end
 
 defmodule ExNylas.Calendar.FreeBusy do
@@ -54,11 +52,10 @@ defmodule ExNylas.Calendar.FreeBusy do
 
   typedstruct do
     @typedoc "A calendar free busy"
-    field :object,    String.t()
-    field :email,     String.t()
-    field :timeslots, list()
+    field(:object, String.t())
+    field(:email, String.t())
+    field(:timeslots, list())
   end
-
 end
 
 defmodule ExNylas.Calendars do
@@ -154,5 +151,4 @@ defmodule ExNylas.Calendars do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

@@ -6,58 +6,57 @@ defmodule ExNylas.Event do
 
   typedstruct do
     @typedoc "A event"
-    field :id,                  String.t()
-    field :object,              String.t()
-    field :account_id,          String.t()
-    field :calendar_id,         String.t()
-    field :message_id,          String.t()
-    field :title,               String.t()
-    field :description,         String.t()
-    field :owner,               String.t()
-    field :participants,        list()
-    field :read_only,           boolean()
-    field :location,            String.t()
-    field :when,                map()
-    field :start,               String.t()
-    field :end,                 String.t()
-    field :busy,                boolean()
-    field :status,              String.t()
-    field :ical_uid,            String.t()
-    field :master_event_id,     String.t()
-    field :original_start_time, non_neg_integer()
+    field(:id, String.t())
+    field(:object, String.t())
+    field(:account_id, String.t())
+    field(:calendar_id, String.t())
+    field(:message_id, String.t())
+    field(:title, String.t())
+    field(:description, String.t())
+    field(:owner, String.t())
+    field(:participants, list())
+    field(:read_only, boolean())
+    field(:location, String.t())
+    field(:when, map())
+    field(:start, String.t())
+    field(:end, String.t())
+    field(:busy, boolean())
+    field(:status, String.t())
+    field(:ical_uid, String.t())
+    field(:master_event_id, String.t())
+    field(:original_start_time, non_neg_integer())
   end
 
-end
+  defmodule Build do
+    @moduledoc """
+    A struct representing a event.
+    """
+    use TypedStruct
 
-defmodule ExNylas.Event.Build do
-  @moduledoc """
-  A struct representing a event.
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "A event"
-    field :calendar_id,  String.t(), enforce: true
-    field :when,         map(),      enforce: true
-    field :title,        String.t()
-    field :description,  String.t()
-    field :location,     String.t()
-    field :participants, list()
-    field :busy,         boolean()
-    field :recurrance,   map()
+    @derive Jason.Encoder
+    typedstruct do
+      @typedoc "A event"
+      field(:calendar_id, String.t(), enforce: true)
+      field(:when, map(), enforce: true)
+      field(:title, String.t())
+      field(:description, String.t())
+      field(:location, String.t())
+      field(:participants, list())
+      field(:busy, boolean())
+      field(:recurrance, map())
+    end
   end
 
-end
+  defmodule RSVP do
+    @moduledoc """
+    A struct representing an event RSVP.
+    """
+    use TypedStruct
 
-defmodule ExNylas.Event.RSVP do
-  @moduledoc """
-  A struct representing an event RSVP.
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "An event RSVP"
-    field :id, String.t()
+    typedstruct do
+      @typedoc "An event RSVP"
+      field(:id, String.t())
+    end
   end
 
 end
@@ -135,7 +134,7 @@ defmodule ExNylas.Events do
         "#{conn.api_server}/send-rsvp",
         body,
         API.header_bearer(conn),
-        [params: params]
+        params: params
       )
 
     case res do
@@ -162,5 +161,4 @@ defmodule ExNylas.Events do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

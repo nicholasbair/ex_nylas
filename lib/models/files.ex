@@ -6,17 +6,16 @@ defmodule ExNylas.File do
 
   typedstruct do
     @typedoc "A file"
-    field :id,                  String.t()
-    field :object,              String.t()
-    field :account_id,          String.t()
-    field :content_type,        String.t()
-    field :size,                non_neg_integer()
-    field :filename,            String.t()
-    field :message_ids,         list()
-    field :content_id,          String.t()
-    field :content_disposition, String.t()
+    field(:id, String.t())
+    field(:object, String.t())
+    field(:account_id, String.t())
+    field(:content_type, String.t())
+    field(:size, non_neg_integer())
+    field(:filename, String.t())
+    field(:message_ids, list())
+    field(:content_id, String.t())
+    field(:content_disposition, String.t())
   end
-
 end
 
 defmodule ExNylas.Files do
@@ -109,5 +108,4 @@ defmodule ExNylas.Files do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

@@ -17,7 +17,7 @@ defmodule ExNylas do
     # Not all objects support both put and post
     # Thus need to differentiate using the update/create key here
     update: %{name: :save, http_method: :put},
-    create: %{name: :save, http_method: :post},
+    create: %{name: :save, http_method: :post}
   }
 
   defp generate_funcs(opts) do
@@ -69,7 +69,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, header_type, use_client_url) do
+  defp generate_api(
+         %{http_method: :get, name: :first} = config,
+         object,
+         struct_name,
+         header_type,
+         use_client_url
+       ) do
     quote do
       @doc """
       Get the first #{unquote(struct_name)}.
@@ -125,7 +131,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, header_type, use_client_url) do
+  defp generate_api(
+         %{http_method: :get, name: :search} = config,
+         object,
+         struct_name,
+         header_type,
+         use_client_url
+       ) do
     quote do
       @doc """
       Search for #{unquote(struct_name)}(s) based on provided `search_text`.
@@ -181,7 +193,14 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: method, name: name} = config, object, struct_name, header_type, use_client_url) when name in [:find, :delete] and method in [:get, :delete] do
+  defp generate_api(
+         %{http_method: method, name: name} = config,
+         object,
+         struct_name,
+         header_type,
+         use_client_url
+       )
+       when name in [:find, :delete] and method in [:get, :delete] do
     quote do
       @doc """
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(struct_name)}.
@@ -236,7 +255,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get} = config, object, struct_name, header_type, use_client_url) do
+  defp generate_api(
+         %{http_method: :get} = config,
+         object,
+         struct_name,
+         header_type,
+         use_client_url
+       ) do
     quote do
       @doc """
       Fetch #{unquote(struct_name)}(s), optionally provide query `params`.
@@ -292,7 +317,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :put} = config, object, struct_name, header_type, use_client_url) do
+  defp generate_api(
+         %{http_method: :put} = config,
+         object,
+         struct_name,
+         header_type,
+         use_client_url
+       ) do
     quote do
       @doc """
       Update a(n) #{unquote(struct_name)}.
@@ -337,7 +368,7 @@ defmodule ExNylas do
       Update a(n) #{unquote(struct_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `id`)!
+          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`body`, `id`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, changeset, id) do
         case unquote(config.name)(conn, changeset, id) do
@@ -348,7 +379,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :post} = config, object, struct_name, header_type, use_client_url) do
+  defp generate_api(
+         %{http_method: :post} = config,
+         object,
+         struct_name,
+         header_type,
+         use_client_url
+       ) do
     quote do
       @doc """
       Create a(n) #{unquote(struct_name)}.
@@ -409,5 +446,4 @@ defmodule ExNylas do
       unquote(generate_funcs(opts))
     end
   end
-
 end

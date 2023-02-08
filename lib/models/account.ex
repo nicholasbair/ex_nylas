@@ -6,15 +6,15 @@ defmodule ExNylas.Account do
 
   typedstruct do
     @typedoc "An account"
-    field :id,                String.t()
-    field :account_id,        String.t()
-    field :object,            String.t()
-    field :name,              String.t()
-    field :email_address,     String.t()
-    field :provider,          String.t()
-    field :organization_unit, String.t()
-    field :sync_state,        String.t()
-    field :linked_at,         integer()
+    field(:id, String.t())
+    field(:account_id, String.t())
+    field(:object, String.t())
+    field(:name, String.t())
+    field(:email_address, String.t())
+    field(:provider, String.t())
+    field(:organization_unit, String.t())
+    field(:sync_state, String.t())
+    field(:linked_at, integer())
   end
 
   alias ExNylas.API
@@ -36,7 +36,7 @@ defmodule ExNylas.Account do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Account)}
+        {:ok, TF.transform(body, __MODULE__)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}
@@ -58,5 +58,4 @@ defmodule ExNylas.Account do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

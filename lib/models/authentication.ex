@@ -6,13 +6,13 @@ defmodule ExNylas.Authentication do
 
   typedstruct do
     @typedoc "Authentication options"
-    field :login_hint,         String.t()
-    field :redirect_uri,       String.t(), enforce: true
-    field :state,              String.t()
-    field :scopes,             list()
-    field :response_type,      String.t(), default: "code"
-    field :provider,           String.t()
-    field :redirect_on_error?, boolean()
+    field(:login_hint, String.t())
+    field(:redirect_uri, String.t(), enforce: true)
+    field(:state, String.t())
+    field(:scopes, list())
+    field(:response_type, String.t(), default: "code")
+    field(:provider, String.t())
+    field(:redirect_on_error?, boolean())
   end
 
   alias ExNylas.API
@@ -158,6 +158,10 @@ defmodule ExNylas.Authentication do
   end
 
   defp parse_options({_key, nil}), do: ""
-  defp parse_options({:scopes, scopes}) when is_list(scopes), do: "&scopes=#{Enum.join(scopes, ",")}"
+
+  defp parse_options({:scopes, scopes}) when is_list(scopes) do
+    "&scopes=#{Enum.join(scopes, ",")}"
+  end
+
   defp parse_options({key, val}), do: "&#{key}=#{val}"
 end

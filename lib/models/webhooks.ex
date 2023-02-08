@@ -6,29 +6,28 @@ defmodule ExNylas.Webhook do
 
   typedstruct do
     @typedoc "A webhook"
-    field :application_id, String.t()
-    field :callback_url,   String.t()
-    field :id,             String.t()
-    field :state,          String.t()
-    field :triggers,       list()
-    field :version,        String.t()
+    field(:application_id, String.t())
+    field(:callback_url, String.t())
+    field(:id, String.t())
+    field(:state, String.t())
+    field(:triggers, list())
+    field(:version, String.t())
   end
 
-end
+  defmodule Build do
+    @moduledoc """
+    A struct representing a webhook.
+    """
+    use TypedStruct
 
-defmodule ExNylas.Webhook.Build do
-  @moduledoc """
-  A struct representing a webhook.
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "A webhook"
-    field :state,        String.t()
-    field :callback_url, String.t(), enforce: true
-    field :triggers,     list(),     enforce: true
+    @derive Jason.Encoder
+    typedstruct do
+      @typedoc "A webhook"
+      field(:state, String.t())
+      field(:callback_url, String.t(), enforce: true)
+      field(:triggers, list(), enforce: true)
+    end
   end
-
 end
 
 defmodule ExNylas.Webhooks do
@@ -42,5 +41,4 @@ defmodule ExNylas.Webhooks do
     header_type: :header_basic,
     use_client_url: true,
     include: [:list, :first, :find, :delete, :build, :update, :create]
-
 end
