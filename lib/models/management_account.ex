@@ -107,12 +107,12 @@ defmodule ExNylas.ManagementAccounts do
   Downgrade the management account.
 
   Example
-      {:ok, result} = conn |> ExNylas.ManagementAccounts.downgrade()
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.downgrade(`id`)
   """
-  def downgrade(%Conn{} = conn) do
+  def downgrade(%Conn{} = conn, account_id) do
     res =
       API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/downgrade",
+        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/downgrade",
         %{},
         API.header_basic(conn)
       )
@@ -133,10 +133,10 @@ defmodule ExNylas.ManagementAccounts do
   Downgrade the management account.
 
   Example
-      result = conn |> ExNylas.ManagementAccounts.downgrade!()
+      result = conn |> ExNylas.ManagementAccounts.downgrade!(`id`)
   """
-  def downgrade!(%Conn{} = conn) do
-    case downgrade(conn) do
+  def downgrade!(%Conn{} = conn, account_id) do
+    case downgrade(conn, account_id) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
@@ -146,12 +146,12 @@ defmodule ExNylas.ManagementAccounts do
   Upgrade the management account.
 
   Example
-      {:ok, result} = conn |> ExNylas.ManagementAccounts.upgrade()
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.upgrade(`id`)
   """
-  def upgrade(%Conn{} = conn) do
+  def upgrade(%Conn{} = conn, account_id) do
     res =
       API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/upgrade",
+        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/upgrade",
         %{},
         API.header_basic(conn)
       )
@@ -172,10 +172,10 @@ defmodule ExNylas.ManagementAccounts do
   Upgrade the management account.
 
   Example
-      result = conn |> ExNylas.ManagementAccounts.upgrade!()
+      result = conn |> ExNylas.ManagementAccounts.upgrade!(`id`)
   """
-  def upgrade!(%Conn{} = conn) do
-    case upgrade(conn) do
+  def upgrade!(%Conn{} = conn, account_id) do
+    case upgrade(conn, account_id) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
