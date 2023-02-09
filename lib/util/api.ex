@@ -7,13 +7,6 @@ defmodule ExNylas.API do
   alias ExNylas.Connection, as: Conn
 
   def process_request_body(body) when is_map(body) or is_struct(body), do: Jason.encode!(body)
-  # def process_request_body(body) when is_map(body), do: Jason.encode!(body)
-
-  # def process_request_body(body) when is_struct(body) do
-  #   body
-  #   |> Map.from_struct()
-  #   |> Jason.encode!()
-  # end
 
   def process_request_body(body), do: body
 
