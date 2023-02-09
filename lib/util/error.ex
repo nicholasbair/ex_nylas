@@ -10,5 +10,4 @@ defmodule ExNylasError do
     msg = "Error: #{inspect(value)}"
     %ExNylasError{message: msg}
   end
-
 end

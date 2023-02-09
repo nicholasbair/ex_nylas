@@ -1,4 +1,4 @@
-defmodule Models.Job do
+defmodule ExNylas.Job do
   @moduledoc """
   A struct representing a job.
   """
@@ -6,19 +6,18 @@ defmodule Models.Job do
 
   typedstruct do
     @typedoc "A job"
-    field :account_id,    String.t()
-    field :action,        String.t()
-    field :created_at,    non_neg_integer()
-    field :id,            String.t()
-    field :job_status_id, String.t()
-    field :object,        String.t()
-    field :status,        String.t()
-    field :reason,        String.t()
+    field(:account_id, String.t())
+    field(:action, String.t())
+    field(:created_at, non_neg_integer())
+    field(:id, String.t())
+    field(:job_status_id, String.t())
+    field(:object, String.t())
+    field(:status, String.t())
+    field(:reason, String.t())
   end
-
 end
 
-defmodule Models.Jobs do
+defmodule ExNylas.Jobs do
   @moduledoc """
   Interface for Nylas job.
   """
@@ -27,5 +26,4 @@ defmodule Models.Jobs do
     object: "jobs",
     struct: ExNylas.Job,
     include: [:list, :first, :find]
-
 end

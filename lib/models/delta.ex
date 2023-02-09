@@ -6,7 +6,7 @@ defmodule ExNylas.Delta do
 
   typedstruct do
     @typedoc "A delta/cursor"
-    field :cursor, String.t()
+    field(:cursor, String.t())
   end
 
   alias ExNylas.API
@@ -29,7 +29,7 @@ defmodule ExNylas.Delta do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Delta)}
+        {:ok, TF.transform(body, __MODULE__)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}
@@ -62,11 +62,8 @@ defmodule ExNylas.Delta do
     API.get(
       "#{conn.api_server}/delta/streaming?cursor=#{cursor}",
       API.header_bearer(conn),
-      [
-        stream_to: stream_to,
-        timeout: :infinity
-      ]
+      stream_to: stream_to,
+      timeout: :infinity
     )
   end
-
 end

@@ -18,7 +18,7 @@ defmodule ExNylasTest do
     "ManagementAccounts",
     "Messages",
     "Threads",
-    "Webhooks",
+    "Webhooks"
   ]
 
   defp build_conn do
@@ -46,12 +46,11 @@ defmodule ExNylasTest do
         )
 
       if ok == :error do
-        IO.puts "Error on #{unquote(m)}, message printed below"
-        IO.inspect res
+        IO.puts("Error on #{unquote(m)}, message printed below")
+        IO.inspect(res)
       end
 
       assert ok == :ok
     end
   end)
-
 end

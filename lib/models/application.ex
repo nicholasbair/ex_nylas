@@ -5,9 +5,9 @@ defmodule ExNylas.Application do
   use TypedStruct
 
   typedstruct do
-    field :application_name, String.t()
-    field :icon_url,         String.t()
-    field :redirect_uris,    list()
+    field(:application_name, String.t())
+    field(:icon_url, String.t())
+    field(:redirect_uris, list())
   end
 
   alias ExNylas.API
@@ -29,7 +29,7 @@ defmodule ExNylas.Application do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Application)}
+        {:ok, TF.transform(body, __MODULE__)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}
@@ -90,5 +90,4 @@ defmodule ExNylas.Application do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

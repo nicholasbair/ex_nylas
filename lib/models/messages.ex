@@ -6,24 +6,24 @@ defmodule ExNylas.Message do
 
   typedstruct do
     @typedoc "A message"
-    field :account_id, String.t()
-    field :bcc,        list()
-    field :body,       String.t()
-    field :cc,         list()
-    field :date,       non_neg_integer()
-    field :events,     list()
-    field :files,      list()
-    field :from,       list()
-    field :id,         String.t()
-    field :labels,     list()
-    field :object,     String.t()
-    field :reply_to,   list()
-    field :snippet,    String.t()
-    field :starred,    boolean()
-    field :subject,    String.t()
-    field :thread_id,  String.t()
-    field :to,         list()
-    field :unread,     boolean()
+    field(:account_id, String.t())
+    field(:bcc, list())
+    field(:body, String.t())
+    field(:cc, list())
+    field(:date, non_neg_integer())
+    field(:events, list())
+    field(:files, list())
+    field(:from, list())
+    field(:id, String.t())
+    field(:labels, list())
+    field(:object, String.t())
+    field(:reply_to, list())
+    field(:snippet, String.t())
+    field(:starred, boolean())
+    field(:subject, String.t())
+    field(:thread_id, String.t())
+    field(:to, list())
+    field(:unread, boolean())
   end
 
 end
@@ -77,5 +77,4 @@ defmodule ExNylas.Messages do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

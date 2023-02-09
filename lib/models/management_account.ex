@@ -6,16 +6,15 @@ defmodule ExNylas.ManagementAccount do
 
   typedstruct do
     @typedoc "A management account"
-    field :id,                  String.t()
-    field :billing_state,       String.t()
-    field :email_address,       String.t()
-    field :namespace_id,        String.t()
-    field :provider,            String.t()
-    field :sync_state,          String.t()
-    field :trial,               boolean()
-    field :authentication_type, String.t()
+    field(:id, String.t())
+    field(:billing_state, String.t())
+    field(:email_address, String.t())
+    field(:namespace_id, String.t())
+    field(:provider, String.t())
+    field(:sync_state, String.t())
+    field(:trial, boolean())
+    field(:authentication_type, String.t())
   end
-
 end
 
 defmodule ExNylas.ManagementAccount.Downgrade do
@@ -26,9 +25,8 @@ defmodule ExNylas.ManagementAccount.Downgrade do
 
   typedstruct do
     @typedoc "A management account downgrade"
-    field :success, boolean()
+    field(:success, boolean())
   end
-
 end
 
 defmodule ExNylas.ManagementAccount.Upgrade do
@@ -39,9 +37,8 @@ defmodule ExNylas.ManagementAccount.Upgrade do
 
   typedstruct do
     @typedoc "A management account upgrade"
-    field :success, boolean()
+    field(:success, boolean())
   end
-
 end
 
 defmodule ExNylas.ManagementAccount.RevokeAll do
@@ -52,9 +49,8 @@ defmodule ExNylas.ManagementAccount.RevokeAll do
 
   typedstruct do
     @typedoc "A management account revoke all"
-    field :success, boolean()
+    field(:success, boolean())
   end
-
 end
 
 defmodule ExNylas.ManagementAccount.IPAddresses do
@@ -65,10 +61,9 @@ defmodule ExNylas.ManagementAccount.IPAddresses do
 
   typedstruct do
     @typedoc "A management account IP addresses"
-    field :ip_addresses, list()
-    field :updated_at,   non_neg_integer()
+    field(:ip_addresses, list())
+    field(:updated_at, non_neg_integer())
   end
-
 end
 
 defmodule ExNylas.ManagementAccount.TokenInfo do
@@ -79,12 +74,11 @@ defmodule ExNylas.ManagementAccount.TokenInfo do
 
   typedstruct do
     @typedoc "A management account token info"
-    field :created_at, non_neg_integer()
-    field :scopes,     String.t()
-    field :state,      String.t()
-    field :updated_at, non_neg_integer()
+    field(:created_at, non_neg_integer())
+    field(:scopes, String.t())
+    field(:state, String.t())
+    field(:updated_at, non_neg_integer())
   end
-
 end
 
 defmodule ExNylas.ManagementAccounts do
@@ -296,5 +290,4 @@ defmodule ExNylas.ManagementAccounts do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

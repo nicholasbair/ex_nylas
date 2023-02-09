@@ -6,28 +6,27 @@ defmodule ExNylas.Thread do
 
   typedstruct do
     @typedoc "A thread"
-    field :subject,                         String.t()
-    field :participants,                    list()
-    field :last_message_timestamp,          non_neg_integer()
-    field :last_message_received_timestamp, non_neg_integer()
-    field :last_message_sent_timestamp,     non_neg_integer()
-    field :first_message_timestamp,         non_neg_integer()
-    field :snippet,                         String.t()
-    field :unread,                          boolean()
-    field :starred,                         boolean()
-    field :has_attachments,                 boolean()
-    field :version,                         String.t()
-    field :folders,                         list()
-    field :labels,                          list()
-    field :message_ids,                     list()
-    field :draft_ids,                       list()
-    field :messages,                        list()
-    field :drafts,                          list()
-    field :id,                              String.t()
-    field :object,                          String.t()
-    field :account_id,                      String.t()
+    field(:subject, String.t())
+    field(:participants, list())
+    field(:last_message_timestamp, non_neg_integer())
+    field(:last_message_received_timestamp, non_neg_integer())
+    field(:last_message_sent_timestamp, non_neg_integer())
+    field(:first_message_timestamp, non_neg_integer())
+    field(:snippet, String.t())
+    field(:unread, boolean())
+    field(:starred, boolean())
+    field(:has_attachments, boolean())
+    field(:version, String.t())
+    field(:folders, list())
+    field(:labels, list())
+    field(:message_ids, list())
+    field(:draft_ids, list())
+    field(:messages, list())
+    field(:drafts, list())
+    field(:id, String.t())
+    field(:object, String.t())
+    field(:account_id, String.t())
   end
-
 end
 
 defmodule ExNylas.Threads do
@@ -39,5 +38,4 @@ defmodule ExNylas.Threads do
     object: "threads",
     struct: ExNylas.Thread,
     include: [:list, :first, :search, :find, :update]
-
 end

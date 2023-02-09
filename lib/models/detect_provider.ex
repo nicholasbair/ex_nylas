@@ -6,25 +6,25 @@ defmodule ExNylas.DetectProvider do
 
   typedstruct do
     @typedoc "Detect provider"
-    field :auth_name,     String.t()
-    field :detected,      boolean()
-    field :email_address, String.t()
-    field :is_imap,       boolean()
-    field :provider_name, String.t()
+    field(:auth_name, String.t())
+    field(:detected, boolean())
+    field(:email_address, String.t())
+    field(:is_imap, boolean())
+    field(:provider_name, String.t())
   end
 
   defmodule Build do
     @moduledoc """
-    A struct representing provider detection payload for a given email address.
+    A struct representing provider detection request payload for a given email address.
     """
     use TypedStruct
 
     @derive Jason.Encoder
-    typedstruct do
+    typedstruct enforce: true do
       @typedoc "Detect provider"
-      field :client_id,     String.t(), enforce: true
-      field :client_secret, String.t(), enforce: true
-      field :email_address, String.t(), enforce: true
+      field(:client_id, String.t())
+      field(:client_secret, String.t())
+      field(:email_address, String.t())
     end
   end
 
@@ -42,7 +42,11 @@ defmodule ExNylas.DetectProvider do
     res =
       API.post(
         "#{conn.api_server}/connect/detect-provider",
-        %ExNylas.DetectProvider.Build{client_id: conn.client_id, client_secret: conn.client_secret, email_address: email_address},
+        %ExNylas.DetectProvider.Build{
+          client_id: conn.client_id,
+          client_secret: conn.client_secret,
+          email_address: email_address
+        },
         []
       )
 
@@ -70,5 +74,4 @@ defmodule ExNylas.DetectProvider do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

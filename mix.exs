@@ -21,7 +21,7 @@ defmodule ExNylas.MixProject do
     [
       {:httpoison, "~> 1.7"},
       {:jason, "~> 1.2"},
-      {:typed_struct, "~> 0.2.1"},
+      {:typed_struct, "~> 0.2.1"}
     ]
   end
 end
