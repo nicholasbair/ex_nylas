@@ -36,7 +36,6 @@ defmodule ExNylas.Contact do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A contact"
       field(:given_name, String.t())

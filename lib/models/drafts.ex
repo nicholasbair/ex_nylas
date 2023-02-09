@@ -35,7 +35,6 @@ defmodule ExNylas.Draft do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A draft"
       field(:subject, String.t())
@@ -50,18 +49,59 @@ defmodule ExNylas.Draft do
   end
 end
 
-
-
 defmodule ExNylas.Drafts do
   @moduledoc """
   Interface for Nylas Drafts.
   """
-
-  # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
-  import Kernel, except: [send: 2]
+  alias ExNylas.API
+  alias ExNylas.Connection, as: Conn
+  alias ExNylas.Transform, as: TF
 
   use ExNylas,
     object: "drafts",
     struct: ExNylas.Draft,
-    include: [:list, :first, :find, :delete, :send, :build, :create, :update]
+    include: [:list, :first, :find, :delete, :build, :create, :update]
+
+  @doc """
+  Send a draft.
+
+  Example
+      {:ok, sent_message} = conn |> ExNylas.Drafts.send(`draft_id`, `version`)
+  """
+  def send(%Conn{} = conn, draft_id, version, tracking \\ %{}) do
+    res =
+      API.post(
+        "#{conn.api_server}/send",
+        %{
+          draft_id: draft_id,
+          version: version,
+          tracking: tracking
+        },
+        API.header_bearer(conn)
+      )
+
+    case res do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, TF.transform(body, ExNylas.Message)}
+
+      {:ok, %HTTPoison.Response{body: body}} ->
+        {:error, body}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, reason}
+    end
+  end
+
+  @doc """
+  Send a draft.
+
+  Example
+      {:ok, sent_message} = conn |> ExNylas.Drafts.send!(`draft_id`, `version`)
+  """
+  def send!(%Conn{} = conn, draft_id, version, tracking \\ %{}) do
+    case send(conn, draft_id, version, tracking) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
 end
