@@ -27,37 +27,17 @@ defmodule ExNylas.Event do
     field(:original_start_time, non_neg_integer())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing a event.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "A event"
-      field(:calendar_id, String.t(), enforce: true)
-      field(:when, map(), enforce: true)
-      field(:title, String.t())
-      field(:description, String.t())
-      field(:location, String.t())
-      field(:participants, list())
-      field(:busy, boolean())
-      field(:recurrance, map())
-    end
+  typedstruct module: Build do
+    @typedoc "A struct representing the create event request payload."
+    field(:calendar_id, String.t(), enforce: true)
+    field(:when, map(), enforce: true)
+    field(:title, String.t())
+    field(:description, String.t())
+    field(:location, String.t())
+    field(:participants, list())
+    field(:busy, boolean())
+    field(:recurrance, map())
   end
-
-  defmodule RSVP do
-    @moduledoc """
-    A struct representing an event RSVP.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "An event RSVP"
-      field(:id, String.t())
-    end
-  end
-
 end
 
 defmodule ExNylas.Events do
@@ -68,7 +48,6 @@ defmodule ExNylas.Events do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
-  alias ExNylas.Event.RSVP
   alias ExNylas.Event
 
   use ExNylas,
@@ -77,12 +56,12 @@ defmodule ExNylas.Events do
     include: [:list, :first, :find, :build]
 
   @doc """
-  Create/update for an event, include `notify_participants` in the params map (optional)
+  Create/update for an event
 
   Example
       {:ok, binary} = conn |> ExNylas.Events.save(`body`)
   """
-  def save(%Conn{} = conn, body, params \\ %{}) do
+  def save(%Conn{} = conn, body, notify_participants \\ true) do
     {method, url} =
       case body.id do
         nil -> {:post, "#{conn.api_server}/events"}
@@ -93,7 +72,7 @@ defmodule ExNylas.Events do
       apply(
         API,
         method,
-        [url, body, API.header_bearer(conn), [params: params]]
+        [url, body, API.header_bearer(conn) ++ ["content-type": "application/json"], [params: %{notify_participants: notify_participants}]]
       )
 
     case res do
@@ -109,36 +88,35 @@ defmodule ExNylas.Events do
   end
 
   @doc """
-  Create/update for an event, include `notify_participants` in the params map (optional)
+  Create/update for an event
 
   Example
       binary = conn |> ExNylas.Events.save!(`body`)
   """
-  def save!(%Conn{} = conn, body, params \\ %{}) do
-    case save(conn, body, params) do
+  def save!(%Conn{} = conn, body, notify_participants \\ true) do
+    case save(conn, body, notify_participants) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
   end
 
   @doc """
-  Send an RSVP for a given event, include `notify_participants` in the params map (optional)
+  Send an RSVP for a given event
 
   Example
-      {:ok, binary} = conn |> ExNylas.Events.rsvp(`body`)
+      {:ok, binary} = conn |> ExNylas.Events.rsvp(`event_id`, `status`, `account_id`)
   """
-  def rsvp(%Conn{} = conn, body, params \\ %{}) do
+  def rsvp(%Conn{} = conn, event_id, status, account_id) do
     res =
       API.post(
         "#{conn.api_server}/send-rsvp",
-        body,
-        API.header_bearer(conn),
-        params: params
+        %{event_id: event_id, status: status, account_id: account_id},
+        API.header_bearer(conn) ++ ["content-type": "application/json"]
       )
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, RSVP)}
+        {:ok, TF.transform(body, Event)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}
@@ -149,13 +127,13 @@ defmodule ExNylas.Events do
   end
 
   @doc """
-  Send an RSVP for a given event, include `notify_participants` in the params map (optional)
+  Send an RSVP for a given event
 
   Example
-      binary = conn |> ExNylas.Events.rsvp!(`body`)
+      binary = conn |> ExNylas.Events.rsvp!(`event_id`, `status`, `account_id`)
   """
-  def rsvp!(%Conn{} = conn, body, params \\ %{}) do
-    case rsvp(conn, body, params) do
+  def rsvp!(%Conn{} = conn, event_id, status, account_id) do
+    case rsvp(conn, event_id, status, account_id) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end

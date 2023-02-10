@@ -13,16 +13,9 @@ defmodule ExNylas.Folder do
     field(:account_id, String.t())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing a folder.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "A folder"
-      field(:display_name, String.t(), enforce: true)
-    end
+  typedstruct module: Build do
+    @typedoc "A struct representing the create folder request payload."
+    field(:display_name, String.t(), enforce: true)
   end
 end
 

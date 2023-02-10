@@ -1,5 +1,4 @@
 defmodule ExNylas.Authentication do
-
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
@@ -107,7 +106,7 @@ defmodule ExNylas.Authentication do
           grant_type: "authorization_code",
           code: code
         },
-        API.header_basic(conn)
+        API.header_basic(conn) ++ ["content-type": "application/json"]
       )
 
     case res do
@@ -146,7 +145,7 @@ defmodule ExNylas.Authentication do
       API.post(
         "#{conn.api_server}/oauth/revoke",
         %{},
-        API.header_basic(conn.access_token, conn.api_version)
+        API.header_basic(conn.access_token, conn.api_version) ++ ["content-type": "application/json"]
       )
 
     case res do

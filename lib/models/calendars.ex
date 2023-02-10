@@ -14,19 +14,12 @@ defmodule ExNylas.Calendar do
     field(:read_only, boolean())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing a calendar.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "A calendar"
-      field(:name, String.t(), enforce: true)
-      field(:description, String.t())
-      field(:location, String.t())
-      field(:timezone, String.t())
-    end
+  typedstruct module: Build do
+    @typedoc "A struct representing the create calendar request payload."
+    field(:name, String.t(), enforce: true)
+    field(:description, String.t())
+    field(:location, String.t())
+    field(:timezone, String.t())
   end
 end
 
@@ -84,7 +77,7 @@ defmodule ExNylas.Calendars do
       API.post(
         "#{conn.api_server}/calendars/availability",
         body,
-        API.header_bearer(conn)
+        API.header_bearer(conn) ++ ["content-type": "application/json"]
       )
 
     case res do
@@ -123,7 +116,7 @@ defmodule ExNylas.Calendars do
       API.post(
         "#{conn.api_server}/calendars/free-busy",
         body,
-        API.header_bearer(conn)
+        API.header_bearer(conn) ++ ["content-type": "application/json"]
       )
 
     case res do

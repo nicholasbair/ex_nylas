@@ -100,7 +100,7 @@ defmodule ExNylas do
             [
               url,
               headers,
-              [params: params]
+              [params: Map.put(params, :limit, 1)]
             ]
           )
 
@@ -332,7 +332,7 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `id`)
       """
       def unquote(config.name)(%Conn{} = conn, changeset, id) do
-        headers = apply(ExNylas.Api, unquote(header_type), [conn])
+        headers = apply(ExNylas.Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_client_url) do
@@ -394,7 +394,7 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`)
       """
       def unquote(config.name)(%Conn{} = conn, body) do
-        headers = apply(ExNylas.API, unquote(header_type), [conn])
+        headers = apply(ExNylas.API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_client_url) do

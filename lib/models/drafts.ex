@@ -24,28 +24,21 @@ defmodule ExNylas.Draft do
     field(:files, list())
     field(:events, list())
     field(:labels, list())
-    field(:version, String.t())
+    field(:version, non_neg_integer())
     field(:job_status_id, String.t())
     field(:reply_to_message_id, String.t())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing a draft.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "A draft"
-      field(:subject, String.t())
-      field(:to, list())
-      field(:cc, list())
-      field(:bcc, list())
-      field(:from, list())
-      field(:reply_to, list())
-      field(:reply_to_message_id, String.t())
-      field(:file_ids, list())
-    end
+  typedstruct module: Build do
+    @typedoc "A struct representing the create draft request payload."
+    field(:subject, String.t())
+    field(:to, list())
+    field(:cc, list())
+    field(:bcc, list())
+    field(:from, list())
+    field(:reply_to, list())
+    field(:reply_to_message_id, String.t())
+    field(:file_ids, list())
   end
 end
 
@@ -77,7 +70,7 @@ defmodule ExNylas.Drafts do
           version: version,
           tracking: tracking
         },
-        API.header_bearer(conn)
+        API.header_bearer(conn) ++ ["content-type": "application/json"]
       )
 
     case res do
@@ -96,7 +89,7 @@ defmodule ExNylas.Drafts do
   Send a draft.
 
   Example
-      {:ok, sent_message} = conn |> ExNylas.Drafts.send!(`draft_id`, `version`)
+      sent_message = conn |> ExNylas.Drafts.send!(`draft_id`, `version`)
   """
   def send!(%Conn{} = conn, draft_id, version, tracking \\ %{}) do
     case send(conn, draft_id, version, tracking) do
