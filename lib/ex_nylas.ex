@@ -16,7 +16,7 @@ defmodule ExNylas do
     build: %{name: :build},
     # Not all objects support both put and post
     # Thus need to differentiate using the update/create key here
-    update: %{name: :save, http_method: :put},
+    update: %{name: :update, http_method: :put},
     create: %{name: :save, http_method: :post}
   }
 
