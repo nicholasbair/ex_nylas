@@ -26,11 +26,13 @@ defmodule ExNylas.Connection do
   Example
       conn = ExNylas.Connection.new("id", "secret", "token")
   """
-  def new(client_id, client_secret, access_token) do
+  def new(client_id, client_secret, access_token, api_server \\ @api_server, api_version \\ @api_version) do
     %ExNylas.Connection{
       client_id: client_id,
       client_secret: client_secret,
-      access_token: access_token
+      access_token: access_token,
+      api_server: api_server,
+      api_version: api_version
     }
   end
 end

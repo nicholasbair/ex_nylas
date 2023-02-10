@@ -33,7 +33,6 @@ defmodule ExNylas.Event do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A event"
       field(:calendar_id, String.t(), enforce: true)

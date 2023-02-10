@@ -1,22 +1,49 @@
 defmodule ExNylas.Authentication do
-  @moduledoc """
-  A struct and interface for Nylas hosted authentication
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "Authentication options"
-    field(:login_hint, String.t())
-    field(:redirect_uri, String.t(), enforce: true)
-    field(:state, String.t())
-    field(:scopes, list())
-    field(:response_type, String.t(), default: "code")
-    field(:provider, String.t())
-    field(:redirect_on_error?, boolean())
-  end
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Transform, as: TF
+
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "Authentication response"
+    field(:access_token, String.t())
+    field(:account_id, String.t())
+    field(:email_address, String.t())
+    field(:provider, list())
+    field(:token_type, String.t())
+  end
+
+  defmodule Options do
+    @moduledoc """
+    A struct and interface for Nylas hosted authentication
+    """
+    use TypedStruct
+
+    typedstruct do
+      @typedoc "Authentication options"
+      field(:login_hint, String.t())
+      field(:redirect_uri, String.t(), enforce: true)
+      field(:state, String.t())
+      field(:scopes, list())
+      field(:response_type, String.t(), default: "code")
+      field(:provider, String.t())
+      field(:redirect_on_error, boolean())
+    end
+
+    def new(login_hint, redirect_uri, state, scopes, response_type, provider, redirect_on_error) do
+      %Options{
+        login_hint: login_hint,
+        redirect_uri: redirect_uri,
+        state: state,
+        scopes: scopes,
+        response_type: response_type,
+        provider: provider,
+        redirect_on_error: redirect_on_error
+      }
+    end
+  end
 
   @doc """
   Returns the URI to send the end user
@@ -31,7 +58,7 @@ defmodule ExNylas.Authentication do
   """
   def get_auth_url(%Conn{} = conn, options) do
     url =
-      "#{conn.api_server}/oauth/authorize?client_id=#{Map.get(conn, :client_id)}"
+      "#{conn.api_server}/oauth/authorize?client_id=#{conn.client_id}"
       |> parse_options(options)
 
     cond do
@@ -85,7 +112,7 @@ defmodule ExNylas.Authentication do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body}
+        {:ok, TF.transform(body, __MODULE__)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}
@@ -148,6 +175,14 @@ defmodule ExNylas.Authentication do
   end
 
   # -- Private --
+  defp parse_options(url, options) when is_struct(options) do
+    st_options =
+      options
+      |> Map.from_struct()
+
+    parse_options(url, st_options)
+  end
+
   defp parse_options(url, options) do
     res =
       options

@@ -20,7 +20,7 @@ defmodule ExNylas.MixProject do
   defp deps do
     [
       {:httpoison, "~> 1.7"},
-      {:jason, "~> 1.2"},
+      {:poison, "~> 5.0"},
       {:typed_struct, "~> 0.2.1"}
     ]
   end

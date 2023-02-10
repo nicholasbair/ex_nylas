@@ -11,7 +11,7 @@ defmodule ExNylas.Calendar do
     field(:account_id, String.t())
     field(:name, String.t())
     field(:description, String.t())
-    field(:read_only?, boolean())
+    field(:read_only, boolean())
   end
 
   defmodule Build do
@@ -20,7 +20,6 @@ defmodule ExNylas.Calendar do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A calendar"
       field(:name, String.t(), enforce: true)

@@ -20,7 +20,6 @@ defmodule ExNylas.Webhook do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A webhook"
       field(:state, String.t())

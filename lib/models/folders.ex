@@ -19,7 +19,6 @@ defmodule ExNylas.Folder do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A folder"
       field(:display_name, String.t(), enforce: true)

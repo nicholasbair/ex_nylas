@@ -19,7 +19,6 @@ defmodule ExNylas.Label do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct do
       @typedoc "A label"
       field(:display_name, String.t(), enforce: true)

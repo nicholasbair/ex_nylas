@@ -19,7 +19,6 @@ defmodule ExNylas.DetectProvider do
     """
     use TypedStruct
 
-    @derive Jason.Encoder
     typedstruct enforce: true do
       @typedoc "Detect provider"
       field(:client_id, String.t())
