@@ -24,7 +24,7 @@ defmodule ExNylas.Delta do
       API.post(
         "#{conn.api_server}/delta/latest_cursor",
         %{},
-        API.header_bearer(conn)
+        API.header_bearer(conn) ++ ["content-type": "application/json"]
       )
 
     case res do

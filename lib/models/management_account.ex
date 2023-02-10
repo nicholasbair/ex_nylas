@@ -15,64 +15,29 @@ defmodule ExNylas.ManagementAccount do
     field(:trial, boolean())
     field(:authentication_type, String.t())
   end
-end
 
-defmodule ExNylas.ManagementAccount.Downgrade do
-  @moduledoc """
-  A struct representing a management account downgrade.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: Downgrade do
     @typedoc "A management account downgrade"
     field(:success, boolean())
   end
-end
 
-defmodule ExNylas.ManagementAccount.Upgrade do
-  @moduledoc """
-  A struct representing a management account upgrade.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: Upgrade do
     @typedoc "A management account upgrade"
     field(:success, boolean())
   end
-end
 
-defmodule ExNylas.ManagementAccount.RevokeAll do
-  @moduledoc """
-  A struct representing a management account revoke all.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: RevokeAll do
     @typedoc "A management account revoke all"
     field(:success, boolean())
   end
-end
 
-defmodule ExNylas.ManagementAccount.IPAddresses do
-  @moduledoc """
-  A struct representing a management account IP addresses.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: IPAddresses do
     @typedoc "A management account IP addresses"
     field(:ip_addresses, list())
     field(:updated_at, non_neg_integer())
   end
-end
 
-defmodule ExNylas.ManagementAccount.TokenInfo do
-  @moduledoc """
-  A struct representing a management account token info.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: TokenInfo do
     @typedoc "A management account token info"
     field(:created_at, non_neg_integer())
     field(:scopes, String.t())
@@ -108,7 +73,7 @@ defmodule ExNylas.ManagementAccounts do
       API.post(
         "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/downgrade",
         %{},
-        API.header_basic(conn)
+        API.header_basic(conn) ++ ["content-type": "application/json"]
       )
 
     case res do
@@ -147,7 +112,7 @@ defmodule ExNylas.ManagementAccounts do
       API.post(
         "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/upgrade",
         %{},
-        API.header_basic(conn)
+        API.header_basic(conn) ++ ["content-type": "application/json"]
       )
 
     case res do

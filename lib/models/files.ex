@@ -26,7 +26,7 @@ defmodule ExNylas.Files do
   use ExNylas,
     object: "files",
     struct: ExNylas.File,
-    include: [:list, :first, :find, :delete, :update, :create]
+    include: [:list, :first, :find, :delete, :create]
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
@@ -47,7 +47,7 @@ defmodule ExNylas.Files do
 
     case res do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body}
+        {:ok, TF.transform(body, ExNylas.File)}
 
       {:ok, %HTTPoison.Response{body: body}} ->
         {:error, body}

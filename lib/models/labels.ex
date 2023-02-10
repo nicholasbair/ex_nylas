@@ -13,16 +13,9 @@ defmodule ExNylas.Label do
     field(:id, String.t())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing a label.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "A label"
-      field(:display_name, String.t(), enforce: true)
-    end
+  typedstruct module: Build do
+    @typedoc "A struct representing the create label request payload."
+    field(:display_name, String.t(), enforce: true)
   end
 end
 

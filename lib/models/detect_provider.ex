@@ -13,18 +13,11 @@ defmodule ExNylas.DetectProvider do
     field(:provider_name, String.t())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing provider detection request payload for a given email address.
-    """
-    use TypedStruct
-
-    typedstruct enforce: true do
-      @typedoc "Detect provider"
-      field(:client_id, String.t())
-      field(:client_secret, String.t())
-      field(:email_address, String.t())
-    end
+  typedstruct module: Build, enforce: true do
+    @typedoc "A struct representing the detect provider request payload"
+    field(:client_id, String.t())
+    field(:client_secret, String.t())
+    field(:email_address, String.t())
   end
 
   alias ExNylas.API
@@ -46,7 +39,7 @@ defmodule ExNylas.DetectProvider do
           client_secret: conn.client_secret,
           email_address: email_address
         },
-        []
+        ["content-type": "application/json"]
       )
 
     case res do

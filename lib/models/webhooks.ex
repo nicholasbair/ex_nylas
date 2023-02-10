@@ -14,18 +14,11 @@ defmodule ExNylas.Webhook do
     field(:version, String.t())
   end
 
-  defmodule Build do
-    @moduledoc """
-    A struct representing a webhook.
-    """
-    use TypedStruct
-
-    typedstruct do
-      @typedoc "A webhook"
-      field(:state, String.t())
-      field(:callback_url, String.t(), enforce: true)
-      field(:triggers, list(), enforce: true)
-    end
+  typedstruct module: Build do
+    @typedoc "A struct representing the create webhook request payload."
+    field(:state, String.t())
+    field(:callback_url, String.t(), enforce: true)
+    field(:triggers, list(), enforce: true)
   end
 end
 
