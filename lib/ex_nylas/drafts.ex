@@ -27,6 +27,9 @@ defmodule ExNylas.Draft do
     field(:version, non_neg_integer())
     field(:job_status_id, String.t())
     field(:reply_to_message_id, String.t())
+    field(:folder, Map)
+    field(:metadata, Map)
+    field(:cids, list())
   end
 
   typedstruct module: Build do
@@ -39,6 +42,8 @@ defmodule ExNylas.Draft do
     field(:reply_to, list())
     field(:reply_to_message_id, String.t())
     field(:file_ids, list())
+    field(:body, String.t())
+    field(:metadata, Map)
   end
 end
 
