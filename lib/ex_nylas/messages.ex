@@ -13,6 +13,7 @@ defmodule ExNylas.Message do
     field(:date, non_neg_integer())
     field(:events, list())
     field(:files, list())
+    field(:folder, Map)
     field(:from, list())
     field(:id, String.t())
     field(:labels, list())
@@ -24,6 +25,10 @@ defmodule ExNylas.Message do
     field(:thread_id, String.t())
     field(:to, list())
     field(:unread, boolean())
+    field(:reply_to_message_id, String.t())
+    field(:metadata, Map)
+    field(:cids, list())
+    field(:headers, Map)
   end
 
   typedstruct module: Build do
@@ -39,6 +44,7 @@ defmodule ExNylas.Message do
     field(:subject, String.t())
     field(:to, list())
     field(:tracking, Map)
+    field(:metadata, Map)
   end
 end
 
