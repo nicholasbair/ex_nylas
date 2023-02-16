@@ -27,8 +27,8 @@ defmodule ExNylas.Draft do
     field(:version, non_neg_integer())
     field(:job_status_id, String.t())
     field(:reply_to_message_id, String.t())
-    field(:folder, Map)
-    field(:metadata, Map)
+    field(:folder, map())
+    field(:metadata, map())
     field(:cids, list())
   end
 
@@ -43,7 +43,7 @@ defmodule ExNylas.Draft do
     field(:reply_to_message_id, String.t())
     field(:file_ids, list())
     field(:body, String.t())
-    field(:metadata, Map)
+    field(:metadata, map())
   end
 end
 
