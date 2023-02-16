@@ -26,28 +26,14 @@ defmodule ExNylas.Calendar do
     field(:location, String.t())
     field(:timezone, String.t())
   end
-end
 
-defmodule ExNylas.Calendar.Availability do
-  @moduledoc """
-  A struct representing availability.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: Availability do
     @typedoc "Calendar availability"
     field(:object, String.t())
     field(:timeslots, list())
   end
-end
 
-defmodule ExNylas.Calendar.FreeBusy do
-  @moduledoc """
-  A struct representing a free busy.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: FreeBusy do
     @typedoc "A calendar free busy"
     field(:object, String.t())
     field(:email, String.t())

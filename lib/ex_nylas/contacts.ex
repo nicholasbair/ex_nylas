@@ -50,15 +50,8 @@ defmodule ExNylas.Contact do
     field(:web_pages, list())
     field(:group, String.t())
   end
-end
 
-defmodule ExNylas.Contact.Group do
-  @moduledoc """
-  A struct representing a contact group.
-  """
-  use TypedStruct
-
-  typedstruct do
+  typedstruct module: Group do
     @typedoc "A contact group"
     field(:id, String.t())
     field(:object, String.t())
