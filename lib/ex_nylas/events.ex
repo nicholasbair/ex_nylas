@@ -18,13 +18,20 @@ defmodule ExNylas.Event do
     field(:read_only, boolean())
     field(:location, String.t())
     field(:when, map())
-    field(:start, String.t())
-    field(:end, String.t())
     field(:busy, boolean())
     field(:status, String.t())
     field(:ical_uid, String.t())
     field(:master_event_id, String.t())
     field(:original_start_time, non_neg_integer())
+    field(:updated_at, non_neg_integer())
+    field(:conferencing, map())
+    field(:recurrence, map())
+    field(:metadata, map())
+    field(:notifications, list())
+    field(:organizer_email, String.t())
+    field(:organizer_name, String.t())
+    field(:visibility, String.t())
+    field(:hide_participants, boolean())
   end
 
   typedstruct module: Build do
@@ -37,6 +44,13 @@ defmodule ExNylas.Event do
     field(:participants, list())
     field(:busy, boolean())
     field(:recurrance, map())
+    field(:visibility, String.t())
+    field(:conferencing, map())
+    field(:reminder_minutes, String.t())
+    field(:reminder_method, String.t())
+    field(:metadata, map())
+    field(:notifications, list())
+    field(:hide_participants, boolean())
   end
 end
 
