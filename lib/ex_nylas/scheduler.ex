@@ -10,8 +10,8 @@ defmodule ExNylas.Scheduler do
   typedstruct do
     @typedoc "A scheduler page config"
     field(:access_tokens, list)
-    field(:config, Map)
-    field(:booking, Map)
+    field(:config, map())
+    field(:booking, map())
     field(:name, String.t())
     field(:slug, String.t())
   end
