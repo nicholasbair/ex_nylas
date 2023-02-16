@@ -12,6 +12,11 @@ defmodule ExNylas.Calendar do
     field(:name, String.t())
     field(:description, String.t())
     field(:read_only, boolean())
+    field(:location, String.t())
+    field(:timezone, String.t())
+    field(:metadata, map())
+    field(:is_primary, boolean())
+    field(:hex_color, String.t())
   end
 
   typedstruct module: Build do
