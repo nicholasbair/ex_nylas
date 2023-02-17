@@ -27,5 +27,5 @@ defmodule ExNylas.Folders do
   use ExNylas,
     object: "folders",
     struct: ExNylas.Folder,
-    include: [:list, :first, :find, :delete, :build, :update, :create]
+    include: [:list, :first, :find, :delete, :build, :update, :create, :all]
 end

@@ -74,7 +74,7 @@ defmodule ExNylas.Contacts do
   use ExNylas,
     object: "contacts",
     struct: ExNylas.Contact,
-    include: [:list, :first, :find, :delete, :build, :create, :update]
+    include: [:list, :first, :find, :delete, :build, :create, :update, :all]
 
   @doc """
   Get contacts groups.

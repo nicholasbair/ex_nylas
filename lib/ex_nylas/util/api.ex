@@ -11,7 +11,8 @@ defmodule ExNylas.API do
     "user-agent": "ExNylas/" <> Mix.Project.config()[:version]
   ]
 
-  def process_request_body({:ok, body}) when is_map(body) or is_struct(body), do: Poison.encode!(body)
+  def process_request_body({:ok, body}) when is_map(body) or is_struct(body),
+    do: Poison.encode!(body)
 
   def process_request_body(body) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
@@ -27,7 +28,7 @@ defmodule ExNylas.API do
   def header_bearer(%Conn{} = conn) do
     [
       authorization: "Bearer #{conn.access_token}",
-      "Nylas-API-Version": conn.api_version,
+      "Nylas-API-Version": conn.api_version
     ] ++ @base_headers
   end
 
@@ -36,7 +37,7 @@ defmodule ExNylas.API do
 
     [
       authorization: "Basic #{encoded}",
-      "Nylas-API-Version": conn.api_version,
+      "Nylas-API-Version": conn.api_version
     ] ++ @base_headers
   end
 
@@ -45,7 +46,7 @@ defmodule ExNylas.API do
 
     [
       authorization: "Basic #{encoded}",
-      "Nylas-API-Version": api_version,
+      "Nylas-API-Version": api_version
     ] ++ @base_headers
   end
 end

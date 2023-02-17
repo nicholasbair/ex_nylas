@@ -37,5 +37,5 @@ defmodule ExNylas.Threads do
   use ExNylas,
     object: "threads",
     struct: ExNylas.Thread,
-    include: [:list, :first, :search, :find, :update]
+    include: [:list, :first, :search, :find, :update, :all]
 end

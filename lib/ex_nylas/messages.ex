@@ -62,7 +62,7 @@ defmodule ExNylas.Messages do
   use ExNylas,
     object: "messages",
     struct: ExNylas.Message,
-    include: [:list, :first, :search, :find, :update, :build]
+    include: [:list, :first, :search, :find, :update, :build, :all]
 
   @doc """
   Get the raw content for a message.

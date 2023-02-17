@@ -58,7 +58,7 @@ defmodule ExNylas.Drafts do
   use ExNylas,
     object: "drafts",
     struct: ExNylas.Draft,
-    include: [:list, :first, :find, :delete, :build, :create, :update]
+    include: [:list, :first, :find, :delete, :build, :create, :update, :all]
 
   @doc """
   Send a draft.
