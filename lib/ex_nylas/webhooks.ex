@@ -32,5 +32,5 @@ defmodule ExNylas.Webhooks do
     struct: ExNylas.Webhook,
     header_type: :header_basic,
     use_client_url: true,
-    include: [:list, :first, :find, :delete, :build, :update, :create]
+    include: [:list, :first, :find, :delete, :build, :update, :create, :all]
 end

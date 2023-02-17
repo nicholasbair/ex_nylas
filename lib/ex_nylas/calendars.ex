@@ -55,7 +55,7 @@ defmodule ExNylas.Calendars do
   use ExNylas,
     object: "calendars",
     struct: ExNylas.Calendar,
-    include: [:list, :first, :find, :delete, :build, :create, :update]
+    include: [:list, :first, :find, :delete, :build, :create, :update, :all]
 
   @doc """
   Get calendar availability.

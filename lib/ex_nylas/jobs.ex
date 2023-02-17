@@ -23,7 +23,7 @@ defmodule ExNylas.Jobs do
   """
 
   use ExNylas,
-    object: "jobs",
+    object: "job-statuses",
     struct: ExNylas.Job,
-    include: [:list, :first, :find]
+    include: [:list, :first, :find, :all]
 end

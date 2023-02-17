@@ -14,6 +14,7 @@ defmodule ExNylas do
     delete: %{name: :delete, http_method: :delete},
     send: %{name: :send, http_method: :post},
     build: %{name: :build},
+    all: %{name: :all},
     # Not all objects support both put and post
     # Thus need to differentiate using the update/create key here
     update: %{name: :update, http_method: :put},
@@ -34,6 +35,33 @@ defmodule ExNylas do
       Map.get(@funcs, k)
       |> generate_api(object, struct_name, header_type, use_client_url)
     end)
+  end
+
+  defp generate_api(%{name: :all} = config, _object, struct_name, _header_type, _use_client_url) do
+    quote do
+      @doc """
+      Fetch all #{unquote(struct_name)}(s) matching the provided query (function will handle paging).
+
+      Example
+        {:ok, result} = ExNylas.#{__MODULE__}.all(conn, params)
+      """
+      def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
+        apply(ExNylas.Paging, :all, [conn, __MODULE__, params])
+      end
+
+      @doc """
+      Fetch all #{unquote(struct_name)}(s) matching the provided query (function will handle paging).
+
+      Example
+        result = ExNylas.#{__MODULE__}.all!(conn, params)
+      """
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
+        case unquote(config.name)(conn, params) do
+          {:ok, body} -> body
+          {:error, reason} -> raise ExNylasError, reason
+        end
+      end
+    end
   end
 
   defp generate_api(%{name: :build} = config, _object, struct_name, _header_type, _use_client_url) do
@@ -332,7 +360,8 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `id`)
       """
       def unquote(config.name)(%Conn{} = conn, changeset, id) do
-        headers = apply(ExNylas.Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+        headers =
+          apply(ExNylas.Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_client_url) do
@@ -394,7 +423,8 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`)
       """
       def unquote(config.name)(%Conn{} = conn, body) do
-        headers = apply(ExNylas.API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+        headers =
+          apply(ExNylas.API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_client_url) do

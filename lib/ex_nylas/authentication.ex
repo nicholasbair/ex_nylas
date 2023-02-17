@@ -145,7 +145,8 @@ defmodule ExNylas.Authentication do
       API.post(
         "#{conn.api_server}/oauth/revoke",
         %{},
-        API.header_basic(conn.access_token, conn.api_version) ++ ["content-type": "application/json"]
+        API.header_basic(conn.access_token, conn.api_version) ++
+          ["content-type": "application/json"]
       )
 
     case res do

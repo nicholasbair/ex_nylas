@@ -39,7 +39,7 @@ defmodule ExNylas.DetectProvider do
           client_secret: conn.client_secret,
           email_address: email_address
         },
-        ["content-type": "application/json"]
+        "content-type": "application/json"
       )
 
     case res do

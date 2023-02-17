@@ -26,7 +26,7 @@ defmodule ExNylas.Files do
   use ExNylas,
     object: "files",
     struct: ExNylas.File,
-    include: [:list, :first, :find, :delete, :create]
+    include: [:list, :first, :find, :delete, :create, :all]
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn

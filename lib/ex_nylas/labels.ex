@@ -27,5 +27,5 @@ defmodule ExNylas.Labels do
   use ExNylas,
     object: "labels",
     struct: ExNylas.Label,
-    include: [:list, :first, :find, :delete, :build, :update, :create]
+    include: [:list, :first, :find, :delete, :build, :update, :create, :all]
 end

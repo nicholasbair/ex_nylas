@@ -67,7 +67,7 @@ defmodule ExNylas.Events do
   use ExNylas,
     object: "events",
     struct: ExNylas.Event,
-    include: [:list, :first, :find, :build]
+    include: [:list, :first, :find, :build, :all]
 
   @doc """
   Create/update for an event
@@ -86,7 +86,12 @@ defmodule ExNylas.Events do
       apply(
         API,
         method,
-        [url, body, API.header_bearer(conn) ++ ["content-type": "application/json"], [params: %{notify_participants: notify_participants}]]
+        [
+          url,
+          body,
+          API.header_bearer(conn) ++ ["content-type": "application/json"],
+          [params: %{notify_participants: notify_participants}]
+        ]
       )
 
     case res do

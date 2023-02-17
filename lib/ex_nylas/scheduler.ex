@@ -1,11 +1,15 @@
 defmodule ExNylas.Scheduler do
- @moduledoc """
+  @moduledoc """
   A struct representing a scheduler page config.
   """
   use TypedStruct
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
+
+  use ExNylas,
+    struct: __MODULE__,
+    include: [:all]
 
   typedstruct do
     @typedoc "A scheduler page config"
@@ -46,7 +50,6 @@ defmodule ExNylas.Scheduler do
     |> struct!(scheduler)
   end
 
-
   # POST example
   @doc """
   Detect the provider for a given email address.
@@ -63,7 +66,7 @@ defmodule ExNylas.Scheduler do
           client_secret: conn.client_secret,
           email_address: email_address
         },
-        ["content-type": "application/json"]
+        "content-type": "application/json"
       )
 
     case res do
@@ -104,7 +107,7 @@ defmodule ExNylas.Scheduler do
           API.get(
             url <> "/manage/pages",
             API.header_bearer(conn),
-            [params: params]
+            params: params
           )
 
         case res do
@@ -117,7 +120,9 @@ defmodule ExNylas.Scheduler do
           {:error, %HTTPoison.Error{reason: reason}} ->
             {:error, reason}
         end
-      {:error, message} -> {:error, message}
+
+      {:error, message} ->
+        {:error, message}
     end
   end
 
@@ -179,7 +184,9 @@ defmodule ExNylas.Scheduler do
           {:error, %HTTPoison.Error{reason: reason}} ->
             {:error, reason}
         end
-      {:error, message} -> {:error, message}
+
+      {:error, message} ->
+        {:error, message}
     end
   end
 
@@ -221,7 +228,9 @@ defmodule ExNylas.Scheduler do
           {:error, %HTTPoison.Error{reason: reason}} ->
             {:error, reason}
         end
-      {:error, message} -> {:error, message}
+
+      {:error, message} ->
+        {:error, message}
     end
   end
 
@@ -247,11 +256,12 @@ defmodule ExNylas.Scheduler do
   def save(%Conn{} = conn, page_config) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res = ExNylas.API.post(
-          url,
-          page_config,
-          ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
-        )
+        res =
+          ExNylas.API.post(
+            url,
+            page_config,
+            ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
+          )
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -263,7 +273,9 @@ defmodule ExNylas.Scheduler do
           {:error, %HTTPoison.Error{reason: reason}} ->
             {:error, reason}
         end
-      {:error, message} -> {:error, message}
+
+      {:error, message} ->
+        {:error, message}
     end
   end
 
@@ -289,11 +301,12 @@ defmodule ExNylas.Scheduler do
   def update(%Conn{} = conn, page_config, id) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res = ExNylas.API.put(
-          url <> "/" <> id,
-          page_config,
-          ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
-        )
+        res =
+          ExNylas.API.put(
+            url <> "/" <> id,
+            page_config,
+            ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
+          )
 
         case res do
           {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -305,7 +318,9 @@ defmodule ExNylas.Scheduler do
           {:error, %HTTPoison.Error{reason: reason}} ->
             {:error, reason}
         end
-      {:error, message} -> {:error, message}
+
+      {:error, message} ->
+        {:error, message}
     end
   end
 
