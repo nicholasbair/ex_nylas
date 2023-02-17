@@ -44,10 +44,10 @@ conn = ExNylas.Connection.new("1234", "1234", "1234")
 conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
 
 # Returns {:ok, result} or {:error, reason}
-{:ok, messages} = ExNylas.Messages.first(conn)
+{:ok, message} = ExNylas.Messages.first(conn)
 
 # Returns result or raises an exception
-messages = ExNylas.Messages.first!(conn)
+message = ExNylas.Messages.first!(conn)
 ```
 
 3. The results of each function call are transformed into a struct, with the exception of `Messages.get_raw/1`, which returns the raw content of a message, as well as any other functions that return raw data, like the `Files.download/2` and `Contacts.get_picture/2`.
@@ -55,10 +55,10 @@ messages = ExNylas.Messages.first!(conn)
 4. Queries and filters are typically expected as a map:
 ```elixir
 conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_token: "1234"}
-{:ok, threads} = ExNylas.Threads.list(%{limit: 5})
+{:ok, threads} = ExNylas.Threads.list(conn, %{limit: 5})
 
 # Searching is the exception
-{:ok, threads} = ExNylas.Threads.search("nylas")
+{:ok, threads} = ExNylas.Threads.search(conn, "nylas")
 ```
 
 5. Where `save/1`, `save!/1`, `save/2`, or `save!/2` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes--so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
@@ -79,6 +79,6 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 {:ok, all_messages} = ExNylas.Messages.all(conn, %{to: "hello@example.com"})
 
 # Or handle paging on your own
-{:ok, first_page} - ExNylas.Messages.list(%{limit: 50})
+{:ok, first_page} - ExNylas.Messages.list(conn, %{limit: 50})
 ```
 
