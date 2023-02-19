@@ -13,7 +13,6 @@ Unofficial Elixir bindings for the Nylas API.
 - [ ] Availability 
 - [ ] Free busy 
 - [ ] Neural 
-- [ ] Native auth 
 - [ ] Integrations (for conferencing auto-creation) 
 - [ ] Tests 
 - [ ] Push to Hex 
@@ -61,7 +60,7 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 {:ok, threads} = ExNylas.Threads.search(conn, "nylas")
 ```
 
-5. Where `save/1`, `save!/1`, `save/2`, or `save!/2` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes--so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
+5. Where `save/save!` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
 ```elixir
 {:ok, label} = ExNylas.Labels.build(%{display_name: "Hello World"})
 # label == %ExNylas.Label.Build{display_name: "Hello World"}
@@ -79,6 +78,6 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 {:ok, all_messages} = ExNylas.Messages.all(conn, %{to: "hello@example.com"})
 
 # Or handle paging on your own
-{:ok, first_page} - ExNylas.Messages.list(conn, %{limit: 50})
+{:ok, first_page} = ExNylas.Messages.list(conn, %{limit: 50})
 ```
 
