@@ -53,11 +53,8 @@ defmodule ExNylas.API do
     ] ++ @base_headers
   end
 
-  def handle_response(res, transform_to \\ nil) do
-    response_handler(res, transform_to)
-  end
-
-  defp response_handler(res, transform_to) when is_nil(transform_to) do
+  def handle_response(res, transform_to \\ nil)
+  def handle_response(res, transform_to) when is_nil(transform_to) do
     case res do
       {:ok, %HTTPoison.Response{status_code: status, body: body}} ->
         case status do
@@ -73,8 +70,8 @@ defmodule ExNylas.API do
     end
   end
 
-  defp response_handler(res, transform_to) do
-    case response_handler(res, nil) do
+  def handle_response(res, transform_to) do
+    case handle_response(res, nil) do
       {:ok, body} ->
         {:ok, TF.transform(body, transform_to)}
 
