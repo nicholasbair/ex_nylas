@@ -13,7 +13,6 @@ Unofficial Elixir bindings for the Nylas API.
 - [ ] Availability 
 - [ ] Free busy 
 - [ ] Neural 
-- [ ] Native auth 
 - [ ] Integrations (for conferencing auto-creation) 
 - [ ] Tests 
 - [ ] Push to Hex 
