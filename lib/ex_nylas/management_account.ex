@@ -26,22 +26,9 @@ defmodule ExNylas.ManagementAccount do
     field(:success, boolean())
   end
 
-  typedstruct module: RevokeAll do
-    @typedoc "A management account revoke all"
-    field(:success, boolean())
-  end
-
   typedstruct module: IPAddresses do
     @typedoc "A management account IP addresses"
     field(:ip_addresses, list())
-    field(:updated_at, non_neg_integer())
-  end
-
-  typedstruct module: TokenInfo do
-    @typedoc "A management account token info"
-    field(:created_at, non_neg_integer())
-    field(:scopes, String.t())
-    field(:state, String.t())
     field(:updated_at, non_neg_integer())
   end
 end
@@ -141,45 +128,6 @@ defmodule ExNylas.ManagementAccounts do
   end
 
   @doc """
-  Revoke all tokens for a given account.
-
-  Example
-      {:ok, result} = conn |> ExNylas.ManagementAccounts.revoke_all(`id`)
-  """
-  def revoke_all(%Conn{} = conn, id) do
-    res =
-      API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/revoke-all",
-        %{},
-        API.header_basic(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.ManagementAccount.RevokeAll)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
-  end
-
-  @doc """
-  Revoke all tokens for a given account.
-
-  Example
-      result = conn |> ExNylas.ManagementAccounts.revoke_all!(`id`)
-  """
-  def revoke_all!(%Conn{} = conn, id) do
-    case revoke_all(conn, id) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
-    end
-  end
-
-  @doc """
   Get IP Addresses.
 
   Example
@@ -212,45 +160,6 @@ defmodule ExNylas.ManagementAccounts do
   """
   def ip_addresses!(%Conn{} = conn) do
     case ip_addresses(conn) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
-    end
-  end
-
-  @doc """
-  Get token information for a given account.
-
-  Example
-      {:ok, result} = conn |> ExNylas.ManagementAccounts.token_info(`id`)
-  """
-  def token_info(%Conn{} = conn, id) do
-    res =
-      API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/token-info",
-        %{access_token: conn.access_token},
-        API.header_basic(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.ManagementAccount.TokenInfo)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
-  end
-
-  @doc """
-  Get token information for a given account.
-
-  Example
-      result = conn |> ExNylas.ManagementAccounts.token_info!(`id`)
-  """
-  def token_info!(%Conn{} = conn, id) do
-    case token_info(conn, id) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
