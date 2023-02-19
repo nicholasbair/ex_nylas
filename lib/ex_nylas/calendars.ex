@@ -48,7 +48,6 @@ defmodule ExNylas.Calendars do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
   alias ExNylas.Calendar.Availability
   alias ExNylas.Calendar.FreeBusy
 
@@ -64,23 +63,12 @@ defmodule ExNylas.Calendars do
       {:ok, result} = conn |> ExNylas.Calendars.availability(`body`)
   """
   def availability(%Conn{} = conn, body) do
-    res =
-      API.post(
-        "#{conn.api_server}/calendars/availability",
-        body,
-        API.header_bearer(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, Availability)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/calendars/availability",
+      body,
+      API.header_bearer(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(Availability)
   end
 
   @doc """
@@ -103,23 +91,12 @@ defmodule ExNylas.Calendars do
       {:ok, result} = conn |> ExNylas.Calendars.free_busy(`body`)
   """
   def free_busy(%Conn{} = conn, body) do
-    res =
-      API.post(
-        "#{conn.api_server}/calendars/free-busy",
-        body,
-        API.header_bearer(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, FreeBusy)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/calendars/free-busy",
+      body,
+      API.header_bearer(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(FreeBusy)
   end
 
   @doc """

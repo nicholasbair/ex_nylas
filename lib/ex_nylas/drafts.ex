@@ -53,7 +53,6 @@ defmodule ExNylas.Drafts do
   """
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   use ExNylas,
     object: "drafts",
@@ -67,27 +66,16 @@ defmodule ExNylas.Drafts do
       {:ok, sent_message} = conn |> ExNylas.Drafts.send(`draft_id`, `version`)
   """
   def send(%Conn{} = conn, draft_id, version, tracking \\ %{}) do
-    res =
-      API.post(
-        "#{conn.api_server}/send",
-        %{
-          draft_id: draft_id,
-          version: version,
-          tracking: tracking
-        },
-        API.header_bearer(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Message)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/send",
+      %{
+        draft_id: draft_id,
+        version: version,
+        tracking: tracking
+      },
+      API.header_bearer(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(ExNylas.Message)
   end
 
   @doc """

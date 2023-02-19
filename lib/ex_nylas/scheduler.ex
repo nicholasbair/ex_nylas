@@ -5,7 +5,6 @@ defmodule ExNylas.Scheduler do
   use TypedStruct
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   use ExNylas,
     struct: __MODULE__,
@@ -45,54 +44,7 @@ defmodule ExNylas.Scheduler do
   Example
       scheduler = conn |> ExNylas.Scheduler.build(`config`)
   """
-  def build!(scheduler) do
-    __MODULE__
-    |> struct!(scheduler)
-  end
-
-  # POST example
-  @doc """
-  Detect the provider for a given email address.
-
-  Example
-      {:ok, result} = conn |> ExNylas.DetectProvider.detect(`email_address`)
-  """
-  def detect(%Conn{} = conn, email_address) do
-    res =
-      API.post(
-        "#{conn.api_server}/connect/detect-provider",
-        %ExNylas.DetectProvider.Build{
-          client_id: conn.client_id,
-          client_secret: conn.client_secret,
-          email_address: email_address
-        },
-        "content-type": "application/json"
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, __MODULE__)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
-  end
-
-  @doc """
-  Detect the provider for a given email address.
-
-  Example
-      result = conn |> ExNylas.DetectProvider.detect!(`email_address`)
-  """
-  def detect!(%Conn{} = conn, email_address) do
-    case detect(conn, email_address) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
-    end
-  end
+  def build!(scheduler), do: struct!(__MODULE__, scheduler)
 
   @doc """
   Fetch scheduler pages.
@@ -103,23 +55,12 @@ defmodule ExNylas.Scheduler do
   def list(%Conn{} = conn, params \\ %{}) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res =
-          API.get(
-            url <> "/manage/pages",
-            API.header_bearer(conn),
-            params: params
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, __MODULE__)}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        API.get(
+          url <> "/manage/pages",
+          API.header_bearer(conn),
+          params: params
+        )
+        |> API.handle_response(__MODULE__)
 
       {:error, message} ->
         {:error, message}
@@ -168,22 +109,11 @@ defmodule ExNylas.Scheduler do
   def find(%Conn{} = conn, id) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res =
-          API.get(
-            url <> "/manage/pages/#{id}",
-            API.header_bearer(conn)
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, __MODULE__)}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        API.get(
+          url <> "/manage/pages/#{id}",
+          API.header_bearer(conn)
+        )
+        |> API.handle_response(__MODULE__)
 
       {:error, message} ->
         {:error, message}
@@ -212,22 +142,11 @@ defmodule ExNylas.Scheduler do
   def delete(%Conn{} = conn, id) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res =
-          API.delete(
-            url <> "/manage/pages/#{id}",
-            API.header_bearer(conn)
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, body}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        API.delete(
+          url <> "/manage/pages/#{id}",
+          API.header_bearer(conn)
+        )
+        |> API.handle_response()
 
       {:error, message} ->
         {:error, message}
@@ -256,23 +175,12 @@ defmodule ExNylas.Scheduler do
   def save(%Conn{} = conn, page_config) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res =
-          ExNylas.API.post(
-            url,
-            page_config,
-            ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, __MODULE__)}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        ExNylas.API.post(
+          url,
+          page_config,
+          ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
+        )
+        |> API.handle_response(__MODULE__)
 
       {:error, message} ->
         {:error, message}
@@ -301,23 +209,12 @@ defmodule ExNylas.Scheduler do
   def update(%Conn{} = conn, page_config, id) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
-        res =
-          ExNylas.API.put(
-            url <> "/" <> id,
-            page_config,
-            ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, __MODULE__)}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        ExNylas.API.put(
+          url <> "/" <> id,
+          page_config,
+          ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
+        )
+        |> API.handle_response(__MODULE__)
 
       {:error, message} ->
         {:error, message}

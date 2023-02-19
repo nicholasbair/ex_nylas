@@ -1,7 +1,7 @@
 defmodule ExNylas.Authentication do
+  alias ExNylas.Authentication.TokenInfo
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   use TypedStruct
 
@@ -25,24 +25,13 @@ defmodule ExNylas.Authentication do
       {:ok, res} = ExNylas.Authentication.revoke_token(conn)
   """
   def revoke_token(%Conn{} = conn) do
-    res =
-      API.post(
-        "#{conn.api_server}/oauth/revoke",
-        %{},
-        API.header_basic(conn.access_token, conn.api_version) ++
-          ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/oauth/revoke",
+      %{},
+      API.header_basic(conn.access_token, conn.api_version) ++
+        ["content-type": "application/json"]
+    )
+    |> API.handle_response()
   end
 
   @doc """
@@ -71,23 +60,12 @@ defmodule ExNylas.Authentication do
         _ -> %{keep_access_token: token_to_keep}
       end
 
-    res =
-      API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/revoke-all",
-        body,
-        API.header_basic(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, RevokeAll)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/revoke-all",
+      body,
+      API.header_basic(conn)
+    )
+    |> API.handle_response(RevokeAll)
   end
 
   @doc """
@@ -110,23 +88,12 @@ defmodule ExNylas.Authentication do
       {:ok, result} = conn |> ExNylas.Authentication.token_info(`id`)
   """
   def token_info(%Conn{} = conn, id) do
-    res =
-      API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/token-info",
-        %{access_token: conn.access_token},
-        API.header_basic(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, TokenInfo)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/token-info",
+      %{access_token: conn.access_token},
+      API.header_basic(conn)
+    )
+    |> API.handle_response(TokenInfo)
   end
 
   @doc """
@@ -234,28 +201,17 @@ defmodule ExNylas.Authentication do
         {:ok, access_token} = ExNylas.Authentication.Hosted.exchange_code_for_token(conn, code)
     """
     def exchange_code_for_token(%Conn{} = conn, code) do
-      res =
-        API.post(
-          "#{conn.api_server}/oauth/token",
-          %{
-            client_id: conn.client_id,
-            client_secret: conn.client_secret,
-            grant_type: "authorization_code",
-            code: code
-          },
-          ["content-type": "application/json"]
-        )
-
-      case res do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          {:ok, TF.transform(body, ExNylas.Authentication)}
-
-        {:ok, %HTTPoison.Response{body: body}} ->
-          {:error, body}
-
-        {:error, %HTTPoison.Error{reason: reason}} ->
-          {:error, reason}
-      end
+      API.post(
+        "#{conn.api_server}/oauth/token",
+        %{
+          client_id: conn.client_id,
+          client_secret: conn.client_secret,
+          grant_type: "authorization_code",
+          code: code
+        },
+        ["content-type": "application/json"]
+      )
+      |> API.handle_response(ExNylas.Authentication)
     end
 
     @doc """
@@ -391,30 +347,19 @@ defmodule ExNylas.Authentication do
     end
 
     def authorize(%Conn{} = conn, name, email_address, provider, settings, scopes) when is_bitstring(scopes) do
-      res =
-        API.post(
-          "#{conn.api_server}/connect/authorize",
-          %{
-            client_id: conn.client_id,
-            name: name,
-            email_address: email_address,
-            provider: provider,
-            settings: settings,
-            scopes: scopes
-          },
-          ["content-type": "application/json"]
-        )
-
-      case res do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          {:ok, body}
-
-        {:ok, %HTTPoison.Response{body: body}} ->
-          {:error, body}
-
-        {:error, %HTTPoison.Error{reason: reason}} ->
-          {:error, reason}
-      end
+      API.post(
+        "#{conn.api_server}/connect/authorize",
+        %{
+          client_id: conn.client_id,
+          name: name,
+          email_address: email_address,
+          provider: provider,
+          settings: settings,
+          scopes: scopes
+        },
+        ["content-type": "application/json"]
+      )
+      |> API.handle_response()
     end
 
     @doc """
@@ -441,28 +386,17 @@ defmodule ExNylas.Authentication do
         {:ok, access_token} = ExNylas.Authentication.Native.exchange_code_for_token(conn, code)
     """
     def exchange_code_for_token(%Conn{} = conn, code) do
-      res =
-        API.post(
-          "#{conn.api_server}/connect/token",
-          %{
-            client_id: conn.client_id,
-            client_secret: conn.client_secret,
-            grant_type: "authorization_code",
-            code: code
-          },
-          ["content-type": "application/json"]
-        )
-
-      case res do
-        {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-          {:ok, TF.transform(body, ExNylas.Authentication.Native)}
-
-        {:ok, %HTTPoison.Response{body: body}} ->
-          {:error, body}
-
-        {:error, %HTTPoison.Error{reason: reason}} ->
-          {:error, reason}
-      end
+      API.post(
+        "#{conn.api_server}/connect/token",
+        %{
+          client_id: conn.client_id,
+          client_secret: conn.client_secret,
+          grant_type: "authorization_code",
+          code: code
+        },
+        ["content-type": "application/json"]
+      )
+      |> API.handle_response(ExNylas.Authentication.Native)
     end
 
     @doc """

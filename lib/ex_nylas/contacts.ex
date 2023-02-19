@@ -68,7 +68,6 @@ defmodule ExNylas.Contacts do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
   alias ExNylas.Contact.Group
 
   use ExNylas,
@@ -83,22 +82,11 @@ defmodule ExNylas.Contacts do
       {:ok, result} = conn |> ExNylas.Contacts.groups()
   """
   def groups(%Conn{} = conn) do
-    res =
-      API.get(
-        "#{conn.api_server}/contacts/groups",
-        API.header_bearer(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, Group)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get(
+      "#{conn.api_server}/contacts/groups",
+      API.header_bearer(conn)
+    )
+    |> API.handle_response(Group)
   end
 
   @doc """
@@ -121,22 +109,11 @@ defmodule ExNylas.Contacts do
       {:ok, binary} = conn |> ExNylas.Contacts.get_picture(`id`)
   """
   def get_picture(%Conn{} = conn, id) do
-    res =
-      API.get(
-        "#{conn.api_server}/contacts/#{id}/picture",
-        API.header_bearer(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get(
+      "#{conn.api_server}/contacts/#{id}/picture",
+      API.header_bearer(conn)
+    )
+    |> API.handle_response()
   end
 
   @doc """

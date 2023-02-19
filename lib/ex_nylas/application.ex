@@ -12,7 +12,6 @@ defmodule ExNylas.Application do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   @doc """
   Get the application.
@@ -21,22 +20,11 @@ defmodule ExNylas.Application do
       {:ok, result} = conn |> ExNylas.Application.get()
   """
   def get(%Conn{} = conn) do
-    res =
-      API.get(
-        "#{conn.api_server}/a/#{conn.client_id}",
-        API.header_basic(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, __MODULE__)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get(
+      "#{conn.api_server}/a/#{conn.client_id}",
+      API.header_basic(conn)
+    )
+    |> API.handle_response(__MODULE__)
   end
 
   @doc """
@@ -59,23 +47,12 @@ defmodule ExNylas.Application do
       {:ok, result} = conn |> ExNylas.Application.update(`body`)
   """
   def update(%Conn{} = conn, body) do
-    res =
-      API.put(
-        "#{conn.api_server}/a/#{conn.client_id}",
-        body,
-        API.header_basic(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Application)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.put(
+      "#{conn.api_server}/a/#{conn.client_id}",
+      body,
+      API.header_basic(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(ExNylas.Application)
   end
 
   @doc """
