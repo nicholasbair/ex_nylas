@@ -63,7 +63,7 @@ defmodule ExNylas.Authentication do
     API.post(
       "#{conn.api_server}/a/#{conn.client_id}/accounts/#{id}/revoke-all",
       body,
-      API.header_basic(conn)
+      API.header_basic(conn) ++ ["content-type": "application/json"]
     )
     |> API.handle_response(RevokeAll)
   end
