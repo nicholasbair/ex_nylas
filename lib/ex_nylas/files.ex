@@ -30,7 +30,6 @@ defmodule ExNylas.Files do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   @doc """
   Download a file.
@@ -39,22 +38,11 @@ defmodule ExNylas.Files do
       {:ok, binary} = conn |> ExNylas.Files.download(`id`)
   """
   def download(%Conn{} = conn, id) do
-    res =
-      API.get(
-        "#{conn.api_server}/files/#{id}/download",
-        API.header_bearer(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.File)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get(
+      "#{conn.api_server}/files/#{id}/download",
+      API.header_bearer(conn)
+    )
+    |> API.handle_response(ExNylas.File)
   end
 
   @doc """
@@ -77,23 +65,12 @@ defmodule ExNylas.Files do
       {:ok, result} = conn |> ExNylas.Files.upload(`path_to_file`)
   """
   def upload(%Conn{} = conn, path_to_file) do
-    res =
-      API.post(
-        "#{conn.api_server}/files",
-        API.header_bearer(conn),
-        {:multipart, [{:file, path_to_file}]}
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.File)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/files",
+      API.header_bearer(conn),
+      {:multipart, [{:file, path_to_file}]}
+    )
+    |> API.handle_response(ExNylas.File)
   end
 
   @doc """

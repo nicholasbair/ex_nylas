@@ -61,7 +61,6 @@ defmodule ExNylas.Events do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
   alias ExNylas.Event
 
   use ExNylas,
@@ -82,28 +81,17 @@ defmodule ExNylas.Events do
         _ -> {:put, "#{conn.api_server}/events/#{body.id}"}
       end
 
-    res =
-      apply(
-        API,
-        method,
-        [
-          url,
-          body,
-          API.header_bearer(conn) ++ ["content-type": "application/json"],
-          [params: %{notify_participants: notify_participants}]
-        ]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, Event)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    apply(
+      API,
+      method,
+      [
+        url,
+        body,
+        API.header_bearer(conn) ++ ["content-type": "application/json"],
+        [params: %{notify_participants: notify_participants}]
+      ]
+    )
+    |> API.handle_response(Event)
   end
 
   @doc """
@@ -126,23 +114,12 @@ defmodule ExNylas.Events do
       {:ok, binary} = conn |> ExNylas.Events.rsvp(`event_id`, `status`, `account_id`)
   """
   def rsvp(%Conn{} = conn, event_id, status, account_id) do
-    res =
-      API.post(
-        "#{conn.api_server}/send-rsvp",
-        %{event_id: event_id, status: status, account_id: account_id},
-        API.header_bearer(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, Event)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/send-rsvp",
+      %{event_id: event_id, status: status, account_id: account_id},
+      API.header_bearer(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(Event)
   end
 
   @doc """

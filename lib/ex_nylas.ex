@@ -4,7 +4,7 @@ defmodule ExNylas do
   """
 
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
+  alias ExNylas.API, as: API
 
   @funcs %{
     list: %{name: :list, http_method: :get},
@@ -112,7 +112,7 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.first()
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
-        headers = apply(ExNylas.API, unquote(header_type), [conn])
+        headers = apply(API, unquote(header_type), [conn])
 
         url =
           if unquote(use_client_url) do
@@ -121,27 +121,16 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
-        res =
-          apply(
-            ExNylas.API,
-            unquote(config.http_method),
-            [
-              url,
-              headers,
-              [params: Map.put(params, :limit, 1)]
-            ]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, List.first(body) |> TF.transform(unquote(struct_name))}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        apply(
+          API,
+          unquote(config.http_method),
+          [
+            url,
+            headers,
+            [params: Map.put(params, :limit, 1)]
+          ]
+        )
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -174,7 +163,7 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.search("nylas")
       """
       def unquote(config.name)(%Conn{} = conn, search_text) do
-        headers = apply(ExNylas.API, unquote(header_type), [conn])
+        headers = apply(API, unquote(header_type), [conn])
 
         url =
           if unquote(use_client_url) do
@@ -183,27 +172,16 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}/search"
           end
 
-        res =
-          apply(
-            ExNylas.API,
-            unquote(config.http_method),
-            [
-              url,
-              headers,
-              [params: %{q: search_text}]
-            ]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, unquote(struct_name))}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        apply(
+          API,
+          unquote(config.http_method),
+          [
+            url,
+            headers,
+            [params: %{q: search_text}]
+          ]
+        )
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -237,7 +215,7 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`)
       """
       def unquote(config.name)(%Conn{} = conn, id) do
-        headers = apply(ExNylas.API, unquote(header_type), [conn])
+        headers = apply(API, unquote(header_type), [conn])
 
         url =
           if unquote(use_client_url) do
@@ -246,26 +224,15 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}/#{id}"
           end
 
-        res =
-          apply(
-            ExNylas.API,
-            unquote(method),
-            [
-              url,
-              headers
-            ]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, unquote(struct_name))}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        apply(
+          API,
+          unquote(method),
+          [
+            url,
+            headers
+          ]
+        )
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -298,7 +265,7 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}()
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
-        headers = apply(ExNylas.API, unquote(header_type), [conn])
+        headers = apply(API, unquote(header_type), [conn])
 
         url =
           if unquote(use_client_url) do
@@ -307,27 +274,16 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
-        res =
-          apply(
-            ExNylas.API,
-            unquote(config.http_method),
-            [
-              url,
-              headers,
-              [params: params]
-            ]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, unquote(struct_name))}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        apply(
+          API,
+          unquote(config.http_method),
+          [
+            url,
+            headers,
+            [params: params]
+          ]
+        )
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -361,7 +317,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, changeset, id) do
         headers =
-          apply(ExNylas.Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+          apply(Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_client_url) do
@@ -370,27 +326,16 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}/#{id}"
           end
 
-        res =
-          apply(
-            ExNylas.API,
-            unquote(config.http_method),
-            [
-              url,
-              changeset,
-              headers
-            ]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, unquote(struct_name))}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        apply(
+          API,
+          unquote(config.http_method),
+          [
+            url,
+            changeset,
+            headers
+          ]
+        )
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -424,7 +369,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, body) do
         headers =
-          apply(ExNylas.API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+          apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_client_url) do
@@ -433,27 +378,16 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
-        res =
-          apply(
-            ExNylas.API,
-            unquote(config.http_method),
-            [
-              url,
-              body,
-              headers
-            ]
-          )
-
-        case res do
-          {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-            {:ok, TF.transform(body, unquote(struct_name))}
-
-          {:ok, %HTTPoison.Response{body: body}} ->
-            {:error, body}
-
-          {:error, %HTTPoison.Error{reason: reason}} ->
-            {:error, reason}
-        end
+        apply(
+          API,
+          unquote(config.http_method),
+          [
+            url,
+            body,
+            headers
+          ]
+        )
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """

@@ -11,7 +11,6 @@ defmodule ExNylas.Delta do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   @doc """
   Get the latest delta cursor.
@@ -20,23 +19,12 @@ defmodule ExNylas.Delta do
       {:ok, result} = conn |> ExNylas.Delta.latest_cursor()
   """
   def latest_cursor(%Conn{} = conn) do
-    res =
-      API.post(
-        "#{conn.api_server}/delta/latest_cursor",
-        %{},
-        API.header_bearer(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, __MODULE__)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/delta/latest_cursor",
+      %{},
+      API.header_bearer(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(__MODULE__)
   end
 
   @doc """

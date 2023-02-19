@@ -54,7 +54,6 @@ defmodule ExNylas.Messages do
   """
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]
@@ -76,18 +75,8 @@ defmodule ExNylas.Messages do
       |> API.header_bearer()
       |> Keyword.put(:accept, "message/rfc822")
 
-    res = API.get("#{conn.api_server}/messages/#{id}", headers)
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, body}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get("#{conn.api_server}/messages/#{id}", headers)
+    |> API.handle_response()
   end
 
   @doc """
@@ -110,23 +99,12 @@ defmodule ExNylas.Messages do
       {:ok, sent_message} = conn |> ExNylas.Messages.send_raw(`raw`)
   """
   def send_raw(%Conn{} = conn, raw) do
-    res =
-      API.post(
-        "#{conn.api_server}/send",
-        raw,
-        API.header_bearer(conn) ++ ["content-type": "message/rfc822"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Message)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/send",
+      raw,
+      API.header_bearer(conn) ++ ["content-type": "message/rfc822"]
+    )
+    |> API.handle_response(ExNylas.Message)
   end
 
   @doc """
@@ -149,23 +127,12 @@ defmodule ExNylas.Messages do
       {:ok, sent_message} = conn |> ExNylas.Messages.send(`message`)
   """
   def send(%Conn{} = conn, message) do
-    res =
-      API.post(
-        "#{conn.api_server}/send",
-        message,
-        API.header_bearer(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.Message)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/send",
+      message,
+      API.header_bearer(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(ExNylas.Message)
   end
 
   @doc """

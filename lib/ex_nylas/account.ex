@@ -19,7 +19,6 @@ defmodule ExNylas.Account do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   @doc """
   Get the account associated with the `access_token`.
@@ -28,22 +27,11 @@ defmodule ExNylas.Account do
       {:ok, result} = conn |> ExNylas.Account.get()
   """
   def get(%Conn{} = conn) do
-    res =
-      API.get(
-        "#{conn.api_server}/account",
-        API.header_bearer(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, __MODULE__)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get(
+      "#{conn.api_server}/account",
+      API.header_bearer(conn)
+    )
+    |> API.handle_response(__MODULE__)
   end
 
   @doc """

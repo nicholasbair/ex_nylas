@@ -40,7 +40,6 @@ defmodule ExNylas.ManagementAccounts do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   use ExNylas,
     object: "accounts",
@@ -56,23 +55,12 @@ defmodule ExNylas.ManagementAccounts do
       {:ok, result} = conn |> ExNylas.ManagementAccounts.downgrade(`id`)
   """
   def downgrade(%Conn{} = conn, account_id) do
-    res =
-      API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/downgrade",
-        %{},
-        API.header_basic(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.ManagementAccount.Downgrade)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/downgrade",
+      %{},
+      API.header_basic(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(ExNylas.ManagementAccount.Downgrade)
   end
 
   @doc """
@@ -95,23 +83,12 @@ defmodule ExNylas.ManagementAccounts do
       {:ok, result} = conn |> ExNylas.ManagementAccounts.upgrade(`id`)
   """
   def upgrade(%Conn{} = conn, account_id) do
-    res =
-      API.post(
-        "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/upgrade",
-        %{},
-        API.header_basic(conn) ++ ["content-type": "application/json"]
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.ManagementAccount.Upgrade)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}/upgrade",
+      %{},
+      API.header_basic(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response(ExNylas.ManagementAccount.Upgrade)
   end
 
   @doc """
@@ -134,22 +111,11 @@ defmodule ExNylas.ManagementAccounts do
       {:ok, result} = conn |> ExNylas.ManagementAccounts.ip_addresses()
   """
   def ip_addresses(%Conn{} = conn) do
-    res =
-      API.get(
-        "#{conn.api_server}/a/#{conn.client_id}/ip_addresses",
-        API.header_basic(conn)
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, ExNylas.ManagementAccount.IPAddresses)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.get(
+      "#{conn.api_server}/a/#{conn.client_id}/ip_addresses",
+      API.header_basic(conn)
+    )
+    |> API.handle_response(ExNylas.ManagementAccount.IPAddresses)
   end
 
   @doc """

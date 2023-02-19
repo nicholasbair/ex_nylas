@@ -22,7 +22,6 @@ defmodule ExNylas.DetectProvider do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Transform, as: TF
 
   @doc """
   Detect the provider for a given email address.
@@ -31,27 +30,16 @@ defmodule ExNylas.DetectProvider do
       {:ok, result} = conn |> ExNylas.DetectProvider.detect(`email_address`)
   """
   def detect(%Conn{} = conn, email_address) do
-    res =
-      API.post(
-        "#{conn.api_server}/connect/detect-provider",
-        %ExNylas.DetectProvider.Build{
-          client_id: conn.client_id,
-          client_secret: conn.client_secret,
-          email_address: email_address
-        },
-        "content-type": "application/json"
-      )
-
-    case res do
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        {:ok, TF.transform(body, __MODULE__)}
-
-      {:ok, %HTTPoison.Response{body: body}} ->
-        {:error, body}
-
-      {:error, %HTTPoison.Error{reason: reason}} ->
-        {:error, reason}
-    end
+    API.post(
+      "#{conn.api_server}/connect/detect-provider",
+      %ExNylas.DetectProvider.Build{
+        client_id: conn.client_id,
+        client_secret: conn.client_secret,
+        email_address: email_address
+      },
+      "content-type": "application/json"
+    )
+    |> API.handle_response(__MODULE__)
   end
 
   @doc """
