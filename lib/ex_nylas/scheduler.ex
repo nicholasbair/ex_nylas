@@ -87,7 +87,10 @@ defmodule ExNylas.Scheduler do
       {:ok, scheduler_page} = conn |> ExNylas.Scheduler.first()
   """
   def first(%Conn{} = conn, params \\ %{}) do
-    list(conn, Map.put(params, :limit, 1))
+    case list(conn, Map.put(params, :limit, 1)) do
+      {:ok, res} -> {:ok, Enum.at(res, 0)}
+      res -> res
+    end
   end
 
   @doc """
@@ -97,7 +100,10 @@ defmodule ExNylas.Scheduler do
       scheduler_page = conn |> ExNylas.Scheduler.first()
   """
   def first!(%Conn{} = conn, params \\ %{}) do
-    list(conn, Map.put(params, :limit, 1))
+    case first(conn, params) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
   end
 
   @doc """
