@@ -121,16 +121,22 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
-        apply(
-          API,
-          unquote(config.http_method),
-          [
-            url,
-            headers,
-            [params: Map.put(params, :limit, 1)]
-          ]
-        )
-        |> API.handle_response(unquote(struct_name))
+        res =
+          apply(
+            API,
+            unquote(config.http_method),
+            [
+              url,
+              headers,
+              [params: Map.put(params, :limit, 1)]
+            ]
+          )
+          |> API.handle_response(unquote(struct_name))
+
+        case res do
+          {:ok, val} -> {:ok, Enum.at(val, 0)}
+          val -> val
+        end
       end
 
       @doc """
