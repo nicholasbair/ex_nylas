@@ -9,10 +9,8 @@ Unofficial Elixir bindings for the Nylas API.
 - This is my first attempt at metaprogramming
 
 ## TODO / Known Issues
-- [ ] Events RSVPing 
 - [ ] Availability 
 - [ ] Free busy 
-- [ ] Neural 
 - [ ] Integrations (for conferencing auto-creation) 
 - [ ] Tests 
 - [ ] Push to Hex 
