@@ -10,7 +10,6 @@ Unofficial Elixir bindings for the Nylas API.
 
 ## TODO / Known Issues
 - [ ] Availability 
-- [ ] Free busy 
 - [ ] Integrations (for conferencing auto-creation) 
 - [ ] Tests 
 - [ ] Push to Hex 
@@ -58,7 +57,7 @@ conn = %ExNylas.Connection{client_id: "1234", client_secret: "1234", access_toke
 {:ok, threads} = ExNylas.Threads.search(conn, "nylas")
 ```
 
-5. Where `save/save!` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
+5. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`save` will accept either a map or a struct.  Build leverages [TypedStruct](https://hex.pm/packages/typed_struct) behind the scenes so fields are validated against the struct definition, but while types are defined, they are not validated.  For example:
 ```elixir
 {:ok, label} = ExNylas.Labels.build(%{display_name: "Hello World"})
 # label == %ExNylas.Label.Build{display_name: "Hello World"}
