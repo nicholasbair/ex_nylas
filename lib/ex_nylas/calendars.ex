@@ -32,13 +32,6 @@ defmodule ExNylas.Calendar do
     field(:object, String.t())
     field(:timeslots, list())
   end
-
-  typedstruct module: FreeBusy do
-    @typedoc "A calendar free busy"
-    field(:object, String.t())
-    field(:email, String.t())
-    field(:timeslots, list())
-  end
 end
 
 defmodule ExNylas.Calendars do
@@ -49,7 +42,6 @@ defmodule ExNylas.Calendars do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Calendar.Availability
-  alias ExNylas.Calendar.FreeBusy
 
   use ExNylas,
     object: "calendars",
@@ -79,34 +71,6 @@ defmodule ExNylas.Calendars do
   """
   def availability!(%Conn{} = conn, body) do
     case availability(conn, body) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
-    end
-  end
-
-  @doc """
-  Get calendar free/busy.
-
-  Example
-      {:ok, result} = conn |> ExNylas.Calendars.free_busy(`body`)
-  """
-  def free_busy(%Conn{} = conn, body) do
-    API.post(
-      "#{conn.api_server}/calendars/free-busy",
-      body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
-    )
-    |> API.handle_response(FreeBusy)
-  end
-
-  @doc """
-  Get calendar free/busy.
-
-  Example
-      result = conn |> ExNylas.Calendars.free_busy!(`body`)
-  """
-  def free_busy!(%Conn{} = conn, body) do
-    case free_busy(conn, body) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
