@@ -1,5 +1,5 @@
 defmodule ExNylas.Calendars.Availability do
-   @moduledoc """
+  @moduledoc """
   Interface for Nylas calendar availability.
   """
   use TypedStruct
