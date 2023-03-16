@@ -9,15 +9,11 @@ Unofficial Elixir bindings for the Nylas API.
 - This is my first attempt at metaprogramming
 
 ## TODO / Known Issues
-- [ ] Availability 
-- [ ] Integrations (for conferencing auto-creation) 
 - [ ] Tests 
 - [ ] Push to Hex 
+- [ ] Integrations (for conferencing auto-creation) 
 
 ## Installation
-
-*Note* - not available on Hex (yet).
-
 ```elixir
 def deps do
   [

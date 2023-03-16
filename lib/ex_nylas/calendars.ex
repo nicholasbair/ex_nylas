@@ -27,11 +27,6 @@ defmodule ExNylas.Calendar do
     field(:timezone, String.t())
   end
 
-  typedstruct module: Availability do
-    @typedoc "Calendar availability"
-    field(:object, String.t())
-    field(:timeslots, list())
-  end
 end
 
 defmodule ExNylas.Calendars do
@@ -39,40 +34,9 @@ defmodule ExNylas.Calendars do
   Interface for Nylas calendars.
   """
 
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Calendar.Availability
-
   use ExNylas,
     object: "calendars",
     struct: ExNylas.Calendar,
     include: [:list, :first, :find, :delete, :build, :create, :update, :all]
 
-  @doc """
-  Get calendar availability.
-
-  Example
-      {:ok, result} = conn |> ExNylas.Calendars.availability(`body`)
-  """
-  def availability(%Conn{} = conn, body) do
-    API.post(
-      "#{conn.api_server}/calendars/availability",
-      body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
-    )
-    |> API.handle_response(Availability)
-  end
-
-  @doc """
-  Get calendar availability.
-
-  Example
-      result = conn |> ExNylas.Calendars.availability!(`body`)
-  """
-  def availability!(%Conn{} = conn, body) do
-    case availability(conn, body) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
-    end
-  end
 end
