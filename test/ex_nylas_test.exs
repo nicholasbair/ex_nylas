@@ -14,10 +14,12 @@ defmodule ExNylasTest do
     "Events",
     "Files",
     "Folders",
+    "Jobs",
     "Labels",
     "ManagementAccounts",
     "Messages",
     "Threads",
+    "Scheduler",
     "Webhooks"
   ]
 
@@ -53,4 +55,29 @@ defmodule ExNylasTest do
       assert ok == :ok
     end
   end)
+
+    # Test for first/2
+    @modules
+    |> Enum.filter(fn m ->
+      Module.concat([ExNylas, String.to_atom(m)])
+      |> apply(:__info__, [:functions])
+      |> Enum.any?(fn {name, arity} -> name == :first and arity == 2 end)
+    end)
+    |> Enum.each(fn m ->
+      test "First for #{m}" do
+        {ok, res} =
+          apply(
+            Module.concat([ExNylas, String.to_atom(unquote(m))]),
+            :first,
+            [build_conn(), %{limit: 1}]
+          )
+
+        if ok == :error do
+          IO.puts("Error on #{unquote(m)}, message printed below")
+          IO.inspect(res)
+        end
+
+        assert ok == :ok
+      end
+    end)
 end
