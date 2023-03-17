@@ -28,11 +28,19 @@ defmodule ExNylas.API do
     end
   end
 
+  def header_bearer(%Conn{access_token: token}) when is_nil(token) do
+    raise "ExNylas.Connection struct is missing a value for `access_token` which is required for this call."
+  end
+
   def header_bearer(%Conn{} = conn) do
     [
       authorization: "Bearer #{conn.access_token}",
       "Nylas-API-Version": conn.api_version
     ] ++ @base_headers
+  end
+
+  def header_basic(%Conn{client_secret: secret}) when is_nil(secret) do
+    raise "ExNylas.Connection struct is missing a value for `client_secret` which is required for this call."
   end
 
   def header_basic(%Conn{} = conn) do
