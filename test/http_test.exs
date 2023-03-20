@@ -24,7 +24,7 @@ defmodule ExNylasTest.HTTP do
 
     assert {:ok, []} ==
       ExNylas.Connection.new("id", "secret", "token", endpoint_url(bypass.port))
-      |> ExNylas.Jobs.list() # Nothing special about labels here, any API would do
+      |> ExNylas.Jobs.list() # Nothing special about jobs here, any API would do
 
     # Blocks until the TCP socket is closed.
     Bypass.down(bypass)
