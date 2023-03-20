@@ -254,7 +254,7 @@ defmodule ExNylas.Authentication do
     defp parse_options({key, val}), do: "&#{key}=#{val}"
   end
 
-  defmodule ExNylas.Authentication.Native do
+  defmodule Native do
   @moduledoc """
   Nylas native authentication
   """
