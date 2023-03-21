@@ -42,7 +42,7 @@ defmodule ExNylas.Files do
       "#{conn.api_server}/files/#{id}/download",
       API.header_bearer(conn)
     )
-    |> API.handle_response(ExNylas.File)
+    |> API.handle_response()
   end
 
   @doc """
