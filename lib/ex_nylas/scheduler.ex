@@ -176,9 +176,9 @@ defmodule ExNylas.Scheduler do
   Create a scheduler page.
 
   Example
-      {:ok, page} = conn |> ExNylas.Scheduler.save(`page_config`)
+      {:ok, page} = conn |> ExNylas.Scheduler.create(`page_config`)
   """
-  def save(%Conn{} = conn, page_config) do
+  def create(%Conn{} = conn, page_config) do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
         ExNylas.API.post(
@@ -197,10 +197,10 @@ defmodule ExNylas.Scheduler do
   Create a scheduler page.
 
   Example
-      result = conn |> ExNylas.Scheduler.save(`page_config`)
+      result = conn |> ExNylas.Scheduler.create!(`page_config`)
   """
-  def save!(%Conn{} = conn, page_config) do
-    case save(conn, page_config) do
+  def create!(%Conn{} = conn, page_config) do
+    case create(conn, page_config) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end
