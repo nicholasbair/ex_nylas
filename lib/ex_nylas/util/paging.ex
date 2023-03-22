@@ -15,15 +15,16 @@ defmodule ExNylas.Paging do
   defp page(%Conn{} = conn, resource, query, offset \\ 0, acc \\ []) do
     query =
       query
-      |> Map.put(:limit, @limit)
+      |> Map.put_new(:limit, @limit)
       |> Map.put(:offset, offset)
 
     case apply(resource, :list, [conn, query]) do
       {:ok, data} ->
         new = acc ++ data
+        limit = Map.get(query, :limit)
 
-        case length(data) == @limit do
-          true -> page(conn, resource, query, offset + @limit, new)
+        case length(data) == limit do
+          true -> page(conn, resource, query, offset + limit, new)
           false -> {:ok, new}
         end
 
