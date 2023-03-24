@@ -18,7 +18,7 @@ defmodule ExNylas do
     # Not all objects support both put and post
     # Thus need to differentiate using the update/create key here
     update: %{name: :update, http_method: :put},
-    create: %{name: :save, http_method: :post}
+    create: %{name: :create, http_method: :post}
   }
 
   defp generate_funcs(opts) do
