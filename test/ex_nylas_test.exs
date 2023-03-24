@@ -1,83 +1,41 @@
 defmodule ExNylasTest do
-  # Use async == false to avoid API limits
-  use ExUnit.Case, async: false
-  doctest ExNylas
+  use ExUnit.Case, async: true
 
-  # Stored as strings to avoid additional parsing
-  @modules [
-    "Account",
-    "Application",
-    "Calendars",
-    "Contacts",
-    "Delta",
-    "Drafts",
-    "Events",
-    "Files",
-    "Folders",
-    "Jobs",
-    "Labels",
-    "ManagementAccounts",
-    "Messages",
-    "Threads",
-    "Scheduler",
-    "Webhooks"
-  ]
+  defp generate_tests(opts) do
+    include = Keyword.get(opts, :include, [])
+    object = Keyword.get(opts, :object)
+    struct_name = Keyword.get(opts, :struct)
+    bypass = Keyword.get(opts, :bypass)
 
-  defp build_conn do
-    %ExNylas.Connection{
-      client_id: System.fetch_env!("NYLAS_CLIENT_ID"),
-      client_secret: System.fetch_env!("NYLAS_CLIENT_SECRET"),
-      access_token: System.fetch_env!("NYLAS_ACCESS_TOKEN")
-    }
+    configs = ExNylas.api_configs()
+
+    configs
+    |> Map.keys()
+    |> Enum.filter(fn k -> k in include end)
+    |> Enum.map(fn k ->
+      Map.get(configs, k)
+      |> generate_test(object, struct_name, bypass)
+    end)
   end
 
-  # Test for list/2
-  @modules
-  |> Enum.filter(fn m ->
-    Module.concat([ExNylas, String.to_atom(m)])
-    |> apply(:__info__, [:functions])
-    |> Enum.any?(fn {name, arity} -> name == :list and arity == 2 end)
-  end)
-  |> Enum.each(fn m ->
-    test "List for #{m}" do
-      {ok, res} =
-        apply(
-          Module.concat([ExNylas, String.to_atom(unquote(m))]),
-          :list,
-          [build_conn(), %{limit: 1}]
-        )
+  defp generate_test(%{name: :find} = config, object, struct_name, bypass) do
+    quote do
+      test "#{unquote(struct_name)}.#{unquote(config.name)} makes a call to #{unquote(config.http_method)} /#{unquote(object)}", %{bypass: unquote(bypass)} do
+        Bypass.expect_once(unquote(bypass), unquote(config.http_method), "/#{unquote(object)}", fn conn ->
+          Plug.Conn.resp(conn, 200, ~s<{"id": "1234"}>)
+        end)
 
-      if ok == :error do
-        IO.puts("Error on #{unquote(m)}, message printed below")
-        IO.inspect(res)
+        apply(unquote(struct_name), unquote(config.name), ExNylas.Connection.new("id", "secret", "token", "http://localhost:#{unquote(bypass.port)}/"))
+
+        assert 1 == 2
       end
-
-      assert ok == :ok
     end
-  end)
+  end
 
-  # Test for first/2
-  @modules
-  |> Enum.filter(fn m ->
-    Module.concat([ExNylas, String.to_atom(m)])
-    |> apply(:__info__, [:functions])
-    |> Enum.any?(fn {name, arity} -> name == :first and arity == 2 end)
-  end)
-  |> Enum.each(fn m ->
-    test "First for #{m}" do
-      {ok, res} =
-        apply(
-          Module.concat([ExNylas, String.to_atom(unquote(m))]),
-          :first,
-          [build_conn()]
-        )
-
-      if ok == :error do
-        IO.puts("Error on #{unquote(m)}, message printed below")
-        IO.inspect(res)
-      end
-
-      assert ok == :ok
+  defmacro __using__(opts) do
+    quote do
+      unquote(generate_tests(opts))
     end
-  end)
+  end
+
 end
