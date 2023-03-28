@@ -58,3 +58,31 @@ defmodule ExNylas.Webhooks do
     computed == String.downcase(signature)
   end
 end
+
+defmodule ExNylas.WebhookNotification do
+  @moduledoc """
+  A struct representing a webhook notification.
+  """
+  use TypedStruct
+
+  typedstruct do
+    @typedoc "A webhook notification"
+    field(:deltas, [Delta.t()])
+  end
+
+  typedstruct module: Delta do
+    field(:date, non_neg_integer())
+    field(:object, String.t())
+    field(:type, String.t())
+    field(:object_data, ObjectData.t())
+  end
+
+  typedstruct module: ObjectData do
+    field(:namespace_id, String.t())
+    field(:account_id, String.t())
+    field(:object, String.t())
+    field(:attributes, map())
+    field(:id, String.t())
+    field(:metadata, map())
+  end
+end
