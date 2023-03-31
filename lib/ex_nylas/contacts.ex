@@ -2,63 +2,220 @@ defmodule ExNylas.Contact do
   @moduledoc """
   A struct representing a contact.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A contact"
-    field(:id, String.t())
-    field(:object, String.t())
-    field(:account_id, String.t())
-    field(:given_name, String.t())
-    field(:middle_name, String.t())
-    field(:surname, String.t())
-    field(:suffix, String.t())
-    field(:nickname, String.t())
-    field(:birthday, String.t())
-    field(:company_name, String.t())
-    field(:job_title, String.t())
-    field(:manager_name, String.t())
-    field(:office_location, String.t())
-    field(:notes, String.t())
-    field(:picture_url, String.t())
-    field(:emails, list())
-    field(:im_addresses, list())
-    field(:physical_addresses, list())
-    field(:phone_numbers, list())
-    field(:web_pages, list())
-    field(:groups, list())
-    field(:source, String.t())
+  defstruct [
+    :id,
+    :object,
+    :account_id,
+    :given_name,
+    :middle_name,
+    :surname,
+    :suffix,
+    :nickname,
+    :birthday,
+    :company_name,
+    :job_title,
+    :manager_name,
+    :office_location,
+    :notes,
+    :picture_url,
+    :emails,
+    :im_addresses,
+    :physical_addresses,
+    :phone_numbers,
+    :web_pages,
+    :groups,
+    :source,
+  ]
+
+  @typedoc "A contact"
+  @type t :: %__MODULE__{
+    id: String.t(),
+    object: String.t(),
+    account_id: String.t(),
+    given_name: String.t(),
+    middle_name: String.t(),
+    surname: String.t(),
+    suffix: String.t(),
+    nickname: String.t(),
+    birthday: String.t(),
+    company_name: String.t(),
+    job_title: String.t(),
+    manager_name: String.t(),
+    office_location: String.t(),
+    notes: String.t(),
+    picture_url: String.t(),
+    emails: [ExNylas.Contact.EmailAddress.t()],
+    im_addresses: [ExNylas.Contact.IMAddress.t()],
+    physical_addresses: [ExNylas.Contact.PhysicalAddress.t()],
+    phone_numbers: [ExNylas.Contact.PhoneNumber.t()],
+    web_pages: [ExNylas.Contact.WebPage.t()],
+    groups: [ExNylas.Contact.Group.t()],
+    source: String.t(),
+  }
+
+  defmodule EmailAddress do
+
+    defstruct [
+      :type,
+      :email,
+    ]
+
+    @type t :: %__MODULE__{
+      type: String.t(),
+      email: String.t(),
+    }
   end
 
-  typedstruct module: Build do
+  defmodule IMAddress do
+    # @derive Nestru.Decoder
+    # use Domo, skip_defaults: true
+
+    defstruct [
+      :type,
+      :im_address,
+    ]
+
+    @type t :: %__MODULE__{
+      type: String.t(),
+      im_address: String.t(),
+    }
+  end
+
+  defmodule PhysicalAddress do
+    # @derive Nestru.Decoder
+    # use Domo, skip_defaults: true
+
+    defstruct [
+      :format,
+      :type,
+      :street_address,
+      :city,
+      :postal_code,
+      :state,
+      :country,
+      :secondary_address
+    ]
+
+    @type t :: %__MODULE__{
+      format: String.t(),
+      type: String.t(),
+      street_address: String.t(),
+      city: String.t(),
+      postal_code: String.t(),
+      state: String.t(),
+      country: String.t(),
+      secondary_address: String.t(),
+    }
+  end
+
+  defmodule PhoneNumber do
+    defstruct [
+      :type,
+      :number,
+    ]
+
+    @type t :: %__MODULE__{
+      type: String.t(),
+      number: String.t(),
+    }
+  end
+
+  defmodule WebPage do
+    defstruct [
+      :type,
+      :url,
+    ]
+
+    @type t :: %__MODULE__{
+      type: String.t(),
+      url: String.t(),
+    }
+  end
+
+  defmodule Build do
+
+    defstruct [
+      :given_name,
+      :middle_name,
+      :surname,
+      :suffix,
+      :nickname,
+      :birthday,
+      :company_name,
+      :job_title,
+      :manager_name,
+      :office_location,
+      :notes,
+      :emails,
+      :im_addresses,
+      :physical_addresses,
+      :phone_numbers,
+      :web_pages,
+      :group,
+    ]
+
     @typedoc "A struct representing the create contact request payload."
-    field(:given_name, String.t())
-    field(:middle_name, String.t())
-    field(:surname, String.t())
-    field(:suffix, String.t())
-    field(:nickname, String.t())
-    field(:birthday, String.t())
-    field(:company_name, String.t())
-    field(:job_title, String.t())
-    field(:manager_name, String.t())
-    field(:office_location, String.t())
-    field(:notes, String.t())
-    field(:emails, list())
-    field(:im_addresses, list())
-    field(:physical_addresses, list())
-    field(:phone_numbers, list())
-    field(:web_pages, list())
-    field(:group, String.t())
+    @type t :: %__MODULE__{
+      given_name: String.t(),
+      middle_name: String.t(),
+      surname: String.t(),
+      suffix: String.t(),
+      nickname: String.t(),
+      birthday: String.t(),
+      company_name: String.t(),
+      job_title: String.t(),
+      manager_name: String.t(),
+      office_location: String.t(),
+      notes: String.t(),
+      emails: [ExNylas.Contact.EmailAddress.t()],
+      im_addresses: [ExNylas.Contact.IMAddress.t()],
+      physical_addresses: [ExNylas.Contact.PhysicalAddress.t()],
+      phone_numbers: [ExNylas.Contact.PhoneNumber.t()],
+      web_pages: [ExNylas.Contact.WebPage.t()],
+      group: String.t(),
+    }
+
   end
 
-  typedstruct module: Group do
+  defmodule Group do
+    defstruct [
+      :id,
+      :object,
+      :account_id,
+      :name,
+      :path,
+    ]
+
     @typedoc "A contact group"
-    field(:id, String.t())
-    field(:object, String.t())
-    field(:account_id, String.t())
-    field(:name, String.t())
-    field(:path, String.t())
+    @type t :: %__MODULE__{
+      id: String.t(),
+      object: String.t(),
+      account_id: String.t(),
+      name: String.t(),
+      path: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Contact.Group{}
+    end
+
+    def as_list(), do: [as_struct()]
+
   end
+
+  def as_struct() do
+    %ExNylas.Contact{
+      emails: [%ExNylas.Contact.EmailAddress{}],
+      im_addresses: [%ExNylas.Contact.IMAddress{}],
+      physical_addresses: [%ExNylas.Contact.PhysicalAddress{}],
+      phone_numbers: [%ExNylas.Contact.PhoneNumber{}],
+      web_pages: [%ExNylas.Contact.WebPage{}],
+      groups: [%ExNylas.Contact.Group{}],
+    }
+  end
+
+  def as_list, do: [as_struct()]
 end
 
 defmodule ExNylas.Contacts do
@@ -86,7 +243,7 @@ defmodule ExNylas.Contacts do
       "#{conn.api_server}/contacts/groups",
       API.header_bearer(conn)
     )
-    |> API.handle_response(Group)
+    |> API.handle_response(Group.as_list())
   end
 
   @doc """

@@ -2,34 +2,69 @@ defmodule ExNylas.ManagementAccount do
   @moduledoc """
   A struct representing a management account.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A management account"
-    field(:id, String.t())
-    field(:billing_state, String.t())
-    field(:email_address, String.t())
-    field(:namespace_id, String.t())
-    field(:provider, String.t())
-    field(:sync_state, String.t())
-    field(:trial, boolean())
-    field(:authentication_type, String.t())
+  defstruct [
+    :id,
+    :billing_state,
+    :email_address,
+    :namespace_id,
+    :provider,
+    :sync_state,
+    :trial,
+    :authentication_type,
+  ]
+
+  @typedoc "A management account"
+  @type t :: %__MODULE__{
+    id: String.t(),
+    billing_state: String.t(),
+    email_address: String.t(),
+    namespace_id: String.t(),
+    provider: String.t(),
+    sync_state: String.t(),
+    trial: boolean(),
+    authentication_type: String.t(),
+  }
+
+  def as_struct() do
+    %ExNylas.ManagementAccount{}
   end
 
-  typedstruct module: Downgrade do
+  def as_list, do: [as_struct()]
+
+  defmodule Downgrade do
+    defstruct [
+      :success
+    ]
+
     @typedoc "A management account downgrade"
-    field(:success, boolean())
+    @type t :: %__MODULE__{
+      success: boolean()
+    }
   end
 
-  typedstruct module: Upgrade do
+  defmodule Upgrade do
+    defstruct [
+      :success
+    ]
+
     @typedoc "A management account upgrade"
-    field(:success, boolean())
+    @type t :: %__MODULE__{
+      success: boolean()
+    }
   end
 
-  typedstruct module: IPAddresses do
+  defmodule IPAddresses do
+    defstruct [
+      :ip_addresses,
+      :updated_at,
+    ]
+
     @typedoc "A management account IP addresses"
-    field(:ip_addresses, list())
-    field(:updated_at, non_neg_integer())
+    @type t :: %__MODULE__{
+      ip_addresses: list(),
+      updated_at: non_neg_integer(),
+    }
   end
 end
 

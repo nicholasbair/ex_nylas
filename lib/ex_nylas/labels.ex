@@ -2,20 +2,28 @@ defmodule ExNylas.Label do
   @moduledoc """
   A struct representing a label.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A label"
-    field(:display_name, String.t())
-    field(:name, String.t())
-    field(:object, String.t())
-    field(:account_id, String.t())
-    field(:id, String.t())
-  end
+  defstruct [:display_name, :name, :object, :account_id, :id]
 
-  typedstruct module: Build do
+  @typedoc "A label"
+  @type t :: %__MODULE__{
+    display_name: String.t(),
+    name: String.t(),
+    object: String.t(),
+    account_id: String.t(),
+    id: String.t(),
+  }
+
+  def as_struct(), do: %ExNylas.Label{}
+
+  def as_list(), do: [as_struct()]
+
+  defmodule Build do
+    @enforce_keys [:display_name]
+    defstruct [:display_name]
+
     @typedoc "A struct representing the create label request payload."
-    field(:display_name, String.t(), enforce: true)
+    @type t :: %__MODULE__{display_name: String.t()}
   end
 end
 

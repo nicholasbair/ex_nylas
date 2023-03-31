@@ -2,16 +2,19 @@ defmodule ExNylas.Application do
   @moduledoc """
   A struct representing a Nylas application.
   """
-  use TypedStruct
-
-  typedstruct do
-    field(:application_name, String.t())
-    field(:icon_url, String.t())
-    field(:redirect_uris, list())
-  end
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+
+  defstruct [:application_name, :icon_url, :redirect_uris]
+
+  @type t :: %__MODULE__{
+    application_name: String.t(),
+    icon_url: String.t(),
+    redirect_uris: [String.t()]
+  }
+
+  def as_struct(), do: %ExNylas.Application{}
 
   @doc """
   Get the application.
@@ -24,7 +27,7 @@ defmodule ExNylas.Application do
       "#{conn.api_server}/a/#{conn.client_id}",
       API.header_basic(conn)
     )
-    |> API.handle_response(__MODULE__)
+    |> API.handle_response(as_struct())
   end
 
   @doc """
@@ -52,7 +55,7 @@ defmodule ExNylas.Application do
       body,
       API.header_basic(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(ExNylas.Application)
+    |> API.handle_response(as_struct())
   end
 
   @doc """

@@ -2,7 +2,6 @@ defmodule ExNylas.Scheduler do
   @moduledoc """
   A struct representing a scheduler page config.
   """
-  use TypedStruct
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
 
@@ -10,19 +9,246 @@ defmodule ExNylas.Scheduler do
     struct: __MODULE__,
     include: [:all]
 
-  typedstruct do
-    @typedoc "A scheduler page config"
-    field(:access_tokens, list)
-    field(:config, map())
-    field(:booking, map())
-    field(:name, String.t())
-    field(:slug, String.t())
+  defstruct [
+    :access_tokens,
+    :access_token_infos,
+    :app_client_id,
+    :app_organization_id,
+    :config,
+    :created_at,
+    :edit_token,
+    :id,
+    :modified_at,
+    :name,
+    :slug,
+  ]
+
+  @typedoc "A scheduler page config"
+  @type t :: %__MODULE__{
+    access_tokens: [String.t()],
+    access_token_infos: [ExNylas.Scheduler.AccessTokenInfo.t()],
+    app_client_id: String.t(),
+    app_organization_id: non_neg_integer(),
+    config: ExNylas.Scheduler.Config.t(),
+    created_at: String.t(),
+    edit_token: String.t(),
+    id: non_neg_integer(),
+    modified_at: String.t(),
+    name: String.t(),
+    slug: String.t(),
+  }
+
+  defmodule AccessTokenInfo do
+    defstruct [
+      :account_email,
+      :account_name,
+    ]
+
+    @type t :: %__MODULE__{
+      account_email: String.t(),
+      account_name: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.AccessTokenInfo{}
+    end
   end
+
+  defmodule Config do
+    defstruct [
+      :appearance,
+      :booking,
+      :calendar_ids,
+      :disable_emails,
+      :event,
+      :features,
+      :locale,
+    ]
+
+    @type t :: %__MODULE__{
+      appearance: ExNylas.Scheduler.Appearance.t(),
+      booking: ExNylas.Scheduler.Booking.t(),
+      calendar_ids: map(),
+      disable_emails: boolean(),
+      event: ExNylas.Scheduler.Event.t(),
+      features: ExNylas.Scheduler.Features.t(),
+      locale: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.Config{
+        appearance: ExNylas.Scheduler.Appearance.as_struct(),
+        booking: ExNylas.Scheduler.Booking.as_struct(),
+        event: ExNylas.Scheduler.Event.as_struct(),
+        features: ExNylas.Scheduler.Features.as_struct(),
+      }
+    end
+  end
+
+  defmodule Appearance do
+    defstruct [
+      :color,
+      :company_name,
+      :logo,
+      :show_autoschedule,
+      :show_nylas_branding,
+      :show_timezone_options,
+      :show_week_view,
+      :submit_text,
+      :thank_you_redirect,
+    ]
+
+    @type t :: %__MODULE__{
+      color: String.t(),
+      company_name: String.t(),
+      logo: String.t(),
+      show_autoschedule: boolean(),
+      show_nylas_branding: boolean(),
+      show_timezone_options: boolean(),
+      show_week_view: boolean(),
+      submit_text: String.t(),
+      thank_you_redirect: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.Appearance{}
+    end
+  end
+
+  defmodule Booking do
+    defstruct [
+      :additional_fields,
+      :additional_guests_hidden,
+      :available_days_in_the_future,
+      :caledar_invite_to_guests,
+      :confirmation_emails_to_guests,
+      :confirmation_emails_to_host,
+      :confirmation_method,
+      :interval_minutes,
+      :min_booking_notice,
+      :min_buffer,
+      :min_cancellation_notice,
+      :name_field_hidden,
+      :opening_hours,
+      :scheduling_method,
+    ]
+
+    @type t :: %__MODULE__{
+      additional_fields: [ExNylas.Scheduler.AdditionalField.t()],
+      additional_guests_hidden: boolean(),
+      available_days_in_the_future: non_neg_integer(),
+      caledar_invite_to_guests: boolean(),
+      confirmation_emails_to_guests: boolean(),
+      confirmation_emails_to_host: boolean(),
+      confirmation_method: String.t(),
+      interval_minutes: non_neg_integer(),
+      min_booking_notice: non_neg_integer(),
+      min_buffer: non_neg_integer(),
+      min_cancellation_notice: non_neg_integer(),
+      name_field_hidden: boolean(),
+      opening_hours: [ExNylas.Scheduler.OpeningHour.t()],
+      scheduling_method: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.Booking{}
+    end
+  end
+
+  defmodule AdditionalField do
+    defstruct [
+      :label,
+      :name,
+      :order,
+      :required,
+      :type,
+      :dropdown_options,
+      :multi_select_options,
+      :pattern,
+    ]
+
+    @type t :: %__MODULE__{
+      label: String.t(),
+      name: String.t(),
+      order: integer(),
+      required: boolean(),
+      type: String.t(),
+      dropdown_options: [String.t()],
+      multi_select_options: [String.t()],
+      pattern: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.AdditionalField{}
+    end
+  end
+
+  defmodule OpeningHour do
+    defstruct [
+      :days,
+      :start,
+      :end,
+    ]
+
+    @type t :: %__MODULE__{
+      days: [String.t()],
+      start: String.t(),
+      end: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.OpeningHour{}
+    end
+  end
+
+  defmodule Event do
+    defstruct [
+      :capacity,
+      :duration,
+      :location,
+      :title,
+    ]
+
+    @type t :: %__MODULE__{
+      capacity: integer(),
+      duration: non_neg_integer(),
+      location: String.t(),
+      title: String.t(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.Event{}
+    end
+  end
+
+  defmodule Features do
+    defstruct [
+      :collective_meetings,
+      :group_meetings,
+    ]
+
+    @type t :: %__MODULE__{
+      collective_meetings: boolean(),
+      group_meetings: boolean(),
+    }
+
+    def as_struct() do
+      %ExNylas.Scheduler.Features{}
+    end
+  end
+
+  def as_struct() do
+    %ExNylas.Scheduler{
+      config: ExNylas.Scheduler.Config.as_struct()
+    }
+  end
+
+  def as_list(), do: [as_struct()]
 
   @doc """
   Build a scheduler.
 
-  Note - call save/2 to create the page on Nylas.
+  Note - call create/2 to create the page on Nylas.
 
   Example
       {:ok, scheduler} = conn |> ExNylas.Scheduler.build(`config`)
@@ -39,7 +265,7 @@ defmodule ExNylas.Scheduler do
   @doc """
   Build a scheduler.
 
-  Note - call save/2 to create the page on Nylas.
+  Note - call create/2 to create the page on Nylas.
 
   Example
       scheduler = conn |> ExNylas.Scheduler.build(`config`)
@@ -60,7 +286,7 @@ defmodule ExNylas.Scheduler do
           API.header_bearer(conn),
           params: params
         )
-        |> API.handle_response(__MODULE__)
+        |> API.handle_response(as_list())
 
       {:error, message} ->
         {:error, message}
@@ -119,7 +345,7 @@ defmodule ExNylas.Scheduler do
           url <> "/manage/pages/#{id}",
           API.header_bearer(conn)
         )
-        |> API.handle_response(__MODULE__)
+        |> API.handle_response(as_struct())
 
       {:error, message} ->
         {:error, message}
@@ -186,7 +412,7 @@ defmodule ExNylas.Scheduler do
           page_config,
           ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
         )
-        |> API.handle_response(__MODULE__)
+        |> API.handle_response(as_struct())
 
       {:error, message} ->
         {:error, message}
@@ -220,7 +446,7 @@ defmodule ExNylas.Scheduler do
           page_config,
           ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
         )
-        |> API.handle_response(__MODULE__)
+        |> API.handle_response(as_struct())
 
       {:error, message} ->
         {:error, message}

@@ -2,15 +2,16 @@ defmodule ExNylas.Delta do
   @moduledoc """
   A struct representing a delta & interface for Nylas delta.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A delta/cursor"
-    field(:cursor, String.t())
-  end
+  defstruct [:cursor]
+
+  @typedoc "A delta/cursor"
+  @type t :: %__MODULE__{cursor: String.t()}
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+
+  def as_struct(), do: %ExNylas.Delta{}
 
   @doc """
   Get the latest delta cursor.
@@ -24,7 +25,7 @@ defmodule ExNylas.Delta do
       %{},
       API.header_bearer(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(__MODULE__)
+    |> API.handle_response(as_struct())
   end
 
   @doc """

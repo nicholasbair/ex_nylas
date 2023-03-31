@@ -2,7 +2,6 @@ defmodule ExNylas.Calendars.Availability do
   @moduledoc """
   Interface for Nylas calendar availability.
   """
-  use TypedStruct
   use ExNylas,
     struct: __MODULE__,
     include: [:build]
@@ -10,26 +9,71 @@ defmodule ExNylas.Calendars.Availability do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
 
-  typedstruct do
-    @typedoc "Calendar availability"
-    field(:object, String.t())
-    field(:timeslots, list())
+  defstruct [:object, :timeslots]
+
+  @type t :: %__MODULE__{
+    object: String.t(),
+    timeslots: [ExNylas.Calendars.Availability.TimeSlot.t()]
+  }
+
+  defmodule TimeSlot do
+    defstruct [
+      :object,
+      :status,
+      :start,
+      :end,
+    ]
+
+    @type t :: %__MODULE__{
+      object: String.t(),
+      status: String.t(),
+      start: non_neg_integer(),
+      end: non_neg_integer(),
+    }
+
+    def as_struct() do
+      %ExNylas.Calendars.Availability.TimeSlot{}
+    end
   end
 
-  typedstruct module: Build do
+  def as_struct() do
+    %ExNylas.Calendars.Availability{
+      timeslots: [ExNylas.Calendars.Availability.TimeSlot.as_struct()]
+    }
+  end
+
+  defmodule Build do
+    @enforce_keys [:duration_minutes, :start_time, :end_time, :interval_minutes, :emails]
+    defstruct [
+      :duration_minutes,
+      :start_time,
+      :end_time,
+      :interval_minutes,
+      :round_start,
+      :emails,
+      :free_busy,
+      :open_hours,
+      :tentative_busy,
+      :round_robin,
+      :buffer,
+      :calendars,
+    ]
+
     @typedoc "A struct representing the calendar availability request payload."
-    field(:duration_minutes, non_neg_integer(), enforce: true)
-    field(:start_time, non_neg_integer(), enforce: true)
-    field(:end_time, non_neg_integer(), enforce: true)
-    field(:interval_minutes, non_neg_integer(), enforce: true)
-    field(:round_start, boolean())
-    field(:emails, list(), enforce: true)
-    field(:free_busy, list())
-    field(:open_hours, list())
-    field(:tentative_busy, boolean())
-    field(:round_robin, String.t())
-    field(:buffer, non_neg_integer())
-    field(:calendars, list())
+    @type t :: %__MODULE__{
+      duration_minutes: non_neg_integer(),
+      start_time: non_neg_integer(),
+      end_time: non_neg_integer(),
+      interval_minutes: non_neg_integer(),
+      round_start: boolean(),
+      emails: list(),
+      free_busy: list(),
+      open_hours: list(),
+      tentative_busy: boolean(),
+      round_robin: String.t(),
+      buffer: non_neg_integer(),
+      calendars: list(),
+    }
   end
 
   @doc """
@@ -64,7 +108,7 @@ defmodule ExNylas.Calendars.Availability do
       body,
       API.header_bearer(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(Availability)
+    |> API.handle_response(ExNylas.Calendars.Availability.as_struct())
   end
 
   defp availability_consecutive(%Conn{} = conn, body) do
@@ -73,6 +117,6 @@ defmodule ExNylas.Calendars.Availability do
       body,
       API.header_bearer(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(Availability)
+    |> API.handle_response(ExNylas.Calendars.Availability.as_struct())
   end
 end

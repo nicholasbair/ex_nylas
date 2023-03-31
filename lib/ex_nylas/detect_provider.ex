@@ -2,22 +2,41 @@ defmodule ExNylas.DetectProvider do
   @moduledoc """
   A struct representing provider detection for a given email address.
   """
-  use TypedStruct
+  # @derive Nestru.Decoder
+  # use Domo, skip_defaults: true
 
-  typedstruct do
-    @typedoc "Detect provider"
-    field(:auth_name, String.t())
-    field(:detected, boolean())
-    field(:email_address, String.t())
-    field(:is_imap, boolean())
-    field(:provider_name, String.t())
-  end
+  defstruct [
+    :auth_name,
+    :detected,
+    :email_address,
+    :is_imap,
+    :provider_name,
+  ]
 
-  typedstruct module: Build, enforce: true do
+  @typedoc "Detect provider"
+  @type t :: %__MODULE__{
+    auth_name: String.t(),
+    detected: boolean(),
+    email_address: String.t(),
+    is_imap: boolean(),
+    provider_name: String.t(),
+  }
+
+  def as_struct(), do: %ExNylas.DetectProvider{}
+
+  defmodule Build do
+    # @derive Jason.Encoder
+    # use Domo, skip_defaults: true
+
+    @enforce_keys [:client_id, :client_secret, :email_address]
+    defstruct [:client_id, :client_secret, :email_address]
+
     @typedoc "A struct representing the detect provider request payload"
-    field(:client_id, String.t())
-    field(:client_secret, String.t())
-    field(:email_address, String.t())
+    @type t :: %__MODULE__{
+      client_id: String.t(),
+      client_secret: String.t(),
+      email_address: String.t(),
+    }
   end
 
   alias ExNylas.API
@@ -39,7 +58,7 @@ defmodule ExNylas.DetectProvider do
       },
       "content-type": "application/json"
     )
-    |> API.handle_response(__MODULE__)
+    |> API.handle_response(as_struct())
   end
 
   @doc """
