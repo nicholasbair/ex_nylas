@@ -6,19 +6,26 @@ defmodule ExNylas.Connection do
   The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API, the access_token is needed.
   For calls to application, account management and webhooks, the client_id and client_secret is required.
   """
-  use TypedStruct
 
   @api_server "https://api.nylas.com"
   @api_version "2.7"
 
-  typedstruct do
-    @typedoc "A Nylas API connection."
-    field(:client_id, String.t())
-    field(:client_secret, String.t())
-    field(:access_token, String.t())
-    field(:api_server, String.t(), default: @api_server)
-    field(:api_version, String.t(), default: @api_version)
-  end
+  defstruct [
+    :client_id,
+    :client_secret,
+    :access_token,
+    api_server: @api_server,
+    api_version: @api_version
+  ]
+
+  @typedoc "A Nylas API connection."
+  @type t :: %__MODULE__{
+    client_id: String.t(),
+    client_secret: String.t(),
+    access_token: String.t(),
+    api_server: String.t(),
+    api_version: String.t(),
+  }
 
   @doc """
   Create a new Nylas connection.

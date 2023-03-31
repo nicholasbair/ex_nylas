@@ -2,20 +2,35 @@ defmodule ExNylas.File do
   @moduledoc """
   A struct representing a file.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A file"
-    field(:id, String.t())
-    field(:object, String.t())
-    field(:account_id, String.t())
-    field(:content_type, String.t())
-    field(:size, non_neg_integer())
-    field(:filename, String.t())
-    field(:message_ids, list())
-    field(:content_id, String.t())
-    field(:content_disposition, String.t())
-  end
+  defstruct [
+    :id,
+    :object,
+    :account_id,
+    :content_type,
+    :size,
+    :filename,
+    :message_ids,
+    :content_id,
+    :content_disposition,
+  ]
+
+  @typedoc "A file"
+  @type t :: %__MODULE__{
+    id: String.t(),
+    object: String.t(),
+    account_id: String.t(),
+    content_type: String.t(),
+    size: non_neg_integer(),
+    filename: String.t(),
+    message_ids: [String.t()],
+    content_id: String.t(),
+    content_disposition: String.t(),
+  }
+
+  def as_struct, do: %ExNylas.File{}
+
+  def as_list, do: [as_struct()]
 end
 
 defmodule ExNylas.Files do

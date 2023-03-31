@@ -2,23 +2,25 @@ defmodule ExNylas.Account do
   @moduledoc """
   A struct representing an account & interface for Nylas account.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "An account"
-    field(:id, String.t())
-    field(:account_id, String.t())
-    field(:object, String.t())
-    field(:name, String.t())
-    field(:email_address, String.t())
-    field(:provider, String.t())
-    field(:organization_unit, String.t())
-    field(:sync_state, String.t())
-    field(:linked_at, integer())
-  end
+  defstruct [:id, :account_id, :object,  :name, :email_address, :provider, :organization_unit, :sync_state, :linked_at]
+
+  @type t :: %__MODULE__{
+    id: String.t(),
+    account_id: String.t(),
+    object: String.t(),
+    name: String.t(),
+    email_address: String.t(),
+    provider: String.t(),
+    organization_unit: String.t(),
+    sync_state: String.t(),
+    linked_at: non_neg_integer(),
+  }
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+
+  def as_struct, do: %ExNylas.Account{}
 
   @doc """
   Get the account associated with the `access_token`.
@@ -31,7 +33,7 @@ defmodule ExNylas.Account do
       "#{conn.api_server}/account",
       API.header_bearer(conn)
     )
-    |> API.handle_response(__MODULE__)
+    |> API.handle_response(as_struct())
   end
 
   @doc """

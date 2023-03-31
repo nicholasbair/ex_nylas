@@ -2,23 +2,40 @@ defmodule ExNylas.Webhook do
   @moduledoc """
   A struct representing a webhook.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A webhook"
-    field(:application_id, String.t())
-    field(:callback_url, String.t())
-    field(:id, String.t())
-    field(:state, String.t())
-    field(:triggers, list())
-    field(:version, String.t())
-  end
+  defstruct [
+    :application_id,
+    :callback_url,
+    :id,
+    :state,
+    :triggers,
+    :version,
+  ]
 
-  typedstruct module: Build do
-    @typedoc "A struct representing the create webhook request payload."
-    field(:state, String.t())
-    field(:callback_url, String.t(), enforce: true)
-    field(:triggers, list(), enforce: true)
+  @type t :: %__MODULE__{
+    application_id: String.t(),
+    callback_url: String.t(),
+    state: String.t(),
+    triggers: [String.t()],
+    version: String.t(),
+  }
+
+  def as_struct(), do: %ExNylas.Webhook{}
+
+  def as_list, do: [as_struct()]
+
+  defmodule Build do
+    defstruct [
+      :state,
+      :callback_url,
+      :triggers,
+    ]
+
+    @type t :: %__MODULE__{
+      state: String.t(),
+      callback_url: String.t(),
+      triggers: [String.t()],
+    }
   end
 end
 
@@ -26,7 +43,6 @@ defmodule ExNylas.Webhooks do
   @moduledoc """
   Interface for Nylas webhook.
   """
-  alias ExNylas.Connection, as: Conn
 
   use ExNylas,
     object: "webhooks",
@@ -34,19 +50,71 @@ defmodule ExNylas.Webhooks do
     header_type: :header_basic,
     use_client_url: true,
     include: [:list, :first, :find, :delete, :build, :update, :create, :all]
+end
 
-  @doc """
+defmodule ExNylas.WebhookNotification do
+  @moduledoc """
+  A struct representing a webhook notification.
+  """
+
+  alias ExNylas.Connection, as: Conn
+
+  defstruct [
+    :deltas
+  ]
+
+  @type t :: %__MODULE__{
+    deltas: [ExNylas.WebhookNotification.Delta.t()]
+  }
+
+  defmodule Delta do
+    defstruct [
+      :date,
+      :object,
+      :type,
+      :object_data
+    ]
+
+    @type t :: %__MODULE__{
+      date: non_neg_integer(),
+      object: String.t(),
+      type: String.t(),
+      object_data: ExNylas.WebhookNotification.ObjectData.t(),
+    }
+  end
+
+  defmodule ObjectData do
+    defstruct [
+      :namespace_id,
+      :account_id,
+      :object,
+      :attributes,
+      :id,
+      :metadata,
+    ]
+
+    @type t :: %__MODULE__{
+      namespace_id: String.t(),
+      account_id: String.t(),
+      object: String.t(),
+      attributes: map(),
+      id: String.t(),
+      metadata: map(),
+    }
+  end
+
+ @doc """
   Validate the X-Nylas-Signature header from a webhook.
 
   Example
-      valid = conn |> ExNylas.Webhoooks.valid_signature?(body, signature_from_webhook_request)
+      valid = conn |> ExNylas.WebhoookNotification.valid_signature?(body, signature_from_webhook_request)
   """
   def valid_signature?(%Conn{client_secret: secret}, _body, _signature) when is_nil(secret) do
-    raise "ExNylas.Connection struct is missing a value for `client_secret` which is required for this operation."
+    raise ExNylasError, "ExNylas.Connection struct is missing a value for `client_secret` which is required for this operation."
   end
 
   def valid_signature?(%Conn{} = _conn, body, _signature) when not is_bitstring(body) do
-    raise "body should be passed as a string."
+    raise ExNylasError, "body should be passed as a string."
   end
 
   def valid_signature?(%Conn{} = conn, body, signature) do
@@ -56,33 +124,5 @@ defmodule ExNylas.Webhooks do
       |> String.downcase()
 
     computed == String.downcase(signature)
-  end
-end
-
-defmodule ExNylas.WebhookNotification do
-  @moduledoc """
-  A struct representing a webhook notification.
-  """
-  use TypedStruct
-
-  typedstruct do
-    @typedoc "A webhook notification"
-    field(:deltas, [Delta.t()])
-  end
-
-  typedstruct module: Delta do
-    field(:date, non_neg_integer())
-    field(:object, String.t())
-    field(:type, String.t())
-    field(:object_data, ObjectData.t())
-  end
-
-  typedstruct module: ObjectData do
-    field(:namespace_id, String.t())
-    field(:account_id, String.t())
-    field(:object, String.t())
-    field(:attributes, map())
-    field(:id, String.t())
-    field(:metadata, map())
   end
 end

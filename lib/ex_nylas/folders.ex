@@ -2,20 +2,34 @@ defmodule ExNylas.Folder do
   @moduledoc """
   A struct representing a folder.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A folder"
-    field(:display_name, String.t())
-    field(:name, String.t())
-    field(:id, String.t())
-    field(:object, String.t())
-    field(:account_id, String.t())
-  end
+  defstruct [
+    :display_name,
+    :name,
+    :id,
+    :object,
+    :account_id,
+  ]
 
-  typedstruct module: Build do
+  @typedoc "A folder"
+  @type t :: %__MODULE__{
+    display_name: String.t(),
+    name: String.t(),
+    id: String.t(),
+    object: String.t(),
+    account_id: String.t(),
+  }
+
+  def as_struct(), do: %ExNylas.Folder{}
+
+  def as_list(), do: [as_struct()]
+
+  defmodule Build do
+    @enforce_keys [:display_name]
+    defstruct [:display_name]
+
     @typedoc "A struct representing the create folder request payload."
-    field(:display_name, String.t(), enforce: true)
+    @type t :: %__MODULE__{display_name: String.t()}
   end
 end
 

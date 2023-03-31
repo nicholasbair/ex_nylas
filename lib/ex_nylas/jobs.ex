@@ -2,19 +2,35 @@ defmodule ExNylas.Job do
   @moduledoc """
   A struct representing a job.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A job"
-    field(:account_id, String.t())
-    field(:action, String.t())
-    field(:created_at, non_neg_integer())
-    field(:id, String.t())
-    field(:job_status_id, String.t())
-    field(:object, String.t())
-    field(:status, String.t())
-    field(:reason, String.t())
+  defstruct [
+    :account_id,
+    :action,
+    :created_at,
+    :id,
+    :job_status_id,
+    :object,
+    :status,
+    :reason,
+  ]
+
+  @typedoc "A job"
+  @type t :: %__MODULE__{
+    account_id: String.t(),
+    action: String.t(),
+    created_at: non_neg_integer(),
+    id: String.t(),
+    job_status_id: String.t(),
+    object: String.t(),
+    status: String.t(),
+    reason: String.t(),
+  }
+
+  def as_struct() do
+    %ExNylas.Job{}
   end
+
+  def as_list(), do: [as_struct()]
 end
 
 defmodule ExNylas.Jobs do

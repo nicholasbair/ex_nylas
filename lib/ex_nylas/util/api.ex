@@ -14,19 +14,11 @@ defmodule ExNylas.API do
 
   @success_codes Enum.to_list(200..299)
 
-  def process_request_body({:ok, body}) when is_map(body) or is_struct(body),
-    do: Poison.encode!(body)
+  def process_request_body({:ok, body}) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
   def process_request_body(body) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
   def process_request_body(body), do: body
-
-  def process_response_body(body) do
-    case Poison.decode(body) do
-      {:ok, res} -> res
-      {:error, _} -> body
-    end
-  end
 
   def header_bearer(%Conn{access_token: token}) when is_nil(token) do
     raise "ExNylas.Connection struct is missing a value for `access_token` which is required for this call."
@@ -80,9 +72,7 @@ defmodule ExNylas.API do
 
   def handle_response(res, transform_to) do
     case handle_response(res, nil) do
-      {:ok, body} ->
-        {:ok, TF.transform(body, transform_to)}
-
+      {:ok, body} -> TF.transform(body, transform_to)
       body -> body
     end
   end

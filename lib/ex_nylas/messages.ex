@@ -2,50 +2,127 @@ defmodule ExNylas.Message do
   @moduledoc """
   A struct representing a message.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A message"
-    field(:account_id, String.t())
-    field(:bcc, list())
-    field(:body, String.t())
-    field(:cc, list())
-    field(:date, non_neg_integer())
-    field(:events, list())
-    field(:files, list())
-    field(:folder, map())
-    field(:from, list())
-    field(:id, String.t())
-    field(:labels, list())
-    field(:object, String.t())
-    field(:reply_to, list())
-    field(:snippet, String.t())
-    field(:starred, boolean())
-    field(:subject, String.t())
-    field(:thread_id, String.t())
-    field(:to, list())
-    field(:unread, boolean())
-    field(:reply_to_message_id, String.t())
-    field(:metadata, map())
-    field(:cids, list())
-    field(:headers, map())
+  defstruct [
+    :account_id,
+    :bcc,
+    :body,
+    :cc,
+    :date,
+    :events,
+    :files,
+    :folder,
+    :from,
+    :id,
+    :labels,
+    :object,
+    :reply_to,
+    :snippet,
+    :starred,
+    :subject,
+    :thread_id,
+    :to,
+    :unread,
+    :reply_to_message_id,
+    :metadata,
+    :cids,
+    :headers,
+  ]
+
+  @typedoc "A message"
+  @type t :: %__MODULE__{
+    account_id: String.t(),
+    bcc: [ExNylas.Common.EmailParticipant.t()],
+    body: String.t(),
+    cc: [ExNylas.Common.EmailParticipant.t()],
+    date: non_neg_integer(),
+    events: [ExNylas.Event.t()],
+    files: [ExNylas.File.t()],
+    folder: ExNylas.Folder.t(),
+    from: [ExNylas.Common.EmailParticipant.t()],
+    id: String.t(),
+    labels: [ExNylas.Label.t()],
+    object: String.t(),
+    reply_to: [ExNylas.Common.EmailParticipant.t()],
+    snippet: String.t(),
+    starred: boolean(),
+    subject: String.t(),
+    thread_id: String.t(),
+    to: [ExNylas.Common.EmailParticipant.t()],
+    unread: boolean(),
+    reply_to_message_id: String.t(),
+    metadata: map(),
+    cids: [String.t()],
+    headers: ExNylas.Headers.t(),
+  }
+
+  defmodule Headers do
+    defstruct [
+      :in_reply_to,
+      :message_id,
+      :references,
+    ]
+
+    @type t :: %__MODULE__{
+      in_reply_to: String.t(),
+      message_id: String.t(),
+      references: [String.t()],
+    }
+
+    def as_struct() do
+      %ExNylas.Message.Headers{}
+    end
   end
 
-  typedstruct module: Build do
+  defmodule Build do
+    defstruct [
+      :bcc,
+      :body,
+      :cc,
+      :events,
+      :files,
+      :from,
+      :labels,
+      :reply_to,
+      :subject,
+      :to,
+      :tracking,
+      :metadata,
+    ]
+
     @typedoc "A struct representing the send message request payload."
-    field(:bcc, list())
-    field(:body, String.t())
-    field(:cc, list())
-    field(:events, list())
-    field(:files, list())
-    field(:from, list())
-    field(:labels, list())
-    field(:reply_to, list())
-    field(:subject, String.t())
-    field(:to, list())
-    field(:tracking, map())
-    field(:metadata, map())
+    @type t :: %__MODULE__{
+      bcc: list(),
+      body: String.t(),
+      cc: list(),
+      events: list(),
+      files: list(),
+      from: list(),
+      labels: list(),
+      reply_to: list(),
+      subject: String.t(),
+      to: list(),
+      tracking: map(),
+      metadata: map(),
+    }
   end
+
+  def as_struct() do
+    %ExNylas.Message{
+      bcc: [ExNylas.Common.EmailParticipant.as_struct()],
+      cc: [ExNylas.Common.EmailParticipant.as_struct()],
+      events: [ExNylas.Event.as_struct()],
+      files: [ExNylas.File.as_struct()],
+      folder: ExNylas.Folder.as_struct(),
+      from: [ExNylas.Common.EmailParticipant.as_struct()],
+      labels: [ExNylas.Label.as_struct()],
+      reply_to: [ExNylas.Common.EmailParticipant.as_struct()],
+      to: [ExNylas.Common.EmailParticipant.as_struct()],
+      headers: ExNylas.Message.Headers.as_struct(),
+    }
+  end
+
+  def as_list(), do: [as_struct()]
 end
 
 defmodule ExNylas.Messages do

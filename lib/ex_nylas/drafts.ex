@@ -2,48 +2,102 @@ defmodule ExNylas.Draft do
   @moduledoc """
   A struct representing a draft.
   """
-  use TypedStruct
 
-  typedstruct do
-    @typedoc "A draft"
-    field(:id, String.t())
-    field(:object, String.t())
-    field(:account_id, String.t())
-    field(:subject, String.t())
-    field(:from, list())
-    field(:reply_to, list())
-    field(:to, list())
-    field(:cc, list())
-    field(:bcc, list())
-    field(:date, non_neg_integer())
-    field(:thread_id, String.t())
-    field(:snippet, String.t())
-    field(:body, String.t())
-    field(:unread, boolean())
-    field(:starred, boolean())
-    field(:files, list())
-    field(:events, list())
-    field(:labels, list())
-    field(:version, non_neg_integer())
-    field(:job_status_id, String.t())
-    field(:reply_to_message_id, String.t())
-    field(:folder, map())
-    field(:metadata, map())
-    field(:cids, list())
-  end
+  defstruct [
+    :id,
+    :object,
+    :account_id,
+    :subject,
+    :from,
+    :reply_to,
+    :to,
+    :cc,
+    :bcc,
+    :date,
+    :thread_id,
+    :snippet,
+    :body,
+    :unread,
+    :starred,
+    :files,
+    :events,
+    :labels,
+    :version,
+    :job_status_id,
+    :reply_to_message_id,
+    :folder,
+    :metadata,
+    :cids,
+  ]
 
-  typedstruct module: Build do
+  @typedoc "A draft"
+  @type t :: %__MODULE__{
+    id: String.t(),
+    object: String.t(),
+    account_id: String.t(),
+    subject: String.t(),
+    from: [ExNylas.Common.EmailParticipant.t()],
+    reply_to: [ExNylas.Common.EmailParticipant.t()],
+    to: [ExNylas.Common.EmailParticipant.t()],
+    cc: [ExNylas.Common.EmailParticipant.t()],
+    bcc: [ExNylas.Common.EmailParticipant.t()],
+    date: non_neg_integer(),
+    thread_id: String.t(),
+    snippet: String.t(),
+    body: String.t(),
+    unread: boolean(),
+    starred: boolean(),
+    files: [ExNylas.File.t()],
+    events: [ExNylas.Event.t()],
+    labels: [ExNylas.Label.t()],
+    version: non_neg_integer(),
+    job_status_id: String.t(),
+    reply_to_message_id: String.t(),
+    folder: ExNylas.Folder.t(),
+    metadata: map(),
+    cids: [String.t()],
+  }
+
+  def as_struct, do: %ExNylas.Draft{
+    from: [ExNylas.Common.EmailParticipant.as_struct()],
+    reply_to: [ExNylas.Common.EmailParticipant.as_struct()],
+    to: [ExNylas.Common.EmailParticipant.as_struct()],
+    cc: [ExNylas.Common.EmailParticipant.as_struct()],
+    bcc: [ExNylas.Common.EmailParticipant.as_struct()],
+    files: [ExNylas.File.as_struct()],
+    events: [ExNylas.Event.as_struct()],
+    labels: [ExNylas.Label.as_struct()],
+  }
+
+  def as_list, do: [as_struct()]
+
+  defmodule Build do
+    defstruct [
+      :subject,
+      :to,
+      :cc,
+      :bcc,
+      :from,
+      :reply_to,
+      :reply_to_message_id,
+      :file_ids,
+      :body,
+      :metadata,
+    ]
+
     @typedoc "A struct representing the create draft request payload."
-    field(:subject, String.t())
-    field(:to, list())
-    field(:cc, list())
-    field(:bcc, list())
-    field(:from, list())
-    field(:reply_to, list())
-    field(:reply_to_message_id, String.t())
-    field(:file_ids, list())
-    field(:body, String.t())
-    field(:metadata, map())
+    @type t :: %__MODULE__{
+      subject: String.t(),
+      from: [ExNylas.Common.EmailParticipant.t()],
+      reply_to: [ExNylas.Common.EmailParticipant.t()],
+      to: [ExNylas.Common.EmailParticipant.t()],
+      cc: [ExNylas.Common.EmailParticipant.t()],
+      bcc: [ExNylas.Common.EmailParticipant.t()],
+      reply_to_message_id: String.t(),
+      file_ids: [String.t()],
+      body: String.t(),
+      metadata: map(),
+    }
   end
 end
 

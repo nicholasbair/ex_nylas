@@ -3,19 +3,24 @@ defmodule ExNylas.Authentication do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
 
-  use TypedStruct
+  defmodule RevokeAll do
+    defstruct [:success]
+    @type t :: %__MODULE__{success: boolean()}
 
-  typedstruct module: RevokeAll do
-    @typedoc "Revoke all response"
-    field(:success, boolean())
+    def as_struct(), do: %ExNylas.Authentication.RevokeAll{}
   end
 
-  typedstruct module: TokenInfo do
-    @typedoc "Token info response"
-    field(:created_at, non_neg_integer())
-    field(:scopes, String.t())
-    field(:state, String.t())
-    field(:updated_at, non_neg_integer())
+  defmodule TokenInfo do
+    defstruct [:created_at, :scopes, :state, :updated_at]
+
+    @type t :: %__MODULE__{
+      created_at: non_neg_integer(),
+      scopes: String.t(),
+      state: String.t(),
+      updated_at: non_neg_integer()
+    }
+
+    def as_struct(), do: %ExNylas.Authentication.TokenInfo{}
   end
 
   @doc """
@@ -65,7 +70,7 @@ defmodule ExNylas.Authentication do
       body,
       API.header_basic(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(RevokeAll)
+    |> API.handle_response(ExNylas.Authentication.RevokeAll.as_struct())
   end
 
   @doc """
@@ -93,7 +98,7 @@ defmodule ExNylas.Authentication do
       %{access_token: conn.access_token},
       API.header_basic(conn)
     )
-    |> API.handle_response(TokenInfo)
+    |> API.handle_response(ExNylas.Authentication.TokenInfo.as_struct())
   end
 
   @doc """
@@ -114,26 +119,41 @@ defmodule ExNylas.Authentication do
     Nylas hosted authentication
     """
 
-    use TypedStruct
+    defstruct [:access_token, :account_id, :email_address, :provider, :token_type]
 
-    typedstruct do
-      @typedoc "Hosted authentication response"
-      field(:access_token, String.t())
-      field(:account_id, String.t())
-      field(:email_address, String.t())
-      field(:provider, list())
-      field(:token_type, String.t())
-    end
+    @typedoc "Hosted authentication response"
+    @type t :: %__MODULE__{
+      access_token: String.t(),
+      account_id: String.t(),
+      email_address: String.t(),
+      provider: String.t(),
+      token_type: String.t()
+    }
 
-    typedstruct module: Options do
+    def as_struct(), do: %ExNylas.Authentication.Hosted{}
+
+    defmodule Options do
+      @enforce_keys [:redirect_uri]
+      defstruct [
+        :login_hint,
+        :redirect_uri,
+        :state,
+        :scopes,
+        :provider,
+        :redirect_on_error,
+        response_type: "code"
+      ]
+
       @typedoc "Authentication options"
-      field(:login_hint, String.t())
-      field(:redirect_uri, String.t(), enforce: true)
-      field(:state, String.t())
-      field(:scopes, list())
-      field(:response_type, String.t(), default: "code")
-      field(:provider, String.t())
-      field(:redirect_on_error, boolean())
+      @type t :: %__MODULE__{
+        login_hint: String.t(),
+        redirect_uri: String.t(),
+        state: String.t(),
+        scopes: [String.t()],
+        response_type: String.t(),
+        provider: String.t(),
+        redirect_on_error: boolean()
+      }
     end
 
     def build_options(login_hint, redirect_uri, state, scopes, response_type, provider, redirect_on_error) do
@@ -211,7 +231,7 @@ defmodule ExNylas.Authentication do
         },
         ["content-type": "application/json"]
       )
-      |> API.handle_response(ExNylas.Authentication)
+      |> API.handle_response(as_struct())
     end
 
     @doc """
@@ -259,55 +279,105 @@ defmodule ExNylas.Authentication do
   Nylas native authentication
   """
 
-    use TypedStruct
+    defstruct [
+      :id,
+      :object,
+      :account_id,
+      :name,
+      :provider,
+      :organization_unit,
+      :sync_state,
+      :linked_at,
+      :email_address,
+      :access_token,
+      :billing_state,
+    ]
 
-    typedstruct do
-      @typedoc "Native authentication response"
-      field(:id, String.t())
-      field(:object, String.t())
-      field(:account_id, String.t())
-      field(:name, String.t())
-      field(:provider, String.t())
-      field(:organization_unit, String.t())
-      field(:sync_state, String.t())
-      field(:linked_at, non_neg_integer)
-      field(:email_address, String.t())
-      field(:access_token, String.t())
-      field(:billing_state, String.t())
-    end
+    @typedoc "Native authentication response"
+    @type t :: %__MODULE__{
+      id: String.t(),
+      object: String.t(),
+      account_id: String.t(),
+      name: String.t(),
+      provider: String.t(),
+      organization_unit: String.t(),
+      sync_state: String.t(),
+      linked_at: non_neg_integer(),
+      email_address: String.t(),
+      access_token: String.t(),
+      billing_state: String.t()
+    }
 
-    typedstruct module: Settings do
-      field(:google_client_id, String.t())
-      field(:google_client_secret, String.t())
-      field(:google_refresh_token, String.t())
-      field(:microsoft_client_id, String.t())
-      field(:microsoft_client_secret, String.t())
-      field(:microsoft_refresh_token, String.t())
-      field(:redirect_uri, String.t())
-      field(:imap_host, String.t())
-      field(:imap_port, non_neg_integer)
-      field(:imap_username, String.t())
-      field(:imap_password, String.t())
-      field(:smtp_host, String.t())
-      field(:smtp_port, non_neg_integer)
-      field(:smtp_username, String.t())
-      field(:smtp_password, String.t())
-      field(:ssl_required, boolean())
-      field(:password, String.t())
-      field(:username, String.t())
-      field(:exchange_server_host, String.t())
-      field(:service_account, boolean())
-      field(:service_account_json, String.t())
-      field(:type, String.t())
-      field(:project_id, String.t())
-      field(:private_key_id, String.t())
-      field(:private_key, String.t())
-      field(:client_email, String.t())
-      field(:client_id, String.t())
-      field(:auth_uri, String.t())
-      field(:token_uri, String.t())
-      field(:auth_provider_x509_cert_url, String.t())
-      field(:client_x509_cert_url, String.t())
+    def as_struct(), do: %ExNylas.Authentication.Native{}
+
+    defmodule Settings do
+      defstruct [
+        :google_client_id,
+        :google_client_secret,
+        :google_refresh_token,
+        :microsoft_client_id,
+        :microsoft_client_secret,
+        :microsoft_refresh_token,
+        :redirect_uri,
+        :imap_host,
+        :imap_port,
+        :imap_username,
+        :imap_password,
+        :smtp_host,
+        :smtp_port,
+        :smtp_username,
+        :smtp_password,
+        :ssl_required,
+        :password,
+        :username,
+        :exchange_server_host,
+        :service_account,
+        :service_account_json,
+        :type,
+        :project_id,
+        :private_key_id,
+        :private_key,
+        :client_email,
+        :client_id,
+        :auth_uri,
+        :token_uri,
+        :auth_provider_x509_cert_url,
+        :client_x509_cert_url,
+      ]
+
+      @type t :: %__MODULE__{
+        google_client_id: String.t(),
+        google_client_secret: String.t(),
+        google_refresh_token: String.t(),
+        microsoft_client_id: String.t(),
+        microsoft_client_secret: String.t(),
+        microsoft_refresh_token: String.t(),
+        redirect_uri: String.t(),
+        imap_host: String.t(),
+        imap_port: non_neg_integer,
+        imap_username: String.t(),
+        imap_password: String.t(),
+        smtp_host: String.t(),
+        smtp_port: non_neg_integer,
+        smtp_username: String.t(),
+        smtp_password: String.t(),
+        ssl_required: boolean(),
+        password: String.t(),
+        username: String.t(),
+        exchange_server_host: String.t(),
+        service_account: boolean(),
+        service_account_json: String.t(),
+        type: String.t(),
+        project_id: String.t(),
+        private_key_id: String.t(),
+        private_key: String.t(),
+        client_email: String.t(),
+        client_id: String.t(),
+        auth_uri: String.t(),
+        token_uri: String.t(),
+        auth_provider_x509_cert_url: String.t(),
+        client_x509_cert_url: String.t(),
+      }
     end
 
     @doc """
@@ -396,7 +466,7 @@ defmodule ExNylas.Authentication do
         },
         ["content-type": "application/json"]
       )
-      |> API.handle_response(ExNylas.Authentication.Native)
+      |> API.handle_response(as_struct())
     end
 
     @doc """

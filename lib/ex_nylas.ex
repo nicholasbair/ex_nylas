@@ -121,6 +121,8 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
+        val = apply(unquote(struct_name), :as_list, [])
+
         res =
           apply(
             API,
@@ -131,7 +133,7 @@ defmodule ExNylas do
               [params: Map.put(params, :limit, 1)]
             ]
           )
-          |> API.handle_response(unquote(struct_name))
+          |> API.handle_response(val)
 
         case res do
           {:ok, val} -> {:ok, Enum.at(val, 0)}
@@ -178,6 +180,8 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}/search"
           end
 
+        val = apply(unquote(struct_name), :as_list, [])
+
         apply(
           API,
           unquote(config.http_method),
@@ -187,7 +191,7 @@ defmodule ExNylas do
             [params: %{q: search_text}]
           ]
         )
-        |> API.handle_response(unquote(struct_name))
+        |> API.handle_response(val)
       end
 
       @doc """
@@ -230,6 +234,8 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}/#{id}"
           end
 
+        val = apply(unquote(struct_name), :as_struct, [])
+
         apply(
           API,
           unquote(method),
@@ -238,7 +244,7 @@ defmodule ExNylas do
             headers
           ]
         )
-        |> API.handle_response(unquote(struct_name))
+        |> API.handle_response(val)
       end
 
       @doc """
@@ -280,6 +286,8 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
+        val = apply(unquote(struct_name), :as_list, [])
+
         apply(
           API,
           unquote(config.http_method),
@@ -289,7 +297,7 @@ defmodule ExNylas do
             [params: params]
           ]
         )
-        |> API.handle_response(unquote(struct_name))
+        |> API.handle_response(val)
       end
 
       @doc """
@@ -332,6 +340,8 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}/#{id}"
           end
 
+        val = apply(unquote(struct_name), :as_struct, [])
+
         apply(
           API,
           unquote(config.http_method),
@@ -341,7 +351,7 @@ defmodule ExNylas do
             headers
           ]
         )
-        |> API.handle_response(unquote(struct_name))
+        |> API.handle_response(val)
       end
 
       @doc """
@@ -384,6 +394,8 @@ defmodule ExNylas do
             "#{conn.api_server}/#{unquote(object)}"
           end
 
+        val = apply(unquote(struct_name), :as_struct, [])
+
         apply(
           API,
           unquote(config.http_method),
@@ -393,7 +405,7 @@ defmodule ExNylas do
             headers
           ]
         )
-        |> API.handle_response(unquote(struct_name))
+        |> API.handle_response(val)
       end
 
       @doc """
