@@ -92,7 +92,6 @@ defmodule ExNylas.ManagementAccounts do
   def delete(%Conn{} = conn, account_id) do
     API.delete(
       "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}",
-      %{},
       API.header_basic(conn) ++ ["content-type": "application/json"]
     )
     |> API.handle_response()
