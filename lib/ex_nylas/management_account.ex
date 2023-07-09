@@ -84,6 +84,34 @@ defmodule ExNylas.ManagementAccounts do
     use_client_url: true
 
   @doc """
+  Delete an account.
+
+  Example
+      {:ok, result} = conn |> ExNylas.ManagementAccounts.delete(`id`)
+  """
+  def delete(%Conn{} = conn, account_id) do
+    API.delete(
+      "#{conn.api_server}/a/#{conn.client_id}/accounts/#{account_id}",
+      %{},
+      API.header_basic(conn) ++ ["content-type": "application/json"]
+    )
+    |> API.handle_response()
+  end
+
+  @doc """
+  Delete an account.
+
+  Example
+      result = conn |> ExNylas.ManagementAccounts.delete!(`id`)
+  """
+  def delete!(%Conn{} = conn, account_id) do
+    case delete(conn, account_id) do
+      {:ok, res} -> res
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
   Downgrade the management account.
 
   Example
