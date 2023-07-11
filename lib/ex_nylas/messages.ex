@@ -58,15 +58,15 @@ defmodule ExNylas.Message do
 
   defmodule Headers do
     defstruct [
-      :in_reply_to,
-      :message_id,
-      :references,
+      :"In-Reply-To",
+      :"Message-Id",
+      :References,
     ]
 
     @type t :: %__MODULE__{
-      in_reply_to: String.t(),
-      message_id: String.t(),
-      references: [String.t()],
+      "In-Reply-To": String.t(),
+      "Message-Id": String.t(),
+      References: [String.t()],
     }
 
     def as_struct() do
