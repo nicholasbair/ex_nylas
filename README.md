@@ -17,7 +17,7 @@ Unofficial Elixir bindings for the Nylas API.
 ```elixir
 def deps do
   [
-    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "0.1.0"}
+    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.1.2"}
   ]
 end
 ```
