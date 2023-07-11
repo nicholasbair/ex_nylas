@@ -19,7 +19,7 @@ defmodule ExNylas.MixProject do
 
   defp deps do
     [
-      {:httpoison, "~> 1.7"},
+      {:httpoison, "~> 2.1"},
       {:poison, "~> 5.0"},
       {:bypass, "~> 2.1", only: :test},
     ]
