@@ -23,7 +23,7 @@ defmodule ExNylas.Authentication.Hosted do
   def as_struct(), do: %ExNylas.Authentication.Hosted{}
 
   defmodule Options do
-    @enforce_keys [:provider, :redirect_uri]
+    @enforce_keys [:redirect_uri]
     defstruct [
       :provider,
       :redirect_uri,
