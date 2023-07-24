@@ -5,26 +5,22 @@ defmodule ExNylas.File do
 
   defstruct [
     :id,
-    :object,
-    :account_id,
+    :grant_id,
     :content_type,
     :size,
     :filename,
-    :message_ids,
-    :content_id,
+    :is_inline,
     :content_disposition,
   ]
 
   @typedoc "A file"
   @type t :: %__MODULE__{
     id: String.t(),
-    object: String.t(),
-    account_id: String.t(),
+    grant_id: String.t(),
     content_type: String.t(),
     size: non_neg_integer(),
     filename: String.t(),
-    message_ids: [String.t()],
-    content_id: String.t(),
+    is_inline: boolean(),
     content_disposition: String.t(),
   }
 
