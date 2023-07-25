@@ -75,7 +75,7 @@ defmodule ExNylas.API do
         TF.transform(body, ExNylas.Common.Response.as_struct(transform_to))
       {:error, body} ->
         # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
-        {_, val} = TF.transform(body, transform_to)
+        {_, val} = TF.transform(body, ExNylas.Common.Response.as_struct(transform_to))
         {:error, val}
     end
   end
