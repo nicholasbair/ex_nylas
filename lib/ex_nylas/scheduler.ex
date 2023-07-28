@@ -408,7 +408,7 @@ defmodule ExNylas.Scheduler do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
         ExNylas.API.post(
-          url,
+          url <> "/manage/pages",
           page_config,
           ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
         )
@@ -442,7 +442,7 @@ defmodule ExNylas.Scheduler do
     case convert_to_scheduler_url(conn) do
       {:ok, url} ->
         ExNylas.API.put(
-          url <> "/" <> id,
+          url <> "/manage/pages/" <> id,
           page_config,
           ExNylas.API.header_bearer(conn) ++ ["content-type": "application/json"]
         )
