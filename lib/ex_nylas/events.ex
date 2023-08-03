@@ -226,27 +226,45 @@ defmodule ExNylas.Events do
     include: [:list, :first, :find, :build, :all]
 
   @doc """
-  Create/update for an event
+  Create an event
 
   Example
-      {:ok, event} = conn |> ExNylas.Events.save(`body`)
+      {:ok, event} = conn |> ExNylas.Events.create(`body`)
   """
-  def save(%Conn{} = conn, body, notify_participants \\ true) do
-    {method, url} =
-      case body.id do
-        nil -> {:post, "#{conn.api_server}/events"}
-        _ -> {:put, "#{conn.api_server}/events/#{body.id}"}
-      end
+  def create(%Conn{} = conn, body, notify_participants \\ true) do
+    API.post(
+      "#{conn.api_server}/events",
+      body,
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [params: %{notify_participants: notify_participants}]
+    )
+    |> API.handle_response(Event)
+  end
 
-    apply(
-      API,
-      method,
-      [
-        url,
-        body,
+  @doc """
+  Create an event
+
+  Example
+      event = conn |> ExNylas.Events.create!(`body`)
+  """
+  def create!(%Conn{} = conn, body, notify_participants \\ true) do
+    case create(conn, body, notify_participants) do
+      {:ok, res} -> res
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
+  Update an event
+
+  Example
+      {:ok, event} = conn |> ExNylas.Events.update(`body`)
+  """
+  def update(%Conn{} = conn, body, notify_participants \\ true) do
+    API.put(
+      "#{conn.api_server}/events/#{body.id}",
         API.header_bearer(conn) ++ ["content-type": "application/json"],
         [params: %{notify_participants: notify_participants}]
-      ]
     )
     |> API.handle_response(Event)
   end
@@ -255,10 +273,10 @@ defmodule ExNylas.Events do
   Create/update for an event
 
   Example
-      event = conn |> ExNylas.Events.save!(`body`)
+      event = conn |> ExNylas.Events.update!(`body`)
   """
-  def save!(%Conn{} = conn, body, notify_participants \\ true) do
-    case save(conn, body, notify_participants) do
+  def update!(%Conn{} = conn, body, notify_participants \\ true) do
+    case update(conn, body, notify_participants) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
