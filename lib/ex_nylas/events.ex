@@ -31,6 +31,7 @@ defmodule ExNylas.Event do
     :visibility,
     :hide_participants,
     :customer_event_id,
+    :job_status_id,
   ]
 
   @typedoc "A event"
@@ -62,6 +63,7 @@ defmodule ExNylas.Event do
     visibility: String.t(),
     hide_participants: boolean(),
     customer_event_id: String.t(),
+    job_status_id: String.t(),
   }
 
   defmodule Participant do
@@ -238,7 +240,7 @@ defmodule ExNylas.Events do
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [params: %{notify_participants: notify_participants}]
     )
-    |> API.handle_response(Event)
+    |> API.handle_response(Event.as_struct())
   end
 
   @doc """
@@ -266,7 +268,7 @@ defmodule ExNylas.Events do
         API.header_bearer(conn) ++ ["content-type": "application/json"],
         [params: %{notify_participants: notify_participants}]
     )
-    |> API.handle_response(Event)
+    |> API.handle_response(Event.as_struct())
   end
 
   @doc """
@@ -294,7 +296,7 @@ defmodule ExNylas.Events do
       %{event_id: event_id, status: status, account_id: account_id},
       API.header_bearer(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(Event)
+    |> API.handle_response(Event.as_struct())
   end
 
   @doc """
