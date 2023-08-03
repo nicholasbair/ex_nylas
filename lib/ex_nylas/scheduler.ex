@@ -5,10 +5,6 @@ defmodule ExNylas.Scheduler do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
 
-  use ExNylas,
-    struct: __MODULE__,
-    include: [:all]
-
   defstruct [
     :access_tokens,
     :access_token_infos,
