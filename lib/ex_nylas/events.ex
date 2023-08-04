@@ -260,11 +260,12 @@ defmodule ExNylas.Events do
   Update an event
 
   Example
-      {:ok, event} = conn |> ExNylas.Events.update(`body`)
+      {:ok, event} = conn |> ExNylas.Events.update(`event_id`, `body`)
   """
-  def update(%Conn{} = conn, body, notify_participants \\ true) do
+  def update(%Conn{} = conn, event_id, body, notify_participants \\ true) do
     API.put(
-      "#{conn.api_server}/events/#{body.id}",
+      "#{conn.api_server}/events/#{event_id}",
+        body,
         API.header_bearer(conn) ++ ["content-type": "application/json"],
         [params: %{notify_participants: notify_participants}]
     )
@@ -272,13 +273,13 @@ defmodule ExNylas.Events do
   end
 
   @doc """
-  Create/update for an event
+  Update an event
 
   Example
-      event = conn |> ExNylas.Events.update!(`body`)
+      event = conn |> ExNylas.Events.update!(`event_id`, `body`)
   """
-  def update!(%Conn{} = conn, body, notify_participants \\ true) do
-    case update(conn, body, notify_participants) do
+  def update!(%Conn{} = conn, event_id, body, notify_participants \\ true) do
+    case update(conn, event_id, body, notify_participants) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
