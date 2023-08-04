@@ -286,6 +286,34 @@ defmodule ExNylas.Events do
   end
 
   @doc """
+  Delete an event
+
+  Example
+      {:ok, event} = conn |> ExNylas.Events.delete(`event_id`)
+  """
+  def delete(%Conn{} = conn, event_id, notify_participants \\ true) do
+    API.delete(
+      "#{conn.api_server}/events/#{event_id}",
+        API.header_bearer(conn) ++ ["content-type": "application/json"],
+        [params: %{notify_participants: notify_participants}]
+    )
+    |> API.handle_response()
+  end
+
+  @doc """
+  Delete an event
+
+  Example
+      event = conn |> ExNylas.Events.delete!(`event_id`)
+  """
+  def delete!(%Conn{} = conn, event_id, notify_participants \\ true) do
+    case delete(conn, event_id, notify_participants) do
+      {:ok, res} -> res
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
   Send an RSVP for a given event
 
   Example
