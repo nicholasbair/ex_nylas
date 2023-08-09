@@ -211,6 +211,16 @@ defmodule ExNylas.Event do
       hide_participants: boolean(),
     }
   end
+
+  defmodule Cancel do
+    defstruct [:job_status_id]
+
+    @type t :: %__MODULE__{
+      job_status_id: String.t(),
+    }
+
+    def as_struct, do: %Cancel{}
+  end
 end
 
 defmodule ExNylas.Events do
@@ -297,7 +307,7 @@ defmodule ExNylas.Events do
         API.header_bearer(conn) ++ ["content-type": "application/json"],
         [params: %{notify_participants: notify_participants}]
     )
-    |> API.handle_response()
+    |> API.handle_response(ExNylas.Event.Cancel.as_struct())
   end
 
   @doc """
