@@ -4,13 +4,15 @@ defmodule ExNylas.Common do
     defstruct [
       :request_id,
       :data,
-      :error
+      :error,
+      :next_cursor
     ]
 
     @type t :: %__MODULE__{
       request_id: String.t(),
       data: map(),
       error: ExNylas.Common.Error.t(),
+      next_cursor: String.t()
     }
 
     def as_struct(), do: %ExNylas.Common.Response{}
