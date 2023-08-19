@@ -283,7 +283,7 @@ defmodule ExNylas do
           if unquote(use_client_url) do
             "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
           else
-            "#{conn.api_server}/#{unquote(object)}"
+            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
           end
 
         val = apply(unquote(struct_name), :as_list, [])
