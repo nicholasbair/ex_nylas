@@ -123,7 +123,7 @@ defmodule ExNylas.Authentication.Hosted do
   Exchange an authorization code for a Nylas access token
 
   Example
-      {:ok, access_token} = ExNylas.Authentication.Hosted.exchange_code_for_token(conn, code)
+      {:ok, access_token} = ExNylas.Authentication.Hosted.exchange_code_for_token(conn, code, redirect)
   """
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri) do
     API.post(
@@ -144,10 +144,10 @@ defmodule ExNylas.Authentication.Hosted do
   Exchange an authorization code for a Nylas access token
 
   Example
-      access_token = ExNylas.Authentication.Hosted.exchange_code_for_token!(conn, code)
+      access_token = ExNylas.Authentication.Hosted.exchange_code_for_token!(conn, code, redirect)
   """
-  def exchange_code_for_token!(%Conn{} = conn, code) do
-    case exchange_code_for_token(conn, code) do
+  def exchange_code_for_token!(%Conn{} = conn, code, redirect_uri) do
+    case exchange_code_for_token(conn, code, redirect_uri) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
