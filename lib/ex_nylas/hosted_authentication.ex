@@ -137,7 +137,7 @@ defmodule ExNylas.Authentication.Hosted do
       },
       ["content-type": "application/json"]
     )
-    |> API.handle_response(as_struct())
+    |> API.handle_response(ExNylas.Authentication.Hosted.as_struct())
   end
 
   @doc """
