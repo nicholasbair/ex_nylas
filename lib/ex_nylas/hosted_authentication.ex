@@ -127,7 +127,7 @@ defmodule ExNylas.Authentication.Hosted do
   """
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri) do
     API.post(
-      "#{conn.api_server}/connect/token",
+      "#{conn.api_server}/v3/connect/token",
       %{
         client_id: conn.client_id,
         client_secret: conn.client_secret,
