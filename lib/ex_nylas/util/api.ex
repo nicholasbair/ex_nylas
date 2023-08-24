@@ -52,8 +52,8 @@ defmodule ExNylas.API do
     ] ++ @base_headers
   end
 
-  def handle_response(res, transform_to \\ nil)
-  def handle_response(res, transform_to) when is_nil(transform_to) do
+  def handle_response(res, transform_to \\ nil, use_common_response \\ true)
+  def handle_response(res, transform_to, _) when is_nil(transform_to) do
     case res do
       {:ok, %HTTPoison.Response{status_code: status, body: body}} ->
         case status do
@@ -69,7 +69,7 @@ defmodule ExNylas.API do
     end
   end
 
-  def handle_response(res, transform_to) do
+  def handle_response(res, transform_to, true = _use_common_response) do
     case handle_response(res, nil) do
       {:ok, body} ->
         TF.transform(body, ExNylas.Common.Response.as_struct(transform_to))
@@ -77,6 +77,13 @@ defmodule ExNylas.API do
         # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
         {_, val} = TF.transform(body, ExNylas.Common.Response.as_struct(transform_to))
         {:error, val}
+    end
+  end
+
+  def handle_response(res, transform_to, false = _use_common_response) do
+    case handle_response(res, nil) do
+      {:ok, body} -> TF.transform(body, transform_to)
+      body -> body
     end
   end
 end
