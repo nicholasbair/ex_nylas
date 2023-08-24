@@ -49,7 +49,7 @@ defmodule ExNylas.Grants do
       {:ok, _} = conn |> ExNylas.Grants.get()
   """
   def find(%Conn{} = conn) do
-    API.find(
+    API.get(
       conn.api_server <> "/v3/grants/" <> conn.grant_id,
       API.header_api_key(conn)
     )
