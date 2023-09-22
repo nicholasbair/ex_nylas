@@ -224,7 +224,7 @@ defmodule ExNylas do
       Example
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`)
       """
-      def unquote(config.name)(%Conn{} = conn, id) do
+      def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
 
         url =
@@ -241,7 +241,8 @@ defmodule ExNylas do
           unquote(method),
           [
             url,
-            headers
+            headers,
+            [params: params]
           ]
         )
         |> API.handle_response(val)
