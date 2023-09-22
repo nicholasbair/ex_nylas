@@ -46,10 +46,10 @@ defmodule ExNylas.Event do
     master_event_id: String.t(),
     metadata: map(),
     object: String.t(),
-    organizer: String.t(),
+    organizer: ExNylas.Event.Organizer.t(),
     participants: [ExNylas.Event.Participant.t()],
     read_only: boolean(),
-    reminders: map(),
+    reminders: [ExNylas.Event.Reminder.t()],
     recurrence: [String.t()],
     status: String.t(),
     title: String.t(),
@@ -58,18 +58,29 @@ defmodule ExNylas.Event do
     when: ExNylas.Event.When.t(),
   }
 
-  # TODO: define reminder and organizer
-  """
-  reminders: %{
-    "overrides" => [%{"reminder_minutes" => 10}],
-    "use_default" => false
-  },
+  defmodule Reminder do
+    defstruct [
+      :overrides,
+      :use_default,
+    ]
 
-  organizer: %{
-    "email" => "nicknewnewtest@outlook.com",
-    "name" => "Nick McTest"
-  },
-  """
+    @type t :: %__MODULE__{
+      overrides: [map()],
+      use_default: boolean(),
+    }
+  end
+
+  defmodule Organizer do
+    defstruct [
+      :email,
+      :name,
+    ]
+
+    @type t :: %__MODULE__{
+      email: String.t(),
+      name: String.t(),
+    }
+  end
 
   defmodule Participant do
     @enforce_keys [:email]
@@ -140,7 +151,9 @@ defmodule ExNylas.Event do
     %ExNylas.Event{
       participants: [%ExNylas.Event.Participant{email: nil}],
       when: %ExNylas.Event.When{},
-      conferencing: %ExNylas.Event.Conferencing{}
+      conferencing: %ExNylas.Event.Conferencing{},
+      reminders: [%ExNylas.Event.Reminder{}],
+      organizer: %ExNylas.Event.Organizer{},
     }
   end
 
