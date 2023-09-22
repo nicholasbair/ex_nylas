@@ -212,7 +212,7 @@ defmodule ExNylas.Events do
   use ExNylas,
     object: "events",
     struct: ExNylas.Event,
-    include: [:list, :first, :find, :build, :all, :create, :update]
+    include: [:list, :first, :find, :build, :all, :create, :update, :delete]
 
   @doc """
   Send an RSVP for a given event
