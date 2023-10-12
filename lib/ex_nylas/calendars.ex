@@ -4,32 +4,34 @@ defmodule ExNylas.Calendar do
   """
 
   defstruct [
-    :id,
-    :object,
-    :account_id,
-    :name,
+    :grant_id,
     :description,
-    :read_only,
-    :location,
-    :timezone,
-    :metadata,
+    :id,
     :is_primary,
+    :name,
+    :object,
+    :read_only,
+    :timezone,
     :hex_color,
+    :hex_foreground_color,
+    :is_owned_by_user,
+    :metadata,
   ]
 
   @typedoc "A calendar"
   @type t :: %__MODULE__{
-    id: String.t(),
-    object: String.t(),
-    account_id: String.t(),
-    name: String.t(),
+    grant_id: String.t(),
     description: String.t(),
-    read_only: boolean(),
-    location: String.t(),
-    timezone: String.t(),
-    metadata: map(),
+    id: String.t(),
     is_primary: boolean(),
+    name: String.t(),
+    object: String.t(),
+    read_only: boolean(),
+    timezone: String.t(),
     hex_color: String.t(),
+    hex_foreground_color: String.t(),
+    is_owned_by_user: boolean(),
+    metadata: map(),
   }
 
   def as_struct(), do: %ExNylas.Calendar{}

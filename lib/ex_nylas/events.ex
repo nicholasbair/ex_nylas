@@ -4,65 +4,83 @@ defmodule ExNylas.Event do
   """
 
   defstruct [
-    :id,
-    :object,
-    :account_id,
+    :busy,
     :calendar_id,
-    :message_id,
-    :title,
+    :conferencing,
+    :created_at,
     :description,
-    :owner,
+    :hide_participants,
+    :grant_id,
+    :html_link,
+    :ical_uid,
+    :id,
+    :location,
+    :master_event_id,
+    :metadata,
+    :object,
+    :organizer,
     :participants,
     :read_only,
-    :location,
-    :when,
-    :busy,
-    :status,
-    :ical_uid,
-    :master_event_id,
-    :original_start_time,
-    :updated_at,
-    :conferencing,
+    :reminders,
     :recurrence,
-    :metadata,
-    :notifications,
-    :organizer_email,
-    :organizer_name,
+    :status,
+    :title,
+    :updated_at,
     :visibility,
-    :hide_participants,
-    :customer_event_id,
+    :when,
   ]
 
   @typedoc "A event"
   @type t :: %__MODULE__{
-    id: String.t(),
-    object: String.t(),
-    account_id: String.t(),
+    busy: boolean(),
     calendar_id: String.t(),
-    message_id: String.t(),
-    title: String.t(),
+    conferencing: ExNylas.Event.Conferencing.t(),
+    created_at: non_neg_integer(),
     description: String.t(),
-    owner: String.t(),
+    hide_participants: boolean(),
+    grant_id: String.t(),
+    html_link: String.t(),
+    ical_uid: String.t(),
+    id: String.t(),
+    location: String.t(),
+    master_event_id: String.t(),
+    metadata: map(),
+    object: String.t(),
+    organizer: ExNylas.Event.Organizer.t(),
     participants: [ExNylas.Event.Participant.t()],
     read_only: boolean(),
-    location: String.t(),
-    when: ExNylas.Event.When.t(),
-    busy: boolean(),
+    reminders: [ExNylas.Event.Reminder.t()],
+    recurrence: [String.t()],
     status: String.t(),
-    ical_uid: String.t(),
-    master_event_id: String.t(),
-    original_start_time: non_neg_integer(),
+    title: String.t(),
     updated_at: non_neg_integer(),
-    conferencing: ExNylas.Event.Conferencing.t(),
-    recurrence: ExNylas.Event.Recurrence.t(),
-    metadata: map(),
-    notifications: [ExNylas.Event.Notification.t()],
-    organizer_email: String.t(),
-    organizer_name: String.t(),
     visibility: String.t(),
-    hide_participants: boolean(),
-    customer_event_id: String.t(),
+    when: ExNylas.Event.When.t(),
   }
+
+  defmodule Reminder do
+    defstruct [
+      :overrides,
+      :use_default,
+    ]
+
+    @type t :: %__MODULE__{
+      overrides: [map()],
+      use_default: boolean(),
+    }
+  end
+
+  defmodule Organizer do
+    defstruct [
+      :email,
+      :name,
+    ]
+
+    @type t :: %__MODULE__{
+      email: String.t(),
+      name: String.t(),
+    }
+  end
 
   defmodule Participant do
     @enforce_keys [:email]
@@ -129,42 +147,13 @@ defmodule ExNylas.Event do
     }
   end
 
-  defmodule Notification do
-    defstruct [
-      :type,
-      :minutes_before_event,
-      :body,
-      :subject,
-      :payload,
-      :url,
-    ]
-
-    @type t :: %__MODULE__{
-      type: String.t(),
-      minutes_before_event: String.t(),
-      body: String.t(),
-      subject: String.t(),
-      payload: String.t(),
-      url: String.t(),
-    }
-  end
-
-  defmodule Recurrence do
-    defstruct [:rrule, :timezone,]
-
-    @type t :: %__MODULE__{
-      rrule: [String.t()],
-      timezone: String.t(),
-    }
-  end
-
   def as_struct do
     %ExNylas.Event{
       participants: [%ExNylas.Event.Participant{email: nil}],
       when: %ExNylas.Event.When{},
       conferencing: %ExNylas.Event.Conferencing{},
-      recurrence: %ExNylas.Event.Recurrence{},
-      notifications: [%ExNylas.Event.Notification{}],
+      reminders: [%ExNylas.Event.Reminder{}],
+      organizer: %ExNylas.Event.Organizer{},
     }
   end
 
@@ -223,57 +212,18 @@ defmodule ExNylas.Events do
   use ExNylas,
     object: "events",
     struct: ExNylas.Event,
-    include: [:list, :first, :find, :build, :all]
-
-  @doc """
-  Create/update for an event
-
-  Example
-      {:ok, event} = conn |> ExNylas.Events.save(`body`)
-  """
-  def save(%Conn{} = conn, body, notify_participants \\ true) do
-    {method, url} =
-      case body.id do
-        nil -> {:post, "#{conn.api_server}/events"}
-        _ -> {:put, "#{conn.api_server}/events/#{body.id}"}
-      end
-
-    apply(
-      API,
-      method,
-      [
-        url,
-        body,
-        API.header_bearer(conn) ++ ["content-type": "application/json"],
-        [params: %{notify_participants: notify_participants}]
-      ]
-    )
-    |> API.handle_response(Event)
-  end
-
-  @doc """
-  Create/update for an event
-
-  Example
-      event = conn |> ExNylas.Events.save!(`body`)
-  """
-  def save!(%Conn{} = conn, body, notify_participants \\ true) do
-    case save(conn, body, notify_participants) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
-    end
-  end
+    include: [:list, :first, :find, :build, :all, :create, :update, :delete]
 
   @doc """
   Send an RSVP for a given event
 
   Example
-      {:ok, success} = conn |> ExNylas.Events.rsvp(`event_id`, `status`, `account_id`)
+      {:ok, success} = conn |> ExNylas.Events.rsvp(`event_id`, `calendar_id`, `status`)
   """
-  def rsvp(%Conn{} = conn, event_id, status, account_id) do
+  def rsvp(%Conn{} = conn, event_id, calendar_id, status) do
     API.post(
-      "#{conn.api_server}/send-rsvp",
-      %{event_id: event_id, status: status, account_id: account_id},
+      "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp?calendar_id=#{calendar_id}",
+      %{status: status},
       API.header_bearer(conn) ++ ["content-type": "application/json"]
     )
     |> API.handle_response(Event)
@@ -283,10 +233,10 @@ defmodule ExNylas.Events do
   Send an RSVP for a given event
 
   Example
-      success = conn |> ExNylas.Events.rsvp!(`event_id`, `status`, `account_id`)
+      success = conn |> ExNylas.Events.rsvp!(`event_id`, `calendar_id`, `status`)
   """
-  def rsvp!(%Conn{} = conn, event_id, status, account_id) do
-    case rsvp(conn, event_id, status, account_id) do
+  def rsvp!(%Conn{} = conn, event_id, calendar_id, status) do
+    case rsvp(conn, event_id, calendar_id, status) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end

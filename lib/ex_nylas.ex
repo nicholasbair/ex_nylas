@@ -17,7 +17,7 @@ defmodule ExNylas do
     all: %{name: :all},
     # Not all objects support both put and post
     # Thus need to differentiate using the update/create key here
-    update: %{name: :update, http_method: :put},
+    update: %{name: :update, http_method: :patch},
     create: %{name: :create, http_method: :post}
   }
 
@@ -224,7 +224,7 @@ defmodule ExNylas do
       Example
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`)
       """
-      def unquote(config.name)(%Conn{} = conn, id) do
+      def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
 
         url =
@@ -241,7 +241,8 @@ defmodule ExNylas do
           unquote(method),
           [
             url,
-            headers
+            headers,
+            [params: params]
           ]
         )
         |> API.handle_response(val)
@@ -316,7 +317,7 @@ defmodule ExNylas do
   end
 
   defp generate_api(
-         %{http_method: :put} = config,
+         %{http_method: :patch} = config,
          object,
          struct_name,
          header_type,
@@ -327,9 +328,9 @@ defmodule ExNylas do
       Update a(n) #{unquote(struct_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `id`)
+          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `id`, `params`)
       """
-      def unquote(config.name)(%Conn{} = conn, changeset, id) do
+      def unquote(config.name)(%Conn{} = conn, changeset, id, params \\ %{}) do
         headers =
           apply(Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
@@ -337,7 +338,7 @@ defmodule ExNylas do
           if unquote(use_client_url) do
             "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
           else
-            "#{conn.api_server}/#{unquote(object)}/#{id}"
+            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/#{id}"
           end
 
         val = apply(unquote(struct_name), :as_struct, [])
@@ -348,7 +349,8 @@ defmodule ExNylas do
           [
             url,
             changeset,
-            headers
+            headers,
+            [params: params]
           ]
         )
         |> API.handle_response(val)
@@ -358,10 +360,10 @@ defmodule ExNylas do
       Update a(n) #{unquote(struct_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`body`, `id`)
+          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`body`, `id`, `params`)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, changeset, id) do
-        case unquote(config.name)(conn, changeset, id) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, changeset, id, params) do
+        case unquote(config.name)(conn, changeset, id, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
         end
@@ -381,9 +383,9 @@ defmodule ExNylas do
       Create a(n) #{unquote(struct_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`)
+          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
       """
-      def unquote(config.name)(%Conn{} = conn, body) do
+      def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
         headers =
           apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
@@ -391,7 +393,7 @@ defmodule ExNylas do
           if unquote(use_client_url) do
             "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
           else
-            "#{conn.api_server}/#{unquote(object)}"
+            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
           end
 
         val = apply(unquote(struct_name), :as_struct, [])
@@ -402,7 +404,8 @@ defmodule ExNylas do
           [
             url,
             body,
-            headers
+            headers,
+            [params: params]
           ]
         )
         |> API.handle_response(val)
@@ -412,10 +415,10 @@ defmodule ExNylas do
       Create a(n) #{unquote(struct_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`)
+          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body) do
-        case unquote(config.name)(conn, body) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params) do
+        case unquote(config.name)(conn, body, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
         end
