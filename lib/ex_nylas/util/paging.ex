@@ -1,4 +1,8 @@
 defmodule ExNylas.Paging do
+  @moduledoc """
+  Interface for Nylas paging.
+  """
+
   alias ExNylas.Connection, as: Conn
 
   def all(%Conn{} = conn, resource, params \\ %{}), do: page(conn, resource, params)

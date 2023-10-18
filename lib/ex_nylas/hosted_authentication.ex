@@ -1,74 +1,10 @@
-defmodule ExNylas.Authentication.Hosted do
+defmodule ExNylas.HostedAuthentication do
   @moduledoc """
   Nylas hosted authentication
   """
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-
-  defstruct [
-    :access_token,
-    :expires_in,
-    :id_token,
-    :refresh_token,
-    :scope,
-    :token_type,
-    :grant_id,
-  ]
-
-  @type t :: %__MODULE__{
-    access_token: String.t(),
-    expires_in: integer(),
-    id_token: String.t(),
-    refresh_token: String.t(),
-    scope: String.t(),
-    token_type: String.t(),
-    grant_id: String.t(),
-  }
-
-  def as_struct(), do: %ExNylas.Authentication.Hosted{}
-
-  defmodule Options do
-    @enforce_keys [:redirect_uri]
-    defstruct [
-      :provider,
-      :redirect_uri,
-      :scopes,
-      :state,
-      :login_hint,
-      :access_type,
-      :code_challenge,
-      :code_challenge_method,
-      :credential_id,
-    ]
-
-    @typedoc "Authentication options"
-    @type t :: %__MODULE__{
-      provider: String.t(),
-      redirect_uri: String.t(),
-      scopes: [String.t()],
-      state: String.t(),
-      login_hint: String.t(),
-      access_type: String.t(),
-      code_challenge: String.t(),
-      code_challenge_method: String.t(),
-      credential_id: String.t(),
-    }
-  end
-
-  def build_options(provider, redirect_uri, scopes, state, login_hint, access_type, code_challenge, code_challenge_method, credential_id) do
-    %Options{
-      provider: provider,
-      redirect_uri: redirect_uri,
-      scopes: scopes,
-      state: state,
-      login_hint: login_hint,
-      access_type: access_type,
-      code_challenge: code_challenge,
-      code_challenge_method: code_challenge_method,
-      credential_id: credential_id,
-    }
-  end
 
   @doc """
   Returns the URI to send the end user
@@ -137,7 +73,7 @@ defmodule ExNylas.Authentication.Hosted do
       },
       ["content-type": "application/json"]
     )
-    |> API.handle_response(ExNylas.Authentication.Hosted.as_struct(), false)
+    |> API.handle_response(ExNylas.Model.HostedAuthentication.as_struct(), false)
   end
 
   @doc """
