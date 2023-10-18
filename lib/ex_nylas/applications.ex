@@ -1,9 +1,7 @@
-defmodule ExNylas.Application do
+defmodule ExNylas.Applications do
   @moduledoc """
   Interface for Nylas applications.
   """
-
-  # TODO: add application callback URI endpoints
 
   use ExNylas,
     object: "applications",
