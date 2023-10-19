@@ -9,6 +9,8 @@ defmodule ExNylas.Model.SmartCompose do
     field(:suggestion, String.t())
   end
 
+  def as_struct(), do: struct(__MODULE__)
+
   typedstruct module: Build do
     field(:prompt, String.t())
   end
