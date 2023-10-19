@@ -1,4 +1,4 @@
-defmodule ExNylas.Connector do
+defmodule ExNylas.Connectors do
   @moduledoc """
   Interface for Nylas connector.
   """

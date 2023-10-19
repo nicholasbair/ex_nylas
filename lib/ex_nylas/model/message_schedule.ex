@@ -8,10 +8,11 @@ defmodule ExNylas.Model.MessageSchedule do
   typedstruct do
     field(:schedule_id, String.t())
     field(:status, Status.t())
+    field(:close_time, non_neg_integer())
   end
 
   typedstruct module: Status do
-    field(:status, String.t())
+    field(:code, String.t())
     field(:description, String.t())
   end
 

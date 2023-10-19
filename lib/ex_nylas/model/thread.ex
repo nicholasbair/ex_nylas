@@ -1,4 +1,4 @@
-defmodule ExNylas.Thread do
+defmodule ExNylas.Model.Thread do
   @moduledoc """
   A struct representing a thread.
   """

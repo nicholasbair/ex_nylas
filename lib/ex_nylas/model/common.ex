@@ -48,7 +48,7 @@ defmodule ExNylas.Model.Common do
     A struct representing an email participant.
     """
 
-    typedstruct module: EmailParticipant do
+    typedstruct do
       field(:email, String.t(), enforce: true)
       field(:name, String.t())
     end
