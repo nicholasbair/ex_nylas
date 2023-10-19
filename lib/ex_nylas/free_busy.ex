@@ -22,7 +22,7 @@ defmodule ExNylas.Calendars.FreeBusy do
       body,
       API.header_bearer(conn) ++ ["content-type": "application/json"]
     )
-    |> API.handle_response(ExNylas.Calendars.FreeBusy.as_list())
+    |> API.handle_response(ExNylas.Model.Calendar.FreeBusy.as_list())
   end
 
   @doc """
