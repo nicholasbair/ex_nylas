@@ -134,7 +134,7 @@ defmodule ExNylas do
           |> API.handle_response(val)
 
         case res do
-          {:ok, val} -> {:ok, Enum.at(val, 0)}
+          {:ok, val} -> {:ok, %{val | data: Enum.at(val.data, 0)}}
           val -> val
         end
       end
