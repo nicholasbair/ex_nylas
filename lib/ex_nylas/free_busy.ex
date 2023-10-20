@@ -20,7 +20,8 @@ defmodule ExNylas.Calendars.FreeBusy do
     API.post(
       "#{conn.api_server}/calendars/free-busy",
       body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(ExNylas.Model.Calendar.FreeBusy.as_list())
   end

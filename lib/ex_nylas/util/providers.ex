@@ -1,4 +1,4 @@
-defmodule ExNylas.Util.Providers do
+defmodule ExNylas.Providers do
   @moduledoc """
   Interface for Nylas providers.
   """
@@ -7,34 +7,31 @@ defmodule ExNylas.Util.Providers do
   alias ExNylas.Connection, as: Conn
 
   @doc """
-  Send a message.
+  Detect the provider for an email address.
 
   Example
-      {:ok, sent_message} = conn |> ExNylas.Messages.send(`message`)
+      {:ok,  detect} = conn |> ExNylas.Providers.detect(%{email: `email`} = _params)
   """
-  def detect(%Conn{} = conn, email, params \\ %{}) do
-    params =
-      params
-      |> Map.merge(%{email: email, client_id: conn.client_id})
-      |> Map.to_list()
+  def detect(%Conn{} = conn, params \\ %{}) do
+    url = "#{conn.api_server}/v3/providers/detect?#{URI.encode_query(params)}"
 
     API.post(
-      "#{conn.api_server}/v3/providers/detect",
+      url,
       %{},
       API.header_bearer(conn),
-      params
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(ExNylas.Model.Provider)
   end
 
   @doc """
-  Send a message.
+  Detect the provider for an email address.
 
   Example
-      sent_message = conn |> ExNylas.Messages.send!(`message`)
+      detect = conn |> ExNylas.Providers.detect(%{email: `email`} = _params)
   """
-  def detect!(%Conn{} = conn, email, params \\ %{}) do
-    case detect(conn, email, params) do
+  def detect!(%Conn{} = conn, params \\ %{}) do
+    case detect(conn, params) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end

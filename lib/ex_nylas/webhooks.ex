@@ -22,7 +22,8 @@ defmodule ExNylas.Webhooks do
     API.post(
       "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
       %{},
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(ExNylas.Model.Webhook)
   end
@@ -50,7 +51,8 @@ defmodule ExNylas.Webhooks do
     API.post(
       "#{conn.api_server}/v3/webhooks/mock-payload",
       %{trigger_type: trigger},
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response()
   end
@@ -78,7 +80,8 @@ defmodule ExNylas.Webhooks do
     API.post(
       "#{conn.api_server}/v3/webhooks/mock-payload",
       %{trigger_type: trigger, callback_url: callback_url},
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response()
   end

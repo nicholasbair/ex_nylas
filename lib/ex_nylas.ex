@@ -128,7 +128,11 @@ defmodule ExNylas do
             [
               url,
               headers,
-              [params: Map.put(params, :limit, 1)]
+              [
+                timeout: conn.timeout,
+                recv_timeout: conn.recv_timeout,
+                params: Map.put(params, :limit, 1)
+              ]
             ]
           )
           |> API.handle_response(val)
@@ -186,7 +190,11 @@ defmodule ExNylas do
           [
             url,
             headers,
-            [params: %{q: search_text}]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: %{q: search_text}
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -240,7 +248,11 @@ defmodule ExNylas do
           [
             url,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -293,7 +305,11 @@ defmodule ExNylas do
           [
             url,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -348,7 +364,11 @@ defmodule ExNylas do
             url,
             changeset,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -403,7 +423,11 @@ defmodule ExNylas do
             url,
             body,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)

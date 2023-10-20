@@ -20,7 +20,8 @@ defmodule ExNylas.Calendars.Availability do
     API.post(
       "#{conn.api_server}/v3/calendars/availability",
       body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(ExNylas.Model.Calendar.Availability.as_struct())
   end

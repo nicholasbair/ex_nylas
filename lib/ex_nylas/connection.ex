@@ -10,6 +10,8 @@ defmodule ExNylas.Connection do
   use TypedStruct
 
   @api_server "https://api.us.nylas.com"
+  @timeout 3_000
+  @recv_timeout 5_000
 
   typedstruct do
     field(:client_id, String.t())
@@ -17,5 +19,7 @@ defmodule ExNylas.Connection do
     field(:api_key, String.t())
     field(:grant_id, String.t())
     field(:api_server, String.t(), default: @api_server)
+    field(:timeout, non_neg_integer(), default: @timeout) # timeout for establishing a TCP or SSL connection, in milliseconds.
+    field(:recv_timeout, non_neg_integer(), default: @recv_timeout) # timeout for receiving an HTTP response from the socket, in milliseconds.
   end
 end

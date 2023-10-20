@@ -24,7 +24,8 @@ defmodule ExNylas.Drafts do
     API.post(
       "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
       %{},
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(ExNylas.Model.Message)
   end

@@ -22,7 +22,8 @@ defmodule ExNylas.Events do
     API.post(
       "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp?calendar_id=#{calendar_id}",
       %{status: status},
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(Event)
   end

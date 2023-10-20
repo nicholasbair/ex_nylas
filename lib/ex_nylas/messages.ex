@@ -24,7 +24,8 @@ defmodule ExNylas.Messages do
     API.post(
       "#{conn.api_server}/v3/messages/send",
       message,
-      API.header_bearer(conn) ++ ["content-type": "application/json"]
+      API.header_bearer(conn) ++ ["content-type": "application/json"],
+      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
     |> API.handle_response(ExNylas.Message)
   end
