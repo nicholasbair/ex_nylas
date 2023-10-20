@@ -20,41 +20,40 @@ defmodule ExNylas.API do
 
   def process_request_body(body), do: body
 
-  def header_bearer(%Conn{access_token: token}) when is_nil(token) do
-    raise "ExNylas.Connection struct is missing a value for `access_token` which is required for this call."
+  def header_bearer(%Conn{api_key: key, grant_id: grant_id}) when is_nil(key) or is_nil(grant_id) do
+    raise "ExNylas.Connection struct is missing a value for `api_key` or `grant_id` which are required for this call."
   end
 
   def header_bearer(%Conn{} = conn) do
     [
-      authorization: "Bearer #{conn.access_token}",
-      "Nylas-API-Version": conn.api_version
+      authorization: "Bearer #{conn.api_key}"
     ] ++ @base_headers
   end
 
-  def header_basic(%Conn{client_secret: secret}) when is_nil(secret) do
-    raise "ExNylas.Connection struct is missing a value for `client_secret` which is required for this call."
+  def header_api_key(%Conn{api_key: key}) when is_nil(key) do
+    raise "ExNylas.Connection struct is missing a value for `api_key` which is required for this call."
+  end
+
+  def header_api_key(%Conn{} = conn) do
+    [
+      authorization: "Bearer #{conn.api_key}"
+    ] ++ @base_headers
+  end
+
+  def header_basic(%Conn{client_id: id, client_secret: secret}) when is_nil(id) or is_nil(secret) do
+    raise "ExNylas.Connection struct is missing a value for `client_id` or `client_secret` which are required for this call."
   end
 
   def header_basic(%Conn{} = conn) do
-    encoded = Base.encode64("#{conn.client_secret}:")
+    encoded = Base.encode64("#{conn.client_id}:#{conn.client_secret}")
 
     [
-      authorization: "Basic #{encoded}",
-      "Nylas-API-Version": conn.api_version
+      authorization: "Basic #{encoded}"
     ] ++ @base_headers
   end
 
-  def header_basic(auth_val, api_version) do
-    encoded = Base.encode64("#{auth_val}:")
-
-    [
-      authorization: "Basic #{encoded}",
-      "Nylas-API-Version": api_version
-    ] ++ @base_headers
-  end
-
-  def handle_response(res, transform_to \\ nil)
-  def handle_response(res, transform_to) when is_nil(transform_to) do
+  def handle_response(res, transform_to \\ nil, use_common_response \\ true)
+  def handle_response(res, transform_to, _) when is_nil(transform_to) do
     case res do
       {:ok, %HTTPoison.Response{status_code: status, body: body}} ->
         case status do
@@ -70,7 +69,22 @@ defmodule ExNylas.API do
     end
   end
 
-  def handle_response(res, transform_to) do
+  def handle_response(res, transform_to, true = _use_common_response) do
+    case handle_response(res, nil) do
+      {:ok, body} ->
+        TF.transform(body, ExNylas.Model.Common.Response.as_struct(transform_to))
+
+      {:error, :timeout} ->
+        {:error, :timeout}
+
+      {:error, body} ->
+        # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
+        {_, val} = TF.transform(body, ExNylas.Model.Common.Response.as_struct(transform_to))
+        {:error, val}
+    end
+  end
+
+  def handle_response(res, transform_to, false = _use_common_response) do
     case handle_response(res, nil) do
       {:ok, body} -> TF.transform(body, transform_to)
       body -> body

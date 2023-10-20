@@ -1,7 +1,9 @@
 defmodule ExNylas.Paging do
-  alias ExNylas.Connection, as: Conn
+  @moduledoc """
+  Interface for Nylas paging.
+  """
 
-  @limit 100
+  alias ExNylas.Connection, as: Conn
 
   def all(%Conn{} = conn, resource, params \\ %{}), do: page(conn, resource, params)
 
@@ -12,20 +14,16 @@ defmodule ExNylas.Paging do
     end
   end
 
-  defp page(%Conn{} = conn, resource, query, offset \\ 0, acc \\ []) do
-    query =
-      query
-      |> Map.put_new(:limit, @limit)
-      |> Map.put(:offset, offset)
+  defp page(%Conn{} = conn, resource, query, next_cursor \\ nil, acc \\ []) do
+    query = Map.put(query, :page_token, next_cursor)
 
     case apply(resource, :list, [conn, query]) do
-      {:ok, data} ->
-        new = acc ++ data
-        limit = Map.get(query, :limit)
+      {:ok, res} ->
+        new = acc ++ Map.get(res, :data, [])
 
-        case length(data) == limit do
-          true -> page(conn, resource, query, offset + limit, new)
-          false -> {:ok, new}
+        case res.next_cursor do
+          nil -> {:ok, new}
+          _ -> page(conn, resource, query, res.next_cursor, new)
         end
 
       err ->

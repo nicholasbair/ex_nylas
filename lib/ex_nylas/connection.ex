@@ -1,51 +1,25 @@
 defmodule ExNylas.Connection do
-  @moduledoc """
+   @moduledoc """
   A struct representing a Nylas API connection.
 
-  The client_id, client_secret and access_token are all optional when creating the connection struct.
-  The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API, the access_token is needed.
+  The client_id, client_secret, api_key and grant_id are all optional when creating the connection struct.
+  The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API, the api_key and grant_id are needed.
   For calls to application, account management and webhooks, the client_id and client_secret is required.
   """
 
-  @api_server "https://api.nylas.com"
-  @api_version "2.7"
+  use TypedStruct
 
-  defstruct [
-    :client_id,
-    :client_secret,
-    :access_token,
-    api_server: @api_server,
-    api_version: @api_version
-  ]
+  @api_server "https://api.us.nylas.com"
+  @timeout 3_000
+  @recv_timeout 5_000
 
-  @typedoc "A Nylas API connection."
-  @type t :: %__MODULE__{
-    client_id: String.t(),
-    client_secret: String.t(),
-    access_token: String.t(),
-    api_server: String.t(),
-    api_version: String.t(),
-  }
-
-  @doc """
-  Create a new Nylas connection.
-
-  Example
-      conn = ExNylas.Connection.new("id", "secret", "token")
-  """
-  def new(
-        client_id,
-        client_secret,
-        access_token,
-        api_server \\ @api_server,
-        api_version \\ @api_version
-      ) do
-    %ExNylas.Connection{
-      client_id: client_id,
-      client_secret: client_secret,
-      access_token: access_token,
-      api_server: api_server,
-      api_version: api_version
-    }
+  typedstruct do
+    field(:client_id, String.t())
+    field(:client_secret, String.t())
+    field(:api_key, String.t())
+    field(:grant_id, String.t())
+    field(:api_server, String.t(), default: @api_server)
+    field(:timeout, non_neg_integer(), default: @timeout) # timeout for establishing a TCP or SSL connection, in milliseconds.
+    field(:recv_timeout, non_neg_integer(), default: @recv_timeout) # timeout for receiving an HTTP response from the socket, in milliseconds.
   end
 end
