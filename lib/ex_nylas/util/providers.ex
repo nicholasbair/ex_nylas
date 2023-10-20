@@ -13,13 +13,15 @@ defmodule ExNylas.Providers do
       {:ok,  detect} = conn |> ExNylas.Providers.detect(%{email: `email`} = _params)
   """
   def detect(%Conn{} = conn, params \\ %{}) do
-    url = "#{conn.api_server}/v3/providers/detect?#{URI.encode_query(params)}"
-
     API.post(
-      url,
+      "#{conn.api_server}/v3/providers/detect",
       %{},
       API.header_bearer(conn),
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+      [
+        timeout: conn.timeout,
+        recv_timeout: conn.recv_timeout,
+        params: params
+      ]
     )
     |> API.handle_response(ExNylas.Model.Provider)
   end
