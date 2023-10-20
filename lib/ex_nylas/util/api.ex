@@ -73,6 +73,10 @@ defmodule ExNylas.API do
     case handle_response(res, nil) do
       {:ok, body} ->
         TF.transform(body, ExNylas.Model.Common.Response.as_struct(transform_to))
+
+      {:error, :timeout} ->
+        {:error, :timeout}
+
       {:error, body} ->
         # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
         {_, val} = TF.transform(body, ExNylas.Model.Common.Response.as_struct(transform_to))
