@@ -15,8 +15,6 @@ defmodule ExNylas do
     send: %{name: :send, http_method: :post},
     build: %{name: :build},
     all: %{name: :all},
-    # Not all objects support both put and post
-    # Thus need to differentiate using the update/create key here
     update: %{name: :update, http_method: :patch},
     create: %{name: :create, http_method: :post}
   }
@@ -26,18 +24,18 @@ defmodule ExNylas do
     object = Keyword.get(opts, :object)
     struct_name = Keyword.get(opts, :struct)
     header_type = Keyword.get(opts, :header_type, :header_bearer)
-    use_client_url = Keyword.get(opts, :use_client_url, false)
+    use_admin_url = Keyword.get(opts, :use_admin_url, false)
 
     @funcs
     |> Map.keys()
     |> Enum.filter(fn k -> k in include end)
     |> Enum.map(fn k ->
       Map.get(@funcs, k)
-      |> generate_api(object, struct_name, header_type, use_client_url)
+      |> generate_api(object, struct_name, header_type, use_admin_url)
     end)
   end
 
-  defp generate_api(%{name: :all} = config, _object, struct_name, _header_type, _use_client_url) do
+  defp generate_api(%{name: :all} = config, _object, struct_name, _header_type, _use_admin_url) do
     quote do
       @doc """
       Fetch all #{unquote(struct_name)}(s) matching the provided query (function will handle paging).
@@ -64,7 +62,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{name: :build} = config, _object, struct_name, _header_type, _use_client_url) do
+  defp generate_api(%{name: :build} = config, _object, struct_name, _header_type, _use_admin_url) do
     quote do
       @doc """
       Create and validate a #{unquote(struct_name)}, use the save function to send to Nylas.
@@ -102,7 +100,7 @@ defmodule ExNylas do
          object,
          struct_name,
          header_type,
-         use_client_url
+         use_admin_url
        ) do
     quote do
       @doc """
@@ -115,10 +113,10 @@ defmodule ExNylas do
         headers = apply(API, unquote(header_type), [conn])
 
         url =
-          if unquote(use_client_url) do
-            "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
+          if unquote(use_admin_url) do
+            "#{conn.api_server}/v3/#{unquote(object)}"
           else
-            "#{conn.api_server}/#{unquote(object)}"
+            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
           end
 
         val = apply(unquote(struct_name), :as_list, [])
@@ -130,13 +128,17 @@ defmodule ExNylas do
             [
               url,
               headers,
-              [params: Map.put(params, :limit, 1)]
+              [
+                timeout: conn.timeout,
+                recv_timeout: conn.recv_timeout,
+                params: Map.put(params, :limit, 1)
+              ]
             ]
           )
           |> API.handle_response(val)
 
         case res do
-          {:ok, val} -> {:ok, Enum.at(val, 0)}
+          {:ok, val} -> {:ok, %{val | data: Enum.at(val.data, 0)}}
           val -> val
         end
       end
@@ -161,7 +163,7 @@ defmodule ExNylas do
          object,
          struct_name,
          header_type,
-         use_client_url
+         use_admin_url
        ) do
     quote do
       @doc """
@@ -174,10 +176,10 @@ defmodule ExNylas do
         headers = apply(API, unquote(header_type), [conn])
 
         url =
-          if unquote(use_client_url) do
-            "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}/search"
+          if unquote(use_admin_url) do
+            "#{conn.api_server}/v3/#{unquote(object)}/search"
           else
-            "#{conn.api_server}/#{unquote(object)}/search"
+            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/search"
           end
 
         val = apply(unquote(struct_name), :as_list, [])
@@ -188,7 +190,11 @@ defmodule ExNylas do
           [
             url,
             headers,
-            [params: %{q: search_text}]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: %{q: search_text}
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -214,7 +220,7 @@ defmodule ExNylas do
          object,
          struct_name,
          header_type,
-         use_client_url
+         use_admin_url
        )
        when name in [:find, :delete] and method in [:get, :delete] do
     quote do
@@ -228,8 +234,8 @@ defmodule ExNylas do
         headers = apply(API, unquote(header_type), [conn])
 
         url =
-          if unquote(use_client_url) do
-            "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}/#{id}"
+          if unquote(use_admin_url) do
+            "#{conn.api_server}/v3/#{unquote(object)}/#{id}"
           else
             "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/#{id}"
           end
@@ -242,7 +248,11 @@ defmodule ExNylas do
           [
             url,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -268,7 +278,7 @@ defmodule ExNylas do
          object,
          struct_name,
          header_type,
-         use_client_url
+         use_admin_url
        ) do
     quote do
       @doc """
@@ -281,8 +291,8 @@ defmodule ExNylas do
         headers = apply(API, unquote(header_type), [conn])
 
         url =
-          if unquote(use_client_url) do
-            "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
+          if unquote(use_admin_url) do
+            "#{conn.api_server}/v3/#{unquote(object)}"
           else
             "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
           end
@@ -295,7 +305,11 @@ defmodule ExNylas do
           [
             url,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -321,7 +335,7 @@ defmodule ExNylas do
          object,
          struct_name,
          header_type,
-         use_client_url
+         use_admin_url
        ) do
     quote do
       @doc """
@@ -335,8 +349,8 @@ defmodule ExNylas do
           apply(Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
-          if unquote(use_client_url) do
-            "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
+          if unquote(use_admin_url) do
+            "#{conn.api_server}/v3/#{unquote(object)}"
           else
             "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/#{id}"
           end
@@ -350,7 +364,11 @@ defmodule ExNylas do
             url,
             changeset,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
@@ -376,7 +394,7 @@ defmodule ExNylas do
          object,
          struct_name,
          header_type,
-         use_client_url
+         use_admin_url
        ) do
     quote do
       @doc """
@@ -390,8 +408,8 @@ defmodule ExNylas do
           apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
-          if unquote(use_client_url) do
-            "#{conn.api_server}/a/#{conn.client_id}/#{unquote(object)}"
+          if unquote(use_admin_url) do
+            "#{conn.api_server}/v3/#{unquote(object)}"
           else
             "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
           end
@@ -405,7 +423,11 @@ defmodule ExNylas do
             url,
             body,
             headers,
-            [params: params]
+            [
+              timeout: conn.timeout,
+              recv_timeout: conn.recv_timeout,
+              params: params
+            ]
           ]
         )
         |> API.handle_response(val)
