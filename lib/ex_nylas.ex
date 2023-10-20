@@ -346,7 +346,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, changeset, id, params \\ %{}) do
         headers =
-          apply(Api, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+          apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
         url =
           if unquote(use_admin_url) do
