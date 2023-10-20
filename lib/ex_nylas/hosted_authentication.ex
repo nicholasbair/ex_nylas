@@ -112,7 +112,7 @@ defmodule ExNylas.HostedAuthentication do
 
   defp parse_options({_key, nil}), do: ""
 
-  defp parse_options({:scope, scope}) when is_list(scopes) do
+  defp parse_options({:scope, scope}) when is_list(scope) do
     "&scope=#{Enum.join(scope, ",")}"
   end
 
