@@ -25,7 +25,7 @@ defmodule ExNylas.Events do
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
-    |> API.handle_response(Event)
+    |> API.handle_response(Event.as_struct())
   end
 
   @doc """

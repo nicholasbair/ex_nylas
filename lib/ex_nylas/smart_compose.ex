@@ -24,7 +24,7 @@ defmodule ExNylas.SmartCompose do
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
-    |> API.handle_response(ExNylas.Model.SmartCompose)
+    |> API.handle_response(ExNylas.Model.SmartCompose.as_struct())
   end
 
   @doc """

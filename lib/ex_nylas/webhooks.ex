@@ -25,7 +25,7 @@ defmodule ExNylas.Webhooks do
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
-    |> API.handle_response(ExNylas.Model.Webhook)
+    |> API.handle_response(ExNylas.Model.Webhook.as_struct())
   end
 
   @doc """

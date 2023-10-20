@@ -27,7 +27,7 @@ defmodule ExNylas.Drafts do
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
-    |> API.handle_response(ExNylas.Model.Message)
+    |> API.handle_response(ExNylas.Model.Draft.as_struct())
   end
 
   @doc """

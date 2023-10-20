@@ -91,7 +91,7 @@ defmodule ExNylas.Model.Event do
     field(:location, String.t())
     field(:participants, list())
     field(:busy, boolean())
-    field(:recurrence, map())
+    field(:recurrence, [String.t()])
     field(:visibility, String.t())
     field(:conferencing, map())
     field(:reminder_minutes, String.t())
