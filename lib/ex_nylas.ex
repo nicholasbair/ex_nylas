@@ -342,9 +342,9 @@ defmodule ExNylas do
       Update a(n) #{unquote(struct_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `id`, `params`)
+          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`, `body`, `params`)
       """
-      def unquote(config.name)(%Conn{} = conn, changeset, id, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
         headers =
           apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
 
@@ -378,10 +378,10 @@ defmodule ExNylas do
       Update a(n) #{unquote(struct_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`body`, `id`, `params`)
+          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`id`, `body`, `params`)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, changeset, id, params) do
-        case unquote(config.name)(conn, changeset, id, params) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params) do
+        case unquote(config.name)(conn, id, changeset, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
         end
