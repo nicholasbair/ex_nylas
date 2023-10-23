@@ -22,7 +22,8 @@ defmodule ExNylas.MixProject do
       {:httpoison, "~> 2.1"},
       {:poison, "~> 5.0"},
       {:bypass, "~> 2.1", only: :test},
-      {:typed_struct, "~> 0.3.0"}
+      {:typed_struct, "~> 0.3.0"},
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end
 end
