@@ -9,7 +9,6 @@ defmodule ExNylas.Model.ApplicationRedirect do
     field(:id, String.t())
     field(:url, String.t())
     field(:platform, String.t())
-    field(:settings, Settings.t())
   end
 
   def as_struct, do: struct(__MODULE__)
@@ -18,6 +17,5 @@ defmodule ExNylas.Model.ApplicationRedirect do
   typedstruct module: Build do
     field(:url, String.t())
     field(:platform, String.t())
-    field(:settings, Settings.t())
   end
 end

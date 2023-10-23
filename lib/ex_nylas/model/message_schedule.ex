@@ -4,6 +4,7 @@ defmodule ExNylas.Model.MessageSchedule do
   """
 
   use TypedStruct
+  alias ExNylas.Model.MessageSchedule.Status
 
   typedstruct do
     field(:schedule_id, String.t())
