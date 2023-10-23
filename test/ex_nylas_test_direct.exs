@@ -1,6 +1,7 @@
 defmodule ExNylasTestDirect do
   # Use async == false to avoid API limits
   use ExUnit.Case, async: false
+  require Logger
   doctest ExNylas
 
   # Stored as strings to avoid additional parsing
@@ -48,8 +49,8 @@ defmodule ExNylasTestDirect do
         )
 
       if ok == :error do
-        IO.puts("Error on #{unquote(m)}, message printed below")
-        IO.inspect(res)
+        Logger.info("Error on #{unquote(m)}, message printed below")
+        Logger.info("Error: #{inspect(res)}")
       end
 
       assert ok == :ok
@@ -73,8 +74,8 @@ defmodule ExNylasTestDirect do
         )
 
       if ok == :error do
-        IO.puts("Error on #{unquote(m)}, message printed below")
-        IO.inspect(res)
+        Logger.info("Error on #{unquote(m)}, message printed below")
+        Logger.info("Error: #{inspect(res)}")
       end
 
       assert ok == :ok

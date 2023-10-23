@@ -104,8 +104,7 @@ defmodule ExNylas.HostedAuthentication do
   defp parse_options(url, options) do
     res =
       options
-      |> Enum.map(fn {k, v} -> parse_options({k, v}) end)
-      |> Enum.join()
+      |> Enum.map_join(fn {k, v} -> parse_options({k, v}) end)
 
     url <> res
   end
