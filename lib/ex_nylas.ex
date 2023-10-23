@@ -111,14 +111,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
-
-        url =
-          if unquote(use_admin_url) do
-            "#{conn.api_server}/v3/#{unquote(object)}"
-          else
-            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
-          end
-
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
         val = apply(unquote(struct_name), :as_list, [])
 
         res =
@@ -174,14 +167,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, search_text) do
         headers = apply(API, unquote(header_type), [conn])
-
-        url =
-          if unquote(use_admin_url) do
-            "#{conn.api_server}/v3/#{unquote(object)}/search"
-          else
-            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/search"
-          end
-
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
         val = apply(unquote(struct_name), :as_list, [])
 
         apply(
@@ -232,14 +218,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
-
-        url =
-          if unquote(use_admin_url) do
-            "#{conn.api_server}/v3/#{unquote(object)}/#{id}"
-          else
-            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/#{id}"
-          end
-
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
         val = apply(unquote(struct_name), :as_struct, [])
 
         apply(
@@ -289,14 +268,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
-
-        url =
-          if unquote(use_admin_url) do
-            "#{conn.api_server}/v3/#{unquote(object)}"
-          else
-            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
-          end
-
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
         val = apply(unquote(struct_name), :as_list, [])
 
         apply(
@@ -345,16 +317,8 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`, `body`, `params`)
       """
       def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
-        headers =
-          apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
-
-        url =
-          if unquote(use_admin_url) do
-            "#{conn.api_server}/v3/#{unquote(object)}"
-          else
-            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}/#{id}"
-          end
-
+        headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
         val = apply(unquote(struct_name), :as_struct, [])
 
         apply(
@@ -404,16 +368,8 @@ defmodule ExNylas do
           {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
       """
       def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
-        headers =
-          apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
-
-        url =
-          if unquote(use_admin_url) do
-            "#{conn.api_server}/v3/#{unquote(object)}"
-          else
-            "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{unquote(object)}"
-          end
-
+        headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
         val = apply(unquote(struct_name), :as_struct, [])
 
         apply(
@@ -446,6 +402,14 @@ defmodule ExNylas do
         end
       end
     end
+  end
+
+  def generate_url(conn, true = _use_admin_url, object) do
+    "#{conn.api_server}/v3/#{object}"
+  end
+
+  def generate_url(conn, false = _use_admin_url, object) do
+    "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{object}"
   end
 
   defmacro __using__(opts) do
