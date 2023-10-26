@@ -11,7 +11,7 @@ defmodule ExNylas.ConnectorCredentials do
   List connector credentials.
 
   Example
-      {:ok, creds} = conn |> ExNylas.ConnectorCredentials.list()
+      {:ok, creds} = conn |> ExNylas.ConnectorCredentials.list(`provider`)
   """
   def list(%Conn{} = conn, provider, params \\ %{}) do
     API.get(
@@ -30,7 +30,7 @@ defmodule ExNylas.ConnectorCredentials do
   List connector credentials.
 
   Example
-      creds = conn |> ExNylas.ConnectorCredentials.list!()
+      creds = conn |> ExNylas.ConnectorCredentials.list!(`provider`)
   """
   def list!(%Conn{} = conn, provider, params \\ %{}) do
     case list(conn, provider, params) do
