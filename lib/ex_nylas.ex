@@ -95,13 +95,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(
-         %{http_method: :get, name: :first} = config,
-         object,
-         struct_name,
-         header_type,
-         use_admin_url
-       ) do
+  defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, header_type, use_admin_url) do
     quote do
       @doc """
       Get the first #{unquote(struct_name)}.
@@ -151,13 +145,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(
-         %{http_method: :get, name: :search} = config,
-         object,
-         struct_name,
-         header_type,
-         use_admin_url
-       ) do
+  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, header_type, use_admin_url) do
     quote do
       @doc """
       Search for #{unquote(struct_name)}(s) based on provided `search_text`.
@@ -201,14 +189,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(
-         %{http_method: method, name: name} = config,
-         object,
-         struct_name,
-         header_type,
-         use_admin_url
-       )
-       when name in [:find, :delete] and method in [:get, :delete] do
+  defp generate_api(%{http_method: method, name: name} = config, object, struct_name, header_type, use_admin_url) when name in [:find, :delete] and method in [:get, :delete] do
     quote do
       @doc """
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(struct_name)}.
@@ -252,13 +233,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(
-         %{http_method: :get} = config,
-         object,
-         struct_name,
-         header_type,
-         use_admin_url
-       ) do
+  defp generate_api(%{http_method: :get} = config, object, struct_name, header_type, use_admin_url) do
     quote do
       @doc """
       Fetch #{unquote(struct_name)}(s), optionally provide query `params`.
@@ -302,13 +277,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(
-         %{http_method: :patch} = config,
-         object,
-         struct_name,
-         header_type,
-         use_admin_url
-       ) do
+  defp generate_api(%{http_method: :patch} = config, object, struct_name, header_type, use_admin_url) do
     quote do
       @doc """
       Update a(n) #{unquote(struct_name)}.
@@ -353,13 +322,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(
-         %{http_method: :post} = config,
-         object,
-         struct_name,
-         header_type,
-         use_admin_url
-       ) do
+  defp generate_api(%{http_method: :post} = config, object, struct_name, header_type, use_admin_url) do
     quote do
       @doc """
       Create a(n) #{unquote(struct_name)}.
