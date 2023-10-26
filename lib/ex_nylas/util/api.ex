@@ -18,7 +18,7 @@ defmodule ExNylas.API do
 
   def process_request_body(body) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
-  # Encoding for multipart bodies is handled in the interface module, e.g. ExNylas.Messages
+  # Encoding for multipart bodies is handled in the interface module, e.g. ExNylas.Messages or ExNylas.Common
   def process_request_body({:multipart, _} = body), do: body
 
   def process_request_body(body), do: body
