@@ -6,5 +6,6 @@ defmodule ExNylas.Threads do
   use ExNylas,
     object: "threads",
     struct: ExNylas.Model.Thread,
+    readable_name: "thread",
     include: [:list, :first, :find, :update, :all, :delete]
 end

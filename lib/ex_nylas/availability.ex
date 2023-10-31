@@ -5,6 +5,7 @@ defmodule ExNylas.Calendars.Availability do
 
   use ExNylas,
     struct: ExNylas.Model.Calendar.Availability,
+    readable_name: "calendar availability",
     include: [:build]
 
   alias ExNylas.API

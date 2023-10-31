@@ -9,6 +9,7 @@ defmodule ExNylas.Webhooks do
   use ExNylas,
     object: "webhooks",
     struct: ExNylas.Model.Webhook,
+    readable_name: "webhook",
     use_admin_url: true,
     include: [:list, :first, :find, :delete, :build, :update, :create, :all]
 

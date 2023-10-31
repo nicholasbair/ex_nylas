@@ -9,6 +9,7 @@ defmodule ExNylas.SmartCompose do
   use ExNylas,
     object: "messages/smart-compose",
     struct: ExNylas.Model.SmartCompose,
+    readable_name: "smart compose",
     include: [:build, :create]
 
   @doc """

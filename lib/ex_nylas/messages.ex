@@ -13,6 +13,7 @@ defmodule ExNylas.Messages do
   use ExNylas,
     object: "messages",
     struct: ExNylas.Model.Message,
+    readable_name: "message",
     include: [:list, :first, :search, :find, :update, :build, :all]
 
   @doc """

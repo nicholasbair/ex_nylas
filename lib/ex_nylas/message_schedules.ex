@@ -6,5 +6,6 @@ defmodule ExNylas.MessageSchedules do
   use ExNylas,
     object: "messages/schedules",
     struct: ExNylas.Model.MessageSchedule,
+    readable_name: "message schedule",
     include: [:list, :first, :find, :all, :delete]
 end
