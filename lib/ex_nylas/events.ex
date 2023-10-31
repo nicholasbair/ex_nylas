@@ -9,7 +9,8 @@ defmodule ExNylas.Events do
 
   use ExNylas,
     object: "events",
-    struct: ExNylas.Model.Event,
+    struct: Event,
+    readable_name: "event",
     include: [:list, :first, :find, :build, :all, :create, :update, :delete]
 
   @doc """

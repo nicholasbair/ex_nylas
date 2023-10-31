@@ -6,6 +6,7 @@ defmodule ExNylas.WebhookIps do
   use ExNylas,
     object: "webhooks/ip-addresses",
     struct: ExNylas.Model.WebhookIp,
+    readable_name: "webhook IP",
     use_admin_url: true,
     include: [:list]
 end

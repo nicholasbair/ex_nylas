@@ -6,5 +6,6 @@ defmodule ExNylas.Calendars do
   use ExNylas,
     object: "calendars",
     struct: ExNylas.Model.Calendar,
+    readable_name: "calendar",
     include: [:list, :first, :find, :delete, :build, :create, :update, :all]
 end

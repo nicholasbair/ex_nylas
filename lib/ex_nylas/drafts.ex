@@ -13,6 +13,7 @@ defmodule ExNylas.Drafts do
   use ExNylas,
     object: "drafts",
     struct: ExNylas.Model.Draft,
+    readable_name: "draft",
     include: [:list, :first, :find, :delete, :build, :all]
 
   @doc """

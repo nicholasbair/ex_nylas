@@ -25,33 +25,34 @@ defmodule ExNylas do
     struct_name = Keyword.get(opts, :struct)
     header_type = Keyword.get(opts, :header_type, :header_bearer)
     use_admin_url = Keyword.get(opts, :use_admin_url, false)
+    readable_name = Keyword.get(opts, :readable_name, struct_name)
 
     @funcs
     |> Map.keys()
     |> Enum.filter(fn k -> k in include end)
     |> Enum.map(fn k ->
       Map.get(@funcs, k)
-      |> generate_api(object, struct_name, header_type, use_admin_url)
+      |> generate_api(object, struct_name, readable_name, header_type, use_admin_url)
     end)
   end
 
-  defp generate_api(%{name: :all} = config, _object, struct_name, _header_type, _use_admin_url) do
+  defp generate_api(%{name: :all} = config, _object, _struct_name, readable_name, _header_type, _use_admin_url) do
     quote do
       @doc """
-      Fetch all #{unquote(struct_name)}(s) matching the provided query (function will handle paging).
+      Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
       Example
-        {:ok, result} = ExNylas.#{__MODULE__}.all(conn, params)
+        {:ok, result} = #{__MODULE__}.all(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         apply(ExNylas.Paging, :all, [conn, __MODULE__, params])
       end
 
       @doc """
-      Fetch all #{unquote(struct_name)}(s) matching the provided query (function will handle paging).
+      Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
       Example
-        result = ExNylas.#{__MODULE__}.all!(conn, params)
+        result = #{__MODULE__}.all!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -62,13 +63,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{name: :build} = config, _object, struct_name, _header_type, _use_admin_url) do
+  defp generate_api(%{name: :build} = config, _object, struct_name, readable_name, _header_type, _use_admin_url) do
     quote do
       @doc """
-      Create and validate a #{unquote(struct_name)}, use the save function to send to Nylas.
+      Create and validate a #{unquote(readable_name)}, use the save function to send to Nylas.
 
       Example
-        {:ok, result} = ExNylas.#{__MODULE__}.build(`payload`)
+        {:ok, result} = #{__MODULE__}.build(`payload`)
       """
       def unquote(config.name)(payload) do
         try do
@@ -80,10 +81,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      Create and validate a #{unquote(struct_name)}, use the save function to send to Nylas.
+      Create and validate a #{unquote(readable_name)}, use the save function to send to Nylas.
 
       Example
-        result = ExNylas.#{__MODULE__}.build(`payload`)!
+        result = #{__MODULE__}.build(`payload`)!
       """
       def unquote("#{config.name}!" |> String.to_atom())(payload) do
         unquote(struct_name)
@@ -95,13 +96,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, readable_name, header_type, use_admin_url) do
     quote do
       @doc """
-      Get the first #{unquote(struct_name)}.
+      Get the first #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.first()
+          {:ok, result} = conn |> #{__MODULE__}.first()
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
@@ -131,10 +132,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      Get the first #{unquote(struct_name)}.
+      Get the first #{unquote(readable_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.first!()
+          result = conn |> #{__MODULE__}.first!()
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -145,13 +146,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, readable_name, header_type, use_admin_url) do
     quote do
       @doc """
-      Search for #{unquote(struct_name)}(s) based on provided `search_text`.
+      Search for #{unquote(readable_name)}(s) based on provided `search_text`.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.search("nylas")
+          {:ok, result} = conn |> #{__MODULE__}.search("nylas")
       """
       def unquote(config.name)(%Conn{} = conn, search_text) do
         headers = apply(API, unquote(header_type), [conn])
@@ -175,10 +176,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      Search for #{unquote(struct_name)}(s) based on provided `search_text`.
+      Search for #{unquote(readable_name)}(s) based on provided `search_text`.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.search!("nylas")
+          result = conn |> #{__MODULE__}.search!("nylas")
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, search_text) do
         case unquote(config.name)(conn, search_text) do
@@ -189,13 +190,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: method, name: name} = config, object, struct_name, header_type, use_admin_url) when name in [:find, :delete] and method in [:get, :delete] do
+  defp generate_api(%{http_method: method, name: name} = config, object, struct_name, readable_name, header_type, use_admin_url) when name in [:find, :delete] and method in [:get, :delete] do
     quote do
       @doc """
-      #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(struct_name)}.
+      #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`)
+          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}(`id`)
       """
       def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
@@ -219,10 +220,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(struct_name)}.
+      #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`id`)
+          result = conn |> .#{__MODULE__}.#{unquote(config.name)}!(`id`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id) do
         case unquote(config.name)(conn, id) do
@@ -233,13 +234,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get} = config, object, struct_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :get} = config, object, struct_name, readable_name, header_type, use_admin_url) do
     quote do
       @doc """
-      Fetch #{unquote(struct_name)}(s), optionally provide query `params`.
+      Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}()
+          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}()
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
@@ -263,10 +264,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      Fetch #{unquote(struct_name)}(s), optionally provide query `params`.
+      Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!()
+          result = conn |> #{__MODULE__}.#{unquote(config.name)}!()
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -277,13 +278,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :patch} = config, object, struct_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :patch} = config, object, struct_name,readable_name, header_type, use_admin_url) do
     quote do
       @doc """
-      Update a(n) #{unquote(struct_name)}.
+      Update a(n) #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`id`, `body`, `params`)
+          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}(`id`, `body`, `params`)
       """
       def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
@@ -308,10 +309,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      Update a(n) #{unquote(struct_name)}.
+      Update a(n) #{unquote(readable_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}!(`id`, `body`, `params`)
+          result = conn |> #{__MODULE__}.#{unquote(config.name)}!(`id`, `body`, `params`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params) do
         case unquote(config.name)(conn, id, changeset, params) do
@@ -322,13 +323,13 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :post} = config, object, struct_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :post} = config, object, struct_name, readable_name, header_type, use_admin_url) do
     quote do
       @doc """
-      Create a(n) #{unquote(struct_name)}.
+      Create a(n) #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
+          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
       """
       def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
@@ -353,10 +354,10 @@ defmodule ExNylas do
       end
 
       @doc """
-      Create a(n) #{unquote(struct_name)}.
+      Create a(n) #{unquote(readable_name)}.
 
       Example
-          result = conn |> ExNylas.#{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
+          result = conn |> #{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params) do
         case unquote(config.name)(conn, body, params) do

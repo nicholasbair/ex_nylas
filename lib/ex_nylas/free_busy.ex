@@ -5,6 +5,7 @@ defmodule ExNylas.Calendars.FreeBusy do
 
   use ExNylas,
     struct: ExNylas.Model.Calendar.FreeBusy,
+    readable_name: "calendar free/busy",
     include: [:build]
 
   alias ExNylas.API
