@@ -278,7 +278,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :patch} = config, object, struct_name,readable_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :patch} = config, object, struct_name, readable_name, header_type, use_admin_url) do
     quote do
       @doc """
       Update a(n) #{unquote(readable_name)}.
