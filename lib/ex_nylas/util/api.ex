@@ -69,6 +69,8 @@ defmodule ExNylas.API do
 
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, reason}
+
+      _ -> res
     end
   end
 
