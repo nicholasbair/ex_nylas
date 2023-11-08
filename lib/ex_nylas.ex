@@ -200,7 +200,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn])
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}"
         val = apply(unquote(struct_name), :as_struct, [])
 
         apply(
@@ -288,7 +288,7 @@ defmodule ExNylas do
       """
       def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
         headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
+        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}"
         val = apply(unquote(struct_name), :as_struct, [])
 
         apply(
