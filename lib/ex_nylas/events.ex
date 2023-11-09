@@ -17,14 +17,18 @@ defmodule ExNylas.Events do
   Send an RSVP for a given event
 
   Example
-      {:ok, success} = conn |> ExNylas.Events.rsvp(`event_id`, `calendar_id`, `status`)
+      {:ok, success} = conn |> ExNylas.Events.rsvp(`event_id`, `status`, `%{calendar_id: calendar_id}`)
   """
-  def rsvp(%Conn{} = conn, event_id, calendar_id, status) do
+  def rsvp(%Conn{} = conn, event_id, status, %{calendar_id: _calendar_id} = params) do
     API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp?calendar_id=#{calendar_id}",
+      "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
       %{status: status},
       API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+      [
+        timeout: conn.timeout,
+        recv_timeout: conn.recv_timeout,
+        params: params
+      ]
     )
     |> API.handle_response(Event.as_struct())
   end
@@ -33,10 +37,10 @@ defmodule ExNylas.Events do
   Send an RSVP for a given event
 
   Example
-      success = conn |> ExNylas.Events.rsvp!(`event_id`, `calendar_id`, `status`)
+      success = conn |> ExNylas.Events.rsvp!(`event_id`, `status`, `%{calendar_id: calendar_id}`)
   """
-  def rsvp!(%Conn{} = conn, event_id, calendar_id, status) do
-    case rsvp(conn, event_id, calendar_id, status) do
+  def rsvp!(%Conn{} = conn, event_id, status, %{calendar_id: _calendar_id} = params) do
+    case rsvp(conn, event_id, status, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
