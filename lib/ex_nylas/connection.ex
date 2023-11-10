@@ -18,6 +18,7 @@ defmodule ExNylas.Connection do
     field(:client_secret, String.t())
     field(:api_key, String.t())
     field(:grant_id, String.t())
+    field(:access_token, String.t())
     field(:api_server, String.t(), default: @api_server)
     field(:timeout, non_neg_integer(), default: @timeout) # timeout for establishing a TCP or SSL connection, in milliseconds.
     field(:recv_timeout, non_neg_integer(), default: @recv_timeout) # timeout for receiving an HTTP response from the socket, in milliseconds.
