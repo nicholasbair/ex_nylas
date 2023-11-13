@@ -7,9 +7,8 @@ defmodule ExNylas.Model.WebhookIp do
 
   typedstruct do
     field(:ip_addresses, [String.t()])
+    field(:updated_at, non_neg_integer())
   end
 
   def as_struct(), do: struct(__MODULE__)
-
-  def as_list(), do: [as_struct()]
 end
