@@ -19,7 +19,7 @@ defmodule ExNylas.Events do
   Example
       {:ok, success} = conn |> ExNylas.Events.rsvp(`event_id`, `status`, `%{calendar_id: calendar_id}`)
   """
-  def rsvp(%Conn{} = conn, event_id, status, %{calendar_id: _calendar_id} = params) do
+  def rsvp(%Conn{} = conn, event_id, status, params \\ %{}) do
     API.post(
       "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
       %{status: status},
@@ -39,7 +39,7 @@ defmodule ExNylas.Events do
   Example
       success = conn |> ExNylas.Events.rsvp!(`event_id`, `status`, `%{calendar_id: calendar_id}`)
   """
-  def rsvp!(%Conn{} = conn, event_id, status, %{calendar_id: _calendar_id} = params) do
+  def rsvp!(%Conn{} = conn, event_id, status, params \\ %{}) do
     case rsvp(conn, event_id, status, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason

@@ -23,6 +23,16 @@ defmodule ExNylas.API do
 
   def process_request_body(body), do: body
 
+  def header_bearer(%Conn{access_token: token, grant_id: grant_id}) when not is_nil(token) and is_nil(grant_id) do
+    raise "ExNylas.Connection struct is missing a value for `access_token` or `grant_id` which are required for this call."
+  end
+
+  def header_bearer(%Conn{access_token: access_token} = _conn) when not is_nil(access_token) do
+    [
+      authorization: "Bearer #{access_token}"
+    ] ++ @base_headers
+  end
+
   def header_bearer(%Conn{api_key: key, grant_id: grant_id}) when is_nil(key) or is_nil(grant_id) do
     raise "ExNylas.Connection struct is missing a value for `api_key` or `grant_id` which are required for this call."
   end
