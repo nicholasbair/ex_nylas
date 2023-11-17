@@ -9,11 +9,16 @@ defmodule ExNylas.Common do
   end
 
   def build_multipart_body(obj, attachments) do
-    files = Enum.map(attachments, fn file ->
-      basename = Path.basename(file)
-      {:file, basename, {"form-data", [{:name, "file"}, {:filename, Path.basename(basename)}]}, []}
-    end)
+    {:multipart, [{"message", Poison.encode!(obj)}] ++ Enum.map(attachments, &build_file/1)}
+  end
 
-    {:multipart, [{"message", Poison.encode!(obj)}] ++ files}
+  defp build_file({cid, filepath}) do
+    basename = Path.basename(filepath)
+    {:file, basename, {"form-data", [{:name, cid}, {:filename, Path.basename(basename)}]}, []}
+  end
+
+  defp build_file(filepath) do
+    basename = Path.basename(filepath)
+    {:file, basename, {"form-data", [{:name, "file"}, {:filename, Path.basename(basename)}]}, []}
   end
 end
