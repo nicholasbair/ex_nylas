@@ -4,7 +4,6 @@ defmodule ExNylas.Connection do
 
   The client_id, client_secret, api_key and grant_id are all optional when creating the connection struct.
   The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API, the api_key and grant_id are needed.
-  For calls to application, account management and webhooks, the client_id and client_secret is required.
   """
 
   use TypedStruct

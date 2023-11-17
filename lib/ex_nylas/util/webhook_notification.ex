@@ -18,11 +18,10 @@ defmodule ExNylas.WebhookNotification do
   end
 
   def valid_signature?(webhook_secret, body, signature) do
-    computed =
-      :crypto.mac(:hmac, :sha256, webhook_secret, body)
-      |> Base.encode16
-      |> String.downcase()
-
-    computed == String.downcase(signature)
+    :hmac
+    |> :crypto.mac(:sha256, webhook_secret, body)
+    |> Base.encode16
+    |> String.downcase()
+    |> Kernel.==(String.downcase(signature))
   end
 end
