@@ -1,5 +1,5 @@
 defmodule ExNylas.Connection do
-   @moduledoc """
+  @moduledoc """
   A struct representing a Nylas API connection.
 
   The client_id, client_secret, api_key and grant_id are all optional when creating the connection struct.

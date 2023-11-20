@@ -19,7 +19,7 @@ defmodule ExNylas.Calendars.FreeBusy do
   """
   def list(%Conn{} = conn, body) do
     API.post(
-      "#{conn.api_server}/calendars/free-busy",
+      "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
       body,
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
