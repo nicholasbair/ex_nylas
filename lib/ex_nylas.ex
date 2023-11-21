@@ -26,17 +26,18 @@ defmodule ExNylas do
     header_type = Keyword.get(opts, :header_type, :header_bearer)
     use_admin_url = Keyword.get(opts, :use_admin_url, false)
     readable_name = Keyword.get(opts, :readable_name, struct_name)
+    use_cursor_paging = Keyword.get(opts, :use_cursor_paging, true)
 
     @funcs
     |> Map.keys()
     |> Enum.filter(fn k -> k in include end)
     |> Enum.map(fn k ->
       Map.get(@funcs, k)
-      |> generate_api(object, struct_name, readable_name, header_type, use_admin_url)
+      |> generate_api(object, struct_name, readable_name, header_type, use_admin_url, use_cursor_paging)
     end)
   end
 
-  defp generate_api(%{name: :all} = config, _object, _struct_name, readable_name, _header_type, _use_admin_url) do
+  defp generate_api(%{name: :all} = config, _object, _struct_name, readable_name, _header_type, _use_admin_url, use_cursor_paging) do
     quote do
       @doc """
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
@@ -45,7 +46,7 @@ defmodule ExNylas do
         {:ok, result} = #{__MODULE__}.all(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
-        apply(ExNylas.Paging, :all, [conn, __MODULE__, params])
+        apply(ExNylas.Paging, :all, [conn, __MODULE__, unquote(use_cursor_paging), params])
       end
 
       @doc """
@@ -63,7 +64,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{name: :build} = config, _object, struct_name, readable_name, _header_type, _use_admin_url) do
+  defp generate_api(%{name: :build} = config, _object, struct_name, readable_name, _header_type, _use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
       Create and validate a #{unquote(readable_name)}, use the save function to send to Nylas.
@@ -96,7 +97,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, readable_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :get, name: :first} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
       Get the first #{unquote(readable_name)}.
@@ -146,7 +147,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, readable_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
       Search for #{unquote(readable_name)}(s) based on provided `search_text`.
@@ -190,7 +191,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: method, name: name} = config, object, struct_name, readable_name, header_type, use_admin_url) when name in [:find, :delete] and method in [:get, :delete] do
+  defp generate_api(%{http_method: method, name: name} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) when name in [:find, :delete] and method in [:get, :delete] do
     quote do
       @doc """
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
@@ -234,7 +235,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :get} = config, object, struct_name, readable_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :get} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
       Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
@@ -278,7 +279,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :patch} = config, object, struct_name, readable_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :patch} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
       Update a(n) #{unquote(readable_name)}.
@@ -323,7 +324,7 @@ defmodule ExNylas do
     end
   end
 
-  defp generate_api(%{http_method: :post} = config, object, struct_name, readable_name, header_type, use_admin_url) do
+  defp generate_api(%{http_method: :post} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
       Create a(n) #{unquote(readable_name)}.
