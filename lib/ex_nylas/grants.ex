@@ -7,8 +7,9 @@ defmodule ExNylas.Grants do
     object: "grants",
     struct: ExNylas.Model.Grant,
     readable_name: "grant",
-    include: [:list, :find, :delete, :update],
-    use_admin_url: true
+    include: [:list, :find, :delete, :update, :all],
+    use_admin_url: true,
+    use_cursor_paging: false
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn

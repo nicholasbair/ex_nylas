@@ -5,16 +5,28 @@ defmodule ExNylas.Paging do
 
   alias ExNylas.Connection, as: Conn
 
-  def all(%Conn{} = conn, resource, params \\ %{}), do: page(conn, resource, params)
+  @limit 100
 
-  def all!(%Conn{} = conn, resource, params \\ %{}) do
-    case page(conn, resource, params) do
+  def all(conn, resource, use_cursor_paging, params \\ %{})
+  def all(%Conn{} = conn, resource, true = _use_cursor_paging, params), do: page_with_cursor(conn, resource, params)
+  def all(%Conn{} = conn, resource, false = _use_cursor_paging, params), do: page_with_offset(conn, resource, params)
+
+  def all!(conn, resource, use_cursor_paging, params \\ %{})
+  def all!(%Conn{} = conn, resource, true = _use_cursor_paging, params) do
+    case page_with_cursor(conn, resource, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
   end
 
-  defp page(%Conn{} = conn, resource, query, next_cursor \\ nil, acc \\ []) do
+  def all!(%Conn{} = conn, resource, false = _use_cursor_paging, params) do
+    case page_with_offset(conn, resource, params) do
+      {:ok, res} -> res
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  defp page_with_cursor(%Conn{} = conn, resource, query, next_cursor \\ nil, acc \\ []) do
     query = Map.put(query, :page_token, next_cursor)
 
     case apply(resource, :list, [conn, query]) do
@@ -23,7 +35,28 @@ defmodule ExNylas.Paging do
 
         case res.next_cursor do
           nil -> {:ok, new}
-          _ -> page(conn, resource, query, res.next_cursor, new)
+          _ -> page_with_cursor(conn, resource, query, res.next_cursor, new)
+        end
+
+      err ->
+        err
+    end
+  end
+
+  defp page_with_offset(%Conn{} = conn, resource, query, offset \\ 0, acc \\ []) do
+    query =
+      query
+      |> Map.put_new(:limit, @limit)
+      |> Map.put(:offset, offset)
+
+    case apply(resource, :list, [conn, query]) do
+      {:ok, data} ->
+        new = acc ++ data
+        limit = Map.get(query, :limit)
+
+        case length(data) == limit do
+          true -> page_with_offset(conn, resource, query, offset + limit, new)
+          false -> {:ok, new}
         end
 
       err ->

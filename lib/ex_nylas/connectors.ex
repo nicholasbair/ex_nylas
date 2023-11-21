@@ -8,5 +8,6 @@ defmodule ExNylas.Connectors do
     struct: ExNylas.Model.Connector,
     readable_name: "connector",
     use_admin_url: true,
-    include: [:list, :first, :find, :delete, :build, :update, :create, :all]
+    include: [:list, :first, :find, :delete, :build, :update, :create, :all],
+    use_cursor_paging: false
 end
