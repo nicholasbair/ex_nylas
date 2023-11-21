@@ -1,4 +1,4 @@
-defmodule ExNylas.Model.WebhookIp do
+defmodule ExNylas.Model.WebhookIP do
   @moduledoc """
   A struct for Nylas webhook IP.
   """

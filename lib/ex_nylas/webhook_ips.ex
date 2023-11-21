@@ -1,4 +1,4 @@
-defmodule ExNylas.WebhookIps do
+defmodule ExNylas.WebhookIPs do
   @moduledoc """
   Interface for Nylas webhook IPs.
   """
@@ -18,6 +18,6 @@ defmodule ExNylas.WebhookIps do
       API.header_bearer(conn) ++ ["content-type": "application/json"],
       [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
     )
-    |> API.handle_response(ExNylas.Model.WebhookIp.as_struct())
+    |> API.handle_response(ExNylas.Model.WebhookIP.as_struct())
   end
 end
