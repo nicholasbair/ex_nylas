@@ -17,7 +17,7 @@ defmodule ExNylas.Drafts do
     include: [:list, :first, :find, :delete, :build, :all]
 
   @doc """
-  Create a draft.
+  Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
       {:ok, draft} = conn |> ExNylas.Drafts.create(`draft`, `["path_to_attachment"]`)
@@ -33,7 +33,7 @@ defmodule ExNylas.Drafts do
   end
 
   @doc """
-  Create a draft.
+  Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
       draft = conn |> ExNylas.Drafts.create!(`draft`, `["path_to_attachment"]`)
@@ -79,7 +79,7 @@ defmodule ExNylas.Drafts do
   end
 
   @doc """
-  Update a draft.
+  Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   To remove all attachments from a draft, use update/3 or update!/3.
 
@@ -97,7 +97,7 @@ defmodule ExNylas.Drafts do
   end
 
   @doc """
-  Update a draft.
+  Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   To remove all attachments from a draft, use update/3 or update!/3.
 

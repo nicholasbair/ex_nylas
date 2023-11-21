@@ -17,7 +17,7 @@ defmodule ExNylas.Messages do
     include: [:list, :first, :search, :find, :update, :build, :all]
 
   @doc """
-  Send a message.
+  Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
       {:ok, sent_message} = conn |> ExNylas.Messages.send(`message`, `["path_to_attachment"]`)
@@ -33,7 +33,7 @@ defmodule ExNylas.Messages do
   end
 
   @doc """
-  Send a message.
+  Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
       sent_message = conn |> ExNylas.Messages.send!(`message`, `["path_to_attachment"]`)
