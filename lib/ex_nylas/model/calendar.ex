@@ -10,6 +10,7 @@ defmodule ExNylas.Model.Calendar do
     field(:description, String.t())
     field(:id, String.t())
     field(:is_primary, boolean())
+    field(:location, String.t())
     field(:name, String.t())
     field(:object, String.t())
     field(:read_only, boolean())

@@ -12,7 +12,6 @@ defmodule ExNylas.Model.Attachment do
     field(:size, non_neg_integer())
     field(:filename, String.t())
     field(:is_inline, boolean())
-    field(:content_disposition, String.t())
   end
 
   def as_struct, do: struct(__MODULE__)
