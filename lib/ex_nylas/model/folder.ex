@@ -14,6 +14,9 @@ defmodule ExNylas.Model.Folder do
     field(:unread_count, integer)
     field(:child_count, integer)
     field(:parent_id, String.t())
+    field(:background_color, String.t())
+    field(:object, String.t())
+    field(:text_color, String.t())
   end
 
   def as_struct(), do: struct(__MODULE__)
@@ -22,5 +25,8 @@ defmodule ExNylas.Model.Folder do
 
   typedstruct module: Build do
     field(:name, String.t(), enforce: true)
+    field(:parent_id, String.t())
+    field(:background_color, String.t())
+    field(:text_color, String.t())
   end
 end
