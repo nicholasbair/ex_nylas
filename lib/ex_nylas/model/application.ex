@@ -7,6 +7,7 @@ defmodule ExNylas.Model.Application do
   alias ExNylas.Model.{
     ApplicationRedirect,
     Application.Branding,
+    Application.HostedAuthentication,
   }
 
   typedstruct do
@@ -14,6 +15,7 @@ defmodule ExNylas.Model.Application do
     field(:organization_id, String.t())
     field(:region, String.t())
     field(:branding, Branding.t())
+    field(:hosted_authentication, HostedAuthentication.t())
     field(:created_at, non_neg_integer())
     field(:updated_at, non_neg_integer())
     field(:environment, String.t())
@@ -23,7 +25,8 @@ defmodule ExNylas.Model.Application do
 
   def as_list() do
     %__MODULE__{
-      branding: Branding.as_struct()
+      branding: Branding.as_struct(),
+      hosted_authentication: HostedAuthentication.as_struct(),
     }
   end
 

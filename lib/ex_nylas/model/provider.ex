@@ -11,4 +11,6 @@ defmodule ExNylas.Model.Provider do
     field(:email_address, String.t())
     field(:detected, boolean())
   end
+
+  def as_struct(), do: struct(__MODULE__)
 end

@@ -15,15 +15,17 @@ defmodule ExNylas.Calendars.FreeBusy do
   Get calendar free/busy.
 
   Example
-      {:ok, result} = conn |> ExNylas.Calendars.FreeBusy.list(`body`)
+      {:ok, result} = ExNylas.Calendars.FreeBusy.list(conn, `body`)
   """
   def list(%Conn{} = conn, body) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
-      body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      body: API.process_request_body(body),
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Calendar.FreeBusy.as_list())
   end
 
@@ -31,7 +33,7 @@ defmodule ExNylas.Calendars.FreeBusy do
   Get calendar free/busy.
 
   Example
-      result = conn |> ExNylas.Calendars.FreeBusy.list!(`body`)
+      result = ExNylas.Calendars.FreeBusy.list!(conn, `body`)
   """
   def list!(%Conn{} = conn, body) do
     case list(conn, body) do

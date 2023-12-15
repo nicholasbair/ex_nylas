@@ -4,7 +4,6 @@ defmodule ExNylas.Drafts do
   """
 
   alias ExNylas.API
-  alias ExNylas.Common
   alias ExNylas.Connection, as: Conn
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -20,15 +19,19 @@ defmodule ExNylas.Drafts do
   Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
-      {:ok, draft} = conn |> ExNylas.Drafts.create(`draft`, `["path_to_attachment"]`)
+      {:ok, draft} = ExNylas.Drafts.create(conn, `draft`, `["path_to_attachment"]`)
   """
   def create(%Conn{} = conn, draft, attachments \\ []) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
-      Common.build_multipart_body(draft, attachments),
-      API.header_bearer(conn) ++ ["content-type": "multipart/form-data"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    {body, content_type, len} = API.build_multipart(draft, attachments)
+
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+      body: body,
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Draft.as_struct())
   end
 
@@ -36,7 +39,7 @@ defmodule ExNylas.Drafts do
   Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
-      draft = conn |> ExNylas.Drafts.create!(`draft`, `["path_to_attachment"]`)
+      draft = ExNylas.Drafts.create!(conn, `draft`, `["path_to_attachment"]`)
   """
   def create!(%Conn{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
@@ -51,15 +54,17 @@ defmodule ExNylas.Drafts do
   To add attachments greater than 3MB, use update/4 or update!/4.
 
   Example
-      {:ok, draft} = conn |> ExNylas.Drafts.update(`id`, `changeset`)
+      {:ok, draft} = ExNylas.Drafts.update(conn, `id`, `changeset`)
   """
   def update(%Conn{} = conn, id, changeset) do
-    API.patch(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      changeset,
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      body: API.process_request_body(changeset),
+      decode_body: false
     )
+    |> Req.patch(conn.options)
     |> API.handle_response(ExNylas.Model.Draft.as_struct())
   end
 
@@ -69,7 +74,7 @@ defmodule ExNylas.Drafts do
   To add attachments greater than 3MB, use update/4 or update!/4.
 
   Example
-      draft = conn |> ExNylas.Drafts.update!(`id`, `changeset`)
+      draft = ExNylas.Drafts.update!(conn, `id`, `changeset`)
   """
   def update!(%Conn{} = conn, id, changeset) do
     case update(conn, id, changeset) do
@@ -84,15 +89,19 @@ defmodule ExNylas.Drafts do
   To remove all attachments from a draft, use update/3 or update!/3.
 
   Example
-      {:ok, draft} = conn |> ExNylas.Drafts.update(`id`, `changeset`, `["path_to_attachment"]`)
+      {:ok, draft} = ExNylas.Drafts.update(conn, `id`, `changeset`, `["path_to_attachment"]`)
   """
   def update(%Conn{} = conn, id, changeset, attachments) do
-    API.patch(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      Common.build_multipart_body(changeset, attachments),
-      API.header_bearer(conn) ++ ["content-type": "multipart/form-data"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    {body, content_type, len} = API.build_multipart(changeset, attachments)
+
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+      body: body,
+      decode_body: false
     )
+    |> Req.patch(conn.options)
     |> API.handle_response(ExNylas.Model.Draft.as_struct())
   end
 
@@ -102,7 +111,7 @@ defmodule ExNylas.Drafts do
   To remove all attachments from a draft, use update/3 or update!/3.
 
   Example
-      draft = conn |> ExNylas.Drafts.update!(`id`, `changeset`, `["path_to_attachment"]`)
+      draft = ExNylas.Drafts.update!(conn, `id`, `changeset`, `["path_to_attachment"]`)
   """
   def update!(%Conn{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
@@ -115,15 +124,16 @@ defmodule ExNylas.Drafts do
   Send a draft.
 
   Example
-      {:ok, sent_draft} = conn |> ExNylas.Drafts.send(`draft_id`)
+      {:ok, sent_draft} = ExNylas.Drafts.send(conn, `draft_id`)
   """
   def send(%Conn{} = conn, draft_id) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
-      %{},
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}/send",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Draft.as_struct())
   end
 
@@ -131,7 +141,7 @@ defmodule ExNylas.Drafts do
   Send a draft.
 
   Example
-      sent_draft = conn |> ExNylas.Drafts.send!(`draft_id`)
+      sent_draft = ExNylas.Drafts.send!(conn, `draft_id`)
   """
   def send!(%Conn{} = conn, draft_id) do
     case send(conn, draft_id) do

@@ -64,18 +64,19 @@ defmodule ExNylas.HostedAuthentication do
       {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
-    API.post(
-      "#{conn.api_server}/v3/connect/token",
-      %{
+    Req.new(
+      url: "#{conn.api_server}/v3/connect/token",
+      headers: API.base_headers(["content-type": "application/json"]),
+      json: %{
         client_id: conn.client_id,
         client_secret: conn.client_secret,
         grant_type: grant_type,
         code: code,
         redirect_uri: redirect_uri
       },
-      ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.HostedAuthentication.as_struct(), false)
   end
 

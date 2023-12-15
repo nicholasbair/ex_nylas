@@ -15,15 +15,17 @@ defmodule ExNylas.Calendars.Availability do
   Get calendar availability.
 
   Example
-      {:ok, result} = conn |> ExNylas.Calendars.Availability.list(`body`)
+      {:ok, result} = ExNylas.Calendars.Availability.list(conn, `body`)
   """
   def list(%Conn{} = conn, body) do
-    API.post(
-      "#{conn.api_server}/v3/calendars/availability",
-      body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/calendars/availability",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      body: API.process_request_body(body),
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Calendar.Availability.as_struct())
   end
 
@@ -31,7 +33,7 @@ defmodule ExNylas.Calendars.Availability do
   Get calendar availability.
 
   Example
-      result = conn |> ExNylas.Calendars.Availability.list!(`body`)
+      result = ExNylas.Calendars.Availability.list!(conn, `body`)
   """
   def list!(%Conn{} = conn, body) do
     case list(conn, body) do

@@ -10,27 +10,25 @@ defmodule ExNylas.Providers do
   Detect the provider for an email address.
 
   Example
-      {:ok,  detect} = conn |> ExNylas.Providers.detect(%{email: `email`} = _params)
+      {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: `email`} = _params)
   """
   def detect(%Conn{} = conn, params \\ %{}) do
-    API.post(
-      "#{conn.api_server}/v3/providers/detect",
-      %{},
-      API.header_bearer(conn),
-      [
-        timeout: conn.timeout,
-        recv_timeout: conn.recv_timeout,
-        params: params
-      ]
+    Req.new(
+      url: "#{conn.api_server}/v3/providers/detect",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      params: params,
+      decode_body: false
     )
-    |> API.handle_response(ExNylas.Model.Provider)
+    |> Req.post(conn.options)
+    |> API.handle_response(ExNylas.Model.Provider.as_struct())
   end
 
   @doc """
   Detect the provider for an email address.
 
   Example
-      detect = conn |> ExNylas.Providers.detect(%{email: `email`} = _params)
+      detect = ExNylas.Providers.detect(conn, %{email: `email`} = _params)
   """
   def detect!(%Conn{} = conn, params \\ %{}) do
     case detect(conn, params) do

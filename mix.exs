@@ -4,7 +4,7 @@ defmodule ExNylas.MixProject do
   def project do
     [
       app: :ex_nylas,
-      version: "0.2.2",
+      version: "0.3.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -19,8 +19,9 @@ defmodule ExNylas.MixProject do
 
   defp deps do
     [
-      {:httpoison, "~> 2.1"},
+      {:req, "~> 0.4.8"},
       {:poison, "~> 5.0"},
+      {:multipart, "~> 0.4.0"},
       {:bypass, "~> 2.1", only: :test},
       {:typed_struct, "~> 0.3.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
