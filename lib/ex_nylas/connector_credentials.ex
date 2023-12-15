@@ -11,18 +11,17 @@ defmodule ExNylas.ConnectorCredentials do
   List connector credentials.
 
   Example
-      {:ok, creds} = conn |> ExNylas.ConnectorCredentials.list(`provider`)
+      {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, `provider`)
   """
   def list(%Conn{} = conn, provider, params \\ %{}) do
-    API.get(
-      "#{conn.api_server}/connectors/#{provider}/creds",
-      API.header_api_key(conn),
-      [
-        timeout: conn.timeout,
-        recv_timeout: conn.recv_timeout,
-        params: params
-      ]
+    Req.new(
+      url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
+      auth: API.auth_basic(conn),
+      headers: API.base_headers(),
+      params: params,
+      decode_body: false
     )
+    |> Req.get(conn.options)
     |> API.handle_response(Cred.as_list())
   end
 
@@ -30,7 +29,7 @@ defmodule ExNylas.ConnectorCredentials do
   List connector credentials.
 
   Example
-      creds = conn |> ExNylas.ConnectorCredentials.list!(`provider`)
+      creds = ExNylas.ConnectorCredentials.list!(conn, `provider`)
   """
   def list!(%Conn{} = conn, provider, params \\ %{}) do
     case list(conn, provider, params) do
@@ -43,15 +42,17 @@ defmodule ExNylas.ConnectorCredentials do
   Create a connector credential.
 
   Example
-      {:ok, cred} = conn |> ExNylas.ConnectorCredentials.create(`provider`, `body`)
+      {:ok, cred} = ExNylas.ConnectorCredentials.create(conn, `provider`, `body`)
   """
   def create(%Conn{} = conn, provider, body) do
-    API.post(
-      "#{conn.api_server}/connectors/#{provider}/creds",
-      body,
-      API.header_api_key(conn),
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      body: API.process_request_body(body),
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(Cred.as_struct())
   end
 
@@ -59,7 +60,7 @@ defmodule ExNylas.ConnectorCredentials do
   Create a connector credential.
 
   Example
-      cred = conn |> ExNylas.ConnectorCredentials.create!(`provider`, `body`)
+      cred = ExNylas.ConnectorCredentials.create!(conn, `provider`, `body`)
   """
   def create!(%Conn{} = conn, provider, body) do
     case create(conn, provider, body) do
@@ -72,14 +73,16 @@ defmodule ExNylas.ConnectorCredentials do
   Find a connector credential.
 
   Example
-      {:ok, cred} = conn |> ExNylas.ConnectorCredentials.find(`provider`, `id`)
+      {:ok, cred} = ExNylas.ConnectorCredentials.find(conn, `provider`, `id`)
   """
   def find(%Conn{} = conn, provider, id) do
-    API.get(
-      "#{conn.api_server}/connectors/#{provider}/creds/#{id}",
-      API.header_api_key(conn),
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      decode_body: false
     )
+    |> Req.get(conn.options)
     |> API.handle_response(Cred.as_struct())
   end
 
@@ -87,7 +90,7 @@ defmodule ExNylas.ConnectorCredentials do
   Find a connector credential.
 
   Example
-      cred = conn |> ExNylas.ConnectorCredentials.find(`provider`, `id`)
+      cred = ExNylas.ConnectorCredentials.find(conn, `provider`, `id`)
   """
   def find!(%Conn{} = conn, provider, id) do
     case find(conn, provider, id) do
@@ -100,14 +103,16 @@ defmodule ExNylas.ConnectorCredentials do
   Delete a connector credential.
 
   Example
-      {:ok, res} = conn |> ExNylas.ConnectorCredentials.delete(`provider`, `id`)
+      {:ok, res} = ExNylas.ConnectorCredentials.delete(conn, `provider`, `id`)
   """
   def delete(%Conn{} = conn, provider, id) do
-    API.delete(
-      "#{conn.api_server}/connectors/#{provider}/creds/#{id}",
-      API.header_api_key(conn),
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      decode_body: false
     )
+    |> Req.delete(conn.options)
     |> API.handle_response()
   end
 
@@ -115,7 +120,7 @@ defmodule ExNylas.ConnectorCredentials do
   Delete a connector credential.
 
   Example
-      res = conn |> ExNylas.ConnectorCredentials.delete!(`provider`, `id`)
+      res = ExNylas.ConnectorCredentials.delete!(conn, `provider`, `id`)
   """
   def delete!(%Conn{} = conn, provider, id) do
     case delete(conn, provider, id) do
@@ -128,15 +133,17 @@ defmodule ExNylas.ConnectorCredentials do
   Update a connector credential.
 
   Example
-      {:ok, cred} = conn |> ExNylas.ConnectorCredentials.update(`provider`, `id`, `changeset`)
+      {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, `provider`, `id`, `changeset`)
   """
   def update(%Conn{} = conn, provider, id, changeset) do
-    API.patch(
-      "#{conn.api_server}/connectors/#{provider}/creds/#{id}",
-      changeset,
-      API.header_api_key(conn),
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      body: API.process_request_body(changeset),
+      decode_body: false
     )
+    |> Req.patch(conn.options)
     |> API.handle_response(Cred.as_struct())
   end
 
@@ -144,7 +151,7 @@ defmodule ExNylas.ConnectorCredentials do
   Update a connector credential.
 
   Example
-      cred = conn |> ExNylas.ConnectorCredentials.update!(`provider`, `id`, `changeset`)
+      cred = ExNylas.ConnectorCredentials.update!(conn, `provider`, `id`, `changeset`)
   """
   def update!(%Conn{} = conn, provider, id, changeset) do
     case update(conn, provider, id, changeset) do

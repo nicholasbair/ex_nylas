@@ -18,14 +18,16 @@ defmodule ExNylas.Grants do
   Get a grant using the current access token.
 
   Example
-      {:ok, result} = conn |> ExNylas.Grants.me()
+      {:ok, result} = ExNylas.Grants.me(conn)
   """
   def me(%Conn{} = conn) do
-    API.get(
-      "#{conn.api_server}/v3/grants/me",
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/me",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      decode_body: false
     )
+    |> Req.get(conn.options)
     |> API.handle_response(ExNylas.Model.Grant.as_struct())
   end
 end

@@ -4,7 +4,6 @@ defmodule ExNylas.Messages do
   """
 
   alias ExNylas.API
-  alias ExNylas.Common
   alias ExNylas.Connection, as: Conn
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -20,15 +19,19 @@ defmodule ExNylas.Messages do
   Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
-      {:ok, sent_message} = conn |> ExNylas.Messages.send(`message`, `["path_to_attachment"]`)
+      {:ok, sent_message} = ExNylas.Messages.send(conn, `message`, `["path_to_attachment"]`)
   """
   def send(%Conn{} = conn, message, attachments \\ []) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
-      Common.build_multipart_body(message, attachments),
-      API.header_bearer(conn) ++ ["content-type": "multipart/form-data"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    {body, content_type, len} = API.build_multipart(message, attachments)
+
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+      body: body,
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Message.as_struct())
   end
 
@@ -36,7 +39,7 @@ defmodule ExNylas.Messages do
   Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
-      sent_message = conn |> ExNylas.Messages.send!(`message`, `["path_to_attachment"]`)
+      sent_message = ExNylas.Messages.send!(conn, `message`, `["path_to_attachment"]`)
   """
   def send!(%Conn{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do

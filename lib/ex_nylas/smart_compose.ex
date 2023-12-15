@@ -16,15 +16,17 @@ defmodule ExNylas.SmartCompose do
   Smart compose a message reply.
 
   Example
-      {:ok, res} = conn |> ExNylas.SmartCompose.create_reply(`message_id`, `prompt`)
+      {:ok, res} = ExNylas.SmartCompose.create_reply(conn, `message_id`, `prompt`)
   """
   def create_reply(%Conn{} = conn, message_id, prompt) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
-      %{prompt: prompt},
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      json: %{prompt: prompt},
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.SmartCompose.as_struct())
   end
 
@@ -32,7 +34,7 @@ defmodule ExNylas.SmartCompose do
   Smart compose a message reply.
 
   Example
-      res = conn |> ExNylas.SmartCompose.create_reply!(`message_id`, `prompt`)
+      res = ExNylas.SmartCompose.create_reply!(conn, `message_id`, `prompt`)
   """
   def create_reply!(%Conn{} = conn, message_id, prompt) do
     case create_reply(conn, message_id, prompt) do
@@ -47,30 +49,23 @@ defmodule ExNylas.SmartCompose do
   Note - the response is a stream of untransformed events as shown in the example below.
 
   Example
-      {:ok, %HTTPoison.AsyncResponse{id: #Reference<0.1234>}} = conn |> ExNylas.SmartCompose.create_stream(`prompt`, `self()`)
-      iex> flush
-      %HTTPoison.AsyncStatus{id: #Reference<0.1234>, code: 200}
-      %HTTPoison.AsyncHeaders{
-        id: #Reference<0.1234>,
-        headers: [
-          {"Content-Type", "text/event-stream; charset=utf-8"},
-          {"Transfer-Encoding", "chunked"}
-        ]
-      }
-      %HTTPoison.AsyncChunk{id: #Reference<0.1234>, chunk: "data: {\"suggestion\":\"Hello\"}\n\n"}
-      %HTTPoison.AsyncEnd{id: #Reference<0.1234>}
+      ExNylas.SmartCompose.create_stream(conn, `prompt`, `IO.stream()`)
+      data: {"suggestion": ""}
+      data: {"suggestion": "Subject"}
+      ...
+      data: {"suggestion": "]"}
+      {:ok, %IO.Stream{device: :standard_io, raw: false, line_or_bytes: :line}}
   """
   def create_stream(%Conn{} = conn, prompt, stream_to) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
-      %{prompt: prompt},
-      API.header_bearer(conn) ++ ["content-type": "application/json"] |> Keyword.replace(:accept, "text/event-stream"),
-      [
-        timeout: conn.timeout,
-        recv_timeout: conn.recv_timeout,
-        stream_to: stream_to
-      ]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"] |> Keyword.replace(:accept, "text/event-stream")),
+      json: %{prompt: prompt},
+      decode_body: false,
+      into: stream_to
     )
+    |> Req.post(conn.options)
     |> API.handle_response(nil, false)
   end
 
@@ -80,30 +75,23 @@ defmodule ExNylas.SmartCompose do
   Note - the response is a stream of untransformed events as shown in the example below.
 
   Example
-      {:ok, %HTTPoison.AsyncResponse{id: #Reference<0.1234>}} = conn |> ExNylas.SmartCompose.create_reply_stream(`message_id`, `prompt`, `self()`)
-      iex> flush
-      %HTTPoison.AsyncStatus{id: #Reference<0.1234>, code: 200}
-      %HTTPoison.AsyncHeaders{
-        id: #Reference<0.1234>,
-        headers: [
-          {"Content-Type", "text/event-stream; charset=utf-8"},
-          {"Transfer-Encoding", "chunked"}
-        ]
-      }
-      %HTTPoison.AsyncChunk{id: #Reference<0.1234>, chunk: "data: {\"suggestion\":\"Hello\"}\n\n"}
-      %HTTPoison.AsyncEnd{id: #Reference<0.1234>}
+      ExNylas.SmartCompose.create_stream(conn, `message_id`, `prompt`, `IO.stream()`)
+      data: {"suggestion": ""}
+      data: {"suggestion": "Subject"}
+      ...
+      data: {"suggestion": "]"}
+      {:ok, %IO.Stream{device: :standard_io, raw: false, line_or_bytes: :line}}
   """
   def create_reply_stream(%Conn{} = conn, message_id, prompt, stream_to) do
-    API.post(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
-      %{prompt: prompt},
-      API.header_bearer(conn) ++ ["content-type": "application/json"] |> Keyword.replace(:accept, "text/event-stream"),
-      [
-        timeout: conn.timeout,
-        recv_timeout: conn.recv_timeout,
-        stream_to: stream_to
-      ]
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      json: %{prompt: prompt},
+      decode_body: false,
+      into: stream_to
     )
+    |> Req.post(conn.options)
     |> API.handle_response(nil, false)
   end
 end

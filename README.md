@@ -19,7 +19,7 @@ The `main` branch of the repo now leverages Nylas API v3 (currently in beta).  T
 ```elixir
 def deps do
   [
-    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.2.2"}
+    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.3.0"}
   ]
 end
 ```
@@ -33,11 +33,26 @@ conn =
     client_secret: "1234",
     api_key: "1234",
     grant_id: "1234",
+    access_token: "1234", # Typically omited if using `grant_id` + `api_key`
     api_server: "https://api.us.nylas.com",
-    timeout: 3_000,
-    revc_timeout: 5_000
+    options: [] # Passed to Req (HTTP client)
   }
 ```
+
+Options from `ExNylas.Connection` are passed directly to [Req](https://hexdocs.pm/req/Req.html) and can be used to override the default behavior of the HTTP client.  You can find a complete list of options [here](https://hexdocs.pm/req/Req.html#new/1).  The most relevent Req defaults are listed below:
+```elixir
+[
+  retry: :safe_transient,
+  cache: false,
+  compress_body: false,
+  compress: true, # ask server to return compressed responses
+  receive_timeout: 30_000 # socket receive timeout,
+  pool_timeout: 5000 # pool checkout timeout,
+  redact_auth: true
+]
+```
+
+When using options, _do not_ override the value for `decode_body`--while Req can automatically decode the response body using Jason, the SDK uses Poison in order to decode into the structs defined in the models module.
 
 2. Each function supports returning an ok/error tuple or raising an exception, for example:
 ```elixir

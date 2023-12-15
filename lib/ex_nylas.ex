@@ -43,7 +43,7 @@ defmodule ExNylas do
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
       Example
-        {:ok, result} = #{__MODULE__}.all(conn, params)
+        {:ok, result} = #{__MODULE__}.all(`conn`)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         apply(ExNylas.Paging, :all, [conn, __MODULE__, unquote(use_cursor_paging), params])
@@ -53,7 +53,7 @@ defmodule ExNylas do
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
       Example
-        result = #{__MODULE__}.all!(conn, params)
+        result = #{__MODULE__}.all!(`conn`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -103,28 +103,20 @@ defmodule ExNylas do
       Get the first #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> #{__MODULE__}.first()
+          {:ok, result} = #{__MODULE__}.first(`conn`)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
-        headers = apply(API, unquote(header_type), [conn])
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
-        val = apply(unquote(struct_name), :as_list, [])
-
         res =
-          apply(
-            API,
-            unquote(config.http_method),
-            [
-              url,
-              headers,
-              [
-                timeout: conn.timeout,
-                recv_timeout: conn.recv_timeout,
-                params: Map.put(params, :limit, 1)
-              ]
-            ]
+          Req.new(
+            method: :get,
+            url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
+            auth: ExNylas.generate_auth(conn, unquote(header_type)),
+            headers: API.base_headers(),
+            params: Map.put(params, :limit, 1),
+            decode_body: false
           )
-          |> API.handle_response(val)
+          |> Req.request(conn.options)
+          |> API.handle_response(apply(unquote(struct_name), :as_list, []))
 
         case res do
           {:ok, val} -> {:ok, %{val | data: Enum.at(val.data, 0)}}
@@ -136,54 +128,10 @@ defmodule ExNylas do
       Get the first #{unquote(readable_name)}.
 
       Example
-          result = conn |> #{__MODULE__}.first!()
+          result = #{__MODULE__}.first!(`conn`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
-          {:ok, body} -> body
-          {:error, reason} -> raise ExNylasError, reason
-        end
-      end
-    end
-  end
-
-  defp generate_api(%{http_method: :get, name: :search} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
-    quote do
-      @doc """
-      Search for #{unquote(readable_name)}(s) based on provided `search_text`.
-
-      Example
-          {:ok, result} = conn |> #{__MODULE__}.search("nylas")
-      """
-      def unquote(config.name)(%Conn{} = conn, search_text) do
-        headers = apply(API, unquote(header_type), [conn])
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
-        val = apply(unquote(struct_name), :as_list, [])
-
-        apply(
-          API,
-          unquote(config.http_method),
-          [
-            url,
-            headers,
-            [
-              timeout: conn.timeout,
-              recv_timeout: conn.recv_timeout,
-              params: %{q: search_text}
-            ]
-          ]
-        )
-        |> API.handle_response(val)
-      end
-
-      @doc """
-      Search for #{unquote(readable_name)}(s) based on provided `search_text`.
-
-      Example
-          result = conn |> #{__MODULE__}.search!("nylas")
-      """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, search_text) do
-        case unquote(config.name)(conn, search_text) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
         end
@@ -197,37 +145,29 @@ defmodule ExNylas do
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}(`id`)
+          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`, `id`)
       """
       def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
-        headers = apply(API, unquote(header_type), [conn])
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}"
-        val = apply(unquote(struct_name), :as_struct, [])
-
-        apply(
-          API,
-          unquote(method),
-          [
-            url,
-            headers,
-            [
-              timeout: conn.timeout,
-              recv_timeout: conn.recv_timeout,
-              params: params
-            ]
-          ]
+        Req.new(
+          method: unquote(method),
+          url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
+          auth: ExNylas.generate_auth(conn, unquote(header_type)),
+          headers: API.base_headers(),
+          params: params,
+          decode_body: false
         )
-        |> API.handle_response(val)
+        |> Req.request(conn.options)
+        |> API.handle_response(apply(unquote(struct_name), :as_struct, []))
       end
 
       @doc """
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
 
       Example
-          result = conn |> .#{__MODULE__}.#{unquote(config.name)}!(`id`)
+          result = #{__MODULE__}.#{unquote(config.name)}!(`conn`, `id`)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id) do
-        case unquote(config.name)(conn, id) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, params \\ %{}) do
+        case unquote(config.name)(conn, id, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
         end
@@ -241,34 +181,26 @@ defmodule ExNylas do
       Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
 
       Example
-          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}()
+          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
-        headers = apply(API, unquote(header_type), [conn])
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
-        val = apply(unquote(struct_name), :as_list, [])
-
-        apply(
-          API,
-          unquote(config.http_method),
-          [
-            url,
-            headers,
-            [
-              timeout: conn.timeout,
-              recv_timeout: conn.recv_timeout,
-              params: params
-            ]
-          ]
+        Req.new(
+          method: :get,
+          url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
+          auth: ExNylas.generate_auth(conn, unquote(header_type)),
+          headers: API.base_headers(),
+          params: params,
+          decode_body: false
         )
-        |> API.handle_response(val)
+        |> Req.request(conn.options)
+        |> API.handle_response(apply(unquote(struct_name), :as_list, []))
       end
 
       @doc """
       Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
 
       Example
-          result = conn |> #{__MODULE__}.#{unquote(config.name)}!()
+          result = #{__MODULE__}.#{unquote(config.name)}!(`conn`)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -285,37 +217,29 @@ defmodule ExNylas do
       Update a(n) #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}(`id`, `body`, `params`)
+          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`, `id`, `body`, `params`)
       """
       def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
-        headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}"
-        val = apply(unquote(struct_name), :as_struct, [])
-
-        apply(
-          API,
-          unquote(config.http_method),
-          [
-            url,
-            changeset,
-            headers,
-            [
-              timeout: conn.timeout,
-              recv_timeout: conn.recv_timeout,
-              params: params
-            ]
-          ]
+        Req.new(
+          method: :patch,
+          url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
+          auth: ExNylas.generate_auth(conn, unquote(header_type)),
+          headers: API.base_headers(["content-type": "application/json"]),
+          body: changeset,
+          decode_body: false,
+          params: params
         )
-        |> API.handle_response(val)
+        |> Req.request(conn.options)
+        |> API.handle_response(apply(unquote(struct_name), :as_struct, []))
       end
 
       @doc """
       Update a(n) #{unquote(readable_name)}.
 
       Example
-          result = conn |> #{__MODULE__}.#{unquote(config.name)}!(`id`, `body`, `params`)
+          result = #{__MODULE__}.#{unquote(config.name)}!(`conn`, `id`, `body`, `params`)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params \\ %{}) do
         case unquote(config.name)(conn, id, changeset, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -330,37 +254,29 @@ defmodule ExNylas do
       Create a(n) #{unquote(readable_name)}.
 
       Example
-          {:ok, result} = conn |> #{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
+          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`, `body`, `params`)
       """
       def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
-        headers = apply(API, unquote(header_type), [conn]) ++ ["content-type": "application/json"]
-        url = ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object))
-        val = apply(unquote(struct_name), :as_struct, [])
-
-        apply(
-          API,
-          unquote(config.http_method),
-          [
-            url,
-            body,
-            headers,
-            [
-              timeout: conn.timeout,
-              recv_timeout: conn.recv_timeout,
-              params: params
-            ]
-          ]
+        Req.new(
+          method: :post,
+          url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
+          auth: ExNylas.generate_auth(conn, unquote(header_type)),
+          headers: API.base_headers(["content-type": "application/json"]),
+          body: body,
+          decode_body: false,
+          params: params
         )
-        |> API.handle_response(val)
+        |> Req.request(conn.options)
+        |> API.handle_response(apply(unquote(struct_name), :as_struct, []))
       end
 
       @doc """
       Create a(n) #{unquote(readable_name)}.
 
       Example
-          result = conn |> #{__MODULE__}.#{unquote(config.name)}(`body`, `params`)
+          result = #{__MODULE__}.#{unquote(config.name)}(`conn`, `body`, `params`)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params \\ %{}) do
         case unquote(config.name)(conn, body, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -375,6 +291,14 @@ defmodule ExNylas do
 
   def generate_url(conn, false = _use_admin_url, object) do
     "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{object}"
+  end
+
+  def generate_auth(conn, :header_bearer) do
+    API.auth_bearer(conn)
+  end
+
+  def generate_auth(conn, :header_basic) do
+    API.auth_basic(conn)
   end
 
   defmacro __using__(opts) do

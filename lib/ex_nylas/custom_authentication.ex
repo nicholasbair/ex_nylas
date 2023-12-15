@@ -10,15 +10,17 @@ defmodule ExNylas.CustomAuthentication do
   Connect a grant using custom authentication.
 
   Example
-      {:ok, grant} = conn |> ExNylas.CustomAuthentication.connect(`body`)
+      {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, `body`)
   """
   def connect(%Conn{} = conn, body) do
-    API.post(
-      "#{conn.api_server}/v3/connect/custom",
-      body,
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/connect/custom",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      body: API.process_request_body(body),
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Grant.as_struct())
   end
 
@@ -26,7 +28,7 @@ defmodule ExNylas.CustomAuthentication do
   Connect a grant using custom authentication.
 
   Example
-      grant = conn |> ExNylas.CustomAuthentication.connect!(`body`)
+      grant = ExNylas.CustomAuthentication.connect!(conn, `body`)
   """
   def connect!(%Conn{} = conn, body) do
     case connect(conn, body) do

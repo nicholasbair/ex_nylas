@@ -16,18 +16,17 @@ defmodule ExNylas.Attachments do
   Download an attachment.
 
   Example
-      {:ok, result} = conn |> ExNylas.Attachments.download(`id`, %{message_id: `message_id`})
+      {:ok, result} = ExNylas.Attachments.download(conn, `id`, `message_id`)
   """
-  def download(%Conn{} = conn, id, params \\ %{}) do
-    API.get(
-      "#{conn.api_server}/v3/grants/#{conn.grant_id}/attachments/#{id}/download",
-      API.header_bearer(conn) |> Keyword.replace(:accept, "application/octet-stream"),
-      [
-        timeout: conn.timeout,
-        recv_timeout: conn.recv_timeout,
-        params: params
-      ]
+  def download(%Conn{} = conn, id, message_id) do
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/attachments/#{id}/download",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers([accept: "application/octet-stream"]),
+      params: %{message_id: message_id},
+      decode_body: false
     )
+    |> Req.get(conn.options)
     |> API.handle_response()
   end
 
@@ -35,10 +34,10 @@ defmodule ExNylas.Attachments do
   Download an attachment.
 
   Example
-      result = conn |> ExNylas.Attachments.download!(`id`, %{message_id: `message_id`})
+      result = ExNylas.Attachments.download!(conn, `id`, %{message_id: `message_id`})
   """
-  def download!(%Conn{} = conn, id, params \\ %{}) do
-    case download(conn, id, params) do
+  def download!(%Conn{} = conn, id, message_id) do
+    case download(conn, id, message_id) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end

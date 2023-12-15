@@ -17,15 +17,16 @@ defmodule ExNylas.Webhooks do
   Rotate a webhook secret.
 
   Example
-      {:ok, webhook} = conn |> ExNylas.Webhooks.rotate_secret(`webhook_id`)
+      {:ok, webhook} = ExNylas.Webhooks.rotate_secret(conn, `webhook_id`)
   """
   def rotate_secret(%Conn{} = conn, webhook_id) do
-    API.post(
-      "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
-      %{},
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response(ExNylas.Model.Webhook.as_struct())
   end
 
@@ -33,7 +34,7 @@ defmodule ExNylas.Webhooks do
   Rotate a webhook secret.
 
   Example
-      webhook = conn |> ExNylas.Webhooks.rotate_secret(`webhook_id`)
+      webhook = ExNylas.Webhooks.rotate_secret(conn, `webhook_id`)
   """
   def rotate_secret!(%Conn{} = conn, webhook_id) do
     case rotate_secret(conn, webhook_id) do
@@ -46,15 +47,17 @@ defmodule ExNylas.Webhooks do
   Get a mock webhook payload.
 
   Example
-      {:ok, payload} = conn |> ExNylas.Webhooks.mock_payload(`trigger`)
+      {:ok, payload} = ExNylas.Webhooks.mock_payload(conn, `trigger`)
   """
   def mock_payload(%Conn{} = conn, trigger) do
-    API.post(
-      "#{conn.api_server}/v3/webhooks/mock-payload",
-      %{trigger_type: trigger},
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/webhooks/mock-payload",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      json: %{trigger_type: trigger},
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response()
   end
 
@@ -62,7 +65,7 @@ defmodule ExNylas.Webhooks do
   Get a mock webhook payload.
 
   Example
-      payload = conn |> ExNylas.Webhooks.mock_payload(`trigger`)
+      payload = ExNylas.Webhooks.mock_payload(conn, `trigger`)
   """
   def mock_payload!(%Conn{} = conn, trigger) do
     case mock_payload(conn, trigger) do
@@ -75,15 +78,17 @@ defmodule ExNylas.Webhooks do
   Send a test webhook event.
 
   Example
-      {:ok, res} = conn |> ExNylas.Webhooks.send_test_event(`trigger`, `callback_url`)
+      {:ok, res} = ExNylas.Webhooks.send_test_event(conn, `trigger`, `callback_url`)
   """
   def send_test_event(%Conn{} = conn, trigger, callback_url) do
-    API.post(
-      "#{conn.api_server}/v3/webhooks/mock-payload",
-      %{trigger_type: trigger, callback_url: callback_url},
-      API.header_bearer(conn) ++ ["content-type": "application/json"],
-      [timeout: conn.timeout, recv_timeout: conn.recv_timeout]
+    Req.new(
+      url: "#{conn.api_server}/v3/webhooks/mock-payload",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      json: %{trigger_type: trigger, callback_url: callback_url},
+      decode_body: false
     )
+    |> Req.post(conn.options)
     |> API.handle_response()
   end
 
@@ -91,7 +96,7 @@ defmodule ExNylas.Webhooks do
   Send a test webhook event.
 
   Example
-      res = conn |> ExNylas.Webhooks.send_test_event(`trigger`, `callback_url`)
+      res = ExNylas.Webhooks.send_test_event(conn, `trigger`, `callback_url`)
   """
   def send_test_event!(%Conn{} = conn, trigger, callback_url) do
     case send_test_event(conn, trigger, callback_url) do

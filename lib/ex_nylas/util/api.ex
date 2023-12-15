@@ -1,9 +1,8 @@
 defmodule ExNylas.API do
   @moduledoc """
-  Wrapper for HTTPoison, handles making HTTP requests, encoding requests, and decoding responses
+  Utility functions for headers, encoding requests, and decoding responses
   """
 
-  use HTTPoison.Base
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF
 
@@ -14,61 +13,33 @@ defmodule ExNylas.API do
 
   @success_codes Enum.to_list(200..299)
 
+  def auth_bearer(%Conn{grant_id: "me", access_token: access_token}) do
+    {:bearer, access_token}
+  end
+
+  def auth_bearer(%Conn{api_key: api_key}) do
+    {:bearer, api_key}
+  end
+
+  def auth_basic(%Conn{client_id: client_id, client_secret: client_secret}) do
+    {:basic, "#{client_id}:#{client_secret}"}
+  end
+
+  def base_headers(opts \\ []) do
+    @base_headers
+    |> Keyword.merge(opts)
+  end
+
   def process_request_body({:ok, body}) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
   def process_request_body(body) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
-  # Encoding for multipart bodies is handled in the interface module, e.g. ExNylas.Messages or ExNylas.Common
-  def process_request_body({:multipart, _} = body), do: body
-
   def process_request_body(body), do: body
-
-  def header_bearer(%Conn{access_token: token, grant_id: grant_id}) when not is_nil(token) and is_nil(grant_id) do
-    raise "ExNylas.Connection struct is missing a value for `access_token` or `grant_id` which are required for this call."
-  end
-
-  def header_bearer(%Conn{access_token: access_token} = _conn) when not is_nil(access_token) do
-    [
-      authorization: "Bearer #{access_token}"
-    ] ++ @base_headers
-  end
-
-  def header_bearer(%Conn{api_key: key, grant_id: grant_id}) when is_nil(key) or is_nil(grant_id) do
-    raise "ExNylas.Connection struct is missing a value for `api_key` or `grant_id` which are required for this call."
-  end
-
-  def header_bearer(%Conn{} = conn) do
-    [
-      authorization: "Bearer #{conn.api_key}"
-    ] ++ @base_headers
-  end
-
-  def header_api_key(%Conn{api_key: key}) when is_nil(key) do
-    raise "ExNylas.Connection struct is missing a value for `api_key` which is required for this call."
-  end
-
-  def header_api_key(%Conn{} = conn) do
-    [
-      authorization: "Bearer #{conn.api_key}"
-    ] ++ @base_headers
-  end
-
-  def header_basic(%Conn{client_id: id, client_secret: secret}) when is_nil(id) or is_nil(secret) do
-    raise "ExNylas.Connection struct is missing a value for `client_id` or `client_secret` which are required for this call."
-  end
-
-  def header_basic(%Conn{} = conn) do
-    encoded = Base.encode64("#{conn.client_id}:#{conn.client_secret}")
-
-    [
-      authorization: "Basic #{encoded}"
-    ] ++ @base_headers
-  end
 
   def handle_response(res, transform_to \\ nil, use_common_response \\ true)
   def handle_response(res, transform_to, _) when is_nil(transform_to) do
     case res do
-      {:ok, %HTTPoison.Response{status_code: status, body: body}} ->
+      {:ok, %Req.Response{status: status, body: body}} ->
         case status do
           status when status in @success_codes ->
             {:ok, body}
@@ -77,7 +48,7 @@ defmodule ExNylas.API do
             {:error, body}
         end
 
-      {:error, %HTTPoison.Error{reason: reason}} ->
+      {:error, %{reason: reason}} ->
         {:error, reason}
 
       _ -> res
@@ -104,5 +75,45 @@ defmodule ExNylas.API do
       {:ok, body} -> TF.transform(body, transform_to)
       body -> body
     end
+  end
+
+  # Multipart - used by drafts, messages
+  def build_multipart(obj, attachments) do
+    multipart =
+      Multipart.new()
+      |> Multipart.add_part(Multipart.Part.text_field(Poison.encode!(obj), :message))
+      |> add_attachments(attachments)
+
+    {
+      Multipart.body_stream(multipart),
+      Multipart.content_type(multipart, "multipart/form-data"),
+      Multipart.content_length(multipart)
+    }
+  end
+
+  defp add_attachments(multipart, attachments) do
+    Enum.reduce(attachments, multipart, fn f, multipart ->
+      multipart
+      |> Multipart.add_part(build_file(f))
+    end)
+  end
+
+  defp build_file({cid, file_path}) do
+    {filename, file_contents} = get_file_data(file_path)
+
+    Multipart.Part.file_content_field(filename, file_contents, cid, filename: filename)
+  end
+
+  defp build_file(file_path) do
+    {filename, file_contents} = get_file_data(file_path)
+
+    Multipart.Part.file_content_field(filename, file_contents, :file, filename: filename)
+  end
+
+  defp get_file_data(file_path) do
+    filename = Path.basename(file_path)
+    {:ok, file_contents} = File.read(file_path)
+
+    {filename, file_contents}
   end
 end
