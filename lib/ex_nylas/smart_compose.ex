@@ -60,10 +60,10 @@ defmodule ExNylas.SmartCompose do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"] |> Keyword.replace(:accept, "text/event-stream")),
+      headers: API.base_headers(["content-type": "application/json", accept: "text/event-stream"]),
       json: %{prompt: prompt},
-      decode_body: false,
-      into: stream_to
+      into: stream_to,
+      compressed: false
     )
     |> Req.post(conn.options)
     |> API.handle_response(nil, false)
@@ -86,10 +86,11 @@ defmodule ExNylas.SmartCompose do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(["content-type": "application/json", accept: "text/event-stream"]),
       json: %{prompt: prompt},
       decode_body: false,
-      into: stream_to
+      into: stream_to,
+      compressed: false
     )
     |> Req.post(conn.options)
     |> API.handle_response(nil, false)
