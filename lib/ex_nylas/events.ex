@@ -23,7 +23,7 @@ defmodule ExNylas.Events do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{status: status, calendar_id: calendar_id},
       decode_body: false,
       params: %{calendar_id: calendar_id}

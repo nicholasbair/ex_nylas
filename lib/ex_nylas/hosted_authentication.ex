@@ -66,7 +66,7 @@ defmodule ExNylas.HostedAuthentication do
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
     Req.new(
       url: "#{conn.api_server}/v3/connect/token",
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{
         client_id: conn.client_id,
         client_secret: conn.client_secret,

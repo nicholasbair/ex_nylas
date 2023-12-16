@@ -53,7 +53,7 @@ defmodule ExNylas.Webhooks do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{trigger_type: trigger},
       decode_body: false
     )
@@ -84,7 +84,7 @@ defmodule ExNylas.Webhooks do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{trigger_type: trigger, callback_url: callback_url},
       decode_body: false
     )

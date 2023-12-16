@@ -22,7 +22,7 @@ defmodule ExNylas.SmartCompose do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{prompt: prompt},
       decode_body: false
     )
@@ -60,7 +60,7 @@ defmodule ExNylas.SmartCompose do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json", accept: "text/event-stream"]),
+      headers: API.base_headers([accept: "text/event-stream"]),
       json: %{prompt: prompt},
       into: stream_to,
       compressed: false
@@ -86,7 +86,7 @@ defmodule ExNylas.SmartCompose do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json", accept: "text/event-stream"]),
+      headers: API.base_headers([accept: "text/event-stream"]),
       json: %{prompt: prompt},
       decode_body: false,
       into: stream_to,
