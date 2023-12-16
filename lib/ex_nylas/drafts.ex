@@ -19,7 +19,7 @@ defmodule ExNylas.Drafts do
   Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
-      {:ok, draft} = ExNylas.Drafts.create(conn, `draft`, `["path_to_attachment"]`)
+      {:ok, draft} = ExNylas.Drafts.create(conn, draft, ["path_to_attachment"])
   """
   def create(%Conn{} = conn, draft, attachments \\ []) do
     {body, content_type, len} = API.build_multipart(draft, attachments)
@@ -39,7 +39,7 @@ defmodule ExNylas.Drafts do
   Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
   Example
-      draft = ExNylas.Drafts.create!(conn, `draft`, `["path_to_attachment"]`)
+      draft = ExNylas.Drafts.create!(conn, draft, ["path_to_attachment"])
   """
   def create!(%Conn{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
@@ -51,10 +51,10 @@ defmodule ExNylas.Drafts do
   @doc """
   Update a draft.
 
-  To add attachments greater than 3MB, use update/4 or update!/4.
+  To add attachments greater than 3MB, use `update/4` or `update!/4`.
 
   Example
-      {:ok, draft} = ExNylas.Drafts.update(conn, `id`, `changeset`)
+      {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset)
   """
   def update(%Conn{} = conn, id, changeset) do
     Req.new(
@@ -71,10 +71,10 @@ defmodule ExNylas.Drafts do
   @doc """
   Update a draft.
 
-  To add attachments greater than 3MB, use update/4 or update!/4.
+  To add attachments greater than 3MB, use `update/4` or `update!/4`.
 
   Example
-      draft = ExNylas.Drafts.update!(conn, `id`, `changeset`)
+      draft = ExNylas.Drafts.update!(conn, id, changeset)
   """
   def update!(%Conn{} = conn, id, changeset) do
     case update(conn, id, changeset) do
@@ -86,10 +86,10 @@ defmodule ExNylas.Drafts do
   @doc """
   Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
-  To remove all attachments from a draft, use update/3 or update!/3.
+  To remove all attachments from a draft, use `update/3` or `update!/3`.
 
   Example
-      {:ok, draft} = ExNylas.Drafts.update(conn, `id`, `changeset`, `["path_to_attachment"]`)
+      {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset, ["path_to_attachment"])
   """
   def update(%Conn{} = conn, id, changeset, attachments) do
     {body, content_type, len} = API.build_multipart(changeset, attachments)
@@ -108,10 +108,10 @@ defmodule ExNylas.Drafts do
   @doc """
   Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
-  To remove all attachments from a draft, use update/3 or update!/3.
+  To remove all attachments from a draft, use `update/3` or `update!/3`.
 
   Example
-      draft = ExNylas.Drafts.update!(conn, `id`, `changeset`, `["path_to_attachment"]`)
+      draft = ExNylas.Drafts.update!(conn, id, changeset, ["path_to_attachment"])
   """
   def update!(%Conn{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
@@ -124,7 +124,7 @@ defmodule ExNylas.Drafts do
   Send a draft.
 
   Example
-      {:ok, sent_draft} = ExNylas.Drafts.send(conn, `draft_id`)
+      {:ok, sent_draft} = ExNylas.Drafts.send(conn, draft_id)
   """
   def send(%Conn{} = conn, draft_id) do
     Req.new(
@@ -141,7 +141,7 @@ defmodule ExNylas.Drafts do
   Send a draft.
 
   Example
-      sent_draft = ExNylas.Drafts.send!(conn, `draft_id`)
+      sent_draft = ExNylas.Drafts.send!(conn, draft_id)
   """
   def send!(%Conn{} = conn, draft_id) do
     case send(conn, draft_id) do

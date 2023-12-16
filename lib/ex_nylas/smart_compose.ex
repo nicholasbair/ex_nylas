@@ -16,7 +16,7 @@ defmodule ExNylas.SmartCompose do
   Smart compose a message reply.
 
   Example
-      {:ok, res} = ExNylas.SmartCompose.create_reply(conn, `message_id`, `prompt`)
+      {:ok, res} = ExNylas.SmartCompose.create_reply(conn, message_id, prompt)
   """
   def create_reply(%Conn{} = conn, message_id, prompt) do
     Req.new(
@@ -34,7 +34,7 @@ defmodule ExNylas.SmartCompose do
   Smart compose a message reply.
 
   Example
-      res = ExNylas.SmartCompose.create_reply!(conn, `message_id`, `prompt`)
+      res = ExNylas.SmartCompose.create_reply!(conn, message_id, prompt)
   """
   def create_reply!(%Conn{} = conn, message_id, prompt) do
     case create_reply(conn, message_id, prompt) do
@@ -49,7 +49,7 @@ defmodule ExNylas.SmartCompose do
   Note - the response is a stream of untransformed events as shown in the example below.
 
   Example
-      ExNylas.SmartCompose.create_stream(conn, `prompt`, `IO.stream()`)
+      ExNylas.SmartCompose.create_stream(conn, prompt, IO.stream())
       data: {"suggestion": ""}
       data: {"suggestion": "Subject"}
       ...
@@ -75,7 +75,7 @@ defmodule ExNylas.SmartCompose do
   Note - the response is a stream of untransformed events as shown in the example below.
 
   Example
-      ExNylas.SmartCompose.create_stream(conn, `message_id`, `prompt`, `IO.stream()`)
+      ExNylas.SmartCompose.create_stream(conn, message_id, prompt, IO.stream())
       data: {"suggestion": ""}
       data: {"suggestion": "Subject"}
       ...

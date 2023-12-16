@@ -15,7 +15,7 @@ defmodule ExNylas.Calendars.Availability do
   Get calendar availability.
 
   Example
-      {:ok, result} = ExNylas.Calendars.Availability.list(conn, `body`)
+      {:ok, result} = ExNylas.Calendars.Availability.list(conn, body)
   """
   def list(%Conn{} = conn, body) do
     Req.new(
@@ -33,7 +33,7 @@ defmodule ExNylas.Calendars.Availability do
   Get calendar availability.
 
   Example
-      result = ExNylas.Calendars.Availability.list!(conn, `body`)
+      result = ExNylas.Calendars.Availability.list!(conn, body)
   """
   def list!(%Conn{} = conn, body) do
     case list(conn, body) do

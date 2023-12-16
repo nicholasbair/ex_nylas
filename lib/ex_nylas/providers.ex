@@ -10,7 +10,7 @@ defmodule ExNylas.Providers do
   Detect the provider for an email address.
 
   Example
-      {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: `email`} = _params)
+      {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
   def detect(%Conn{} = conn, params \\ %{}) do
     Req.new(
@@ -28,7 +28,7 @@ defmodule ExNylas.Providers do
   Detect the provider for an email address.
 
   Example
-      detect = ExNylas.Providers.detect(conn, %{email: `email`} = _params)
+      detect = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
   def detect!(%Conn{} = conn, params \\ %{}) do
     case detect(conn, params) do

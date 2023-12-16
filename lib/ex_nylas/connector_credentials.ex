@@ -11,7 +11,7 @@ defmodule ExNylas.ConnectorCredentials do
   List connector credentials.
 
   Example
-      {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, `provider`)
+      {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, provider)
   """
   def list(%Conn{} = conn, provider, params \\ %{}) do
     Req.new(
@@ -29,7 +29,7 @@ defmodule ExNylas.ConnectorCredentials do
   List connector credentials.
 
   Example
-      creds = ExNylas.ConnectorCredentials.list!(conn, `provider`)
+      creds = ExNylas.ConnectorCredentials.list!(conn, provider)
   """
   def list!(%Conn{} = conn, provider, params \\ %{}) do
     case list(conn, provider, params) do
@@ -42,7 +42,7 @@ defmodule ExNylas.ConnectorCredentials do
   Create a connector credential.
 
   Example
-      {:ok, cred} = ExNylas.ConnectorCredentials.create(conn, `provider`, `body`)
+      {:ok, cred} = ExNylas.ConnectorCredentials.create(conn, provider, body)
   """
   def create(%Conn{} = conn, provider, body) do
     Req.new(
@@ -60,7 +60,7 @@ defmodule ExNylas.ConnectorCredentials do
   Create a connector credential.
 
   Example
-      cred = ExNylas.ConnectorCredentials.create!(conn, `provider`, `body`)
+      cred = ExNylas.ConnectorCredentials.create!(conn, provider, body)
   """
   def create!(%Conn{} = conn, provider, body) do
     case create(conn, provider, body) do
@@ -73,7 +73,7 @@ defmodule ExNylas.ConnectorCredentials do
   Find a connector credential.
 
   Example
-      {:ok, cred} = ExNylas.ConnectorCredentials.find(conn, `provider`, `id`)
+      {:ok, cred} = ExNylas.ConnectorCredentials.find(conn, provider, id)
   """
   def find(%Conn{} = conn, provider, id) do
     Req.new(
@@ -90,7 +90,7 @@ defmodule ExNylas.ConnectorCredentials do
   Find a connector credential.
 
   Example
-      cred = ExNylas.ConnectorCredentials.find(conn, `provider`, `id`)
+      cred = ExNylas.ConnectorCredentials.find(conn, provider, id)
   """
   def find!(%Conn{} = conn, provider, id) do
     case find(conn, provider, id) do
@@ -103,7 +103,7 @@ defmodule ExNylas.ConnectorCredentials do
   Delete a connector credential.
 
   Example
-      {:ok, res} = ExNylas.ConnectorCredentials.delete(conn, `provider`, `id`)
+      {:ok, res} = ExNylas.ConnectorCredentials.delete(conn, provider, id)
   """
   def delete(%Conn{} = conn, provider, id) do
     Req.new(
@@ -120,7 +120,7 @@ defmodule ExNylas.ConnectorCredentials do
   Delete a connector credential.
 
   Example
-      res = ExNylas.ConnectorCredentials.delete!(conn, `provider`, `id`)
+      res = ExNylas.ConnectorCredentials.delete!(conn, provider, id)
   """
   def delete!(%Conn{} = conn, provider, id) do
     case delete(conn, provider, id) do
@@ -133,7 +133,7 @@ defmodule ExNylas.ConnectorCredentials do
   Update a connector credential.
 
   Example
-      {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, `provider`, `id`, `changeset`)
+      {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, provider, id, changeset)
   """
   def update(%Conn{} = conn, provider, id, changeset) do
     Req.new(
@@ -151,7 +151,7 @@ defmodule ExNylas.ConnectorCredentials do
   Update a connector credential.
 
   Example
-      cred = ExNylas.ConnectorCredentials.update!(conn, `provider`, `id`, `changeset`)
+      cred = ExNylas.ConnectorCredentials.update!(conn, provider, id, changeset)
   """
   def update!(%Conn{} = conn, provider, id, changeset) do
     case update(conn, provider, id, changeset) do

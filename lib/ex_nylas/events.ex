@@ -17,7 +17,7 @@ defmodule ExNylas.Events do
   Send an RSVP for a given event
 
   Example
-      {:ok, success} = ExNylas.Events.rsvp(conn, `event_id`, `status`, `calendar_id`)
+      {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
   """
   def rsvp(%Conn{} = conn, event_id, status, calendar_id) do
     Req.new(
@@ -36,7 +36,7 @@ defmodule ExNylas.Events do
   Send an RSVP for a given event
 
   Example
-      success = ExNylas.Events.rsvp!(conn, `event_id`, `status`, `calendar_id`)
+      success = ExNylas.Events.rsvp!(conn, event_id, status, calendar_id)
   """
   def rsvp!(%Conn{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do

@@ -10,7 +10,7 @@ defmodule ExNylas.CustomAuthentication do
   Connect a grant using custom authentication.
 
   Example
-      {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, `body`)
+      {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, body)
   """
   def connect(%Conn{} = conn, body) do
     Req.new(
@@ -28,7 +28,7 @@ defmodule ExNylas.CustomAuthentication do
   Connect a grant using custom authentication.
 
   Example
-      grant = ExNylas.CustomAuthentication.connect!(conn, `body`)
+      grant = ExNylas.CustomAuthentication.connect!(conn, body)
   """
   def connect!(%Conn{} = conn, body) do
     case connect(conn, body) do
