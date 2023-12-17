@@ -132,8 +132,9 @@ defmodule ExNylas.ConnectorCredentials do
   @doc """
   Update a connector credential.
 
-  Example
-      {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, provider, id, changeset)
+  ## Examples
+
+      iex> {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, provider, id, changeset)
   """
   def update(%Conn{} = conn, provider, id, changeset) do
     Req.new(
@@ -150,8 +151,9 @@ defmodule ExNylas.ConnectorCredentials do
   @doc """
   Update a connector credential.
 
-  Example
-      cred = ExNylas.ConnectorCredentials.update!(conn, provider, id, changeset)
+  ## Examples
+
+      iex> cred = ExNylas.ConnectorCredentials.update!(conn, provider, id, changeset)
   """
   def update!(%Conn{} = conn, provider, id, changeset) do
     case update(conn, provider, id, changeset) do

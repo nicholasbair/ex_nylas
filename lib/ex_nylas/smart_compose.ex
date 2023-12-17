@@ -15,8 +15,9 @@ defmodule ExNylas.SmartCompose do
   @doc """
   Smart compose a message reply.
 
-  Example
-      {:ok, res} = ExNylas.SmartCompose.create_reply(conn, message_id, prompt)
+  ## Examples
+
+      iex> {:ok, res} = ExNylas.SmartCompose.create_reply(conn, message_id, prompt)
   """
   def create_reply(%Conn{} = conn, message_id, prompt) do
     Req.new(
@@ -33,8 +34,9 @@ defmodule ExNylas.SmartCompose do
   @doc """
   Smart compose a message reply.
 
-  Example
-      res = ExNylas.SmartCompose.create_reply!(conn, message_id, prompt)
+  ## Examples
+
+      iex> res = ExNylas.SmartCompose.create_reply!(conn, message_id, prompt)
   """
   def create_reply!(%Conn{} = conn, message_id, prompt) do
     case create_reply(conn, message_id, prompt) do
@@ -48,13 +50,14 @@ defmodule ExNylas.SmartCompose do
 
   Note - the response is a stream of untransformed events as shown in the example below.
 
-  Example
-      ExNylas.SmartCompose.create_stream(conn, prompt, IO.stream())
-      data: {"suggestion": ""}
-      data: {"suggestion": "Subject"}
+  ## Examples
+
+      iex> ExNylas.SmartCompose.create_stream(conn, prompt, IO.stream())
+      iex> data: {"suggestion": ""}
+      iex> data: {"suggestion": "Subject"}
       ...
-      data: {"suggestion": "]"}
-      {:ok, %IO.Stream{device: :standard_io, raw: false, line_or_bytes: :line}}
+      iex> data: {"suggestion": "]"}
+      iex> {:ok, %IO.Stream{device: :standard_io, raw: false, line_or_bytes: :line}}
   """
   def create_stream(%Conn{} = conn, prompt, stream_to) do
     Req.new(
@@ -74,13 +77,14 @@ defmodule ExNylas.SmartCompose do
 
   Note - the response is a stream of untransformed events as shown in the example below.
 
-  Example
-      ExNylas.SmartCompose.create_stream(conn, message_id, prompt, IO.stream())
-      data: {"suggestion": ""}
-      data: {"suggestion": "Subject"}
+  ## Examples
+
+      iex> ExNylas.SmartCompose.create_stream(conn, message_id, prompt, IO.stream())
+      iex> data: {"suggestion": ""}
+      iex> data: {"suggestion": "Subject"}
       ...
-      data: {"suggestion": "]"}
-      {:ok, %IO.Stream{device: :standard_io, raw: false, line_or_bytes: :line}}
+      iex> data: {"suggestion": "]"}
+      iex> {:ok, %IO.Stream{device: :standard_io, raw: false, line_or_bytes: :line}}
   """
   def create_reply_stream(%Conn{} = conn, message_id, prompt, stream_to) do
     Req.new(

@@ -16,8 +16,9 @@ defmodule ExNylas.Webhooks do
   @doc """
   Rotate a webhook secret.
 
-  Example
-      {:ok, webhook} = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
+  ## Examples
+
+      iex> {:ok, webhook} = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
   def rotate_secret(%Conn{} = conn, webhook_id) do
     Req.new(
@@ -33,8 +34,9 @@ defmodule ExNylas.Webhooks do
   @doc """
   Rotate a webhook secret.
 
-  Example
-      webhook = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
+  ## Examples
+
+      iex> webhook = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
   def rotate_secret!(%Conn{} = conn, webhook_id) do
     case rotate_secret(conn, webhook_id) do
@@ -46,8 +48,9 @@ defmodule ExNylas.Webhooks do
   @doc """
   Get a mock webhook payload.
 
-  Example
-      {:ok, payload} = ExNylas.Webhooks.mock_payload(conn, trigger)
+  ## Examples
+
+      iex> {:ok, payload} = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
   def mock_payload(%Conn{} = conn, trigger) do
     Req.new(
@@ -64,8 +67,9 @@ defmodule ExNylas.Webhooks do
   @doc """
   Get a mock webhook payload.
 
-  Example
-      payload = ExNylas.Webhooks.mock_payload(conn, trigger)
+  ## Examples
+
+      iex> payload = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
   def mock_payload!(%Conn{} = conn, trigger) do
     case mock_payload(conn, trigger) do
@@ -77,8 +81,9 @@ defmodule ExNylas.Webhooks do
   @doc """
   Send a test webhook event.
 
-  Example
-      {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, callback_url)
+  ## Examples
+
+      iex> {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, callback_url)
   """
   def send_test_event(%Conn{} = conn, trigger, callback_url) do
     Req.new(
@@ -95,8 +100,9 @@ defmodule ExNylas.Webhooks do
   @doc """
   Send a test webhook event.
 
-  Example
-      res = ExNylas.Webhooks.send_test_event(conn, trigger, callback_url)
+  ## Examples
+
+      iex> res = ExNylas.Webhooks.send_test_event(conn, trigger, callback_url)
   """
   def send_test_event!(%Conn{} = conn, trigger, callback_url) do
     case send_test_event(conn, trigger, callback_url) do

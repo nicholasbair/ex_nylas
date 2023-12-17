@@ -16,8 +16,9 @@ defmodule ExNylas.Events do
   @doc """
   Send an RSVP for a given event
 
-  Example
-      {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
+  ## Examples
+
+      iex> {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
   """
   def rsvp(%Conn{} = conn, event_id, status, calendar_id) do
     Req.new(
@@ -35,8 +36,9 @@ defmodule ExNylas.Events do
   @doc """
   Send an RSVP for a given event
 
-  Example
-      success = ExNylas.Events.rsvp!(conn, event_id, status, calendar_id)
+  ## Examples
+
+      iex> success = ExNylas.Events.rsvp!(conn, event_id, status, calendar_id)
   """
   def rsvp!(%Conn{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do
