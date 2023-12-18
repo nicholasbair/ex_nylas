@@ -135,7 +135,7 @@ defmodule ExNylas.Drafts do
   """
   def send(%Conn{} = conn, draft_id) do
     Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}/send",
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
       auth: API.auth_bearer(conn),
       headers: API.base_headers(),
       decode_body: false
