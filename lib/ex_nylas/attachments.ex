@@ -36,7 +36,7 @@ defmodule ExNylas.Attachments do
 
   ## Examples
 
-      iex> result = ExNylas.Attachments.download!(conn, id, %{message_id: `message_id`})
+      iex> result = ExNylas.Attachments.download!(conn, id, message_id)
   """
   def download!(%Conn{} = conn, id, message_id) do
     case download(conn, id, message_id) do
