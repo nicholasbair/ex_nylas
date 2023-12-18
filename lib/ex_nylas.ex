@@ -236,7 +236,7 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(["content-type": "application/json"]),
-          body: changeset,
+          body: API.process_request_body(changeset),
           decode_body: false,
           params: params
         )
