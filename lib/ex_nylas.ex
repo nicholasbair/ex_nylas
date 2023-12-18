@@ -275,7 +275,7 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(["content-type": "application/json"]),
-          body: body,
+          body: API.process_request_body(body),
           decode_body: false,
           params: params
         )
