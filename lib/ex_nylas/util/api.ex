@@ -77,7 +77,6 @@ defmodule ExNylas.API do
   # Handle streaming response for Smart Compose endpoints
   def handle_stream(fun) do
     fn {:data, data}, {req, resp} ->
-
       case resp.status in 200..299 do
         true ->
           data
