@@ -11,7 +11,7 @@ defmodule ExNylas.Model.Calendar.Availability do
     field(:time_slots, [TimeSlot.t()])
   end
 
-  def as_struct() do
+  def as_struct do
     %__MODULE__{
       time_slots: [TimeSlot.as_struct()]
     }
@@ -28,7 +28,7 @@ defmodule ExNylas.Model.Calendar.Availability do
       field(:end_time, non_neg_integer())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 
   defmodule Build do
@@ -37,9 +37,9 @@ defmodule ExNylas.Model.Calendar.Availability do
     """
 
     alias ExNylas.Model.Calendar.Availability.Build.{
-      Participant,
       AvailabilityRule,
-      OpenHour
+      OpenHour,
+      Participant
     }
 
     typedstruct do

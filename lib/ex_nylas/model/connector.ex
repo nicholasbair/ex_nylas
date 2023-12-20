@@ -19,7 +19,7 @@ defmodule ExNylas.Model.Connector do
     field(:scope, [String.t()])
   end
 
-  def as_struct(), do: struct(__MODULE__)
+  def as_struct, do: struct(__MODULE__)
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 end

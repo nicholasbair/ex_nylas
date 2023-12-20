@@ -3,12 +3,20 @@ defmodule ExNylas.Model.Event do
   A struct representing a event.
   """
 
+  alias ExNylas.Model.{
+    Conferencing,
+    Organizer,
+    Participant,
+    Reminder,
+    When
+  }
+
   use TypedStruct
 
   typedstruct do
     field(:busy, boolean())
     field(:calendar_id, String.t())
-    field(:conferencing, ExNylas.Model.Event.Conferencing.t())
+    field(:conferencing, Conferencing.t())
     field(:created_at, non_neg_integer())
     field(:description, String.t())
     field(:hide_participants, boolean())
@@ -20,16 +28,16 @@ defmodule ExNylas.Model.Event do
     field(:master_event_id, String.t())
     field(:metadata, map())
     field(:object, String.t())
-    field(:organizer, ExNylas.Model.Event.Organizer.t())
-    field(:participants, [ExNylas.Model.Event.Participant.t()])
+    field(:organizer, Organizer.t())
+    field(:participants, [Participant.t()])
     field(:read_only, boolean())
-    field(:reminders, ExNylas.Model.Event.Reminder.t())
+    field(:reminders, Reminder.t())
     field(:recurrence, [String.t()])
     field(:status, String.t())
     field(:title, String.t())
     field(:updated_at, non_neg_integer())
     field(:visibility, String.t())
-    field(:when, ExNylas.Model.Event.When.t())
+    field(:when, When.t())
   end
 
   typedstruct module: Reminder do
@@ -73,15 +81,15 @@ defmodule ExNylas.Model.Event do
 
   def as_struct do
     %__MODULE__{
-      participants: [%ExNylas.Model.Event.Participant{email: nil}],
-      when: %ExNylas.Model.Event.When{},
-      conferencing: %ExNylas.Model.Event.Conferencing{},
-      reminders: %ExNylas.Model.Event.Reminder{},
-      organizer: %ExNylas.Model.Event.Organizer{},
+      participants: [%Participant{email: nil}],
+      when: %When{},
+      conferencing: %Conferencing{},
+      reminders: %Reminder{},
+      organizer: %Organizer{},
     }
   end
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 
   typedstruct module: Build do
     field(:calendar_id, String.t(), enforce: true)

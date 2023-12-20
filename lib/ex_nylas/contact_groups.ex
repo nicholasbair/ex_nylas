@@ -8,5 +8,4 @@ defmodule ExNylas.ContactGroups do
     struct: ExNylas.Model.ContactGroup,
     readable_name: "contact group",
     include: [:list, :all]
-
 end

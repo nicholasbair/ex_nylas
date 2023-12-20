@@ -44,7 +44,7 @@ defmodule ExNylas.Model.Draft do
     field(:tracking_options, TrackingOptions.t())
   end
 
-  def as_struct() do
+  def as_struct do
     %__MODULE__{
       bcc: [EmailParticipant.as_struct()],
       cc: [EmailParticipant.as_struct()],
@@ -55,5 +55,5 @@ defmodule ExNylas.Model.Draft do
     }
   end
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 end

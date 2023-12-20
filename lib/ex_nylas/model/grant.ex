@@ -18,7 +18,7 @@ defmodule ExNylas.Model.Grant do
     field(:updated_at, String.t())
   end
 
-  def as_struct(), do: struct(__MODULE__)
+  def as_struct, do: struct(__MODULE__)
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 end

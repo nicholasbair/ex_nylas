@@ -14,7 +14,7 @@ defmodule ExNylas.Model.Webhook do
     field :notification_email_addresses, [String.t()]
   end
 
-  def as_struct(), do: struct(__MODULE__)
+  def as_struct, do: struct(__MODULE__)
 
   def as_list, do: [as_struct()]
 

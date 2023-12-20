@@ -5,9 +5,9 @@ defmodule ExNylas.Model.Application do
 
   use TypedStruct
   alias ExNylas.Model.{
-    ApplicationRedirect,
     Application.Branding,
     Application.HostedAuthentication,
+    ApplicationRedirect
   }
 
   typedstruct do
@@ -23,7 +23,7 @@ defmodule ExNylas.Model.Application do
     field(:callback_uris, [ApplicationRedirect])
   end
 
-  def as_list() do
+  def as_list do
     %__MODULE__{
       branding: Branding.as_struct(),
       hosted_authentication: HostedAuthentication.as_struct(),
@@ -42,7 +42,7 @@ defmodule ExNylas.Model.Application do
       field(:description, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 
   defmodule HostedAuthentication do
@@ -61,6 +61,6 @@ defmodule ExNylas.Model.Application do
       field(:spacing, integer())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 end

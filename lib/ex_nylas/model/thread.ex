@@ -25,11 +25,11 @@ defmodule ExNylas.Model.Thread do
     field(:latest_draft_or_message, map())
   end
 
-  def as_struct() do
+  def as_struct do
     %__MODULE__{
       participants: [EmailParticipant.as_struct()],
     }
   end
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 end
