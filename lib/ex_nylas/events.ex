@@ -16,14 +16,15 @@ defmodule ExNylas.Events do
   @doc """
   Send an RSVP for a given event
 
-  Example
-      {:ok, success} = ExNylas.Events.rsvp(conn, `event_id`, `status`, `calendar_id`)
+  ## Examples
+
+      iex> {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
   """
   def rsvp(%Conn{} = conn, event_id, status, calendar_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{status: status, calendar_id: calendar_id},
       decode_body: false,
       params: %{calendar_id: calendar_id}
@@ -35,8 +36,9 @@ defmodule ExNylas.Events do
   @doc """
   Send an RSVP for a given event
 
-  Example
-      success = ExNylas.Events.rsvp!(conn, `event_id`, `status`, `calendar_id`)
+  ## Examples
+
+      iex> success = ExNylas.Events.rsvp!(conn, event_id, status, calendar_id)
   """
   def rsvp!(%Conn{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do

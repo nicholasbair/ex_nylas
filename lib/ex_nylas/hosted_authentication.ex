@@ -14,9 +14,10 @@ defmodule ExNylas.HostedAuthentication do
     2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
     3. `response_type` is required (on the options map)
 
-  Example
-      options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
-      {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
+  ## Examples
+
+      iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
+      iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
   def get_auth_url(%Conn{} = conn, options) do
     url =
@@ -46,9 +47,10 @@ defmodule ExNylas.HostedAuthentication do
     2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
     3. `response_type` is required (on the options map)
 
-  Example
-      options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
-      uri = ExNylas.HostedAuthentication.get_auth_url!(conn, options)
+  ## Examples
+
+      iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
+      iex> uri = ExNylas.HostedAuthentication.get_auth_url!(conn, options)
   """
   def get_auth_url!(%Conn{} = conn, options) do
     case get_auth_url(conn, options) do
@@ -60,13 +62,14 @@ defmodule ExNylas.HostedAuthentication do
   @doc """
   Exchange an authorization code for a Nylas access token
 
-  Example
-      {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
+  ## Examples
+
+      iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
     Req.new(
       url: "#{conn.api_server}/v3/connect/token",
-      headers: API.base_headers(["content-type": "application/json"]),
+      headers: API.base_headers(),
       json: %{
         client_id: conn.client_id,
         client_secret: conn.client_secret,
@@ -83,8 +86,9 @@ defmodule ExNylas.HostedAuthentication do
   @doc """
   Exchange an authorization code for a Nylas access token
 
-  Example
-      access_token = ExNylas.HostedAuthentication.exchange_code_for_token!(conn, code, redirect)
+  ## Examples
+
+      iex> access_token = ExNylas.HostedAuthentication.exchange_code_for_token!(conn, code, redirect)
   """
   def exchange_code_for_token!(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
     case exchange_code_for_token(conn, code, redirect_uri, grant_type) do

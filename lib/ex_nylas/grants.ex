@@ -17,8 +17,9 @@ defmodule ExNylas.Grants do
   @doc """
   Get a grant using the current access token.
 
-  Example
-      {:ok, result} = ExNylas.Grants.me(conn)
+  ## Examples
+
+      iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
   def me(%Conn{} = conn) do
     Req.new(

@@ -25,10 +25,7 @@ defmodule ExNylas.API do
     {:basic, "#{client_id}:#{client_secret}"}
   end
 
-  def base_headers(opts \\ []) do
-    @base_headers
-    |> Keyword.merge(opts)
-  end
+  def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
   def process_request_body({:ok, body}) when is_map(body) or is_struct(body), do: Poison.encode!(body)
 
@@ -75,6 +72,29 @@ defmodule ExNylas.API do
       {:ok, body} -> TF.transform(body, transform_to)
       body -> body
     end
+  end
+
+  # Handle streaming response for Smart Compose endpoints
+  def handle_stream(fun) do
+    fn {:data, data}, {req, resp} ->
+      transfrom_stream({:data, data}, {req, resp}, fun)
+    end
+  end
+
+  defp transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
+    data
+    |> String.split("data: ")
+    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.map(&Poison.decode!(&1))
+    |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
+    |> fun.()
+
+    {:cont, {req, resp}}
+  end
+
+  defp transfrom_stream({:data, data}, {req, resp}, _fun) do
+    resp = Map.put(resp, :body, data)
+    {:cont, {req, resp}}
   end
 
   # Multipart - used by drafts, messages

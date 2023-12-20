@@ -42,8 +42,9 @@ defmodule ExNylas do
       @doc """
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
-      Example
-        {:ok, result} = #{__MODULE__}.all(`conn`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.all(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         apply(ExNylas.Paging, :all, [conn, __MODULE__, unquote(use_cursor_paging), params])
@@ -52,8 +53,9 @@ defmodule ExNylas do
       @doc """
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
-      Example
-        result = #{__MODULE__}.all!(`conn`)
+      ## Examples
+
+          iex> result = #{__MODULE__}.all!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -67,10 +69,11 @@ defmodule ExNylas do
   defp generate_api(%{name: :build} = config, _object, struct_name, readable_name, _header_type, _use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
-      Create and validate a #{unquote(readable_name)}, use the save function to send to Nylas.
+      Create and validate a #{unquote(readable_name)}, use create/update to send to Nylas.
 
-      Example
-        {:ok, result} = #{__MODULE__}.build(`payload`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.build(payload)
       """
       def unquote(config.name)(payload) do
         try do
@@ -82,10 +85,11 @@ defmodule ExNylas do
       end
 
       @doc """
-      Create and validate a #{unquote(readable_name)}, use the save function to send to Nylas.
+      Create and validate a #{unquote(readable_name)}, use the create/update to send to Nylas.
 
-      Example
-        result = #{__MODULE__}.build(`payload`)!
+      ## Examples
+
+          iex> result = #{__MODULE__}.build(payload)!
       """
       def unquote("#{config.name}!" |> String.to_atom())(payload) do
         unquote(struct_name)
@@ -102,8 +106,9 @@ defmodule ExNylas do
       @doc """
       Get the first #{unquote(readable_name)}.
 
-      Example
-          {:ok, result} = #{__MODULE__}.first(`conn`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.first(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         res =
@@ -127,8 +132,9 @@ defmodule ExNylas do
       @doc """
       Get the first #{unquote(readable_name)}.
 
-      Example
-          result = #{__MODULE__}.first!(`conn`)
+      ## Examples
+
+          iex> result = #{__MODULE__}.first!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -144,8 +150,9 @@ defmodule ExNylas do
       @doc """
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
 
-      Example
-          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`, `id`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, id, params)
       """
       def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         Req.new(
@@ -163,8 +170,9 @@ defmodule ExNylas do
       @doc """
       #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
 
-      Example
-          result = #{__MODULE__}.#{unquote(config.name)}!(`conn`, `id`)
+      ## Examples
+
+          iex> result = #{__MODULE__}.#{unquote(config.name)}!(conn, id, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, params \\ %{}) do
         case unquote(config.name)(conn, id, params) do
@@ -178,10 +186,11 @@ defmodule ExNylas do
   defp generate_api(%{http_method: :get} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) do
     quote do
       @doc """
-      Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
+      Fetch #{unquote(readable_name)}(s), optionally provide query params.
 
-      Example
-          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         Req.new(
@@ -197,10 +206,11 @@ defmodule ExNylas do
       end
 
       @doc """
-      Fetch #{unquote(readable_name)}(s), optionally provide query `params`.
+      Fetch #{unquote(readable_name)}(s), optionally provide query params.
 
-      Example
-          result = #{__MODULE__}.#{unquote(config.name)}!(`conn`)
+      ## Examples
+
+          iex> result = #{__MODULE__}.#{unquote(config.name)}!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -216,8 +226,9 @@ defmodule ExNylas do
       @doc """
       Update a(n) #{unquote(readable_name)}.
 
-      Example
-          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`, `id`, `body`, `params`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, id, body, params)
       """
       def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
         Req.new(
@@ -225,7 +236,7 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(["content-type": "application/json"]),
-          body: changeset,
+          body: API.process_request_body(changeset),
           decode_body: false,
           params: params
         )
@@ -236,8 +247,9 @@ defmodule ExNylas do
       @doc """
       Update a(n) #{unquote(readable_name)}.
 
-      Example
-          result = #{__MODULE__}.#{unquote(config.name)}!(`conn`, `id`, `body`, `params`)
+      ## Examples
+
+          iex> result = #{__MODULE__}.#{unquote(config.name)}!(conn, id, body, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params \\ %{}) do
         case unquote(config.name)(conn, id, changeset, params) do
@@ -253,8 +265,9 @@ defmodule ExNylas do
       @doc """
       Create a(n) #{unquote(readable_name)}.
 
-      Example
-          {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(`conn`, `body`, `params`)
+      ## Examples
+
+          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, body, params)
       """
       def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
         Req.new(
@@ -262,7 +275,7 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(["content-type": "application/json"]),
-          body: body,
+          body: API.process_request_body(body),
           decode_body: false,
           params: params
         )
@@ -273,8 +286,9 @@ defmodule ExNylas do
       @doc """
       Create a(n) #{unquote(readable_name)}.
 
-      Example
-          result = #{__MODULE__}.#{unquote(config.name)}(`conn`, `body`, `params`)
+      ## Examples
+
+          iex> result = #{__MODULE__}.#{unquote(config.name)}(conn, body, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params \\ %{}) do
         case unquote(config.name)(conn, body, params) do

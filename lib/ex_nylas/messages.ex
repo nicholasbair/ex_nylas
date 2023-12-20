@@ -18,8 +18,9 @@ defmodule ExNylas.Messages do
   @doc """
   Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
-  Example
-      {:ok, sent_message} = ExNylas.Messages.send(conn, `message`, `["path_to_attachment"]`)
+  ## Examples
+
+      iex> {:ok, sent_message} = ExNylas.Messages.send(conn, message, ["path_to_attachment"])
   """
   def send(%Conn{} = conn, message, attachments \\ []) do
     {body, content_type, len} = API.build_multipart(message, attachments)
@@ -38,8 +39,9 @@ defmodule ExNylas.Messages do
   @doc """
   Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
 
-  Example
-      sent_message = ExNylas.Messages.send!(conn, `message`, `["path_to_attachment"]`)
+  ## Examples
+
+      iex> sent_message = ExNylas.Messages.send!(conn, message, ["path_to_attachment"])
   """
   def send!(%Conn{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do

@@ -9,7 +9,7 @@ defmodule ExNylas.Model.Calendar.FreeBusy do
   typedstruct do
     field(:object, String.t())
     field(:email, String.t())
-    field(:timeslots, [TimeSlot.t()])
+    field(:time_slots, [TimeSlot.t()])
   end
 
   typedstruct module: Build do
@@ -20,7 +20,7 @@ defmodule ExNylas.Model.Calendar.FreeBusy do
 
   def as_struct() do
     %__MODULE__{
-      timeslots: [TimeSlot.as_struct()]
+      time_slots: [TimeSlot.as_struct()]
     }
   end
 

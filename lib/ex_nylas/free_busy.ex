@@ -14,8 +14,9 @@ defmodule ExNylas.Calendars.FreeBusy do
   @doc """
   Get calendar free/busy.
 
-  Example
-      {:ok, result} = ExNylas.Calendars.FreeBusy.list(conn, `body`)
+  ## Examples
+
+      iex> {:ok, result} = ExNylas.Calendars.FreeBusy.list(conn, body)
   """
   def list(%Conn{} = conn, body) do
     Req.new(
@@ -32,8 +33,9 @@ defmodule ExNylas.Calendars.FreeBusy do
   @doc """
   Get calendar free/busy.
 
-  Example
-      result = ExNylas.Calendars.FreeBusy.list!(conn, `body`)
+  ## Examples
+
+      iex> result = ExNylas.Calendars.FreeBusy.list!(conn, body)
   """
   def list!(%Conn{} = conn, body) do
     case list(conn, body) do

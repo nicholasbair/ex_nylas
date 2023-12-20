@@ -15,8 +15,9 @@ defmodule ExNylas.Attachments do
   @doc """
   Download an attachment.
 
-  Example
-      {:ok, result} = ExNylas.Attachments.download(conn, `id`, `message_id`)
+  ## Examples
+
+      iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id)
   """
   def download(%Conn{} = conn, id, message_id) do
     Req.new(
@@ -33,8 +34,9 @@ defmodule ExNylas.Attachments do
   @doc """
   Download an attachment.
 
-  Example
-      result = ExNylas.Attachments.download!(conn, `id`, %{message_id: `message_id`})
+  ## Examples
+
+      iex> result = ExNylas.Attachments.download!(conn, id, message_id)
   """
   def download!(%Conn{} = conn, id, message_id) do
     case download(conn, id, message_id) do
