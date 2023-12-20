@@ -3,7 +3,7 @@ defmodule ExNylas.Model.Event do
   A struct representing a event.
   """
 
-  alias ExNylas.Model.{
+  alias ExNylas.Model.Event.{
     Conferencing,
     Organizer,
     Participant,
