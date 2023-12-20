@@ -8,8 +8,8 @@ defmodule ExNylas.Model.Message do
   alias ExNylas.Model.{
     Attachment,
     Common.EmailParticipant,
-    Common.TrackingOptions,
-    Common.MessageHeader
+    Common.MessageHeader,
+    Common.TrackingOptions
   }
 
   typedstruct do
@@ -52,7 +52,7 @@ defmodule ExNylas.Model.Message do
     field(:use_draft, boolean())
   end
 
-  def as_struct() do
+  def as_struct do
     %__MODULE__{
       bcc: [EmailParticipant.as_struct()],
       cc: [EmailParticipant.as_struct()],
@@ -64,5 +64,5 @@ defmodule ExNylas.Model.Message do
     }
   end
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 end

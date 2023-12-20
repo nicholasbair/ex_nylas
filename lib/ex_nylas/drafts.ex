@@ -5,6 +5,7 @@ defmodule ExNylas.Drafts do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Draft
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]
@@ -33,7 +34,7 @@ defmodule ExNylas.Drafts do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Draft.as_struct())
+    |> API.handle_response(Draft.as_struct())
   end
 
   @doc """
@@ -68,7 +69,7 @@ defmodule ExNylas.Drafts do
       decode_body: false
     )
     |> Req.patch(conn.options)
-    |> API.handle_response(ExNylas.Model.Draft.as_struct())
+    |> API.handle_response(Draft.as_struct())
   end
 
   @doc """
@@ -107,7 +108,7 @@ defmodule ExNylas.Drafts do
       decode_body: false
     )
     |> Req.patch(conn.options)
-    |> API.handle_response(ExNylas.Model.Draft.as_struct())
+    |> API.handle_response(Draft.as_struct())
   end
 
   @doc """
@@ -141,7 +142,7 @@ defmodule ExNylas.Drafts do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Draft.as_struct())
+    |> API.handle_response(Draft.as_struct())
   end
 
   @doc """

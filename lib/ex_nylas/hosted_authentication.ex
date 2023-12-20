@@ -5,6 +5,7 @@ defmodule ExNylas.HostedAuthentication do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.HostedAuthentication, as: HA
 
   @doc """
   Returns the URI to send the end user
@@ -80,7 +81,7 @@ defmodule ExNylas.HostedAuthentication do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.HostedAuthentication.as_struct(), false)
+    |> API.handle_response(HA.as_struct(), false)
   end
 
   @doc """

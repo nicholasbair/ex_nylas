@@ -32,7 +32,7 @@ defmodule ExNylas.Model.Contact do
     field(:web_pages, [WebPage.t()])
   end
 
-  def as_struct() do
+  def as_struct do
     %__MODULE__{
       emails: Email.as_list(),
       groups: ContactGroup.as_list(),
@@ -43,7 +43,7 @@ defmodule ExNylas.Model.Contact do
     }
   end
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 
   typedstruct module: Build do
     field(:given_name, String.t(), enforce: true)
@@ -62,9 +62,9 @@ defmodule ExNylas.Model.Contact do
       field(:type, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
 
-    def as_list(), do: [as_struct()]
+    def as_list, do: [as_struct()]
   end
 
   defmodule ImAddress do
@@ -79,9 +79,9 @@ defmodule ExNylas.Model.Contact do
       field(:type, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
 
-    def as_list(), do: [as_struct()]
+    def as_list, do: [as_struct()]
   end
 
   defmodule PhoneNumber do
@@ -96,9 +96,9 @@ defmodule ExNylas.Model.Contact do
       field(:type, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
 
-    def as_list(), do: [as_struct()]
+    def as_list, do: [as_struct()]
   end
 
   defmodule PhysicalAddress do
@@ -117,9 +117,9 @@ defmodule ExNylas.Model.Contact do
       field(:type, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
 
-    def as_list(), do: [as_struct()]
+    def as_list, do: [as_struct()]
   end
 
   defmodule WebPage do
@@ -134,8 +134,8 @@ defmodule ExNylas.Model.Contact do
       field(:type, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
 
-    def as_list(), do: [as_struct()]
+    def as_list, do: [as_struct()]
   end
 end

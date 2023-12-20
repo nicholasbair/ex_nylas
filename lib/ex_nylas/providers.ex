@@ -5,6 +5,7 @@ defmodule ExNylas.Providers do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Provider
 
   @doc """
   Detect the provider for an email address.
@@ -22,7 +23,7 @@ defmodule ExNylas.Providers do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Provider.as_struct())
+    |> API.handle_response(Provider.as_struct())
   end
 
   @doc """

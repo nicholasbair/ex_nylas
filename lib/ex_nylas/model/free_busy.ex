@@ -18,13 +18,13 @@ defmodule ExNylas.Model.Calendar.FreeBusy do
     field(:emails, list())
   end
 
-  def as_struct() do
+  def as_struct do
     %__MODULE__{
       time_slots: [TimeSlot.as_struct()]
     }
   end
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 
   defmodule TimeSlot do
     @moduledoc """
@@ -38,6 +38,6 @@ defmodule ExNylas.Model.Calendar.FreeBusy do
       field(:end_time, non_neg_integer())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 end

@@ -3,8 +3,8 @@ defmodule ExNylas do
   Generate functions that follow the 'standard' path.
   """
 
-  alias ExNylas.Connection, as: Conn
   alias ExNylas.API, as: API
+  alias ExNylas.Connection, as: Conn
 
   @funcs %{
     list: %{name: :list, http_method: :get},
@@ -76,12 +76,10 @@ defmodule ExNylas do
           iex> {:ok, result} = #{__MODULE__}.build(payload)
       """
       def unquote(config.name)(payload) do
-        try do
-          res = apply(__MODULE__, "#{unquote(config.name)}!" |> String.to_atom(), [payload])
-          {:ok, res}
+        res = apply(__MODULE__, "#{unquote(config.name)}!" |> String.to_atom(), [payload])
+        {:ok, res}
         rescue
           e in _ -> {:error, e}
-        end
       end
 
       @doc """

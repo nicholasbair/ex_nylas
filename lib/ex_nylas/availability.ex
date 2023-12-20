@@ -3,13 +3,14 @@ defmodule ExNylas.Calendars.Availability do
   Interface for Nylas calendar availability.
   """
 
+  alias ExNylas.API
+  alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Calendar.Availability, as: AV
+
   use ExNylas,
     struct: ExNylas.Model.Calendar.Availability,
     readable_name: "calendar availability",
     include: [:build]
-
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
 
   @doc """
   Get calendar availability.
@@ -27,7 +28,7 @@ defmodule ExNylas.Calendars.Availability do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Calendar.Availability.as_struct())
+    |> API.handle_response(AV.as_struct())
   end
 
   @doc """

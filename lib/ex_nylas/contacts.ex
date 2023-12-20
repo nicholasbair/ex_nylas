@@ -8,5 +8,4 @@ defmodule ExNylas.Contacts do
     struct: ExNylas.Model.Contact,
     readable_name: "contact",
     include: [:list, :first, :find, :update, :delete, :build, :all, :create]
-
 end

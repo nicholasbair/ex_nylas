@@ -5,6 +5,7 @@ defmodule ExNylas.CustomAuthentication do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Grant
 
   @doc """
   Connect a grant using custom authentication.
@@ -22,7 +23,7 @@ defmodule ExNylas.CustomAuthentication do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Grant.as_struct())
+    |> API.handle_response(Grant.as_struct())
   end
 
   @doc """

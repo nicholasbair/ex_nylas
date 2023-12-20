@@ -3,13 +3,14 @@ defmodule ExNylas.Calendars.FreeBusy do
   Interface for Nylas calendar free/busy.
   """
 
+  alias ExNylas.API
+  alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Calendar.FreeBusy, as: FB
+
   use ExNylas,
     struct: ExNylas.Model.Calendar.FreeBusy,
     readable_name: "calendar free/busy",
     include: [:build]
-
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
 
   @doc """
   Get calendar free/busy.
@@ -27,7 +28,7 @@ defmodule ExNylas.Calendars.FreeBusy do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Calendar.FreeBusy.as_list())
+    |> API.handle_response(FB.as_list())
   end
 
   @doc """

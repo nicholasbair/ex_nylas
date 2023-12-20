@@ -5,6 +5,7 @@ defmodule ExNylas.Webhooks do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Webhook
 
   use ExNylas,
     object: "webhooks",
@@ -28,7 +29,7 @@ defmodule ExNylas.Webhooks do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Webhook.as_struct())
+    |> API.handle_response(Webhook.as_struct())
   end
 
   @doc """

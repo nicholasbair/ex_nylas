@@ -5,13 +5,14 @@ defmodule ExNylas.Messages do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Message
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]
 
   use ExNylas,
     object: "messages",
-    struct: ExNylas.Model.Message,
+    struct: Message,
     readable_name: "message",
     include: [:list, :first, :search, :find, :update, :build, :all]
 
@@ -33,7 +34,7 @@ defmodule ExNylas.Messages do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.Message.as_struct())
+    |> API.handle_response(Message.as_struct())
   end
 
   @doc """

@@ -27,5 +27,5 @@ defmodule ExNylas.Model.HostedAuthentication do
     field(:credential_id, String.t())
   end
 
-  def as_struct(), do: struct(__MODULE__)
+  def as_struct, do: struct(__MODULE__)
 end

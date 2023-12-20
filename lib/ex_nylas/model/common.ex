@@ -19,7 +19,7 @@ defmodule ExNylas.Model.Common do
       field(:next_cursor, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
 
     def as_struct(data_struct) do
       %__MODULE__{
@@ -40,7 +40,7 @@ defmodule ExNylas.Model.Common do
       field(:provider_error, map())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 
   defmodule EmailParticipant do
@@ -53,7 +53,7 @@ defmodule ExNylas.Model.Common do
       field(:name, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 
   defmodule TrackingOptions do
@@ -68,7 +68,7 @@ defmodule ExNylas.Model.Common do
       field(:label, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 
   defmodule MessageHeader do
@@ -81,6 +81,6 @@ defmodule ExNylas.Model.Common do
       field(:value, String.t())
     end
 
-    def as_struct(), do: struct(__MODULE__)
+    def as_struct, do: struct(__MODULE__)
   end
 end

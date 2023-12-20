@@ -5,6 +5,7 @@ defmodule ExNylas.SmartCompose do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.SmartCompose, as: SC
 
   @doc """
   Create a smart compose.
@@ -22,7 +23,7 @@ defmodule ExNylas.SmartCompose do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.SmartCompose.as_struct())
+    |> API.handle_response(SC.as_struct())
   end
 
   @doc """
@@ -55,7 +56,7 @@ defmodule ExNylas.SmartCompose do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(ExNylas.Model.SmartCompose.as_struct())
+    |> API.handle_response(SC.as_struct())
   end
 
   @doc """

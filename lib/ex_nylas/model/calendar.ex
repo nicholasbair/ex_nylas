@@ -21,9 +21,9 @@ defmodule ExNylas.Model.Calendar do
     field(:metadata, map())
   end
 
-  def as_struct(), do: struct(__MODULE__)
+  def as_struct, do: struct(__MODULE__)
 
-  def as_list(), do: [as_struct()]
+  def as_list, do: [as_struct()]
 
   typedstruct module: Build do
     field(:name, String.t(), enforce: true)

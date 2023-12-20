@@ -3,14 +3,14 @@ defmodule ExNylas.Attachments do
   Interface for Nylas attachments.
   """
 
+  alias ExNylas.API
+  alias ExNylas.Connection, as: Conn
+
   use ExNylas,
     object: "attachments",
     struct: ExNylas.Model.Attachment,
     readable_name: "attachment",
     include: [:find]
-
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
 
   @doc """
   Download an attachment.
