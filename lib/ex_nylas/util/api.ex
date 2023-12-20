@@ -77,22 +77,24 @@ defmodule ExNylas.API do
   # Handle streaming response for Smart Compose endpoints
   def handle_stream(fun) do
     fn {:data, data}, {req, resp} ->
-      case resp.status in 200..299 do
-        true ->
-          data
-          |> String.split("data: ")
-          |> Enum.filter(fn x -> x != "" end)
-          |> Enum.map(&Poison.decode!(&1))
-          |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
-          |> fun.()
-
-          {:cont, {req, resp}}
-
-        false ->
-          resp = Map.put(resp, :body, data)
-          {:cont, {req, resp}}
-      end
+      transfrom_stream({:data, data}, {req, resp}, fun)
     end
+  end
+
+  defp transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
+    data
+    |> String.split("data: ")
+    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.map(&Poison.decode!(&1))
+    |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
+    |> fun.()
+
+    {:cont, {req, resp}}
+  end
+
+  defp transfrom_stream({:data, data}, {req, resp}, _fun) do
+    resp = Map.put(resp, :body, data)
+    {:cont, {req, resp}}
   end
 
   # Multipart - used by drafts, messages
