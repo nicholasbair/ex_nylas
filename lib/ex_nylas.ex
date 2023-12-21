@@ -20,17 +20,19 @@ defmodule ExNylas do
 
   defp generate_funcs(opts) do
     include = Keyword.get(opts, :include, [])
-    object = Keyword.get(opts, :object)
-    struct_name = Keyword.get(opts, :struct)
-    header_type = Keyword.get(opts, :header_type, :header_bearer)
-    use_admin_url = Keyword.get(opts, :use_admin_url, false)
-    readable_name = Keyword.get(opts, :readable_name, struct_name)
-    use_cursor_paging = Keyword.get(opts, :use_cursor_paging, true)
 
     @funcs
     |> Enum.filter(fn k -> k.name in include end)
     |> Enum.map(fn k ->
-      generate_api(k, object, struct_name, readable_name, header_type, use_admin_url, use_cursor_paging)
+      generate_api(
+        k,
+        Keyword.get(opts, :object),
+        Keyword.get(opts, :struct),
+        Keyword.get(opts, :readable_name, Keyword.get(opts, :struct)),
+        Keyword.get(opts, :header_type, :header_bearer),
+        Keyword.get(opts, :use_admin_url, false),
+        Keyword.get(opts, :use_cursor_paging, true)
+      )
     end)
   end
 
