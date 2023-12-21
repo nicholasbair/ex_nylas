@@ -14,7 +14,7 @@ defmodule ExNylas.Messages do
     object: "messages",
     struct: Message,
     readable_name: "message",
-    include: [:list, :first, :search, :find, :update, :build, :all]
+    include: [:list, :first, :search, :find, :update, :build, :all, :delete]
 
   @doc """
   Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
