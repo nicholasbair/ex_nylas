@@ -21,10 +21,6 @@ defmodule ExNylas.HostedAuthentication do
       iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
   def get_auth_url(%Conn{} = conn, options) do
-    url =
-      "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}"
-      |> parse_options(options)
-
     cond do
       Map.get(conn, :client_id) |> is_nil() ->
         {:error, "client_id on the connection struct is required for this call"}
@@ -36,7 +32,7 @@ defmodule ExNylas.HostedAuthentication do
         {:error, "response_type was not found in the options map"}
 
       true ->
-        {:ok, url}
+        {:ok, parse_options("#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}", options)}
     end
   end
 

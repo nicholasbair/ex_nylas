@@ -10,5 +10,5 @@ defmodule ExNylas.Model.WebhookIP do
     field(:updated_at, non_neg_integer())
   end
 
-  def as_struct, do: struct(__MODULE__)
+  def as_list, do: struct(__MODULE__)
 end
