@@ -47,7 +47,7 @@ defmodule ExNylas do
           iex> {:ok, result} = #{__MODULE__}.all(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
-        apply(ExNylas.Paging, :all, [conn, __MODULE__, unquote(use_cursor_paging), params])
+        ExNylas.Paging.all(conn, __MODULE__, unquote(use_cursor_paging), params)
       end
 
       @doc """
