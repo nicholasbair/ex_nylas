@@ -7,7 +7,14 @@ defmodule ExNylas.MixProject do
       version: "0.3.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      dialyzer: [plt_add_apps: [:mix]]
+    ]
+  end
+
+  def cli do
+    [
+      preferred_envs: [quality_check: :test]
     ]
   end
 
