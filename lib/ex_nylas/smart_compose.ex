@@ -95,7 +95,7 @@ defmodule ExNylas.SmartCompose do
       compressed: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(nil, false)
+    |> API.handle_response(nil, true)
   end
 
   @doc """
@@ -120,6 +120,6 @@ defmodule ExNylas.SmartCompose do
       compressed: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(nil, false)
+    |> API.handle_response(nil, true)
   end
 end

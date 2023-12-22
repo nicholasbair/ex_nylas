@@ -5,7 +5,9 @@ defmodule ExNylas.Transform do
 
   def transform(nil), do: nil
 
-  def transform(object_or_objects, struct) do
+  def transform(object_or_objects, struct, true = _decode?) do
     Poison.decode(object_or_objects, %{as: struct})
   end
+
+  def transform(object_or_objects, _struct, false = _decode?), do: object_or_objects
 end
