@@ -8,13 +8,14 @@ defmodule ExNylas.MixProject do
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [plt_add_apps: [:mix]]
+      dialyzer: [plt_add_apps: [:mix]],
+      aliases: aliases(),
     ]
   end
 
   def cli do
     [
-      preferred_envs: [quality_check: :test]
+      preferred_envs: [quality_check: :test, qc: :test],
     ]
   end
 
@@ -24,12 +25,18 @@ defmodule ExNylas.MixProject do
     ]
   end
 
+  defp aliases do
+    [
+      c: "compile",
+      qc: "quality_check"
+    ]
+  end
+
   defp deps do
     [
       {:req, "~> 0.4.8"},
       {:poison, "~> 5.0"},
       {:multipart, "~> 0.4.0"},
-      {:bypass, "~> 2.1", only: :test},
       {:typed_struct, "~> 0.3.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
