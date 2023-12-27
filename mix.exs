@@ -15,7 +15,7 @@ defmodule ExNylas.MixProject do
 
   def cli do
     [
-      preferred_envs: [quality_check: :test, qc: :test],
+      preferred_envs: [quality_check: :test, qc: :test, t: :test],
     ]
   end
 
@@ -28,7 +28,8 @@ defmodule ExNylas.MixProject do
   defp aliases do
     [
       c: "compile",
-      qc: "quality_check"
+      qc: "quality_check",
+      t: "test"
     ]
   end
 

@@ -24,6 +24,10 @@ defmodule ExNylas.API do
     {:bearer, access_token}
   end
 
+  def auth_bearer(%Conn{api_key: api_key}) when is_nil(api_key) do
+    raise ExNylasError, "missing value for api_key"
+  end
+
   def auth_bearer(%Conn{api_key: api_key}) do
     {:bearer, api_key}
   end
@@ -94,8 +98,7 @@ defmodule ExNylas.API do
 
   # Responses ###################################################################
 
-  def handle_response(res, transform_to \\ nil, use_common_response \\ true)
-  def handle_response(res, transform_to, use_common_response) do
+  def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     case format_response(res) do
       {:ok, body, true} ->
         TF.transform(body, to_struct(transform_to, use_common_response), true)
@@ -115,10 +118,7 @@ defmodule ExNylas.API do
     end
   end
 
-  defp to_struct(transform_to, true = _use_common_response) do
-    Response.as_struct(transform_to)
-  end
-
+  defp to_struct(transform_to, true = _use_common_response), do: Response.as_struct(transform_to)
   defp to_struct(transform_to, false = _use_common_response), do: transform_to
 
   defp format_response({:ok, %{status: status, body: body} = res}) when status in @success_codes do

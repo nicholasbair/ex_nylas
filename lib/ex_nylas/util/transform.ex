@@ -3,8 +3,6 @@ defmodule ExNylas.Transform do
   Generic transform functions for data returned by the Nylas API
   """
 
-  def transform(nil), do: nil
-
   def transform(object_or_objects, struct, true = _decode?) do
     Poison.decode(object_or_objects, %{as: struct})
   end
