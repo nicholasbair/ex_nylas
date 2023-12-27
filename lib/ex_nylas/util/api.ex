@@ -4,7 +4,10 @@ defmodule ExNylas.API do
   """
 
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Model.Common.Response
   alias ExNylas.Transform, as: TF
+
+  # Requests ###################################################################
 
   @base_headers [
     accept: "application/json",
@@ -13,12 +16,28 @@ defmodule ExNylas.API do
 
   @success_codes Enum.to_list(200..299)
 
+  def auth_bearer(%Conn{grant_id: "me", access_token: access_token}) when is_nil(access_token) do
+    raise ExNylasError, "access_token must be present when using grant_id='me'"
+  end
+
   def auth_bearer(%Conn{grant_id: "me", access_token: access_token}) do
     {:bearer, access_token}
   end
 
+  def auth_bearer(%Conn{api_key: api_key}) when is_nil(api_key) do
+    raise ExNylasError, "missing value for api_key"
+  end
+
   def auth_bearer(%Conn{api_key: api_key}) do
     {:bearer, api_key}
+  end
+
+  def auth_basic(%Conn{client_id: client_id, client_secret: _client_secret}) when is_nil(client_id) do
+    raise ExNylasError, "client_id must be present to use basic auth"
+  end
+
+  def auth_basic(%Conn{client_id: _client_id, client_secret: client_secret}) when is_nil(client_secret) do
+    raise ExNylasError, "client_secret must be present to use basic auth"
   end
 
   def auth_basic(%Conn{client_id: client_id, client_secret: client_secret}) do
@@ -27,75 +46,15 @@ defmodule ExNylas.API do
 
   def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
-  def process_request_body({:ok, body}) when is_map(body) or is_struct(body), do: Poison.encode!(body)
+  def process_request_body(body) when is_struct(body) do
+    body
+    |> Map.from_struct()
+    |> Poison.encode!()
+  end
 
-  def process_request_body(body) when is_map(body) or is_struct(body), do: Poison.encode!(body)
+  def process_request_body(body) when is_map(body), do: Poison.encode!(body)
 
   def process_request_body(body), do: body
-
-  def handle_response(res, transform_to \\ nil, use_common_response \\ true)
-  def handle_response(res, transform_to, _) when is_nil(transform_to) do
-    case res do
-      {:ok, %Req.Response{status: status, body: body}} ->
-        case status do
-          status when status in @success_codes ->
-            {:ok, body}
-
-          _ ->
-            {:error, body}
-        end
-
-      {:error, %{reason: reason}} ->
-        {:error, reason}
-
-      _ -> res
-    end
-  end
-
-  def handle_response(res, transform_to, true = _use_common_response) do
-    case handle_response(res, nil) do
-      {:ok, body} ->
-        TF.transform(body, ExNylas.Model.Common.Response.as_struct(transform_to))
-
-      {:error, :timeout} ->
-        {:error, :timeout}
-
-      {:error, body} ->
-        # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
-        {_, val} = TF.transform(body, ExNylas.Model.Common.Response.as_struct(transform_to))
-        {:error, val}
-    end
-  end
-
-  def handle_response(res, transform_to, false = _use_common_response) do
-    case handle_response(res, nil) do
-      {:ok, body} -> TF.transform(body, transform_to)
-      body -> body
-    end
-  end
-
-  # Handle streaming response for Smart Compose endpoints
-  def handle_stream(fun) do
-    fn {:data, data}, {req, resp} ->
-      transfrom_stream({:data, data}, {req, resp}, fun)
-    end
-  end
-
-  defp transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
-    data
-    |> String.split("data: ")
-    |> Enum.filter(fn x -> x != "" end)
-    |> Enum.map(&Poison.decode!(&1))
-    |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
-    |> fun.()
-
-    {:cont, {req, resp}}
-  end
-
-  defp transfrom_stream({:data, data}, {req, resp}, _fun) do
-    resp = Map.put(resp, :body, data)
-    {:cont, {req, resp}}
-  end
 
   # Multipart - used by drafts, messages
   def build_multipart(obj, attachments) do
@@ -135,5 +94,71 @@ defmodule ExNylas.API do
     {:ok, file_contents} = File.read(file_path)
 
     {filename, file_contents}
+  end
+
+  # Responses ###################################################################
+
+  def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
+    case format_response(res) do
+      {:ok, body, true} ->
+        TF.transform(body, to_struct(transform_to, use_common_response), true)
+
+      {:ok, body, false} ->
+        {:ok, body}
+
+      {:error, body, true} ->
+        # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
+        {_, val} = TF.transform(body, to_struct(transform_to, use_common_response), true)
+        {:error, val}
+
+      {:error, body, false} ->
+        {:error, body}
+
+      val -> val
+    end
+  end
+
+  defp to_struct(transform_to, true = _use_common_response), do: Response.as_struct(transform_to)
+  defp to_struct(transform_to, false = _use_common_response), do: transform_to
+
+  defp format_response({:ok, %{status: status, body: body} = res}) when status in @success_codes do
+    {:ok, body, should_decode?(res)}
+  end
+
+  defp format_response({:ok, %{body: body} = res}) do
+    {:error, body, should_decode?(res)}
+  end
+
+  defp format_response({:error, %{reason: reason}}) do
+    {:error, reason, false}
+  end
+
+  defp format_response(res), do: res
+
+  defp should_decode?(%{headers: %{"content-type" => ["application/json" | _]}}), do: true
+  defp should_decode?(%{headers: %{"content-type" => ["application/json; charset=utf-8" | _]}}), do: true
+  defp should_decode?(_), do: false
+
+  # Handle streaming response for Smart Compose endpoints
+  def handle_stream(fun) do
+    fn {:data, data}, {req, resp} ->
+      transfrom_stream({:data, data}, {req, resp}, fun)
+    end
+  end
+
+  defp transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
+    data
+    |> String.split("data: ")
+    |> Enum.filter(fn x -> x != "" end)
+    |> Enum.map(&Poison.decode!(&1))
+    |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
+    |> fun.()
+
+    {:cont, {req, resp}}
+  end
+
+  defp transfrom_stream({:data, data}, {req, resp}, _fun) do
+    resp = Map.put(resp, :body, data)
+    {:cont, {req, resp}}
   end
 end

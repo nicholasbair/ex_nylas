@@ -27,6 +27,7 @@ defmodule ExNylas.Model.Application do
     %__MODULE__{
       branding: Branding.as_struct(),
       hosted_authentication: HostedAuthentication.as_struct(),
+      callback_uris: [ApplicationRedirect.as_struct()]
     }
   end
 
