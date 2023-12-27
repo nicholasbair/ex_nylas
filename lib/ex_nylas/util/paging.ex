@@ -50,7 +50,8 @@ defmodule ExNylas.Paging do
       |> Map.put(:offset, offset)
 
     case apply(resource, :list, [conn, query]) do
-      {:ok, data} ->
+      {:ok, res} ->
+        data = Map.get(res, :data, [])
         new = acc ++ data
         limit = Map.get(query, :limit)
 
