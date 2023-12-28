@@ -9,7 +9,7 @@ defmodule ExNylas.Model.Webhook do
     field :id, String.t()
     field :description, String.t()
     field :trigger_types, [String.t()]
-    field :callback_url, String.t()
+    field :webhook_url, String.t()
     field :status, String.t()
     field :notification_email_addresses, [String.t()]
   end
@@ -21,7 +21,7 @@ defmodule ExNylas.Model.Webhook do
   typedstruct module: Build do
     field :description, String.t()
     field :trigger_types, [String.t()]
-    field :callback_url, String.t()
+    field :webhook_url, String.t()
     field :notification_email_addresses, [String.t()]
   end
 end

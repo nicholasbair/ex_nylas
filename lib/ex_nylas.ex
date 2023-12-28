@@ -43,7 +43,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.all(conn, params)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.all(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         ExNylas.Paging.all(conn, __MODULE__, unquote(use_cursor_paging), params)
@@ -54,7 +54,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.all!(conn, params)
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.all!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -72,7 +72,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.build(payload)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.build(payload)
       """
       def unquote(config.name)(payload) do
         res = apply(__MODULE__, "#{unquote(config.name)}!" |> String.to_atom(), [payload])
@@ -86,7 +86,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.build(payload)!
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.build(payload)!
       """
       def unquote("#{config.name}!" |> String.to_atom())(payload) do
         unquote(struct_name)
@@ -105,7 +105,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.first(conn, params)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.first(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         res =
@@ -131,7 +131,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.first!(conn, params)
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.first!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -149,7 +149,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, id, params)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, id, params)
       """
       def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
         Req.new(
@@ -169,7 +169,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.#{unquote(config.name)}!(conn, id, params)
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, id, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, params \\ %{}) do
         case unquote(config.name)(conn, id, params) do
@@ -187,7 +187,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, params)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, params)
       """
       def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
         Req.new(
@@ -207,7 +207,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.#{unquote(config.name)}!(conn, params)
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
         case unquote(config.name)(conn, params) do
@@ -225,7 +225,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, id, body, params)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, id, body, params)
       """
       def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
         Req.new(
@@ -246,7 +246,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.#{unquote(config.name)}!(conn, id, body, params)
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, id, body, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params \\ %{}) do
         case unquote(config.name)(conn, id, changeset, params) do
@@ -264,7 +264,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> {:ok, result} = #{__MODULE__}.#{unquote(config.name)}(conn, body, params)
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, body, params)
       """
       def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
         Req.new(
@@ -285,7 +285,7 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{__MODULE__}.#{unquote(config.name)}(conn, body, params)
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, body, params)
       """
       def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params \\ %{}) do
         case unquote(config.name)(conn, body, params) do
@@ -310,6 +310,13 @@ defmodule ExNylas do
 
   def generate_auth(conn, :header_basic) do
     API.auth_basic(conn)
+  end
+
+  def format_module_name(module_name) do
+    module_name
+    |> Atom.to_string()
+    |> String.replace("Elixir.", "")
+    |> String.to_atom()
   end
 
   defmacro __using__(opts) do
