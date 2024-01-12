@@ -84,14 +84,14 @@ defmodule ExNylas.Webhooks do
 
   ## Examples
 
-      iex> {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, callback_url)
+      iex> {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
-  def send_test_event(%Conn{} = conn, trigger, callback_url) do
+  def send_test_event(%Conn{} = conn, trigger, webhook_url) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
       auth: API.auth_bearer(conn),
       headers: API.base_headers(),
-      json: %{trigger_type: trigger, callback_url: callback_url},
+      json: %{trigger_type: trigger, webhook_url: webhook_url},
       decode_body: false
     )
     |> Req.post(conn.options)
@@ -103,10 +103,10 @@ defmodule ExNylas.Webhooks do
 
   ## Examples
 
-      iex> res = ExNylas.Webhooks.send_test_event(conn, trigger, callback_url)
+      iex> res = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
-  def send_test_event!(%Conn{} = conn, trigger, callback_url) do
-    case send_test_event(conn, trigger, callback_url) do
+  def send_test_event!(%Conn{} = conn, trigger, webhook_url) do
+    case send_test_event(conn, trigger, webhook_url) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end
