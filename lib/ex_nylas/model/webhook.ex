@@ -11,6 +11,7 @@ defmodule ExNylas.Model.Webhook do
     field :trigger_types, [String.t()]
     field :webhook_url, String.t()
     field :status, String.t()
+    field :webhook_secret, String.t()
     field :notification_email_addresses, [String.t()]
   end
 

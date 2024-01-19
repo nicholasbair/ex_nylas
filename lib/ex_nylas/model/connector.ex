@@ -6,14 +6,12 @@ defmodule ExNylas.Model.Connector do
   use TypedStruct
 
   typedstruct do
-    field(:name, String.t())
     field(:provider, String.t())
     field(:settings, map())
     field(:scope, [String.t()])
   end
 
   typedstruct module: Build do
-    field(:name, String.t())
     field(:provider, String.t())
     field(:settings, map())
     field(:scope, [String.t()])
