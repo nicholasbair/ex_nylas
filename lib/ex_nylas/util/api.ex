@@ -100,15 +100,15 @@ defmodule ExNylas.API do
 
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     case format_response(res) do
-      {:ok, body, true} ->
-        TF.transform(body, to_struct(transform_to, use_common_response), true)
+      {:ok, body, status, true} ->
+        TF.transform(body, status, to_struct(transform_to, use_common_response), true)
 
-      {:ok, body, false} ->
+      {:ok, body, _status, false} ->
         {:ok, body}
 
-      {:error, body, true} ->
+      {:error, body, status, true} ->
         # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
-        {_, val} = TF.transform(body, to_struct(transform_to, use_common_response), true)
+        {_, val} = TF.transform(body, status, to_struct(transform_to, use_common_response), true)
         {:error, val}
 
       {:error, body, false} ->
@@ -122,11 +122,11 @@ defmodule ExNylas.API do
   defp to_struct(transform_to, false = _use_common_response), do: transform_to
 
   defp format_response({:ok, %{status: status, body: body} = res}) when status in @success_codes do
-    {:ok, body, should_decode?(res)}
+    {:ok, body, status, should_decode?(res)}
   end
 
-  defp format_response({:ok, %{body: body} = res}) do
-    {:error, body, should_decode?(res)}
+  defp format_response({:ok, %{status: status, body: body} = res}) do
+    {:error, body, status, should_decode?(res)}
   end
 
   defp format_response({:error, %{reason: reason}}) do

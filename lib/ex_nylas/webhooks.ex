@@ -62,7 +62,7 @@ defmodule ExNylas.Webhooks do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(nil, true)
+    |> API.handle_response()
   end
 
   @doc """
@@ -95,7 +95,7 @@ defmodule ExNylas.Webhooks do
       decode_body: false
     )
     |> Req.post(conn.options)
-    |> API.handle_response(nil, true)
+    |> API.handle_response()
   end
 
   @doc """
