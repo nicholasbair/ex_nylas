@@ -16,9 +16,16 @@ defmodule ExNylas.Transform do
     406 => :not_acceptable,
     409 => :conflict,
     410 => :gone,
+    411 => :length_required,
+    412 => :precondition_failed,
     413 => :payload_too_large,
+    414 => :uri_too_long,
+    415 => :unsupported_media_type,
+    418 => :im_a_teapot,
     429 => :too_many_requests,
     500 => :internal_server_error,
+    501 => :not_implemented,
+    502 => :bad_gateway,
     503 => :service_unavailable,
     504 => :gateway_timeout
   }
