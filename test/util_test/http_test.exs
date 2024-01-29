@@ -8,7 +8,9 @@ defmodule ExNylasTest.HTTP do
 
   test "client can handle an unsuccessful request", %{bypass: bypass} do
     Bypass.expect_once(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
-      Plug.Conn.resp(conn, 429, ~s<[]>)
+      conn
+      |> Plug.Conn.resp(429, ~s<{"error": "some error"}>)
+      |> Plug.Conn.put_resp_header("content-type", "application/json")
     end)
 
     res =

@@ -4,7 +4,7 @@ defmodule ExNylas.MixProject do
   def project do
     [
       app: :ex_nylas,
-      version: "0.3.2",
+      version: "0.3.3",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       deps: deps(),

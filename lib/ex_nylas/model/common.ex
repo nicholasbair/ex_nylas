@@ -14,6 +14,7 @@ defmodule ExNylas.Model.Common do
 
     typedstruct do
       field(:request_id, String.t())
+      field(:status, atom())
       field(:data, map() | list())
       field(:error, Error.t())
       field(:next_cursor, String.t())
