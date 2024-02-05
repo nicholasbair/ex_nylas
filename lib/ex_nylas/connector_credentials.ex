@@ -16,7 +16,7 @@ defmodule ExNylas.ConnectorCredentials do
   def list(%Conn{} = conn, provider, params \\ %{}) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
-      auth: API.auth_basic(conn),
+      auth: API.auth_bearer(conn),
       headers: API.base_headers(),
       params: params,
       decode_body: false
