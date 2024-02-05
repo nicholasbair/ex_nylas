@@ -17,7 +17,7 @@ defmodule ExNylas.Providers do
   def detect(%Conn{} = conn, params \\ %{}) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",
-      auth: API.auth_basic(conn),
+      auth: API.auth_bearer(conn),
       headers: API.base_headers(),
       params: params,
       decode_body: false
