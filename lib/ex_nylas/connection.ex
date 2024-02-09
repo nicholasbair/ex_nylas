@@ -6,19 +6,17 @@ defmodule ExNylas.Connection do
   The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API the api_key and grant_id are needed.
   """
 
-  use TypedStruct
-
-  typedstruct do
-    field(:client_id, String.t())
-    field(:client_secret, String.t())
-    field(:api_key, String.t())
-    field(:grant_id, String.t())
-    field(:access_token, String.t())
-    field(:api_server, String.t(), default: "https://api.us.nylas.com")
+  defstruct [
+    client_id: nil,
+    client_secret: nil,
+    api_key: nil,
+    grant_id: nil,
+    access_token: nil,
+    api_server: "https://api.us.nylas.com",
 
     # Pass in a list of options to be used when making the request, e.g. `receive_timeout`, `retry`.
     # These options are passed directly to the `Req` library.
     # See https://hexdocs.pm/req/Req.html#new/1 for more information.
-    field(:options, Keyword.t(), default: [])
-  end
+    options: []
+  ]
 end

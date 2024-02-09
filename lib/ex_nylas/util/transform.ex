@@ -3,6 +3,11 @@ defmodule ExNylas.Transform do
   Generic transform functions for data returned by the Nylas API
   """
 
+  alias ExNylas.Schema.Common.Response
+  import Ecto.Changeset
+  import ExNylas, only: [format_module_name: 1]
+  require Logger
+
   @status_codes %{
     200 => :ok,
     201 => :created,
@@ -30,19 +35,53 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
-  def transform(object_or_objects, status, struct, true = _decode?) do
-    object_or_objects
-    |> Poison.decode(%{as: struct})
-    |> insert_status(status)
+  # TODO: refactor
+  # Three cases need to be handled here:
+  # 1. Use common response and transform
+    # - Common response should include `status`
+  # 2. Don't use common response and transform
+  # 3. Don't use common response and don't transform
+
+  def transform(body, status, model, true = _use_common, true = _transform) do
+    %Response{}
+    |> Response.changeset(preprocess_body(model, body, status))
+    |> apply_changes()
   end
 
-  def transform(object_or_objects, _status, _struct, false = _decode?), do: object_or_objects
-
-  defp insert_status({:ok, %ExNylas.Model.Common.Response{} = response}, status) do
-    {:ok, Map.put(response, :status, status_to_atom(status))}
+  def transform(body, _status, model, false = _use_common, true = _transform) do
+    model
+    |> preprocess_data(body)
   end
 
-  defp insert_status(response, _status), do: response
+  def transform(body, _status, _model, _use_common, false = _transform), do: body
+
+  defp preprocess_body(model, body, status) do
+    body
+    |> Map.put("data", preprocess_data(model, body["data"]))
+    |> Map.put("status", status_to_atom(status))
+  end
+
+  defp preprocess_data(model, data) when is_map(data) do
+    model.__struct__
+    |> model.changeset(data)
+    |> log_validations(model)
+    |> apply_changes()
+  end
+
+  defp preprocess_data(model, data) when is_list(data) do
+    Enum.map(data, &preprocess_data(model, &1))
+  end
+
+  defp preprocess_data(_model, data), do: data
+
+  defp log_validations(changeset, model) do
+    if changeset.valid? do
+      changeset
+    else
+      Logger.warning("Validation error(s) while transforming #{format_module_name(model)}: #{inspect(changeset.errors)}")
+      changeset
+    end
+  end
 
   defp status_to_atom(status) do
     Map.get(@status_codes, status, :unknown)
