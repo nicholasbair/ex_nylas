@@ -35,13 +35,6 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
-  # TODO: refactor
-  # Three cases need to be handled here:
-  # 1. Use common response and transform
-    # - Common response should include `status`
-  # 2. Don't use common response and transform
-  # 3. Don't use common response and don't transform
-
   def transform(body, status, model, true = _use_common, true = _transform) do
     %Response{}
     |> Response.changeset(preprocess_body(model, body, status))
@@ -49,8 +42,7 @@ defmodule ExNylas.Transform do
   end
 
   def transform(body, _status, model, false = _use_common, true = _transform) do
-    model
-    |> preprocess_data(body)
+    preprocess_data(model, body)
   end
 
   def transform(body, _status, _model, _use_common, false = _transform), do: body
@@ -83,7 +75,5 @@ defmodule ExNylas.Transform do
     end
   end
 
-  defp status_to_atom(status) do
-    Map.get(@status_codes, status, :unknown)
-  end
+  defp status_to_atom(status), do: Map.get(@status_codes, status, :unknown)
 end
