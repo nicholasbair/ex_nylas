@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Type.MapOrList do
+  @moduledoc """
+  Custom Ecto type for map or list.
+  """
+
   use Ecto.Type
 
   def type, do: :any

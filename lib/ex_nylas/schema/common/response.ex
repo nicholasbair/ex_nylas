@@ -1,4 +1,7 @@
 defmodule ExNylas.Schema.Common.Response do
+  @moduledoc """
+  A struct representing a common response from Nylas.
+  """
 
   use Ecto.Schema
   import Ecto.Changeset
