@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.ConnectorCredential.Build do
+  @moduledoc """
+  Helper module for validating a connector credential before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

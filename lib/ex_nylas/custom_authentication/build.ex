@@ -1,6 +1,6 @@
 defmodule ExNylas.Schema.CustomAuthentication.Build do
   @moduledoc """
-  Structs for Nylas custom authentication.
+  Helper module for validating a custom authentication request.
   """
 
   use Ecto.Schema

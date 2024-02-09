@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Calendar.Availability.Build do
+  @moduledoc """
+  Helper module for validating an availability request.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

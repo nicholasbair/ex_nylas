@@ -1,4 +1,7 @@
 defmodule ExNylas.Schema.ApplicationRedirect.Build do
+  @moduledoc """
+  Helper module for validating an application redirect before creating/updating it.
+  """
 
   use Ecto.Schema
   import Ecto.Changeset

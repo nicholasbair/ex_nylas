@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Folder.Build do
+  @moduledoc """
+  Helper module for validating a folder before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

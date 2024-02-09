@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Calendar.Build do
+  @moduledoc """
+  Helper module for validating a calendar before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

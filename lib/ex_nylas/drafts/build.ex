@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Draft.Build do
+  @moduledoc """
+  Helper module for validating a draft before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

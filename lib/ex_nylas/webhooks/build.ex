@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Webhook.Build do
+  @moduledoc """
+  Helper module for validating a webhook before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

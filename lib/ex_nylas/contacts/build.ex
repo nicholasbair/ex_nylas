@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Contact.Build do
+  @moduledoc """
+  Helper module for validating a contact before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias ExNylas.Schema.Util

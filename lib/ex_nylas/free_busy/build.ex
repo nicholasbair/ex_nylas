@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Calendar.FreeBusy.Build do
+  @moduledoc """
+  Helper module for validating the free/busy request.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

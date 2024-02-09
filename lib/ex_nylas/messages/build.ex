@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Message.Build do
+  @moduledoc """
+  Helper module for validating a message before sending it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
 

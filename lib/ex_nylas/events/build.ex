@@ -1,4 +1,8 @@
 defmodule ExNylas.Schema.Event.Build do
+  @moduledoc """
+  Helper module for validating an event before creating/updating it.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
