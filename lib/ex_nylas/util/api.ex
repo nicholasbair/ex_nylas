@@ -45,7 +45,6 @@ defmodule ExNylas.API do
 
   def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
-  # TODO: is encoding here needed?
   # Multipart - used by drafts, messages
   def build_multipart(obj, attachments) do
     multipart =
