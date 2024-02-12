@@ -14,7 +14,7 @@ defmodule ExNylas.Schema.MessageSchedule do
     field :schedule_id, :string
     field :close_time, :integer
 
-    embeds_one :status, Status do
+    embeds_one :status, Status, primary_key: false do
       field :code, :string
       field :description, :string
     end

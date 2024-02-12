@@ -10,8 +10,8 @@ defmodule ExNylas.Schema.Grant do
 
   schema "grant" do
     field :id, :string
-    field :provider, :string
-    field :grant_status, :string
+    field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
+    field :grant_status, Ecto.Enum, values: ~w(valid invalid)a
     field :email, :string
     field :scope, {:array, :string}
     field :user_agent, :string
@@ -24,6 +24,6 @@ defmodule ExNylas.Schema.Grant do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id])
+    |> validate_required([:id, :provider, :scope, :grant_status, :scope])
   end
 end

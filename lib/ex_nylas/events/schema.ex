@@ -25,15 +25,15 @@ defmodule ExNylas.Schema.Event do
     field :notifications, {:array, :map}
     field :hide_participants, :boolean
 
-    embeds_many :participants, Participant do
+    embeds_many :participants, Participant, primary_key: false do
       field :name, :string
       field :email, :string
-      field :status, :string
+      field :status, Ecto.Enum, values: ~w(yes no maybe noreply)a
       field :comment, :string
       field :phone_number, :string
     end
 
-    embeds_one :when, When do
+    embeds_one :when, When, primary_key: false do
       field :start_time, :integer
       field :end_time, :integer
       field :start_timezone, :string
@@ -46,7 +46,7 @@ defmodule ExNylas.Schema.Event do
       field :date, :string
     end
 
-    embeds_one :conferencing, Conferencing do
+    embeds_one :conferencing, Conferencing, primary_key: false do
       field :meeting_code, :string
       field :password, :string
       field :url, :string
@@ -54,12 +54,12 @@ defmodule ExNylas.Schema.Event do
       field :pin, :string
     end
 
-    embeds_one :reminders, Reminder do
+    embeds_one :reminders, Reminder, primary_key: false do
       field :overrides, {:array, :map}
       field :use_default, :boolean
     end
 
-    embeds_one :organizer, Organizer do
+    embeds_one :organizer, Organizer, primary_key: false do
       field :email, :string
       field :name, :string
     end

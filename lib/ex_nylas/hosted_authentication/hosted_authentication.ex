@@ -7,6 +7,11 @@ defmodule ExNylas.HostedAuthentication do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Schema.HostedAuthentication, as: HA
 
+  use ExNylas,
+    struct: ExNylas.Schema.HostedAuthentication,
+    readable_name: "hosted authentication",
+    include: [:build]
+
   @doc """
   Returns the URI to send the end user
 
@@ -14,6 +19,8 @@ defmodule ExNylas.HostedAuthentication do
     1. `client_id` is required (on the connection struct)
     2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
     3. `response_type` is required (on the options map)
+
+  Optionally use ExNylas.HostedAuthentication.build/1 to validate the options map.
 
   ## Examples
 
@@ -43,6 +50,8 @@ defmodule ExNylas.HostedAuthentication do
     1. `client_id` is required (on the connection struct)
     2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
     3. `response_type` is required (on the options map)
+
+  Optionally use ExNylas.HostedAuthentication.build/1 to validate the options map.
 
   ## Examples
 

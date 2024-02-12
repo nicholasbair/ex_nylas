@@ -13,7 +13,7 @@ defmodule ExNylas.Schema.Calendar.Availability do
   schema "calendar_availability" do
     field :order, {:array, :string}
 
-    embeds_many :time_slots, TimeSlot do
+    embeds_many :time_slots, TimeSlot, primary_key: false do
       field :emails, {:array, :string}
       field :start_time, :integer
       field :end_time, :integer

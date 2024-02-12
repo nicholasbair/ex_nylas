@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.CustomAuthentication.Build do
   @primary_key false
 
   schema "custom_authentication" do
-    field :provider, :string
+    field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
     field :settings, :map
     field :state, :string
   end

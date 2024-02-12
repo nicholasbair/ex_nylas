@@ -19,7 +19,7 @@ defmodule ExNylas.Schema.Application do
     field :region, :string
     field :created_at, :integer
     field :updated_at, :integer
-    field :environment, :string
+    field :environment, Ecto.Enum, values: ~w(production staging)a
     field :v2_organization_id, :string
 
     embeds_one :branding, Branding, primary_key: false do
@@ -31,7 +31,7 @@ defmodule ExNylas.Schema.Application do
 
     embeds_one :hosted_authentication, HostedAuthentication, primary_key: false do
       field :background_image_url, :string
-      field :alignment, :string
+      field :alignment, Ecto.Enum, values: ~w(left center right)a
       field :color_primary, :string
       field :color_secondary, :string
       field :title, :string

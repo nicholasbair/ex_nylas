@@ -11,7 +11,7 @@ defmodule ExNylas.Schema.ApplicationRedirect do
   schema "application_redirect" do
     field :id, :string
     field :url, :string
-    field :platform, :string
+    field :platform, Ecto.Enum, values: ~w(web desktop js ios android)a
   end
 
   def changeset(struct, params \\ %{}) do

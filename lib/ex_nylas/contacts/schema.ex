@@ -23,7 +23,7 @@ defmodule ExNylas.Schema.Contact do
 
     embeds_many :emails, Email, primary_key: false do
       field :email, :string
-      field :type, :string
+      field :type, Ecto.Enum, values: ~w(work home other)a
     end
 
     embeds_many :groups, ContactGroup, primary_key: false do
@@ -38,7 +38,7 @@ defmodule ExNylas.Schema.Contact do
 
     embeds_many :phone_numbers, PhoneNumber, primary_key: false do
       field :number, :string
-      field :type, :string
+      field :type, Ecto.Enum, values: ~w(work home other)a
     end
 
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
@@ -53,7 +53,7 @@ defmodule ExNylas.Schema.Contact do
 
     embeds_many :web_pages, WebPage, primary_key: false do
       field :url, :string
-      field :type, :string
+      field :type, Ecto.Enum, values: ~w(work home other)a
     end
   end
 

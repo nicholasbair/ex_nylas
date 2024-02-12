@@ -14,7 +14,7 @@ defmodule ExNylas.Schema.Calendar.FreeBusy do
     field :object, :string
     field :email, :string
 
-    embeds_many :time_slots, TimeSlot do
+    embeds_many :time_slots, TimeSlot, primary_key: false do
       field :object, :string
       field :status, :string
       field :start_time, :integer
