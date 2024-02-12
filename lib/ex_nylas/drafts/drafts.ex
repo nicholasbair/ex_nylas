@@ -64,7 +64,6 @@ defmodule ExNylas.Drafts do
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
       auth: API.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
-      # body: API.process_request_body(changeset)
       json: changeset
     )
     |> Req.patch(conn.options)

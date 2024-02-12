@@ -11,7 +11,7 @@ defmodule ExNylas.Schema.Connector.Build do
   @primary_key false
 
   schema "connector" do
-    field :provider, Ecto.Enum, values: [:google, :microsoft, :imap, :"virtual-calendar"]
+    field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar)a
     field :scope, {:array, :string}
 
     embeds_one :settings, Settings, primary_key: false do

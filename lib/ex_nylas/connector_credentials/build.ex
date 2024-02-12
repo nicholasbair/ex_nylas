@@ -11,7 +11,7 @@ defmodule ExNylas.Schema.ConnectorCredential.Build do
 
   schema "connector_credential" do
     field :name, :string
-    field :credential_type, :string
+    field :credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a
     field :credential_data, :map
   end
 

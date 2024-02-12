@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Contact.Build.PhoneNumber do
 
   schema "phone_number" do
     field :number, :string
-    field :type, Ecto.Enum, values: [:work, :home, :other]
+    field :type, Ecto.Enum, values: ~w(work home other)a
   end
 
   def changeset(struct, params \\ %{}) do

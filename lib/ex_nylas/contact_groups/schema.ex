@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.ContactGroup do
 
   schema "contact_group" do
     field :grant_id, :string
-    field :group_type, :string
+    field :group_type, Ecto.Enum, values: ~w(system user other)a
     field :id, :string
     field :name, :string
     field :object, :string

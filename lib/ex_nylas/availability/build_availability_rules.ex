@@ -6,13 +6,14 @@ defmodule ExNylas.Schema.Calendar.Availability.Build.AvailabilityRules do
   use Ecto.Schema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
+
   alias ExNylas.Schema.Calendar.Availability.Build.OpenHours
 
   @primary_key false
   @derive {Jason.Encoder, only: [:availability_method, :round_robin_group_id, :buffer, :default_open_hours]}
 
   schema "availability_rules" do
-    field :availability_method, Ecto.Enum, values: [:collective, :"max-fairness", :"max-availability"]
+    field :availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a
     field :round_robin_group_id, :string
 
     embeds_one :buffer, Buffer, primary_key: false do

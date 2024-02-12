@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Contact.Build.Email do
 
   schema "email" do
     field :email, :string
-    field :type, Ecto.Enum, values: [:work, :home, :other]
+    field :type, Ecto.Enum, values: ~w(work home other)a
   end
 
   def changeset(struct, params \\ %{}) do

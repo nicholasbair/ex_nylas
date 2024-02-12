@@ -10,10 +10,10 @@ defmodule ExNylas.Schema.Common.TrackingOptions do
   @derive {Jason.Encoder, only: [:links, :opens, :thread_replies, :label]}
 
   schema "tracking_options" do
-    field(:links, :boolean)
-    field(:opens, :boolean)
-    field(:thread_replies, :boolean)
-    field(:label, :string)
+    field :links, :boolean
+    field :opens, :boolean
+    field :thread_replies, :boolean
+    field :label, :string
   end
 
   def changeset(struct, params \\ %{}) do
