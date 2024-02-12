@@ -22,6 +22,8 @@ defmodule ExNylas.Schema.Event.Build do
     field :hide_participants, :boolean
 
     embeds_many :participants, Participant do
+      @derive {Jason.Encoder, only: [:name, :email, :status, :comment, :phone_number]}
+
       field :name, :string
       field :email, :string
       field :status, :string
@@ -30,6 +32,8 @@ defmodule ExNylas.Schema.Event.Build do
     end
 
     embeds_one :conferencing, Conferencing do
+      @derive {Jason.Encoder, only: [:meeting_code, :password, :url, :phone, :pin]}
+
       field :meeting_code, :string
       field :password, :string
       field :url, :string
@@ -38,11 +42,15 @@ defmodule ExNylas.Schema.Event.Build do
     end
 
     embeds_one :reminders, Reminder do
+      @derive {Jason.Encoder, only: [:overrides, :use_default]}
+
       field :overrides, {:array, :map}
       field :use_default, :boolean
     end
 
     embeds_one :when, When do
+      @derive {Jason.Encoder, only: [:start_time, :end_time, :start_timezone, :end_timezone, :object, :time, :timezone, :start_date, :end_date, :date]}
+
       field :start_time, :integer
       field :end_time, :integer
       field :start_timezone, :string
@@ -59,6 +67,9 @@ defmodule ExNylas.Schema.Event.Build do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants])
+    |> cast_embed(:participants, with: &Util.embedded_changeset/2)
+    |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)
+    |> cast_embed(:reminders, with: &Util.embedded_changeset/2)
     |> cast_embed(:when, with: &Util.embedded_changeset/2)
     |> validate_required([:when])
   end

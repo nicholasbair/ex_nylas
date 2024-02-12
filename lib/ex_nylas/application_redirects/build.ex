@@ -11,12 +11,12 @@ defmodule ExNylas.Schema.ApplicationRedirect.Build do
 
   schema "application_redirect" do
     field :url, :string
-    field :platform, :string
+    field :platform, Ecto.Enum, values: [:web, :desktop, :js, :ios, :android]
   end
 
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:url, :platform])
-    |> validate_required([:url, :platform])
+    |> validate_required([:url])
   end
 end

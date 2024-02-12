@@ -5,6 +5,11 @@ defmodule ExNylas.Schema.Message.Build do
 
   use Ecto.Schema
   import Ecto.Changeset
+  alias ExNylas.Schema.Common.{
+    Build.Attachment,
+    EmailParticipant,
+    TrackingOptions
+  }
 
   @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
   @primary_key false

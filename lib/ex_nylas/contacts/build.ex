@@ -6,6 +6,12 @@ defmodule ExNylas.Schema.Contact.Build do
   use Ecto.Schema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
+  alias ExNylas.Schema.Contact.Build.{
+    Email,
+    ImAddress,
+    PhoneNumber,
+    WebPage
+  }
 
   @derive {Jason.Encoder, only: [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source]}
   @primary_key false
@@ -19,27 +25,21 @@ defmodule ExNylas.Schema.Contact.Build do
     field :object, :string
     field :source, :string
 
-    embeds_many :emails, Email, primary_key: false do
-      field :email, :string
-      field :type, :string
-    end
+    embeds_many :emails, Email
+    embeds_many :im_addresses, ImAddress
+    embeds_many :phone_numbers, PhoneNumber
+    embeds_many :web_pages, WebPage
 
     embeds_many :groups, ContactGroup, primary_key: false do
+      @derive {Jason.Encoder, only: [:id, :name]}
+
       field :id, :string
       field :name, :string
     end
 
-    embeds_many :im_addresses, ImAddress, primary_key: false do
-      field :address, :string
-      field :type, :string
-    end
-
-    embeds_many :phone_numbers, PhoneNumber, primary_key: false do
-      field :number, :string
-      field :type, :string
-    end
-
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
+      @derive {Jason.Encoder, only: [:type, :format, :street_address, :city, :state, :postal_code, :country]}
+
       field :type, :string
       field :format, :string
       field :street_address, :string
@@ -48,22 +48,17 @@ defmodule ExNylas.Schema.Contact.Build do
       field :postal_code, :string
       field :country, :string
     end
-
-    embeds_many :web_pages, WebPage, primary_key: false do
-      field :url, :string
-      field :type, :string
-    end
   end
 
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source])
-    |> cast_embed(:emails, with: &Util.embedded_changeset/2)
+    |> cast_embed(:emails, with: &Email.changeset/2)
+    |> cast_embed(:im_addresses, with: &ImAddress.changeset/2)
+    |> cast_embed(:phone_numbers, with: &PhoneNumber.changeset/2)
+    |> cast_embed(:web_pages, with: &WebPage.changeset/2)
     |> cast_embed(:groups, with: &Util.embedded_changeset/2)
-    |> cast_embed(:im_addresses, with: &Util.embedded_changeset/2)
-    |> cast_embed(:phone_numbers, with: &Util.embedded_changeset/2)
     |> cast_embed(:physical_addresses, with: &Util.embedded_changeset/2)
-    |> cast_embed(:web_pages, with: &Util.embedded_changeset/2)
     |> validate_required([:given_name])
   end
 end

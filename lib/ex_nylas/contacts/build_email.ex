@@ -1,22 +1,22 @@
-defmodule ExNylas.Schema.Common.EmailParticipant do
+defmodule ExNylas.Schema.Contact.Build.Email do
   @moduledoc """
-  A struct representing an email participant.
+  Helper module for validating the email subobject on a contact request.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
 
   @primary_key false
-  @derive {Jason.Encoder, only: [:email, :name]}
 
-  schema "email_participant" do
+  schema "email" do
     field :email, :string
-    field :name, :string
+    field :type, Ecto.Enum, values: [:work, :home, :other]
   end
 
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
     |> validate_required([:email])
+    |> validate_length(:email, min: 1, max: 255)
   end
 end

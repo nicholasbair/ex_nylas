@@ -7,6 +7,7 @@ defmodule ExNylas.Schema.Common.TrackingOptions do
   import Ecto.Changeset
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:links, :opens, :thread_replies, :label]}
 
   schema "tracking_options" do
     field(:links, :boolean)
