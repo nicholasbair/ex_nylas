@@ -25,6 +25,4 @@ defmodule ExNylas.Schema.Calendar.Availability do
     |> cast(params, __MODULE__.__schema__(:fields))
     |> cast_embed(:time_slots, with: &Util.embedded_changeset/2)
   end
-
-
 end

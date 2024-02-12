@@ -117,7 +117,7 @@ defmodule ExNylas.API do
   defp format_response(res), do: res
 
   defp transform?({_, %{headers: %{"content-type" => content_type}}}) do
-    Enum.any?(content_type, fn x -> String.contains?(x, "application/json") end)
+    Enum.any?(content_type, &String.contains?(&1, "application/json"))
   end
 
   defp transform?(_), do: false

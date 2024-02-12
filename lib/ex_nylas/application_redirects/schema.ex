@@ -18,6 +18,4 @@ defmodule ExNylas.Schema.ApplicationRedirect do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
   end
-
-
 end

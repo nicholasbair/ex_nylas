@@ -19,6 +19,4 @@ defmodule ExNylas.Schema.Connector do
     |> cast(params, __MODULE__.__schema__(:fields))
     |> validate_required([:provider])
   end
-
-
 end

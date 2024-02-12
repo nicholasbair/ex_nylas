@@ -68,6 +68,4 @@ defmodule ExNylas.Schema.Contact do
     |> cast_embed(:web_pages, with: &Util.embedded_changeset/2)
     |> validate_required([:grant_id, :id])
   end
-
-
 end

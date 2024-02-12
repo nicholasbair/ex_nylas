@@ -38,5 +38,4 @@ defmodule ExNylas.Providers do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
-
 end

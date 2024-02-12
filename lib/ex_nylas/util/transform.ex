@@ -66,13 +66,11 @@ defmodule ExNylas.Transform do
 
   defp preprocess_data(_model, data), do: data
 
+  defp log_validations(%{valid?: true} = changeset, _model), do: changeset
+
   defp log_validations(changeset, model) do
-    if changeset.valid? do
-      changeset
-    else
-      Logger.warning("Validation error(s) while transforming #{format_module_name(model)}: #{inspect(changeset.errors)}")
-      changeset
-    end
+    Logger.warning("Validation error(s) while transforming #{format_module_name(model)}: #{inspect(changeset.errors)}")
+    changeset
   end
 
   defp status_to_atom(status), do: Map.get(@status_codes, status, :unknown)

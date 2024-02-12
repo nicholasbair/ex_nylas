@@ -29,6 +29,4 @@ defmodule ExNylas.Schema.Calendar do
     |> cast(params, __MODULE__.__schema__(:fields))
     |> validate_required([:id, :grant_id])
   end
-
-
 end

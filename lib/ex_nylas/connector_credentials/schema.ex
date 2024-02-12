@@ -20,6 +20,4 @@ defmodule ExNylas.Schema.ConnectorCredential do
     |> cast(params, __MODULE__.__schema__(:fields))
     |> validate_required([:id])
   end
-
-
 end
