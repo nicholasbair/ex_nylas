@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.ApplicationRedirect.Build do
+defmodule ExNylas.ApplicationRedirect.Build do
   @moduledoc """
   Helper module for validating an application redirect before creating/updating it.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.ApplicationRedirect.Build do
   @derive {Jason.Encoder, only: [:url, :platform]}
   @primary_key false
 
-  schema "application_redirect" do
+  embedded_schema do
     field :url, :string
     field :platform, Ecto.Enum, values: [:web, :desktop, :js, :ios, :android]
   end

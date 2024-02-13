@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Connector do
+defmodule ExNylas.Connector do
   @moduledoc """
   A struct representing a Nylas connector.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.Connector do
 
   @primary_key false
 
-  schema "connector" do
+  embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
     field :settings, :map
     field :scope, {:array, :string}

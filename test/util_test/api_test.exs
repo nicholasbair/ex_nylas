@@ -109,7 +109,7 @@ defmodule ExNylasTest.API do
         body: %{"request_id" => "1234", "data" => %{"grant_id" => "abcd", "name" => "test", "id" => "abcd"}},
         headers: %{"content-type" => ["application/json"]}
       }
-      assert match?({:ok, %ExNylas.Schema.Common.Response{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Schema.Folder, true))
+      assert match?({:ok, %ExNylas.Common.Response{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder, true))
     end
 
     test "does not return common response struct if use_common_response is false" do
@@ -118,7 +118,7 @@ defmodule ExNylasTest.API do
         body: %{"grant_id" => "abcd", "name" => "test", "id" => "abcd"},
         headers: %{"content-type" => ["application/json"]}
       }
-      assert match?({:ok, %ExNylas.Schema.Folder{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Schema.Folder, false))
+      assert match?({:ok, %ExNylas.Folder{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder, false))
     end
 
     test "only decodes JSON responses" do
@@ -132,7 +132,7 @@ defmodule ExNylasTest.API do
         body: %{"request_id" => "1234", "data" => %{"grant_id" => "abcd", "name" => "test", "id" => "abcd"}},
         headers: %{"content-type" => ["application/json"]}
       }
-      assert match?({:ok, %ExNylas.Schema.Common.Response{data: %ExNylas.Schema.Folder{}}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Schema.Folder))
+      assert match?({:ok, %ExNylas.Common.Response{data: %ExNylas.Folder{}}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder))
     end
   end
 

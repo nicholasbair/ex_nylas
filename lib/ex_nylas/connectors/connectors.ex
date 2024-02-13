@@ -5,7 +5,7 @@ defmodule ExNylas.Connectors do
 
   use ExNylas,
     object: "connectors",
-    struct: ExNylas.Schema.Connector,
+    struct: ExNylas.Connector,
     readable_name: "connector",
     use_admin_url: true,
     include: [:list, :first, :find, :delete, :build, :update, :create, :all],

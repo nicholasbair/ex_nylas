@@ -5,7 +5,7 @@ defmodule ExNylas.Events do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Event
+  alias ExNylas.Event
 
   use ExNylas,
     object: "events",

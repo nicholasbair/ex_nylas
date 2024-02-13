@@ -5,11 +5,11 @@ defmodule ExNylas.Grants do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Grant
+  alias ExNylas.Grant
 
   use ExNylas,
     object: "grants",
-    struct: ExNylas.Schema.Grant,
+    struct: ExNylas.Grant,
     readable_name: "grant",
     include: [:list, :find, :delete, :update, :all],
     use_admin_url: true,

@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.ApplicationRedirect do
+defmodule ExNylas.ApplicationRedirect do
   @moduledoc """
   A struct for Nylas application redirect.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.ApplicationRedirect do
 
   @primary_key false
 
-  schema "application_redirect" do
+  embedded_schema do
     field :id, :string
     field :url, :string
     field :platform, Ecto.Enum, values: ~w(web desktop js ios android)a
@@ -17,5 +17,6 @@ defmodule ExNylas.Schema.ApplicationRedirect do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
+    |> validate_required([:url, :id])
   end
 end

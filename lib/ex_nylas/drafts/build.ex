@@ -1,11 +1,11 @@
-defmodule ExNylas.Schema.Draft.Build do
+defmodule ExNylas.Draft.Build do
   @moduledoc """
   Helper module for validating a draft before creating/updating it.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
-  alias ExNylas.Model.Common.{
+  alias ExNylas.Common.{
     Build.Attachment,
     EmailParticipant,
     TrackingOptions
@@ -14,7 +14,7 @@ defmodule ExNylas.Schema.Draft.Build do
   @derive {Jason.Encoder, only: [:reply_to_message_id, :subject, :body, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 
-  schema "draft" do
+  embedded_schema do
     field :reply_to_message_id, :string
     field :subject, :string
     field :body, :string

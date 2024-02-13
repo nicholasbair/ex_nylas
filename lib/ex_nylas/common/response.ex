@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Common.Response do
+defmodule ExNylas.Common.Response do
   @moduledoc """
   A struct representing a common response from Nylas.
   """
@@ -6,7 +6,7 @@ defmodule ExNylas.Schema.Common.Response do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExNylas.Schema.{
+  alias ExNylas.{
     Common.Error,
     Type.MapOrList,
     Type.Atom
@@ -14,7 +14,7 @@ defmodule ExNylas.Schema.Common.Response do
 
   @primary_key false
 
-  schema "common" do
+  embedded_schema do
     field :request_id, :string
     field :status, Atom
     field :data, MapOrList

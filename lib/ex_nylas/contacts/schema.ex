@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Contact do
+defmodule ExNylas.Contact do
   @moduledoc """
   A struct representing a contact.
   """
@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Contact do
 
   @primary_key false
 
-  schema "contact" do
+  embedded_schema do
     field :given_name, :string
     field :grant_id, :string
     field :id, :string

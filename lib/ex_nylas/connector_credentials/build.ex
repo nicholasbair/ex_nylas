@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.ConnectorCredential.Build do
+defmodule ExNylas.ConnectorCredential.Build do
   @moduledoc """
   Helper module for validating a connector credential before creating/updating it.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.ConnectorCredential.Build do
   @derive {Jason.Encoder, only: [:name, :credential_type, :credential_data]}
   @primary_key false
 
-  schema "connector_credential" do
+  embedded_schema do
     field :name, :string
     field :credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a
     field :credential_data, :map

@@ -1,14 +1,14 @@
-defmodule ExNylas.Calendars.Availability do
+defmodule ExNylas.CalendarAvailability do
   @moduledoc """
   Interface for Nylas calendar availability.
   """
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Calendar.Availability, as: AV
+  alias ExNylas.Availability, as: AV
 
   use ExNylas,
-    struct: ExNylas.Schema.Calendar.Availability,
+    struct: __MODULE__,
     readable_name: "calendar availability",
     include: [:build]
 

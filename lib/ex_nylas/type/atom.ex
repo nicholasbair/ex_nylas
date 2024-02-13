@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Type.Atom do
+defmodule ExNylas.Type.Atom do
   @moduledoc """
   Custom Ecto type for atom.
   """

@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Calendar.Build do
+defmodule ExNylas.Calendar.Build do
   @moduledoc """
   Helper module for validating a calendar before creating/updating it.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.Calendar.Build do
   @derive {Jason.Encoder, only: [:description, :location, :name, :timezone, :metadata]}
   @primary_key false
 
-  schema "calendar" do
+  embedded_schema do
     field :description, :string
     field :location, :string
     field :name, :string

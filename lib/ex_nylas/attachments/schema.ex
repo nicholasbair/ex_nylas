@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Attachment do
+defmodule ExNylas.Attachment do
   @moduledoc """
   A struct representing an attachment.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.Attachment do
 
   @primary_key false
 
-  schema "attachment" do
+  embedded_schema do
     field :id, :string
     field :grant_id, :string
     field :content_type, :string

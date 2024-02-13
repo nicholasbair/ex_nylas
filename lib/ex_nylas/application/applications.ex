@@ -5,7 +5,7 @@ defmodule ExNylas.Applications do
 
   use ExNylas,
     object: "applications",
-    struct: ExNylas.Schema.Application,
+    struct: ExNylas.Application,
     readable_name: "application",
     include: [:list, :update],
     use_admin_url: true

@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Grant do
+defmodule ExNylas.Grant do
   @moduledoc """
   A struct represting a Nylas grant.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.Grant do
 
   @primary_key false
 
-  schema "grant" do
+  embedded_schema do
     field :id, :string
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
     field :grant_status, Ecto.Enum, values: ~w(valid invalid)a

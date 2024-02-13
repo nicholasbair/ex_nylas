@@ -5,7 +5,7 @@ defmodule ExNylas.ContactGroups do
 
   use ExNylas,
     object: "contacts/groups",
-    struct: ExNylas.Schema.ContactGroup,
+    struct: ExNylas.ContactGroup,
     readable_name: "contact group",
     include: [:list, :all]
 end

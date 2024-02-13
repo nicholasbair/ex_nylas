@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Calendar.Availability do
+defmodule ExNylas.Availability do
   @moduledoc """
   Structs for Nylas calendar availability.
   """
@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Calendar.Availability do
 
   @primary_key false
 
-  schema "calendar_availability" do
+  embedded_schema do
     field :order, {:array, :string}
 
     embeds_many :time_slots, TimeSlot, primary_key: false do

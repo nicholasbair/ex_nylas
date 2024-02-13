@@ -1,6 +1,6 @@
-defmodule ExNylas.Provider do
+defmodule ExNylas.Common.MessageHeader do
   @moduledoc """
-  Structs for Nylas providers.
+  A struct representing the headers of a message.
   """
 
   use Ecto.Schema
@@ -9,10 +9,8 @@ defmodule ExNylas.Provider do
   @primary_key false
 
   embedded_schema do
-    field :provider, :string
-    field :type, :string
-    field :email_address, :string
-    field :detected, :boolean
+    field :name, :string
+    field :value, :string
   end
 
   def changeset(struct, params \\ %{}) do

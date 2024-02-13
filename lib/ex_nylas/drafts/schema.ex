@@ -1,9 +1,9 @@
-defmodule ExNylas.Schema.Draft do
+defmodule ExNylas.Draft do
   @moduledoc """
   A struct representing a draft.
   """
 
-  alias ExNylas.Schema.{
+  alias ExNylas.{
     Attachment,
     Common.EmailParticipant,
     Common.TrackingOptions
@@ -14,7 +14,7 @@ defmodule ExNylas.Schema.Draft do
 
   @primary_key false
 
-  schema "draft" do
+  embedded_schema do
     field :id, :string
     field :grant_id, :string
     field :object, :string

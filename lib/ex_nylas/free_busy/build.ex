@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Calendar.FreeBusy.Build do
+defmodule ExNylas.CalendarFreeBusy.Build do
   @moduledoc """
   Helper module for validating the free/busy request.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.Calendar.FreeBusy.Build do
   @derive {Jason.Encoder, only: [:emails, :start_time, :end_time]}
   @primary_key false
 
-  schema "free_busy" do
+  embedded_schema do
     field :emails, {:array, :string}
     field :start_time, :integer
     field :end_time, :integer

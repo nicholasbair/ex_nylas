@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Calendar do
+defmodule ExNylas.Calendar do
   @moduledoc """
   A struct representing a calendar.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.Calendar do
 
   @primary_key false
 
-  schema "calendar" do
+  embedded_schema do
     field :grant_id, :string
     field :description, :string
     field :id, :string

@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.CustomAuthentication.Build do
+defmodule ExNylas.CustomAuthentication.Build do
   @moduledoc """
   Helper module for validating a custom authentication request.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.CustomAuthentication.Build do
 
   @primary_key false
 
-  schema "custom_authentication" do
+  embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
     field :settings, :map
     field :state, :string

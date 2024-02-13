@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Event.Build do
   @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
   @primary_key false
 
-  schema "event" do
+  embedded_schema do
     field :title, :string
     field :description, :string
     field :location, :string

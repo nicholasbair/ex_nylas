@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Common.TrackingOptions do
+defmodule ExNylas.Common.TrackingOptions do
   @moduledoc """
   A struct representing tracking options for a message/draft.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.Common.TrackingOptions do
   @primary_key false
   @derive {Jason.Encoder, only: [:links, :opens, :thread_replies, :label]}
 
-  schema "tracking_options" do
+  embedded_schema do
     field :links, :boolean
     field :opens, :boolean
     field :thread_replies, :boolean

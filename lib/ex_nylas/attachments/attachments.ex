@@ -8,7 +8,7 @@ defmodule ExNylas.Attachments do
 
   use ExNylas,
     object: "attachments",
-    struct: ExNylas.Schema.Attachment,
+    struct: ExNylas.Attachment,
     readable_name: "attachment",
     include: [:find]
 

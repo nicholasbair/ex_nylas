@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Common.Error do
+defmodule ExNylas.Common.Error do
   @moduledoc """
   A struct representing an error from the Nylas API.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.Common.Error do
 
   @primary_key false
 
-  schema "error" do
+  embedded_schema do
     field :type, :string
     field :message, :string
     field :provider_error, :map

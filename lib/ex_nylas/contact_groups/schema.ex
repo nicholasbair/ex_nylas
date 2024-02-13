@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.ContactGroup do
+defmodule ExNylas.ContactGroup do
   @moduledoc """
   A struct representing a contact group.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.ContactGroup do
 
   @primary_key false
 
-  schema "contact_group" do
+  embedded_schema do
     field :grant_id, :string
     field :group_type, Ecto.Enum, values: ~w(system user other)a
     field :id, :string

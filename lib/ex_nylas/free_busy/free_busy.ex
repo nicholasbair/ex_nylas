@@ -1,14 +1,14 @@
-defmodule ExNylas.Calendars.FreeBusy do
+defmodule ExNylas.CalendarFreeBusy do
   @moduledoc """
   Interface for Nylas calendar free/busy.
   """
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Calendar.FreeBusy, as: FB
+  alias ExNylas.FreeBusy, as: FB
 
   use ExNylas,
-    struct: ExNylas.Schema.Calendar.FreeBusy,
+    struct: __MODULE__,
     readable_name: "calendar free/busy",
     include: [:build]
 

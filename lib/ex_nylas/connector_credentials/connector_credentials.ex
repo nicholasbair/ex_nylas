@@ -5,7 +5,7 @@ defmodule ExNylas.ConnectorCredentials do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.ConnectorCredential, as: Cred
+  alias ExNylas.ConnectorCredential, as: Cred
 
   @doc """
   List connector credentials.

@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Common.Build.Attachment do
+defmodule ExNylas.Common.Build.Attachment do
   @moduledoc """
   Helper module for validating an attachment in a draft/message before submitting to the Nylas API.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.Common.Build.Attachment do
   @primary_key false
   @derive {Jason.Encoder, only: [:id, :content, :content_type, :size, :filename, :is_inline]}
 
-  schema "attachment" do
+  embedded_schema do
     field :id, :string
     field :content, :string
     field :content_type, :string

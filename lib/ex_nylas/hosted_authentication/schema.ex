@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.HostedAuthentication do
+defmodule ExNylas.HostedAuthentication.Grant do
   @moduledoc """
   Structs for Nylas hosted authentication.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.HostedAuthentication do
 
   @primary_key false
 
-  schema "hosted_authentication" do
+  embedded_schema do
     field :access_token, :string
     field :expires_in, :integer
     field :id_token, :string

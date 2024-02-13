@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Application do
+defmodule ExNylas.Application do
   @moduledoc """
   A struct representing a Nylas application.
   """
@@ -6,14 +6,14 @@ defmodule ExNylas.Schema.Application do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias ExNylas.Schema.{
+  alias ExNylas.{
     ApplicationRedirect,
-    Util
+    Schema.Util
   }
 
   @primary_key false
 
-  schema "application" do
+  embedded_schema do
     field :application_id, :string
     field :organization_id, :string
     field :region, :string

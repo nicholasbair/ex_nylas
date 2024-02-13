@@ -5,7 +5,7 @@ defmodule ExNylas.Providers do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Provider
+  alias ExNylas.Provider
 
   @doc """
   Detect the provider for an email address.

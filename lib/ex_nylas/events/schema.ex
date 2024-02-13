@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Event do
 
   @primary_key false
 
-  schema "event" do
+  embedded_schema do
     field :id, :string
     field :object, :string
     field :grant_id, :string

@@ -5,7 +5,7 @@ defmodule ExNylas.CustomAuthentication do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Grant
+  alias ExNylas.Grant
 
   @doc """
   Connect a grant using custom authentication.

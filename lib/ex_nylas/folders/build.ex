@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Folder.Build do
+defmodule ExNylas.Folder.Build do
   @moduledoc """
   Helper module for validating a folder before creating/updating it.
   """
@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.Folder.Build do
   @derive {Jason.Encoder, only: [:name, :parent_id, :background_color, :text_color]}
   @primary_key false
 
-  schema "folder" do
+  embedded_schema do
     field :name, :string
     field :parent_id, :string
     field :background_color, :string

@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Folder do
+defmodule ExNylas.Folder do
   @moduledoc """
   A struct representing a folder.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.Folder do
 
   @primary_key false
 
-  schema "folder" do
+  embedded_schema do
     field :id, :string
     field :name, :string
     field :grant_id, :string

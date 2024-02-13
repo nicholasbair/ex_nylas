@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.HostedAuthentication.Build do
+defmodule ExNylas.HostedAuthentication.Options.Build do
   @moduledoc """
   Helper module to validate options for hosted authentication.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.HostedAuthentication.Build do
 
   @primary_key false
 
-  schema "options" do
+  embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap)a
     field :redirect_uri, :string
     field :response_type, :string

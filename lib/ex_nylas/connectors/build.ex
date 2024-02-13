@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Connector.Build do
+defmodule ExNylas.Connector.Build do
   @moduledoc """
   Helper module for validating a contact before creating/updating it.
   """
@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Connector.Build do
   @derive {Jason.Encoder, only: [:provider, :settings, :scope]}
   @primary_key false
 
-  schema "connector" do
+  embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar)a
     field :scope, {:array, :string}
 

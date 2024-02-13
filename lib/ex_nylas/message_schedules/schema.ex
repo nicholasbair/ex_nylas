@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.MessageSchedule do
+defmodule ExNylas.MessageSchedule do
   @moduledoc """
   A struct for Nylas message schedules.
   """
@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.MessageSchedule do
 
   @primary_key false
 
-  schema "message_schedule" do
+  embedded_schema do
     field :schedule_id, :string
     field :close_time, :integer
 

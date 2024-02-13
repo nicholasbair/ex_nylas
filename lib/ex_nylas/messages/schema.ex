@@ -1,9 +1,9 @@
-defmodule ExNylas.Schema.Message do
+defmodule ExNylas.Message do
   @moduledoc """
   A struct representing a message.
   """
 
-  alias ExNylas.Schema.{
+  alias ExNylas.{
     Attachment,
     Common.EmailParticipant,
     Common.MessageHeader
@@ -14,7 +14,7 @@ defmodule ExNylas.Schema.Message do
 
   @primary_key false
 
-  schema "message" do
+  embedded_schema do
     field :body, :string
     field :date, :integer
     field :folders, {:array, :string}

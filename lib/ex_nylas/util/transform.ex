@@ -3,7 +3,7 @@ defmodule ExNylas.Transform do
   Generic transform functions for data returned by the Nylas API
   """
 
-  alias ExNylas.Schema.Common.Response
+  alias ExNylas.Common.Response
   import Ecto.Changeset
   import ExNylas, only: [format_module_name: 1]
   require Logger
@@ -69,7 +69,10 @@ defmodule ExNylas.Transform do
   defp log_validations(%{valid?: true} = changeset, _model), do: changeset
 
   defp log_validations(changeset, model) do
-    Logger.warning("Validation error(s) while transforming #{format_module_name(model)}: #{inspect(changeset.errors)}")
+    Ecto.Changeset.traverse_errors(
+      changeset,
+      &Logger.warning("Validation error while transforming #{format_module_name(model)}: #{inspect(&1)}")
+    )
     changeset
   end
 

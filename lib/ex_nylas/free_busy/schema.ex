@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Calendar.FreeBusy do
+defmodule ExNylas.FreeBusy do
   @moduledoc """
   Structs for Nylas calendar free/busy.
   """
@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Calendar.FreeBusy do
 
   @primary_key false
 
-  schema "free_busy" do
+  embedded_schema do
     field :object, :string
     field :email, :string
 

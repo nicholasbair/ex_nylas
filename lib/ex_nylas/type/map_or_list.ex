@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Type.MapOrList do
+defmodule ExNylas.Type.MapOrList do
   @moduledoc """
   Custom Ecto type for map or list.
   """

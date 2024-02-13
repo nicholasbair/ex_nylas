@@ -5,7 +5,7 @@ defmodule ExNylas.Drafts do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Draft
+  alias ExNylas.Draft
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]

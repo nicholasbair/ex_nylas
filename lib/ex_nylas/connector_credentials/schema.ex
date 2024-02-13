@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.ConnectorCredential do
+defmodule ExNylas.ConnectorCredential do
   @moduledoc """
   Structs for Nylas connector credentials.
   """
@@ -8,7 +8,7 @@ defmodule ExNylas.Schema.ConnectorCredential do
 
   @primary_key false
 
-  schema "connector_credential" do
+  embedded_schema do
     field :id, :string
     field :name, :string
     field :credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a

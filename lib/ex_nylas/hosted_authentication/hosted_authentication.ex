@@ -5,10 +5,10 @@ defmodule ExNylas.HostedAuthentication do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.HostedAuthentication, as: HA
+  alias ExNylas.HostedAuthentication.Grant, as: HA
 
   use ExNylas,
-    struct: ExNylas.Schema.HostedAuthentication,
+    struct: ExNylas.HostedAuthentication.Options,
     readable_name: "hosted authentication",
     include: [:build]
 
