@@ -20,6 +20,6 @@ defmodule ExNylas.Attachment do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :grant_id])
+    |> validate_required([:id])
   end
 end

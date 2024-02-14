@@ -55,7 +55,7 @@ defmodule ExNylas.Transform do
 
   defp preprocess_data(model, data) when is_map(data) do
     model.__struct__
-    |> model.changeset(data)
+    |> model.changeset(remove_nil_values(data))
     |> log_validations(model)
     |> apply_changes()
   end
@@ -69,7 +69,7 @@ defmodule ExNylas.Transform do
   defp log_validations(%{valid?: true} = changeset, _model), do: changeset
 
   defp log_validations(changeset, model) do
-    Ecto.Changeset.traverse_errors(
+    traverse_errors(
       changeset,
       &Logger.warning("Validation error while transforming #{format_module_name(model)}: #{inspect(&1)}")
     )
@@ -77,4 +77,8 @@ defmodule ExNylas.Transform do
   end
 
   defp status_to_atom(status), do: Map.get(@status_codes, status, :unknown)
+
+  # Nylas sometimes returns a nil value for a field where a list is expected,
+  # which causes an Ecto validation error.
+  defp remove_nil_values(data), do: Map.reject(data, fn {_k, v} -> v == nil end)
 end
