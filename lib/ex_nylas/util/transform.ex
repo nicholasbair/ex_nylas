@@ -47,32 +47,32 @@ defmodule ExNylas.Transform do
 
   def transform(body, _status, _model, _use_common, false = _transform), do: body
 
-  defp preprocess_body(model, body, status) do
+  def preprocess_body(model, body, status) do
     body
     |> Map.put("data", preprocess_data(model, body["data"]))
     |> Map.put("status", status_to_atom(status))
   end
 
-  defp preprocess_data(model, data) when is_map(data) do
+  def preprocess_data(model, data) when is_map(data) do
     model.__struct__
     |> model.changeset(remove_nil_values(data))
     |> log_validations(model)
     |> apply_changes()
   end
 
-  defp preprocess_data(model, data) when is_list(data) do
+  def preprocess_data(model, data) when is_list(data) do
     Enum.map(data, &preprocess_data(model, &1))
   end
 
-  defp preprocess_data(_model, data), do: data
+  def preprocess_data(_model, data), do: data
 
   defp log_validations(%{valid?: true} = changeset, _model), do: changeset
 
   defp log_validations(changeset, model) do
-    traverse_errors(
-      changeset,
-      &Logger.warning("Validation error while transforming #{format_module_name(model)}: #{inspect(&1)}")
-    )
+    traverse_errors(changeset, fn _changeset, field, {msg, opts} ->
+      Logger.warning("Validation error while transforming #{format_module_name(model)}: #{field} #{msg} #{inspect(opts)}")
+    end)
+
     changeset
   end
 

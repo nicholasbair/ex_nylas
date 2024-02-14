@@ -17,13 +17,13 @@ defmodule ExNylas.Grant do
     field :user_agent, :string
     field :ip, :string
     field :state, :string
-    field :created_at, :string
-    field :updated_at, :string
+    field :created_at, :integer
+    field :updated_at, :integer
   end
 
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :provider, :scope, :grant_status, :scope])
+    |> validate_required([:id, :provider, :scope, :grant_status])
   end
 end

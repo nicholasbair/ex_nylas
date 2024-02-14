@@ -19,11 +19,11 @@ defmodule ExNylas.Contact do
     field :notes, :string
     field :office_location, :string
     field :object, :string
-    field :source, :string
+    field :source, Ecto.Enum, values: ~w(address_book domain inbox)a
 
     embeds_many :emails, Email, primary_key: false do
       field :email, :string
-      field :type, Ecto.Enum, values: ~w(work home other)a
+      field :type, :string
     end
 
     embeds_many :groups, ContactGroup, primary_key: false do

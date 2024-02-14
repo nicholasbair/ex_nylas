@@ -3,7 +3,7 @@ defmodule ExNylas.Schema.Thread do
   A struct representing a thread.
   """
 
-  alias ExNylas.Schema.Common.EmailParticipant
+  alias ExNylas.Common.EmailParticipant
 
   use Ecto.Schema
   import Ecto.Changeset
