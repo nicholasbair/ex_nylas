@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Thread do
+defmodule ExNylas.Thread do
   @moduledoc """
   A struct representing a thread.
   """
@@ -10,7 +10,7 @@ defmodule ExNylas.Schema.Thread do
 
   @primary_key false
 
-  schema "thread" do
+  embedded_schema do
     field :grant_id, :string
     field :id, :string
     field :object, :string

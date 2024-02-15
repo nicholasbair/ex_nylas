@@ -7,11 +7,11 @@ defmodule ExNylas.Connection do
   """
 
   defstruct [
-    client_id: nil,
-    client_secret: nil,
-    api_key: nil,
-    grant_id: nil,
-    access_token: nil,
+    :client_id,
+    :client_secret,
+    :api_key,
+    :grant_id,
+    :access_token,
     api_server: "https://api.us.nylas.com",
 
     # Pass in a list of options to be used when making the request, e.g. `receive_timeout`, `retry`.

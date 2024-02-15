@@ -11,7 +11,7 @@ defmodule ExNylas.ApplicationRedirect.Build do
 
   embedded_schema do
     field :url, :string
-    field :platform, Ecto.Enum, values: [:web, :desktop, :js, :ios, :android]
+    field :platform, Ecto.Enum, values: ~w(web desktop js ios android)a
   end
 
   def changeset(struct, params \\ %{}) do

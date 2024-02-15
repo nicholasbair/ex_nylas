@@ -47,24 +47,40 @@ defmodule ExNylas.Transform do
 
   def transform(body, _status, _model, _use_common, false = _transform), do: body
 
-  def preprocess_body(model, body, status) do
+  def transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
+    ~r/\{.*?\}/
+    |> Regex.scan(data)
+    |> List.first("{}")
+    |> Jason.decode!()
+    |> Map.get("suggestion")
+    |> fun.()
+
+    {:cont, {req, resp}}
+  end
+
+  def transfrom_stream({:data, data}, {req, resp}, _fun) do
+    resp = Map.put(resp, :body, data)
+    {:cont, {req, resp}}
+  end
+
+  defp preprocess_body(model, body, status) do
     body
     |> Map.put("data", preprocess_data(model, body["data"]))
     |> Map.put("status", status_to_atom(status))
   end
 
-  def preprocess_data(model, data) when is_map(data) do
+  defp preprocess_data(model, data) when is_map(data) do
     model.__struct__
     |> model.changeset(remove_nil_values(data))
     |> log_validations(model)
     |> apply_changes()
   end
 
-  def preprocess_data(model, data) when is_list(data) do
+  defp preprocess_data(model, data) when is_list(data) do
     Enum.map(data, &preprocess_data(model, &1))
   end
 
-  def preprocess_data(_model, data), do: data
+  defp preprocess_data(_model, data), do: data
 
   defp log_validations(%{valid?: true} = changeset, _model), do: changeset
 

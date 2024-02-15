@@ -125,24 +125,8 @@ defmodule ExNylas.API do
   # Handle streaming response for Smart Compose endpoints
   def handle_stream(fun) do
     fn {:data, data}, {req, resp} ->
-      transfrom_stream({:data, data}, {req, resp}, fun)
+      TF.transfrom_stream({:data, data}, {req, resp}, fun)
     end
-  end
-
-  defp transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
-    data
-    |> String.split("data: ")
-    |> Enum.filter(fn x -> x != "" end)
-    |> Enum.map(&Jason.decode!(&1))
-    |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
-    |> fun.()
-
-    {:cont, {req, resp}}
-  end
-
-  defp transfrom_stream({:data, data}, {req, resp}, _fun) do
-    resp = Map.put(resp, :body, data)
-    {:cont, {req, resp}}
   end
 
   # Telemetry ##############################################################
