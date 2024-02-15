@@ -3,6 +3,8 @@ defmodule ExNylas do
   Generate functions that follow the 'standard' path.
   """
 
+  import Ecto.Changeset
+
   alias ExNylas.API, as: API
   alias ExNylas.Connection, as: Conn
 
@@ -75,10 +77,15 @@ defmodule ExNylas do
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.build(payload)
       """
       def unquote(config.name)(payload) do
-        res = apply(__MODULE__, "#{unquote(config.name)}!" |> String.to_atom(), [payload])
-        {:ok, res}
-        rescue
-          e in _ -> {:error, e}
+        model =
+          unquote(struct_name)
+          |> to_string()
+          |> Kernel.<>(".Build")
+          |> String.to_atom()
+
+        model.__struct__
+        |> model.changeset(payload)
+        |> apply_action(:build)
       end
 
       @doc """
@@ -89,11 +96,15 @@ defmodule ExNylas do
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.build(payload)!
       """
       def unquote("#{config.name}!" |> String.to_atom())(payload) do
-        unquote(struct_name)
-        |> to_string()
-        |> Kernel.<>(".Build")
-        |> String.to_atom()
-        |> struct!(payload)
+        model =
+          unquote(struct_name)
+          |> to_string()
+          |> Kernel.<>(".Build")
+          |> String.to_atom()
+
+        model.__struct__
+        |> model.changeset(payload)
+        |> apply_action!(:build)
       end
     end
   end
@@ -114,11 +125,11 @@ defmodule ExNylas do
             url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
             auth: ExNylas.generate_auth(conn, unquote(header_type)),
             headers: API.base_headers(),
-            params: Map.put(params, :limit, 1),
-            decode_body: false
+            params: Map.put(params, :limit, 1)
           )
+          |> API.maybe_attach_telemetry(conn)
           |> Req.request(conn.options)
-          |> API.handle_response(apply(unquote(struct_name), :as_list, []))
+          |> API.handle_response(unquote(struct_name))
 
         case res do
           {:ok, val} -> {:ok, %{val | data: Enum.at(val.data, 0)}}
@@ -157,11 +168,11 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(),
-          params: params,
-          decode_body: false
+          params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(apply(unquote(struct_name), :as_struct, []))
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -195,11 +206,11 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(),
-          params: params,
-          decode_body: false
+          params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(apply(unquote(struct_name), :as_list, []))
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -233,12 +244,12 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(["content-type": "application/json"]),
-          body: API.process_request_body(changeset),
-          decode_body: false,
+          json: changeset,
           params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(apply(unquote(struct_name), :as_struct, []))
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -272,12 +283,12 @@ defmodule ExNylas do
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
           auth: ExNylas.generate_auth(conn, unquote(header_type)),
           headers: API.base_headers(["content-type": "application/json"]),
-          body: API.process_request_body(body),
-          decode_body: false,
+          json: body,
           params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(apply(unquote(struct_name), :as_struct, []))
+        |> API.handle_response(unquote(struct_name))
       end
 
       @doc """

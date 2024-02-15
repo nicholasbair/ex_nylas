@@ -3,6 +3,11 @@ defmodule ExNylas.Transform do
   Generic transform functions for data returned by the Nylas API
   """
 
+  alias ExNylas.Common.Response
+  import Ecto.Changeset
+  import ExNylas, only: [format_module_name: 1]
+  require Logger
+
   @status_codes %{
     200 => :ok,
     201 => :created,
@@ -30,21 +35,66 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
-  def transform(object_or_objects, status, struct, true = _decode?) do
-    object_or_objects
-    |> Poison.decode(%{as: struct})
-    |> insert_status(status)
+  def transform(body, status, model, true = _use_common, true = _transform) do
+    %Response{}
+    |> Response.changeset(preprocess_body(model, body, status))
+    |> apply_changes()
   end
 
-  def transform(object_or_objects, _status, _struct, false = _decode?), do: object_or_objects
-
-  defp insert_status({:ok, %ExNylas.Model.Common.Response{} = response}, status) do
-    {:ok, Map.put(response, :status, status_to_atom(status))}
+  def transform(body, _status, model, false = _use_common, true = _transform) do
+    preprocess_data(model, body)
   end
 
-  defp insert_status(response, _status), do: response
+  def transform(body, _status, _model, _use_common, false = _transform), do: body
 
-  defp status_to_atom(status) do
-    Map.get(@status_codes, status, :unknown)
+  def transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
+    ~r/\{.*?\}/
+    |> Regex.scan(data)
+    |> List.first("{}")
+    |> Jason.decode!()
+    |> Map.get("suggestion")
+    |> fun.()
+
+    {:cont, {req, resp}}
   end
+
+  def transfrom_stream({:data, data}, {req, resp}, _fun) do
+    resp = Map.put(resp, :body, data)
+    {:cont, {req, resp}}
+  end
+
+  defp preprocess_body(model, body, status) do
+    body
+    |> Map.put("data", preprocess_data(model, body["data"]))
+    |> Map.put("status", status_to_atom(status))
+  end
+
+  defp preprocess_data(model, data) when is_map(data) do
+    model.__struct__
+    |> model.changeset(remove_nil_values(data))
+    |> log_validations(model)
+    |> apply_changes()
+  end
+
+  defp preprocess_data(model, data) when is_list(data) do
+    Enum.map(data, &preprocess_data(model, &1))
+  end
+
+  defp preprocess_data(_model, data), do: data
+
+  defp log_validations(%{valid?: true} = changeset, _model), do: changeset
+
+  defp log_validations(changeset, model) do
+    traverse_errors(changeset, fn _changeset, field, {msg, opts} ->
+      Logger.warning("Validation error while transforming #{format_module_name(model)}: #{field} #{msg} #{inspect(opts)}")
+    end)
+
+    changeset
+  end
+
+  defp status_to_atom(status), do: Map.get(@status_codes, status, :unknown)
+
+  # Nylas sometimes returns a nil value for a field where a list is expected,
+  # which causes an Ecto validation error.
+  defp remove_nil_values(data), do: Map.reject(data, fn {_k, v} -> v == nil end)
 end

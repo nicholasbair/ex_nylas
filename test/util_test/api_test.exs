@@ -54,21 +54,6 @@ defmodule ExNylasTest.API do
     end
   end
 
-  describe "process_request_body/1" do
-    test "encodes the body if it is a map" do
-      assert ExNylas.API.process_request_body(%{test: "test"}) == "{\"test\":\"test\"}"
-    end
-
-    test "encodes the body if it is a struct" do
-      res = ExNylas.API.process_request_body(%ExNylas.Model.Folder.Build{name: "test"})
-      assert !String.contains?(res, "__struct__")
-    end
-
-    test "does not encode data that isn't a map or struct" do
-      assert ExNylas.API.process_request_body([1, 2, 3, 4]) == [1, 2, 3, 4]
-    end
-  end
-
   describe "build_multipart/2 with attachments" do
     test "returns a stream for the body" do
       {stream, _, _} = ExNylas.API.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
@@ -121,19 +106,19 @@ defmodule ExNylasTest.API do
     test "returns common response struct if use_common_response is true" do
       res = %{
         status: 200,
-        body: "{\"request_id\":\"1234\",\"data\":{\"grant_id\":\"abcd\",\"name\":\"test\",\"id\":\"abcd\"}}",
+        body: %{"request_id" => "1234", "data" => %{"grant_id" => "abcd", "name" => "test", "id" => "abcd"}},
         headers: %{"content-type" => ["application/json"]}
       }
-      assert match?({:ok, %ExNylas.Model.Common.Response{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Model.Folder.as_struct(), true))
+      assert match?({:ok, %ExNylas.Common.Response{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder, true))
     end
 
     test "does not return common response struct if use_common_response is false" do
       res = %{
         status: 200,
-        body: "{\"request_id\":\"1234\",\"data\":{\"grant_id\":\"abcd\",\"name\":\"test\",\"id\":\"abcd\"}}",
+        body: %{"grant_id" => "abcd", "name" => "test", "id" => "abcd"},
         headers: %{"content-type" => ["application/json"]}
       }
-      assert match?({:ok, %ExNylas.Model.Folder{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Model.Folder.as_struct(), false))
+      assert match?({:ok, %ExNylas.Folder{}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder, false))
     end
 
     test "only decodes JSON responses" do
@@ -144,10 +129,10 @@ defmodule ExNylasTest.API do
     test "transforms into the requested struct" do
       res = %{
         status: 200,
-        body: "{\"request_id\":\"1234\",\"data\":{\"grant_id\":\"abcd\",\"name\":\"test\",\"id\":\"abcd\"}}",
+        body: %{"request_id" => "1234", "data" => %{"grant_id" => "abcd", "name" => "test", "id" => "abcd"}},
         headers: %{"content-type" => ["application/json"]}
       }
-      assert match?({:ok, %ExNylas.Model.Common.Response{data: %ExNylas.Model.Folder{}}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Model.Folder.as_struct()))
+      assert match?({:ok, %ExNylas.Common.Response{data: %ExNylas.Folder{}}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder))
     end
   end
 

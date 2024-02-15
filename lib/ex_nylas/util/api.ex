@@ -4,7 +4,6 @@ defmodule ExNylas.API do
   """
 
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Model.Common.Response
   alias ExNylas.Transform, as: TF
 
   # Requests ###################################################################
@@ -46,21 +45,11 @@ defmodule ExNylas.API do
 
   def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
-  def process_request_body(body) when is_struct(body) do
-    body
-    |> Map.from_struct()
-    |> Poison.encode!()
-  end
-
-  def process_request_body(body) when is_map(body), do: Poison.encode!(body)
-
-  def process_request_body(body), do: body
-
   # Multipart - used by drafts, messages
   def build_multipart(obj, attachments) do
     multipart =
       Multipart.new()
-      |> Multipart.add_part(Multipart.Part.text_field(Poison.encode!(obj), :message))
+      |> Multipart.add_part(Multipart.Part.text_field(Jason.encode!(obj), :message))
       |> add_attachments(attachments)
 
     {
@@ -100,65 +89,51 @@ defmodule ExNylas.API do
 
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     case format_response(res) do
-      {:ok, body, status, true} ->
-        TF.transform(body, status, to_struct(transform_to, use_common_response), true)
+      {:ok, body, status} ->
+        {:ok, TF.transform(body, status, transform_to, use_common_response, transform?(res))}
 
-      {:ok, body, _status, false} ->
-        {:ok, body}
+      {:error, body, status} ->
+        {:error, TF.transform(body, status, transform_to, use_common_response, transform?(res))}
 
-      {:error, body, status, true} ->
-        # transform returns ok tuple if transforming to struct succeeds, even if its an error struct
-        {_, val} = TF.transform(body, status, to_struct(transform_to, use_common_response), true)
-        {:error, val}
-
-      {:error, body, false} ->
-        {:error, body}
+      {:error, reason} ->
+        {:error, reason}
 
       val -> val
     end
   end
 
-  defp to_struct(transform_to, true = _use_common_response), do: Response.as_struct(transform_to)
-  defp to_struct(transform_to, false = _use_common_response), do: transform_to
-
-  defp format_response({:ok, %{status: status, body: body} = res}) when status in @success_codes do
-    {:ok, body, status, should_decode?(res)}
+  defp format_response({:ok, %{status: status, body: body}}) when status in @success_codes do
+    {:ok, body, status}
   end
 
-  defp format_response({:ok, %{status: status, body: body} = res}) do
-    {:error, body, status, should_decode?(res)}
+  defp format_response({:ok, %{status: status, body: body}}) do
+    {:error, body, status}
   end
 
   defp format_response({:error, %{reason: reason}}) do
-    {:error, reason, false}
+    {:error, reason}
   end
 
   defp format_response(res), do: res
 
-  defp should_decode?(%{headers: %{"content-type" => ["application/json" | _]}}), do: true
-  defp should_decode?(%{headers: %{"content-type" => ["application/json; charset=utf-8" | _]}}), do: true
-  defp should_decode?(_), do: false
+  defp transform?({_, %{headers: %{"content-type" => content_type}}}) do
+    Enum.any?(content_type, &String.contains?(&1, "application/json"))
+  end
+
+  defp transform?(_), do: false
 
   # Handle streaming response for Smart Compose endpoints
   def handle_stream(fun) do
     fn {:data, data}, {req, resp} ->
-      transfrom_stream({:data, data}, {req, resp}, fun)
+      TF.transfrom_stream({:data, data}, {req, resp}, fun)
     end
   end
 
-  defp transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
-    data
-    |> String.split("data: ")
-    |> Enum.filter(fn x -> x != "" end)
-    |> Enum.map(&Poison.decode!(&1))
-    |> Enum.reduce("", fn x, acc -> acc <> Map.get(x, "suggestion") end)
-    |> fun.()
-
-    {:cont, {req, resp}}
+  # Telemetry ##############################################################
+  def maybe_attach_telemetry(req, %{telemetry: true} = _conn) do
+    ReqTelemetry.attach_default_logger()
+    ReqTelemetry.attach(req)
   end
-
-  defp transfrom_stream({:data, data}, {req, resp}, _fun) do
-    resp = Map.put(resp, :body, data)
-    {:cont, {req, resp}}
-  end
+  def maybe_attach_telemetry(req, %{telemetry: false} = _conn), do: req
+  def maybe_attach_telemetry(req, _), do: req
 end
