@@ -21,6 +21,7 @@ defmodule ExNylas.Providers do
       headers: API.base_headers(),
       params: params
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Provider)
   end

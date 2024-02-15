@@ -20,6 +20,7 @@ defmodule ExNylas.ConnectorCredentials do
       headers: API.base_headers(),
       params: params
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
     |> API.handle_response(Cred)
   end
@@ -50,6 +51,7 @@ defmodule ExNylas.ConnectorCredentials do
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Cred)
   end
@@ -79,6 +81,7 @@ defmodule ExNylas.ConnectorCredentials do
       auth: API.auth_bearer(conn),
       headers: API.base_headers()
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
     |> API.handle_response(Cred)
   end
@@ -108,6 +111,7 @@ defmodule ExNylas.ConnectorCredentials do
       auth: API.auth_bearer(conn),
       headers: API.base_headers()
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.delete(conn.options)
     |> API.handle_response()
   end
@@ -139,6 +143,7 @@ defmodule ExNylas.ConnectorCredentials do
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
     |> API.handle_response(Cred)
   end

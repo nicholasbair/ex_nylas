@@ -40,7 +40,8 @@ defmodule ExNylas.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:bypass, "~> 2.1", only: :test},
-      {:ecto, "~> 3.11"}
+      {:ecto, "~> 3.11"},
+      {:req_telemetry, "~> 0.0.4"}
     ]
   end
 end

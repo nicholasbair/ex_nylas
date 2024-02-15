@@ -17,6 +17,7 @@ defmodule ExNylas.Connection do
     # Pass in a list of options to be used when making the request, e.g. `receive_timeout`, `retry`.
     # These options are passed directly to the `Req` library.
     # See https://hexdocs.pm/req/Req.html#new/1 for more information.
-    options: []
+    options: [],
+    telemetry: false
   ]
 end

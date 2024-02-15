@@ -26,6 +26,7 @@ defmodule ExNylas.CalendarFreeBusy do
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(FB)
   end

@@ -32,6 +32,7 @@ defmodule ExNylas.Messages do
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Message)
   end

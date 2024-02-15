@@ -27,6 +27,7 @@ defmodule ExNylas.Attachments do
       params: %{message_id: message_id},
       decode_body: false
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
     |> API.handle_response()
   end

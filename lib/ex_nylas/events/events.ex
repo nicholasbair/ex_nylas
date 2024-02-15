@@ -28,6 +28,7 @@ defmodule ExNylas.Events do
       json: %{status: status, calendar_id: calendar_id},
       params: %{calendar_id: calendar_id}
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Event)
   end

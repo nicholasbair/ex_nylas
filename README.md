@@ -35,7 +35,8 @@ conn =
     grant_id: "1234",
     access_token: "1234", # Typically omited if using `grant_id` + `api_key`
     api_server: "https://api.us.nylas.com",
-    options: [] # Passed to Req (HTTP client)
+    options: [], # Passed to Req (HTTP client)
+    telemetry: true # Enables telemetry and the default telemetry logger (defaults to `false`)
   }
 ```
 

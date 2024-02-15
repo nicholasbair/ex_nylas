@@ -84,6 +84,7 @@ defmodule ExNylas.HostedAuthentication do
         redirect_uri: redirect_uri
       }
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(HA, false)
   end

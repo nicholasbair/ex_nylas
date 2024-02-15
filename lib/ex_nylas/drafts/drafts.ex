@@ -32,6 +32,7 @@ defmodule ExNylas.Drafts do
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Draft)
   end
@@ -66,6 +67,7 @@ defmodule ExNylas.Drafts do
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
     |> API.handle_response(Draft)
   end
@@ -104,6 +106,7 @@ defmodule ExNylas.Drafts do
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
     |> API.handle_response(Draft)
   end
@@ -137,6 +140,7 @@ defmodule ExNylas.Drafts do
       auth: API.auth_bearer(conn),
       headers: API.base_headers()
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Draft)
   end

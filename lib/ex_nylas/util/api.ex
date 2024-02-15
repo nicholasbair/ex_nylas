@@ -144,4 +144,12 @@ defmodule ExNylas.API do
     resp = Map.put(resp, :body, data)
     {:cont, {req, resp}}
   end
+
+  # Telemetry ##############################################################
+  def maybe_attach_telemetry(req, %{telemetry: true} = _conn) do
+    ReqTelemetry.attach_default_logger()
+    ReqTelemetry.attach(req)
+  end
+  def maybe_attach_telemetry(req, %{telemetry: false} = _conn), do: req
+  def maybe_attach_telemetry(req, _), do: req
 end

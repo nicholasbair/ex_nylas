@@ -27,6 +27,7 @@ defmodule ExNylas.Webhooks do
       auth: API.auth_bearer(conn),
       headers: API.base_headers()
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(Webhook)
   end
@@ -59,6 +60,7 @@ defmodule ExNylas.Webhooks do
       headers: API.base_headers(),
       json: %{trigger_type: trigger}
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response()
   end
@@ -91,6 +93,7 @@ defmodule ExNylas.Webhooks do
       headers: API.base_headers(),
       json: %{trigger_type: trigger, webhook_url: webhook_url}
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response()
   end

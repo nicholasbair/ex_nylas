@@ -127,6 +127,7 @@ defmodule ExNylas do
             headers: API.base_headers(),
             params: Map.put(params, :limit, 1)
           )
+          |> API.maybe_attach_telemetry(conn)
           |> Req.request(conn.options)
           |> API.handle_response(unquote(struct_name))
 
@@ -169,6 +170,7 @@ defmodule ExNylas do
           headers: API.base_headers(),
           params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
         |> API.handle_response(unquote(struct_name))
       end
@@ -206,6 +208,7 @@ defmodule ExNylas do
           headers: API.base_headers(),
           params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
         |> API.handle_response(unquote(struct_name))
       end
@@ -244,6 +247,7 @@ defmodule ExNylas do
           json: changeset,
           params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
         |> API.handle_response(unquote(struct_name))
       end
@@ -282,6 +286,7 @@ defmodule ExNylas do
           json: body,
           params: params
         )
+        |> API.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
         |> API.handle_response(unquote(struct_name))
       end

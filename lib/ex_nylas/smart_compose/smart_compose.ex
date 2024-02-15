@@ -21,6 +21,7 @@ defmodule ExNylas.SmartCompose do
       headers: API.base_headers(),
       json: %{prompt: prompt}
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(SC)
   end
@@ -53,6 +54,7 @@ defmodule ExNylas.SmartCompose do
       headers: API.base_headers(),
       json: %{prompt: prompt}
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response(SC)
   end
@@ -92,6 +94,7 @@ defmodule ExNylas.SmartCompose do
       into: API.handle_stream(stream_to),
       compressed: false
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response()
   end
@@ -117,6 +120,7 @@ defmodule ExNylas.SmartCompose do
       into: API.handle_stream(stream_to),
       compressed: false
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> API.handle_response()
   end

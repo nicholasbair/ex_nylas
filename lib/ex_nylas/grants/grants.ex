@@ -28,6 +28,7 @@ defmodule ExNylas.Grants do
       auth: API.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"])
     )
+    |> API.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
     |> API.handle_response(Grant)
   end
