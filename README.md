@@ -73,7 +73,7 @@ message = ExNylas.Messages.first!(conn)
   |> ExNylas.Threads.list(%{limit: 5})
 ```
 
-4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` will accept either a map or a struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition.  For example:
+4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` will accept either a map or a struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition and in the case of an error, the Ecto changeset is returned.  For example:
 ```elixir
 {:ok, folder} = ExNylas.Folders.build(%{name: "Hello World"})
 
@@ -85,7 +85,7 @@ ExNylas.Folders.build(%{display_name: "Hello Error"})
    action: :build,
    changes: %{},
    errors: [name: {"can't be blank", [validation: :required]}],
-   data: #ExNylas.Schema.Folder.Build<>,
+   data: #ExNylas.Folder.Build<>,
    valid?: false
  >}
 ```
