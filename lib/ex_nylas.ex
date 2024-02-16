@@ -47,7 +47,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.all(conn, params)
       """
-      def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, params \\ []) do
         ExNylas.Paging.all(conn, __MODULE__, unquote(use_cursor_paging), params)
       end
 
@@ -58,7 +58,7 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.all!(conn, params)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -118,14 +118,14 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.first(conn, params)
       """
-      def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, params \\ []) do
         res =
           Req.new(
             method: :get,
             url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
             auth: ExNylas.generate_auth(conn, unquote(header_type)),
             headers: API.base_headers(),
-            params: Map.put(params, :limit, 1)
+            params: put_in(params, [:limit], 1)
           )
           |> API.maybe_attach_telemetry(conn)
           |> Req.request(conn.options)
@@ -144,7 +144,7 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.first!(conn, params)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -162,7 +162,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, id, params)
       """
-      def unquote(config.name)(%Conn{} = conn, id, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, id, params \\ []) do
         Req.new(
           method: unquote(method),
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
@@ -182,7 +182,7 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, id, params)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, params \\ %{}) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, params \\ []) do
         case unquote(config.name)(conn, id, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -200,7 +200,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, params)
       """
-      def unquote(config.name)(%Conn{} = conn, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, params \\ []) do
         Req.new(
           method: :get,
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
@@ -220,7 +220,7 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, params)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ %{}) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -238,7 +238,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, id, body, params)
       """
-      def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, id, changeset, params \\ []) do
         Req.new(
           method: :patch,
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)) <> "/#{id}",
@@ -259,7 +259,7 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, id, body, params)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params \\ %{}) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params \\ []) do
         case unquote(config.name)(conn, id, changeset, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -277,7 +277,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, body, params)
       """
-      def unquote(config.name)(%Conn{} = conn, body, params \\ %{}) do
+      def unquote(config.name)(%Conn{} = conn, body, params \\ []) do
         Req.new(
           method: :post,
           url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
@@ -298,7 +298,7 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, body, params)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params \\ %{}) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params \\ []) do
         case unquote(config.name)(conn, body, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason

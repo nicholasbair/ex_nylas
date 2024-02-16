@@ -14,7 +14,7 @@ defmodule ExNylas.Providers do
 
       iex> {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
-  def detect(%Conn{} = conn, params \\ %{}) do
+  def detect(%Conn{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",
       auth: API.auth_bearer(conn),
@@ -33,7 +33,7 @@ defmodule ExNylas.Providers do
 
       iex> detect = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
-  def detect!(%Conn{} = conn, params \\ %{}) do
+  def detect!(%Conn{} = conn, params \\ []) do
     case detect(conn, params) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
