@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Event do
+defmodule ExNylas.Event do
   @moduledoc """
   A struct representing a event.
   """

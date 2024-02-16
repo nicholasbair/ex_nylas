@@ -16,7 +16,7 @@ defmodule ExNylas.Application do
   embedded_schema do
     field :application_id, :string
     field :organization_id, :string
-    field :region, :string
+    field :region, Ecto.Enum, values: ~w(us eu)a
     field :created_at, :integer
     field :updated_at, :integer
     field :environment, Ecto.Enum, values: ~w(production staging)a
