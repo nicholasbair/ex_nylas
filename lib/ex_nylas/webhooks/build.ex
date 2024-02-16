@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Webhook.Build do
+defmodule ExNylas.Webhook.Build do
   @moduledoc """
   Helper module for validating a webhook before creating/updating it.
   """

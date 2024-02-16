@@ -5,11 +5,11 @@ defmodule ExNylas.Webhooks do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Schema.Webhook
+  alias ExNylas.Webhook
 
   use ExNylas,
     object: "webhooks",
-    struct: ExNylas.Schema.Webhook,
+    struct: ExNylas.Webhook,
     readable_name: "webhook",
     use_admin_url: true,
     include: [:list, :first, :find, :delete, :build, :update, :create, :all]
