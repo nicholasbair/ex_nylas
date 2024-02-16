@@ -7,6 +7,7 @@ defmodule ExNylas.CustomAuthentication.Build do
   import Ecto.Changeset
   alias ExNylas.Schema.Util
 
+  @derive {Jason.Encoder, only: [:provider, :state, :settings]}
   @primary_key false
 
   embedded_schema do
@@ -14,6 +15,8 @@ defmodule ExNylas.CustomAuthentication.Build do
     field :state, :string
 
     embeds_one :settings, Settings, primary_key: false do
+      @derive {Jason.Encoder, only: [:refresh_token, :credential_id, :email_address, :imap_username, :imap_password, :imap_host, :imap_port, :smtp_host, :smtp_port]}
+
       field :refresh_token, :string
       field :credential_id, :string
       field :email_address, :string
