@@ -11,7 +11,7 @@ defmodule ExNylas.Grants do
     object: "grants",
     struct: ExNylas.Grant,
     readable_name: "grant",
-    include: [:list, :find, :delete, :update, :all],
+    include: [:list, :first, :find, :delete, :update, :all],
     use_admin_url: true,
     use_cursor_paging: false
 
