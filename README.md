@@ -66,11 +66,11 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 message = ExNylas.Messages.first!(conn)
 ```
 
-3. Queries and filters are generally expected as a map:
+3. Where supported, queries and filters can be passed as a map or keyword list:
 ```elixir
 {:ok, threads} = 
   %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
-  |> ExNylas.Threads.list(%{limit: 5})
+  |> ExNylas.Threads.list(limit: 5)
 ```
 
 4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` will accept either a map or a struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition and in the case of an error, the Ecto changeset is returned.  For example:
@@ -92,12 +92,12 @@ ExNylas.Folders.build(%{display_name: "Hello Error"})
 
 5. [Ecto](https://hex.pm/packages/ecto) is also used when transforming the API response from Nylas into structs.  Any validation errors are logged, but errors are not returned/raised in order to make to SDK resilient to changes to the API contract.
 
-6. Use `all/2` to fetch all of a given object and let the SDK page for you:
+6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned.  Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results.
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
-{:ok, all_messages} = ExNylas.Messages.all(conn, %{to: "hello@example.com"})
+{:ok, all_messages} = ExNylas.Messages.all(conn, to: "hello@example.com")
 
 # Or handle paging on your own
-{:ok, first_page} = ExNylas.Messages.list(conn, %{limit: 50})
+{:ok, first_page} = ExNylas.Messages.list(conn, limit: 50)
 ```
 

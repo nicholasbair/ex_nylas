@@ -13,7 +13,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, provider)
   """
-  def list(%Conn{} = conn, provider, params \\ %{}) do
+  def list(%Conn{} = conn, provider, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
       auth: API.auth_bearer(conn),
@@ -31,7 +31,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       creds = ExNylas.ConnectorCredentials.list!(conn, provider)
   """
-  def list!(%Conn{} = conn, provider, params \\ %{}) do
+  def list!(%Conn{} = conn, provider, params \\ []) do
     case list(conn, provider, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason

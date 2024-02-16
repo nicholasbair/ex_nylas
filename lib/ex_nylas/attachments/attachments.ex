@@ -13,18 +13,18 @@ defmodule ExNylas.Attachments do
     include: [:find]
 
   @doc """
-  Download an attachment.
+  Download an attachment.  Message ID is required.
 
   ## Examples
 
-      iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id)
+      iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id: message_id)
   """
-  def download(%Conn{} = conn, id, message_id) do
+  def download(%Conn{} = conn, id, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/attachments/#{id}/download",
       auth: API.auth_bearer(conn),
       headers: API.base_headers([accept: "application/octet-stream"]),
-      params: %{message_id: message_id},
+      params: params,
       decode_body: false
     )
     |> API.maybe_attach_telemetry(conn)
@@ -33,14 +33,14 @@ defmodule ExNylas.Attachments do
   end
 
   @doc """
-  Download an attachment.
+  Download an attachment.  Message ID is required.
 
   ## Examples
 
-      iex> result = ExNylas.Attachments.download!(conn, id, message_id)
+      iex> result = ExNylas.Attachments.download!(conn, id, message_id: message_id)
   """
-  def download!(%Conn{} = conn, id, message_id) do
-    case download(conn, id, message_id) do
+  def download!(%Conn{} = conn, id, params \\ []) do
+    case download(conn, id, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
