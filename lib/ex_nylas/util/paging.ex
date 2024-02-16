@@ -5,7 +5,7 @@ defmodule ExNylas.Paging do
 
   alias ExNylas.Connection, as: Conn
 
-  @limit 100
+  @limit 50
 
   def all(conn, resource, use_cursor_paging, params \\ [])
   def all(%Conn{} = conn, resource, true = _use_cursor_paging, params), do: page_with_cursor(conn, resource, params)
