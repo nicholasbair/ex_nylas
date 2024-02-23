@@ -1,6 +1,6 @@
 # ExNylas
 
-Unofficial Elixir bindings for the Nylas API.
+Unofficial Elixir SDK for the Nylas API.
 
 ## Notes
 
@@ -33,7 +33,7 @@ conn =
     client_secret: "1234",
     api_key: "1234",
     grant_id: "1234",
-    access_token: "1234", # Typically omited if using `grant_id` + `api_key`
+    access_token: "1234", # Omited if using `grant_id` + `api_key`
     api_server: "https://api.us.nylas.com",
     options: [], # Passed to Req (HTTP client)
     telemetry: true # Enables telemetry and the default telemetry logger (defaults to `false`)
@@ -47,7 +47,7 @@ Options from `ExNylas.Connection` are passed directly to [Req](https://hexdocs.p
   cache: false,
   compress_body: false,
   compressed: true, # ask server to return compressed responses
-  receive_timeout: 30_000 # socket receive timeout,
+  receive_timeout: 15_000 # socket receive timeout,
   pool_timeout: 5000 # pool checkout timeout,
   redact_auth: true
 ]
@@ -92,7 +92,7 @@ ExNylas.Folders.build(%{display_name: "Hello Error"})
 
 5. [Ecto](https://hex.pm/packages/ecto) is also used when transforming the API response from Nylas into structs.  Any validation errors are logged, but errors are not returned/raised in order to make to SDK resilient to changes to the API contract.
 
-6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned.  Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results.
+6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned.  Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results and/or making this an async operation.
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 {:ok, all_messages} = ExNylas.Messages.all(conn, to: "hello@example.com")
