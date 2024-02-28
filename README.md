@@ -93,9 +93,14 @@ ExNylas.Folders.build(%{display_name: "Hello Error"})
 5. [Ecto](https://hex.pm/packages/ecto) is also used when transforming the API response from Nylas into structs.  Any validation errors are logged, but errors are not returned/raised in order to make to SDK resilient to changes to the API contract.
 
 6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned.  Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results and/or making this an async operation.
+
+Optionally include:
+- `delay` to throttle requests and avoid 429s
+- `send_to` to pass each page to your single arity function instead of accumulating all of the result set in memory
+
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
-{:ok, all_messages} = ExNylas.Messages.all(conn, to: "hello@example.com")
+{:ok, all_messages} = ExNylas.Messages.all(conn, send_to: &IO.inspect/1, delay: 3_000, query: [any_email: "nick@example.com", fields: "include_headers"])
 
 # Or handle paging on your own
 {:ok, first_page} = ExNylas.Messages.list(conn, limit: 50)
