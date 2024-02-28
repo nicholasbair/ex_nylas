@@ -43,23 +43,33 @@ defmodule ExNylas do
       @doc """
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
-      ## Examples
+      The second argument can be a keyword list of options + query parameters to pass to the Nylas API (map is also supported).  Options supports:
+      - `:send_to` - a single arity function to send each page of results (default is nil, e.g. results will be accumulated and returned as a list)
+      - `:delay` - the number of milliseconds to wait between each page request (default is 0)
+      - `:query` - a keyword list or map of query parameters to pass to the Nylas API (default is an empty list)
 
-          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.all(conn, params)
+      ## Examples
+          iex> opts = [send_to: &IO.inspect/1, delay: 3_000, query: [key: "value"]]
+          iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.all(conn, opts)
       """
-      def unquote(config.name)(%Conn{} = conn, params \\ []) do
-        ExNylas.Paging.all(conn, __MODULE__, unquote(use_cursor_paging), params)
+      def unquote(config.name)(%Conn{} = conn, opts \\ []) do
+        ExNylas.Paging.all(conn, __MODULE__, unquote(use_cursor_paging), opts)
       end
 
       @doc """
       Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
 
-      ## Examples
+      The second argument can be a keyword list of options + query parameters to pass to the Nylas API (map is also supported).  Options supports:
+      - `:send_to` - a single arity function to send each page of results (default is nil, e.g. results will be accumulated and returned as a list)
+      - `:delay` - the number of milliseconds to wait between each page request (default is 0)
+      - `:query` - a keyword list or map of query parameters to pass to the Nylas API (default is an empty list)
 
-          iex> result = #{ExNylas.format_module_name(__MODULE__)}.all!(conn, params)
+      ## Examples
+          iex> opts = [send_to: &IO.inspect/1, delay: 3_000, query: [key: "value"]]
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.all!(conn, opts)
       """
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ []) do
-        case unquote(config.name)(conn, params) do
+      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, opts \\ []) do
+        case unquote(config.name)(conn, opts) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
         end
