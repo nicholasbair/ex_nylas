@@ -4,6 +4,7 @@ defmodule ExNylas.Attachments do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
 
   use ExNylas,
@@ -19,6 +20,7 @@ defmodule ExNylas.Attachments do
 
       iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id: message_id)
   """
+  @spec download(Conn.t(), String.t(), Keyword.t() | list()) :: {:ok, String.t()} | {:error, Response.t()}
   def download(%Conn{} = conn, id, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/attachments/#{id}/download",
@@ -39,6 +41,7 @@ defmodule ExNylas.Attachments do
 
       iex> result = ExNylas.Attachments.download!(conn, id, message_id: message_id)
   """
+  @spec download!(Conn.t(), String.t(), Keyword.t() | list()) :: String.t()
   def download!(%Conn{} = conn, id, params \\ []) do
     case download(conn, id, params) do
       {:ok, res} -> res

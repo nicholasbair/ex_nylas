@@ -4,6 +4,7 @@ defmodule ExNylas.Providers do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Provider
 
@@ -14,6 +15,7 @@ defmodule ExNylas.Providers do
 
       iex> {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
+  @spec detect(Conn.t(), Keyword.t() | list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def detect(%Conn{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",
@@ -33,6 +35,7 @@ defmodule ExNylas.Providers do
 
       iex> detect = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
+  @spec detect!(Conn.t(), Keyword.t() | list()) :: Response.t()
   def detect!(%Conn{} = conn, params \\ []) do
     case detect(conn, params) do
       {:ok, body} -> body

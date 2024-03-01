@@ -4,6 +4,7 @@ defmodule ExNylas.HostedAuthentication do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.HostedAuthentication.Grant, as: HA
 
@@ -27,6 +28,7 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
+  @spec get_auth_url(Conn.t(), map()) :: {:ok, String.t()} | {:error, String.t()}
   def get_auth_url(%Conn{} = conn, options) do
     cond do
       Map.get(conn, :client_id) |> is_nil() ->
@@ -58,6 +60,7 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> uri = ExNylas.HostedAuthentication.get_auth_url!(conn, options)
   """
+  @spec get_auth_url!(Conn.t(), map()) :: String.t()
   def get_auth_url!(%Conn{} = conn, options) do
     case get_auth_url(conn, options) do
       {:ok, res} -> res
@@ -72,6 +75,7 @@ defmodule ExNylas.HostedAuthentication do
 
       iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
+  @spec exchange_code_for_token(Conn.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
     Req.new(
       url: "#{conn.api_server}/v3/connect/token",
@@ -96,6 +100,7 @@ defmodule ExNylas.HostedAuthentication do
 
       iex> access_token = ExNylas.HostedAuthentication.exchange_code_for_token!(conn, code, redirect)
   """
+  @spec exchange_code_for_token!(Conn.t(), String.t(), String.t(), String.t()) :: Response.t()
   def exchange_code_for_token!(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
     case exchange_code_for_token(conn, code, redirect_uri, grant_type) do
       {:ok, res} -> res

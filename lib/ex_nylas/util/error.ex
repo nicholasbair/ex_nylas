@@ -3,6 +3,8 @@ defmodule ExNylasError do
   Standard error wrapper
   """
 
+  @type t :: %__MODULE__{message: String.t()}
+
   defexception [:message]
 
   @impl true

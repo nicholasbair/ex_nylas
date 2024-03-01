@@ -6,6 +6,7 @@ defmodule ExNylas.CalendarAvailability do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Availability, as: AV
+  alias ExNylas.Common.Response
 
   use ExNylas,
     struct: __MODULE__,
@@ -19,6 +20,7 @@ defmodule ExNylas.CalendarAvailability do
 
       iex> {:ok, result} = ExNylas.Calendars.Availability.list(conn, body)
   """
+  @spec list(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
   def list(%Conn{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/calendars/availability",
@@ -38,6 +40,7 @@ defmodule ExNylas.CalendarAvailability do
 
       iex> result = ExNylas.Calendars.Availability.list!(conn, body)
   """
+  @spec list!(Conn.t(), map()) :: Response.t()
   def list!(%Conn{} = conn, body) do
     case list(conn, body) do
       {:ok, res} -> res

@@ -4,6 +4,7 @@ defmodule ExNylas.Messages do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Message
 
@@ -23,6 +24,7 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send(conn, message, ["path_to_attachment"])
   """
+  @spec send(Conn.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def send(%Conn{} = conn, message, attachments \\ []) do
     {body, content_type, len} = API.build_multipart(message, attachments)
 
@@ -44,6 +46,7 @@ defmodule ExNylas.Messages do
 
       iex> sent_message = ExNylas.Messages.send!(conn, message, ["path_to_attachment"])
   """
+  @spec send!(Conn.t(), map(), list()) :: Response.t()
   def send!(%Conn{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do
       {:ok, body} -> body

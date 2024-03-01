@@ -4,6 +4,7 @@ defmodule ExNylas.Events do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Event
 
@@ -20,6 +21,7 @@ defmodule ExNylas.Events do
 
       iex> {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
   """
+  @spec rsvp(Conn.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def rsvp(%Conn{} = conn, event_id, status, calendar_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
@@ -40,6 +42,7 @@ defmodule ExNylas.Events do
 
       iex> success = ExNylas.Events.rsvp!(conn, event_id, status, calendar_id)
   """
+  @spec rsvp!(Conn.t(), String.t(), String.t(), String.t()) :: Response.t()
   def rsvp!(%Conn{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do
       {:ok, res} -> res
