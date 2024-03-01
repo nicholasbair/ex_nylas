@@ -12,6 +12,14 @@ defmodule ExNylas.Common.Response do
     Type.Atom
   }
 
+  @type t :: %__MODULE__{
+          request_id: String.t(),
+          status: Atom.t(),
+          data: MapOrList.t(),
+          next_cursor: String.t(),
+          error: Error.t()
+        }
+
   @primary_key false
 
   embedded_schema do

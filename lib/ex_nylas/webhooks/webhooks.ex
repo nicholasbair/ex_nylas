@@ -4,6 +4,7 @@ defmodule ExNylas.Webhooks do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Webhook
 
@@ -21,6 +22,7 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, webhook} = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
+  @spec rotate_secret(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def rotate_secret(%Conn{} = conn, webhook_id) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
@@ -39,6 +41,7 @@ defmodule ExNylas.Webhooks do
 
       iex> webhook = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
+  @spec rotate_secret!(Conn.t(), String.t()) :: Response.t()
   def rotate_secret!(%Conn{} = conn, webhook_id) do
     case rotate_secret(conn, webhook_id) do
       {:ok, body} -> body
@@ -53,6 +56,7 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, payload} = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
+  @spec mock_payload(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def mock_payload(%Conn{} = conn, trigger) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
@@ -72,6 +76,7 @@ defmodule ExNylas.Webhooks do
 
       iex> payload = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
+  @spec mock_payload!(Conn.t(), String.t()) :: Response.t()
   def mock_payload!(%Conn{} = conn, trigger) do
     case mock_payload(conn, trigger) do
       {:ok, body} -> body
@@ -86,6 +91,7 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
+  @spec send_test_event(Conn.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def send_test_event(%Conn{} = conn, trigger, webhook_url) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
@@ -105,6 +111,7 @@ defmodule ExNylas.Webhooks do
 
       iex> res = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
+  @spec send_test_event!(Conn.t(), String.t(), String.t()) :: Response.t()
   def send_test_event!(%Conn{} = conn, trigger, webhook_url) do
     case send_test_event(conn, trigger, webhook_url) do
       {:ok, body} -> body

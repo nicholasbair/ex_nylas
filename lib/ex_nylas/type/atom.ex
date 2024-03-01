@@ -5,6 +5,8 @@ defmodule ExNylas.Type.Atom do
 
   use Ecto.Type
 
+  @type t :: atom()
+
   def type, do: :string
 
   def cast(value) when is_atom(value), do: {:ok, value}

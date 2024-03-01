@@ -4,6 +4,7 @@ defmodule ExNylas.Grants do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
 
@@ -22,6 +23,7 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
+  @spec me(Conn.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def me(%Conn{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",

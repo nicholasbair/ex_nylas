@@ -4,6 +4,7 @@ defmodule ExNylas.Drafts do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Draft
 
@@ -23,6 +24,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.create(conn, draft, ["path_to_attachment"])
   """
+  @spec create(Conn.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def create(%Conn{} = conn, draft, attachments \\ []) do
     {body, content_type, len} = API.build_multipart(draft, attachments)
 
@@ -44,6 +46,7 @@ defmodule ExNylas.Drafts do
 
       iex> draft = ExNylas.Drafts.create!(conn, draft, ["path_to_attachment"])
   """
+  @spec create!(Conn.t(), map(), list()) :: Response.t()
   def create!(%Conn{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
       {:ok, body} -> body
@@ -60,6 +63,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset)
   """
+  @spec update(Conn.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
   def update(%Conn{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
@@ -81,6 +85,7 @@ defmodule ExNylas.Drafts do
 
       iex> draft = ExNylas.Drafts.update!(conn, id, changeset)
   """
+  @spec update!(Conn.t(), String.t(), map()) :: Response.t()
   def update!(%Conn{} = conn, id, changeset) do
     case update(conn, id, changeset) do
       {:ok, body} -> body
@@ -97,6 +102,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset, ["path_to_attachment"])
   """
+  @spec update(Conn.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def update(%Conn{} = conn, id, changeset, attachments) do
     {body, content_type, len} = API.build_multipart(changeset, attachments)
 
@@ -120,6 +126,7 @@ defmodule ExNylas.Drafts do
 
       iex> draft = ExNylas.Drafts.update!(conn, id, changeset, ["path_to_attachment"])
   """
+  @spec update!(Conn.t(), String.t(), map(), list()) :: Response.t()
   def update!(%Conn{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
       {:ok, body} -> body
@@ -134,6 +141,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, sent_draft} = ExNylas.Drafts.send(conn, draft_id)
   """
+  @spec send(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def send(%Conn{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
@@ -152,6 +160,7 @@ defmodule ExNylas.Drafts do
 
       iex> sent_draft = ExNylas.Drafts.send!(conn, draft_id)
   """
+  @spec send!(Conn.t(), String.t()) :: Response.t()
   def send!(%Conn{} = conn, draft_id) do
     case send(conn, draft_id) do
       {:ok, body} -> body

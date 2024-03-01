@@ -4,6 +4,7 @@ defmodule ExNylas.CustomAuthentication do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
 
@@ -14,6 +15,7 @@ defmodule ExNylas.CustomAuthentication do
 
       iex> {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, body)
   """
+  @spec connect(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
   def connect(%Conn{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connect/custom",
@@ -33,6 +35,7 @@ defmodule ExNylas.CustomAuthentication do
 
       iex> grant = ExNylas.CustomAuthentication.connect!(conn, body)
   """
+  @spec connect!(Conn.t(), map()) :: Response.t()
   def connect!(%Conn{} = conn, body) do
     case connect(conn, body) do
       {:ok, res} -> res

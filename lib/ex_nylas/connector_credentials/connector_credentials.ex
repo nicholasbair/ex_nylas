@@ -4,6 +4,7 @@ defmodule ExNylas.ConnectorCredentials do
   """
 
   alias ExNylas.API
+  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.ConnectorCredential, as: Cred
 
@@ -13,6 +14,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, provider)
   """
+  @spec list(Conn.t(), String.t(), Keyword.t() | list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def list(%Conn{} = conn, provider, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -31,6 +33,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       creds = ExNylas.ConnectorCredentials.list!(conn, provider)
   """
+  @spec list!(Conn.t(), String.t(), Keyword.t() | list()) :: Response.t()
   def list!(%Conn{} = conn, provider, params \\ []) do
     case list(conn, provider, params) do
       {:ok, res} -> res
@@ -44,6 +47,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, cred} = ExNylas.ConnectorCredentials.create(conn, provider, body)
   """
+  @spec create(Conn.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
   def create(%Conn{} = conn, provider, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -62,6 +66,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       cred = ExNylas.ConnectorCredentials.create!(conn, provider, body)
   """
+  @spec create!(Conn.t(), String.t(), map()) :: Response.t()
   def create!(%Conn{} = conn, provider, body) do
     case create(conn, provider, body) do
       {:ok, res} -> res
@@ -75,6 +80,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, cred} = ExNylas.ConnectorCredentials.find(conn, provider, id)
   """
+  @spec find(Conn.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def find(%Conn{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -92,6 +98,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       cred = ExNylas.ConnectorCredentials.find(conn, provider, id)
   """
+  @spec find!(Conn.t(), String.t(), String.t()) :: Response.t()
   def find!(%Conn{} = conn, provider, id) do
     case find(conn, provider, id) do
       {:ok, res} -> res
@@ -105,6 +112,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, res} = ExNylas.ConnectorCredentials.delete(conn, provider, id)
   """
+  @spec delete(Conn.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def delete(%Conn{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -122,6 +130,7 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       res = ExNylas.ConnectorCredentials.delete!(conn, provider, id)
   """
+  @spec delete!(Conn.t(), String.t(), String.t()) :: Response.t()
   def delete!(%Conn{} = conn, provider, id) do
     case delete(conn, provider, id) do
       {:ok, res} -> res
@@ -136,6 +145,7 @@ defmodule ExNylas.ConnectorCredentials do
 
       iex> {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, provider, id, changeset)
   """
+  @spec update(Conn.t(), String.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
   def update(%Conn{} = conn, provider, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -155,6 +165,7 @@ defmodule ExNylas.ConnectorCredentials do
 
       iex> cred = ExNylas.ConnectorCredentials.update!(conn, provider, id, changeset)
   """
+  @spec update!(Conn.t(), String.t(), String.t(), map()) :: Response.t()
   def update!(%Conn{} = conn, provider, id, changeset) do
     case update(conn, provider, id, changeset) do
       {:ok, res} -> res

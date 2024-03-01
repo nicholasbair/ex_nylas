@@ -5,6 +5,8 @@ defmodule ExNylas.Type.MapOrList do
 
   use Ecto.Type
 
+  @type t :: map() | list()
+
   def type, do: :any
 
   def cast(data) when is_map(data) or is_list(data), do: {:ok, data}

@@ -6,6 +6,12 @@ defmodule ExNylas.Common.Error do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          type: String.t(),
+          message: String.t(),
+          provider_error: map()
+        }
+
   @primary_key false
 
   embedded_schema do

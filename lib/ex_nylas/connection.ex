@@ -6,6 +6,17 @@ defmodule ExNylas.Connection do
   The API credentials that are required by the Nylas API varies, though for most calls to the Nylas API the api_key and grant_id are needed.
   """
 
+  @type t :: %__MODULE__{
+          client_id: String.t() | nil,
+          client_secret: String.t() | nil,
+          api_key: String.t() | nil,
+          grant_id: String.t() | nil,
+          access_token: String.t() | nil,
+          api_server: String.t(),
+          options: Keyword.t(),
+          telemetry: boolean()
+        }
+
   defstruct [
     :client_id,
     :client_secret,

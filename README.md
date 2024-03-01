@@ -77,7 +77,7 @@ message = ExNylas.Messages.first!(conn)
 ```elixir
 {:ok, folder} = ExNylas.Folders.build(%{name: "Hello World"})
 
-# This will return an because 'display_name' is not part of the struct
+# This will return an error because 'display_name' is not part of the struct
 ExNylas.Folders.build(%{display_name: "Hello Error"})
 
 > {:error,

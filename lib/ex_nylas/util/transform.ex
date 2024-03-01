@@ -69,6 +69,8 @@ defmodule ExNylas.Transform do
     |> Map.put("status", status_to_atom(status))
   end
 
+  defp preprocess_data(nil, data), do: data
+
   defp preprocess_data(model, data) when is_map(data) do
     model.__struct__
     |> model.changeset(remove_nil_values(data))
