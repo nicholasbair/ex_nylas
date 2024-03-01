@@ -5,7 +5,6 @@ defmodule ExNylas do
 
   import Ecto.Changeset
 
-  alias Ecto.Changeset
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Common.Response
@@ -90,7 +89,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.build(payload)
       """
-      @spec unquote(config.name)(map()) :: {:ok, struct()} | {:error, Changeset.t()}
+      @spec unquote(config.name)(map()) :: {:ok, struct()} | {:error, Ecto.Changeset.t()}
       def unquote(config.name)(payload) do
         model =
           unquote(struct_name)

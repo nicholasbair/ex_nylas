@@ -13,7 +13,7 @@ defmodule ExNylas.Connection do
           grant_id: String.t() | nil,
           access_token: String.t() | nil,
           api_server: String.t(),
-          options: list(),
+          options: Keyword.t(),
           telemetry: boolean()
         }
 
