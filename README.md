@@ -95,12 +95,18 @@ ExNylas.Folders.build(%{display_name: "Hello Error"})
 6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned.  Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results and/or making this an async operation.
 
 Optionally include:
-- `delay` to throttle requests and avoid 429s
+- `delay` to throttle requests and avoid 429s (note: this delay is independent of retry delays configured in the HTTP client)
 - `send_to` to pass each page to your single arity function instead of accumulating all of the result set in memory
+- `with_metadata` any data that should be included when invoking the function provided in `send_to`, results are sent as a tuple `{metadata, page}`
 
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
-{:ok, all_messages} = ExNylas.Messages.all(conn, send_to: &IO.inspect/1, delay: 3_000, query: [any_email: "nick@example.com", fields: "include_headers"])
+
+# Accumulate results in memory and return them when paging is complete
+{:ok, []} = ExNylas.Messages.all(conn, query: [any_email: "nick@example.com", fields: "include_headers"])
+
+# Send results to a handler as each page is received
+{:ok, []} = ExNylas.Messages.all(conn, send_to: &IO.inspect/1, delay: 3_000, query: [any_email: "nick@example.com", fields: "include_headers"])
 
 # Or handle paging on your own
 {:ok, first_page} = ExNylas.Messages.list(conn, limit: 50)
