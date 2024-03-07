@@ -9,40 +9,40 @@ defmodule ExNylas.Paging do
 
   def all(conn, resource, use_cursor_paging, opts \\ [])
   def all(%Conn{} = conn, resource, true = _use_cursor_paging, opts) do
-    {query, delay, send_to} = unwrap_opts(opts)
-    page_with_cursor(conn, resource, query, delay, send_to)
+    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
+    page_with_cursor(conn, resource, query, delay, send_to, with_metadata)
   end
 
   def all(%Conn{} = conn, resource, false = _use_cursor_paging, opts) do
-    {query, delay, send_to} = unwrap_opts(opts)
-    page_with_offset(conn, resource, query, delay, send_to)
+    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
+    page_with_offset(conn, resource, query, delay, send_to, with_metadata)
   end
 
   def all!(conn, resource, use_cursor_paging, opts \\ [])
   def all!(%Conn{} = conn, resource, true = _use_cursor_paging, opts) do
-    {query, delay, send_to} = unwrap_opts(opts)
+    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
 
-    case page_with_cursor(conn, resource, query, delay, send_to) do
+    case page_with_cursor(conn, resource, query, delay, send_to, with_metadata) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
   end
 
   def all!(%Conn{} = conn, resource, false = _use_cursor_paging, opts) do
-    {query, delay, send_to} = unwrap_opts(opts)
+    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
 
-    case page_with_offset(conn, resource, query, delay, send_to) do
+    case page_with_offset(conn, resource, query, delay, send_to, with_metadata) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
   end
 
-  defp page_with_cursor(%Conn{} = conn, resource, query, delay, send_to, next_cursor \\ nil, acc \\ []) do
+  defp page_with_cursor(%Conn{} = conn, resource, query, delay, send_to, with_metadata, next_cursor \\ nil, acc \\ []) do
     query = put_in(query, [:page_token], next_cursor)
 
     case apply(resource, :list, [conn, query]) do
       {:ok, res} ->
-        new = send_or_accumulate(send_to, acc, Map.get(res, :data, []))
+        new = send_or_accumulate(send_to, with_metadata, acc, Map.get(res, :data, []))
 
         case res.next_cursor do
           nil ->
@@ -50,7 +50,7 @@ defmodule ExNylas.Paging do
 
           _ ->
             maybe_delay(delay)
-            page_with_cursor(conn, resource, query, delay, send_to, res.next_cursor, new)
+            page_with_cursor(conn, resource, query, delay, send_to, with_metadata, res.next_cursor, new)
         end
 
       err ->
@@ -58,7 +58,7 @@ defmodule ExNylas.Paging do
     end
   end
 
-  defp page_with_offset(%Conn{} = conn, resource, query, delay, send_to, offset \\ 0, acc \\ []) do
+  defp page_with_offset(%Conn{} = conn, resource, query, delay, send_to, with_metadata, offset \\ 0, acc \\ []) do
     query =
       query
       |> indifferent_put_new(:limit, @limit)
@@ -67,13 +67,13 @@ defmodule ExNylas.Paging do
     case apply(resource, :list, [conn, query]) do
       {:ok, res} ->
         data = Map.get(res, :data, [])
-        new = send_or_accumulate(send_to, acc, data)
+        new = send_or_accumulate(send_to, with_metadata, acc, data)
         limit = Map.get(query, :limit)
 
         case length(data) == limit do
           true ->
             maybe_delay(delay)
-            page_with_offset(conn, resource, query, delay, send_to, offset + limit, new)
+            page_with_offset(conn, resource, query, delay, send_to, with_metadata, offset + limit, new)
 
           false ->
             {:ok, new}
@@ -104,16 +104,23 @@ defmodule ExNylas.Paging do
     {
       indifferent_get(opts, :query, []),
       indifferent_get(opts, :delay, 0),
-      indifferent_get(opts, :send_to, nil)
+      indifferent_get(opts, :send_to, nil),
+      indifferent_get(opts, :with_metadata, nil),
     }
   end
 
   defp maybe_delay(delay) when delay <= 0, do: :ok
   defp maybe_delay(delay) when delay > 0, do: :timer.sleep(delay)
 
-  defp send_or_accumulate(nil, acc, data), do: acc ++ data
-  defp send_or_accumulate(send_to, acc, data) do
+  defp send_or_accumulate(nil, _, acc, data), do: acc ++ data
+
+  defp send_or_accumulate(send_to, nil, acc, data) do
     send_to.(data)
+    acc
+  end
+
+  defp send_or_accumulate(send_to, with_metadata, acc, data) do
+    send_to.({with_metadata, data})
     acc
   end
 end
