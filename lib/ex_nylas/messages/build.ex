@@ -8,7 +8,8 @@ defmodule ExNylas.Message.Build do
   alias ExNylas.Common.{
     Build.Attachment,
     EmailParticipant,
-    TrackingOptions
+    TrackingOptions,
+    MessageHeader
   }
 
   @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
@@ -28,6 +29,7 @@ defmodule ExNylas.Message.Build do
     embeds_many :from, EmailParticipant
     embeds_many :reply_to, EmailParticipant
     embeds_many :to, EmailParticipant
+    embeds_many :custom_headers, MessageHeader
     embeds_one :tracking_options, TrackingOptions
   end
 
@@ -36,11 +38,12 @@ defmodule ExNylas.Message.Build do
     |> cast(params, [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft])
     |> cast_embed(:attachments)
     |> cast_embed(:from)
-    |> cast_embed(:to)
+    |> cast_embed(:to, required: true)
     |> cast_embed(:cc)
     |> cast_embed(:bcc)
     |> cast_embed(:tracking_options)
     |> cast_embed(:reply_to)
-    |> validate_required([:subject, :body, :to])
+    |> cast_embed(:custom_headers)
+    |> validate_required([:subject])
   end
 end

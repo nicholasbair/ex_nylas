@@ -64,7 +64,7 @@ defmodule ExNylas.CalendarAvailability.Build do
     |> cast(params, [:start_time, :end_time, :duration_minutes, :interval_minutes, :round_to_30_minutes])
     |> cast_embed(:availability_rules, with: &rules_changeset/2)
     |> cast_embed(:participants, with: &participant_changeset/2, required: true)
-    |> validate_required([:participants, :start_time, :end_time, :duration_minutes])
+    |> validate_required([:start_time, :end_time, :duration_minutes])
   end
 
   def rules_changeset(struct, params \\ %{}) do
