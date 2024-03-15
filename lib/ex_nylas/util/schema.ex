@@ -5,6 +5,7 @@ defmodule ExNylas.Schema.Util do
 
   import Ecto.Changeset
 
+  @spec embedded_changeset(Ecto.Schema.t(), map()) :: Ecto.Changeset.t()
   def embedded_changeset(struct, params) do
     keys =
       struct

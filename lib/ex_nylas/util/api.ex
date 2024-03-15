@@ -15,6 +15,7 @@ defmodule ExNylas.API do
 
   @success_codes Enum.to_list(200..299)
 
+  @spec auth_bearer(Conn.t()) :: {:bearer, String.t()}
   def auth_bearer(%Conn{grant_id: "me", access_token: access_token}) when is_nil(access_token) do
     raise ExNylasError, "access_token must be present when using grant_id='me'"
   end
@@ -31,6 +32,7 @@ defmodule ExNylas.API do
     {:bearer, api_key}
   end
 
+  @spec auth_basic(Conn.t()) :: {:basic, String.t()}
   def auth_basic(%Conn{client_id: client_id, client_secret: _client_secret}) when is_nil(client_id) do
     raise ExNylasError, "client_id must be present to use basic auth"
   end
@@ -43,9 +45,11 @@ defmodule ExNylas.API do
     {:basic, "#{client_id}:#{client_secret}"}
   end
 
+  @spec base_headers([any()]) :: Keyword.t()
   def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
   # Multipart - used by drafts, messages
+  @spec build_multipart(map(), [tuple()]) :: {Enum.t(), String.t(), integer()}
   def build_multipart(obj, attachments) do
     multipart =
       Multipart.new()
@@ -87,6 +91,7 @@ defmodule ExNylas.API do
 
   # Responses ###################################################################
 
+  @spec handle_response({:ok, map()}, any, boolean) :: {:ok, any} | {:error, any}
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     case format_response(res) do
       {:ok, body, status} ->
@@ -123,6 +128,7 @@ defmodule ExNylas.API do
   defp transform?(_), do: false
 
   # Handle streaming response for Smart Compose endpoints
+  @spec handle_stream(function()) :: function()
   def handle_stream(fun) do
     fn {:data, data}, {req, resp} ->
       TF.transfrom_stream({:data, data}, {req, resp}, fun)
@@ -130,6 +136,7 @@ defmodule ExNylas.API do
   end
 
   # Telemetry ##############################################################
+  @spec maybe_attach_telemetry(map(), Conn.t()) :: Req.Request.t()
   def maybe_attach_telemetry(req, %{telemetry: true} = _conn) do
     ReqTelemetry.attach_default_logger()
     ReqTelemetry.attach(req)

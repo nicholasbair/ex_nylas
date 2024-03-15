@@ -35,6 +35,7 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
+  @spec transform(map(), integer(), atom(), boolean(), boolean()) :: Response.t()
   def transform(body, status, model, true = _use_common, true = _transform) do
     %Response{}
     |> Response.changeset(preprocess_body(model, body, status))
@@ -47,6 +48,7 @@ defmodule ExNylas.Transform do
 
   def transform(body, _status, _model, _use_common, false = _transform), do: body
 
+  @spec transfrom_stream({:data, binary()}, {map(), map()}, (-> any())) :: {:cont, {map(), map()}}
   def transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
     ~r/\{.*?\}/
     |> Regex.scan(data)
