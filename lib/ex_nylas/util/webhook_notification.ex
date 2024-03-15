@@ -9,6 +9,7 @@ defmodule ExNylas.WebhookNotification do
   Example
       valid = ExNylas.WebhoookNotification.valid_signature?(webhook_secret, body, signature_from_webhook_request)
   """
+  @spec valid_signature?(String.t(), String.t(), String.t()) :: boolean()
   def valid_signature?(webhook_secret, _body, _signature) when is_nil(webhook_secret) do
     raise ExNylasError, "Webhook secret is required for this operation."
   end

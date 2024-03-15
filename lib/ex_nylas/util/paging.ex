@@ -4,9 +4,11 @@ defmodule ExNylas.Paging do
   """
 
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Common.Response
 
   @limit 50
 
+  @spec all(Conn.t(), atom(), boolean(), [Keyword.t()] | map()) :: {:ok, [struct()]} | {:error, Response.t()}
   def all(conn, resource, use_cursor_paging, opts \\ [])
   def all(%Conn{} = conn, resource, true = _use_cursor_paging, opts) do
     {query, delay, send_to, with_metadata} = unwrap_opts(opts)
@@ -18,6 +20,7 @@ defmodule ExNylas.Paging do
     page_with_offset(conn, resource, query, delay, send_to, with_metadata)
   end
 
+  @spec all!(Conn.t(), atom(), boolean(), [Keyword.t()] | map()) :: [struct()]
   def all!(conn, resource, use_cursor_paging, opts \\ [])
   def all!(%Conn{} = conn, resource, true = _use_cursor_paging, opts) do
     {query, delay, send_to, with_metadata} = unwrap_opts(opts)
