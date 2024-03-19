@@ -35,7 +35,7 @@ defmodule ExNylas.MixProject do
 
   defp deps do
     [
-      {:req, "~> 0.4.8"},
+      {:req, "~> 0.4.14"},
       {:multipart, "~> 0.4.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
