@@ -1,4 +1,4 @@
-defmodule ExNylas.SchedulingSession.Build do
+defmodule ExNylas.Scheduling.Session.Build do
   @moduledoc """
   Helper module for validating a scheduling session before sending it.
   """

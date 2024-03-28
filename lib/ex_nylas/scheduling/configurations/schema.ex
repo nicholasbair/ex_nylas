@@ -1,4 +1,4 @@
-defmodule ExNylas.SchedulingConfiguration do
+defmodule ExNylas.Scheduling.Configuration do
   @moduledoc """
   A struct representing a scheduling configuration.
   """

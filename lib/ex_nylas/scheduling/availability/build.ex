@@ -1,4 +1,4 @@
-defmodule ExNylas.SchedulingAvailability.Build do
+defmodule ExNylas.Scheduling.Availability.Build do
   @moduledoc """
   Helper module for building scheduling availability objects.
   """

@@ -1,4 +1,4 @@
-defmodule ExNylas.SchedulingAvailability do
+defmodule ExNylas.Scheduling.Availability do
   @moduledoc """
   Interface for Nylas scheduling availability.
   """
@@ -17,7 +17,7 @@ defmodule ExNylas.SchedulingAvailability do
 
   ## Examples
 
-      iex> {:ok, availability} = ExNylas.SchedulingAvailability.get(conn, 1614556800, 1614643200)
+      iex> {:ok, availability} = ExNylas.Scheduling.Availability.get(conn, 1614556800, 1614643200)
   """
   @spec get(Conn.t(), integer(), integer(), String.t() | nil, String.t() | nil) :: {:ok, Response.t()} | {:error, Response.t()}
   def get(%Conn{} = conn, start_time, end_time, session_id \\ nil, config_id \\ nil) do
@@ -43,7 +43,7 @@ defmodule ExNylas.SchedulingAvailability do
 
   ## Examples
 
-      iex> availability = ExNylas.SchedulingAvailability.get!(conn, 1614556800, 1614643200)
+      iex> availability = ExNylas.Scheduling.Availability.get!(conn, 1614556800, 1614643200)
   """
   @spec get!(Conn.t(), integer(), integer(), String.t() | nil, String.t() | nil) :: Response.t()
   def get!(%Conn{} = conn, start_time, end_time, session_id \\ nil, config_id \\ nil) do

@@ -1,4 +1,4 @@
-defmodule ExNylas.SchedulingBooking do
+defmodule ExNylas.Scheduling.Booking do
   @moduledoc """
   A struct representing a scheduling booking.
   """

@@ -1,4 +1,4 @@
-defmodule ExNylas.SchedulingBooking.Build do
+defmodule ExNylas.Scheduling.Booking.Build do
   @moduledoc """
   Helper module for validating a scheduling booking before sending it.
   """
