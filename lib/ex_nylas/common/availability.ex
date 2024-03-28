@@ -1,6 +1,6 @@
-defmodule ExNylas.Availability do
+defmodule ExNylas.Common.Availability do
   @moduledoc """
-  Structs for Nylas calendar availability.
+  Struct for Nylas common availability.
   """
 
   use Ecto.Schema
@@ -22,7 +22,7 @@ defmodule ExNylas.Availability do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, __MODULE__.__schema__(:fields))
+    |> cast(params, [:order])
     |> cast_embed(:time_slots, with: &Util.embedded_changeset/2)
   end
 end

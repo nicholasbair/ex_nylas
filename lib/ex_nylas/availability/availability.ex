@@ -5,7 +5,7 @@ defmodule ExNylas.CalendarAvailability do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Availability, as: AV
+  alias ExNylas.Common.Availability, as: AV
   alias ExNylas.Common.Response
 
   use ExNylas,
@@ -18,7 +18,7 @@ defmodule ExNylas.CalendarAvailability do
 
   ## Examples
 
-      iex> {:ok, result} = ExNylas.Calendars.Availability.list(conn, body)
+      iex> {:ok, result} = ExNylas.CalendarAvailability.list(conn, body)
   """
   @spec list(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
   def list(%Conn{} = conn, body) do
@@ -38,7 +38,7 @@ defmodule ExNylas.CalendarAvailability do
 
   ## Examples
 
-      iex> result = ExNylas.Calendars.Availability.list!(conn, body)
+      iex> result = ExNylas.CalendarAvailability.list!(conn, body)
   """
   @spec list!(Conn.t(), map()) :: Response.t()
   def list!(%Conn{} = conn, body) do
