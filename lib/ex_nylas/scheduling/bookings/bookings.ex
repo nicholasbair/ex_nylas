@@ -9,6 +9,6 @@ defmodule ExNylas.Scheduling.Bookings do
     object: "scheduling/bookings",
     struct: Booking,
     readable_name: "scheduling booking",
-    include: [:create, :update, :delete],
+    include: [:create, :update, :delete, :build],
     use_admin_url: true
 end

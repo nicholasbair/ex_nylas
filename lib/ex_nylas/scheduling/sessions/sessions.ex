@@ -9,6 +9,6 @@ defmodule ExNylas.Scheduling.Sessions do
     object: "scheduling/sessions",
     struct: Session,
     readable_name: "scheduling session",
-    include: [:create, :delete],
+    include: [:create, :delete, :build],
     use_admin_url: true
 end

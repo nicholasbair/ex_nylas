@@ -29,7 +29,7 @@ defmodule ExNylas.Common.SchedulingParticipant do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :email, :is_organizer])
-    |> validate_required([:name, :email, :is_organizer])
+    |> validate_required([:name, :email])
     |> cast_embed(:booking, with: &embedded_changeset/2)
     |> cast_embed(:availability, with: &embedded_changeset/2)
   end

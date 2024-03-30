@@ -10,6 +10,11 @@ defmodule ExNylas.Scheduling.Availability do
   }
   alias ExNylas.Connection, as: Conn
 
+  use ExNylas,
+    struct: Availability,
+    readable_name: "scheduling availability",
+    include: [:build]
+
   @doc """
   Get scheduling availability for a given time range.
 

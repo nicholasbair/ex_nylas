@@ -6,9 +6,11 @@ defmodule ExNylas.Scheduling.Configuration do
   use Ecto.Schema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
-  alias ExNylas.Common.SchedulingParticipant, as: Participant
-  alias ExNylas.Common.EventBooking
-  alias ExNylas.Common.AvailabilityRules
+  alias ExNylas.Common.{
+    AvailabilityRules,
+    EventBooking,
+    SchedulingParticipant
+  }
 
   @primary_key false
 
@@ -25,7 +27,7 @@ defmodule ExNylas.Scheduling.Configuration do
     end
 
     embeds_one :booking, EventBooking
-    embeds_many :participants, Participant
+    embeds_many :participants, SchedulingParticipant
   end
 
   def changeset(struct, params \\ %{}) do

@@ -9,6 +9,6 @@ defmodule ExNylas.Scheduling.Configurations do
     object: "scheduling/configurations",
     struct: Configuration,
     readable_name: "scheduling configuration",
-    include: [:list, :find, :create, :update, :delete],
+    include: [:list, :find, :create, :update, :delete, :build],
     use_admin_url: true
 end
