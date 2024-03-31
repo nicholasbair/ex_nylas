@@ -18,10 +18,12 @@ defmodule ExNylas.Common.SchedulingParticipant do
     field :is_organizer, :boolean
 
     embeds_one :availability, Availability, primary_key: false do
+      @derive {Jason.Encoder, only: [:calendar_ids]}
       field :calendar_ids, {:array, :string}
     end
 
     embeds_one :booking, Booking, primary_key: false do
+      @derive {Jason.Encoder, only: [:calendar_id]}
       field :calendar_id, :string
     end
   end
