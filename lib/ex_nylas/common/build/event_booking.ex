@@ -1,16 +1,18 @@
-defmodule ExNylas.Common.EventBooking do
+defmodule ExNylas.Common.Build.EventBooking do
   @moduledoc """
   A struct representing an event booking.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
-  alias ExNylas.Common.{
-    EventConferencing,
-    EventReminder
+  alias ExNylas.Common.Build.{
+    EventReminder,
+    EventConferencing
   }
 
   @primary_key false
+
+  @derive {Jason.Encoder, only: [:title, :location, :description, :booking_type, :additional_fields, :hide_participants, :conference, :reminders]}
 
   embedded_schema do
     field :title, :string

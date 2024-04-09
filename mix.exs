@@ -35,12 +35,12 @@ defmodule ExNylas.MixProject do
 
   defp deps do
     [
-      {:req, "~> 0.4.14"},
-      {:multipart, "~> 0.4.0"},
+      {:bypass, "~> 2.1", only: :test},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
-      {:bypass, "~> 2.1", only: :test},
       {:ecto, "~> 3.11"},
+      {:multipart, "~> 0.4.0"},
+      {:req, "~> 0.4.14"},
       {:req_telemetry, "~> 0.0.4"}
     ]
   end

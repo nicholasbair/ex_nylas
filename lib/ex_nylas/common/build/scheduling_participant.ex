@@ -1,6 +1,6 @@
-defmodule ExNylas.Common.SchedulingParticipant do
+defmodule ExNylas.Common.Build.SchedulingParticipant do
   @moduledoc """
-  A struct representing a scheduling participant.
+  Helper for validating a scheduling participant before sending it.
   """
 
   use Ecto.Schema
@@ -8,6 +8,7 @@ defmodule ExNylas.Common.SchedulingParticipant do
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:name, :email, :is_organizer, :availability, :booking]}
 
   embedded_schema do
     field :name, :string
@@ -15,10 +16,12 @@ defmodule ExNylas.Common.SchedulingParticipant do
     field :is_organizer, :boolean
 
     embeds_one :availability, Availability, primary_key: false do
+      @derive {Jason.Encoder, only: [:calendar_ids]}
       field :calendar_ids, {:array, :string}
     end
 
     embeds_one :booking, Booking, primary_key: false do
+      @derive {Jason.Encoder, only: [:calendar_id]}
       field :calendar_id, :string
     end
   end

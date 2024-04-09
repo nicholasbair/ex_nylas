@@ -1,13 +1,18 @@
-defmodule ExNylas.Common.AvailabilityRules do
+defmodule ExNylas.Common.Build.AvailabilityRules do
   @moduledoc """
-  A struct for availability rules.
+  Helper module for building an availability rules.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
-  alias ExNylas.Common.{Buffer, OpenHours}
+  alias ExNylas.Common.Build.{
+    Buffer,
+    OpenHours
+  }
 
   @primary_key false
+
+  @derive {Jason.Encoder, only: [:availability_method, :round_robin_group_id, :buffer, :default_open_hours]}
 
   embedded_schema do
     field :availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a

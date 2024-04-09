@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.TrackingOptions do
+defmodule ExNylas.Common.Build.TrackingOptions do
   @moduledoc """
   A struct representing tracking options for a message/draft.
   """
@@ -7,6 +7,7 @@ defmodule ExNylas.Common.TrackingOptions do
   import Ecto.Changeset
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:links, :opens, :thread_replies, :label]}
 
   embedded_schema do
     field :links, :boolean

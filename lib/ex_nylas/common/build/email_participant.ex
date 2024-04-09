@@ -1,12 +1,13 @@
-defmodule ExNylas.Common.EmailParticipant do
+defmodule ExNylas.Common.Build.EmailParticipant do
   @moduledoc """
-  A struct representing an email participant.
+  Helper module for building an email participant.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:email, :name]}
 
   embedded_schema do
     field :email, :string

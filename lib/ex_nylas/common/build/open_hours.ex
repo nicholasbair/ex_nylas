@@ -1,12 +1,13 @@
-defmodule ExNylas.Common.OpenHours do
+defmodule ExNylas.Common.Build.OpenHours do
   @moduledoc """
-  A struct for open hours.
+  Helper module for building open hours.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:days, :timezone, :start, :end, :exdates]}
 
   embedded_schema do
     field :days, {:array, :integer}
@@ -20,5 +21,4 @@ defmodule ExNylas.Common.OpenHours do
     struct
     |> cast(params, [:days, :timezone, :start, :end, :exdates])
   end
-
 end
