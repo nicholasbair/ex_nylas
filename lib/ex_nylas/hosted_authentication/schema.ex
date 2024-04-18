@@ -6,6 +6,16 @@ defmodule ExNylas.HostedAuthentication.Grant do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          access_token: String.t(),
+          expires_in: integer,
+          id_token: String.t(),
+          refresh_token: String.t(),
+          scope: String.t(),
+          token_type: String.t(),
+          grant_id: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do
