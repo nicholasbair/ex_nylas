@@ -26,7 +26,14 @@ defmodule ExNylas.Scheduling.Configuration do
       embeds_one :availability_rules, AvailabilityRules
     end
 
-    embeds_one :booking, EventBooking
+    embeds_one :scheduler, Scheduler, primary_key: false do
+      field :available_days_in_future, :integer
+      field :min_cancellation_notice, :integer
+      field :rescheduling_url, :string
+      field :cancellation_url, :string
+    end
+
+    embeds_one :event_booking, EventBooking
     embeds_many :participants, SchedulingParticipant
   end
 
@@ -35,7 +42,7 @@ defmodule ExNylas.Scheduling.Configuration do
     |> cast(params, [:version, :id, :requires_session_auth])
     |> validate_required([:id])
     |> cast_embed(:participants)
-    |> cast_embed(:booking)
+    |> cast_embed(:event_booking)
     |> cast_embed(:availability, with: &embedded_changeset/2, required: true)
   end
 
