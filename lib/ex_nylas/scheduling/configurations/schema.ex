@@ -5,6 +5,8 @@ defmodule ExNylas.Scheduling.Configuration do
 
   use Ecto.Schema
   import Ecto.Changeset
+  import ExNylas.Schema.Util, only: [embedded_changeset: 2]
+
   alias ExNylas.Common.{
     AvailabilityRules,
     EventBooking,
@@ -43,10 +45,11 @@ defmodule ExNylas.Scheduling.Configuration do
     |> validate_required([:id])
     |> cast_embed(:participants)
     |> cast_embed(:event_booking)
-    |> cast_embed(:availability, with: &embedded_changeset/2, required: true)
+    |> cast_embed(:availability, with: &embedded_changeset_availability/2, required: true)
+    |> cast_embed(:scheduler, with: &embedded_changeset/2)
   end
 
-  def embedded_changeset(changeset, params \\ %{}) do
+  def embedded_changeset_availability(changeset, params \\ %{}) do
     changeset
     |> cast(params, [:duration_minutes, :interval_minutes, :round_to_30_minutes])
     |> cast_embed(:availability_rules)
