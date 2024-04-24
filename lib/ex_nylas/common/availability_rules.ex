@@ -5,7 +5,10 @@ defmodule ExNylas.Common.AvailabilityRules do
 
   use Ecto.Schema
   import Ecto.Changeset
-  alias ExNylas.Common.{Buffer, OpenHours}
+  alias ExNylas.Common.{
+    Buffer,
+    OpenHours
+  }
 
   @primary_key false
 
