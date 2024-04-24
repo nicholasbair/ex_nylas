@@ -6,6 +6,8 @@ defmodule ExNylas.Schema.Event.Build do
   use Ecto.Schema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
+  alias ExNylas.Common.Build.EventReminder
+  alias ExNylas.Common.Build.EventConferencing
 
   @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
   @primary_key false
@@ -31,22 +33,8 @@ defmodule ExNylas.Schema.Event.Build do
       field :phone_number, :string
     end
 
-    embeds_one :conferencing, Conferencing do
-      @derive {Jason.Encoder, only: [:meeting_code, :password, :url, :phone, :pin]}
-
-      field :meeting_code, :string
-      field :password, :string
-      field :url, :string
-      field :phone, {:array, :string}
-      field :pin, :string
-    end
-
-    embeds_one :reminders, Reminder do
-      @derive {Jason.Encoder, only: [:overrides, :use_default]}
-
-      field :overrides, {:array, :map}
-      field :use_default, :boolean
-    end
+    embeds_one :conferencing, EventConferencing
+    embeds_one :reminders, EventReminder
 
     embeds_one :when, When do
       @derive {Jason.Encoder, only: [:start_time, :end_time, :start_timezone, :end_timezone, :object, :time, :timezone, :start_date, :end_date, :date]}
@@ -68,8 +56,8 @@ defmodule ExNylas.Schema.Event.Build do
     struct
     |> cast(params, [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
-    |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)
-    |> cast_embed(:reminders, with: &Util.embedded_changeset/2)
+    |> cast_embed(:conferencing)
+    |> cast_embed(:reminders)
     |> cast_embed(:when, with: &Util.embedded_changeset/2)
     |> validate_required([:when])
   end
