@@ -53,4 +53,39 @@ defmodule ExNylas.Messages do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
+
+  @doc """
+  Clean a message.
+
+  ## Examples
+
+      iex> {:ok, message} = ExNylas.Messages.clean(conn, payload)
+  """
+  @spec clean(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def clean(%Conn{} = conn, payload) do
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      json: payload
+    )
+    |> API.maybe_attach_telemetry(conn)
+    |> Req.put(conn.options)
+    |> API.handle_response(Message)
+  end
+
+  @doc """
+  Clean a message.
+
+  ## Examples
+
+      iex> message = ExNylas.Messages.clean!(conn, payload)
+  """
+  @spec clean!(Conn.t(), map()) :: Response.t()
+  def clean!(%Conn{} = conn, payload) do
+    case clean(conn, payload) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
 end
