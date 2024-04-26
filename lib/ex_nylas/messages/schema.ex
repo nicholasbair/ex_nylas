@@ -28,6 +28,7 @@ defmodule ExNylas.Message do
     field :unread, :boolean
     field :metadata, :map
     field :schedule_id, :string
+    field :conversation, :string
 
     embeds_many :bcc, EmailParticipant
     embeds_many :cc, EmailParticipant
@@ -40,7 +41,7 @@ defmodule ExNylas.Message do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:body, :date, :folders, :grant_id, :id, :object, :snippet, :starred, :subject, :thread_id, :unread, :metadata, :schedule_id])
+    |> cast(params, [:body, :date, :folders, :grant_id, :id, :object, :snippet, :starred, :subject, :thread_id, :unread, :metadata, :schedule_id, :conversation])
     |> cast_embed(:bcc)
     |> cast_embed(:cc)
     |> cast_embed(:attachments)
