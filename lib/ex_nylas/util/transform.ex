@@ -71,20 +71,21 @@ defmodule ExNylas.Transform do
     |> Map.put("status", status_to_atom(status))
   end
 
-  defp preprocess_data(nil, data), do: data
+  @spec preprocess_data(nil | atom(), map()) :: [Ecto.Schema.t()] | [map()] | Ecto.Schema.t() | map()
+  def preprocess_data(nil, data), do: data
 
-  defp preprocess_data(model, data) when is_map(data) do
+  def preprocess_data(model, data) when is_map(data) do
     model.__struct__
     |> model.changeset(remove_nil_values(data))
     |> log_validations(model)
     |> apply_changes()
   end
 
-  defp preprocess_data(model, data) when is_list(data) do
+  def preprocess_data(model, data) when is_list(data) do
     Enum.map(data, &preprocess_data(model, &1))
   end
 
-  defp preprocess_data(_model, data), do: data
+  def preprocess_data(_model, data), do: data
 
   defp log_validations(%{valid?: true} = changeset, _model), do: changeset
 
