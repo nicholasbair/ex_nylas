@@ -15,6 +15,10 @@ defmodule ExNylas.WebhookNotifications do
 
   @doc """
   Transform a raw webhook notification into an ExNylas struct.
+
+  ## Examples
+
+      iex> {:ok, struct} = ExNylas.WebhookNotifications.to_struct(raw_payload)
   """
   @spec to_struct(map()) :: {:ok, Notification.t()} | {:error, String.t()}
   def to_struct(raw_notification) do
@@ -29,6 +33,10 @@ defmodule ExNylas.WebhookNotifications do
 
   @doc """
   Transform a raw webhook notification into an ExNylas struct.
+
+  ## Examples
+
+    iex> struct = ExNylas.WebhookNotifications.to_struct!(raw_payload)
   """
   @spec to_struct!(map()) :: Notification.t()
   def to_struct!(raw_notification) do
@@ -41,7 +49,8 @@ defmodule ExNylas.WebhookNotifications do
   @doc """
   Validate the X-Nylas-Signature header from a webhook.
 
-  Example
+  ## Examples
+
       valid = ExNylas.WebhoookNotification.valid_signature?(webhook_secret, body, signature_from_webhook_request)
   """
   @spec valid_signature?(String.t(), String.t(), String.t()) :: boolean()
@@ -81,6 +90,8 @@ defmodule ExNylas.WebhookNotifications do
     {:ok, ThreadReplied}
   end
 
+  # Use the webhook trigger/type to determine the schema to use for transforming the data.
+  # Non-standard cases are handled above.
   defp type_to_schema(type) do
     [hd | _] = String.split(type, ".")
 

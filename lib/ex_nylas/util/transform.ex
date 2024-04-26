@@ -71,6 +71,7 @@ defmodule ExNylas.Transform do
     |> Map.put("status", status_to_atom(status))
   end
 
+  @spec preprocess_data(nil | atom(), map()) :: [Ecto.Schema.t()] | [map()] | Ecto.Schema.t() | map()
   def preprocess_data(nil, data), do: data
 
   def preprocess_data(model, data) when is_map(data) do
