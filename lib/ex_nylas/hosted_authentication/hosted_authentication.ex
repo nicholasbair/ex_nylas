@@ -60,7 +60,7 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> uri = ExNylas.HostedAuthentication.get_auth_url!(conn, options)
   """
-  @spec get_auth_url!(Conn.t(), map()) :: String.t()
+  @spec get_auth_url!(Conn.t(), map() | Keyword.t()) :: String.t()
   def get_auth_url!(%Conn{} = conn, options) do
     case get_auth_url(conn, options) do
       {:ok, res} -> res
