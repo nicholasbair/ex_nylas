@@ -8,6 +8,8 @@ defmodule ExNylas.HostedAuthentication do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.HostedAuthentication.Grant, as: HA
 
+  import ExNylas.Util, only: [indifferent_get: 2]
+
   use ExNylas,
     struct: ExNylas.HostedAuthentication.Options,
     readable_name: "hosted authentication",
@@ -27,16 +29,16 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
-  @spec get_auth_url(Conn.t(), map()) :: {:ok, String.t()} | {:error, String.t()}
+  @spec get_auth_url(Conn.t(), map() | Keyword.t()) :: {:ok, String.t()} | {:error, String.t()}
   def get_auth_url(%Conn{} = conn, options) do
     cond do
-      Map.get(conn, :client_id) |> is_nil() ->
+      is_nil(conn.client_id) ->
         {:error, "client_id on the connection struct is required for this call"}
 
-      Map.get(options, :redirect_uri) |> is_nil() ->
+      indifferent_get(options, :redirect_uri) |> is_nil() ->
         {:error, "redirect_uri was not found in the options map"}
 
-      Map.get(options, :response_type) |> is_nil() ->
+      indifferent_get(options, :response_type) |> is_nil() ->
         {:error, "response_type was not found in the options map"}
 
       true ->
