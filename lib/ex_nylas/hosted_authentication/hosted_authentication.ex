@@ -8,6 +8,8 @@ defmodule ExNylas.HostedAuthentication do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.HostedAuthentication.Grant, as: HA
 
+  import ExNylas.Util, only: [indifferent_get: 2]
+
   use ExNylas,
     struct: ExNylas.HostedAuthentication.Options,
     readable_name: "hosted authentication",
@@ -18,26 +20,25 @@ defmodule ExNylas.HostedAuthentication do
 
   Notes:
     1. `client_id` is required (on the connection struct)
-    2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
-    3. `response_type` is required (on the options map)
+    2. `redirect_uri` is required (in options) and must be registered on the Nylas application
 
-  Optionally use ExNylas.HostedAuthentication.build/1 to validate the options map.
+  Optionally use ExNylas.HostedAuthentication.build/1 to validate options.
 
   ## Examples
 
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
-  @spec get_auth_url(Conn.t(), map()) :: {:ok, String.t()} | {:error, String.t()}
+  @spec get_auth_url(Conn.t(), map() | Keyword.t()) :: {:ok, String.t()} | {:error, String.t()}
   def get_auth_url(%Conn{} = conn, options) do
     cond do
-      Map.get(conn, :client_id) |> is_nil() ->
+      is_nil(conn.client_id) ->
         {:error, "client_id on the connection struct is required for this call"}
 
-      Map.get(options, :redirect_uri) |> is_nil() ->
+      indifferent_get(options, :redirect_uri) |> is_nil() ->
         {:error, "redirect_uri was not found in the options map"}
 
-      Map.get(options, :response_type) |> is_nil() ->
+      indifferent_get(options, :response_type) |> is_nil() ->
         {:error, "response_type was not found in the options map"}
 
       true ->
@@ -50,17 +51,16 @@ defmodule ExNylas.HostedAuthentication do
 
   Notes:
     1. `client_id` is required (on the connection struct)
-    2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
-    3. `response_type` is required (on the options map)
+    2. `redirect_uri` is required (in options) and must be registered on the Nylas application
 
-  Optionally use ExNylas.HostedAuthentication.build/1 to validate the options map.
+  Optionally use ExNylas.HostedAuthentication.build/1 to validate options.
 
   ## Examples
 
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> uri = ExNylas.HostedAuthentication.get_auth_url!(conn, options)
   """
-  @spec get_auth_url!(Conn.t(), map()) :: String.t()
+  @spec get_auth_url!(Conn.t(), map() | Keyword.t()) :: String.t()
   def get_auth_url!(%Conn{} = conn, options) do
     case get_auth_url(conn, options) do
       {:ok, res} -> res

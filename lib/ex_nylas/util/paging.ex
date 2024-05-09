@@ -6,6 +6,8 @@ defmodule ExNylas.Paging do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Common.Response
 
+  import ExNylas.Util, only: [indifferent_get: 3, indifferent_put_new: 3]
+
   @limit 50
 
   @spec all(Conn.t(), atom(), boolean(), Keyword.t() | map()) :: {:ok, [struct()]} | {:error, Response.t()}
@@ -85,22 +87,6 @@ defmodule ExNylas.Paging do
       err ->
         err
     end
-  end
-
-  defp indifferent_put_new(map, key, value) when is_map(map) do
-    Map.put_new(map, key, value)
-  end
-
-  defp indifferent_put_new(keyword, key, value) when is_list(keyword) do
-    Keyword.put_new(keyword, key, value)
-  end
-
-  defp indifferent_get(map, key, default) when is_map(map) do
-    Map.get(map, key, default)
-  end
-
-  defp indifferent_get(keyword, key, default) when is_list(keyword) do
-    Keyword.get(keyword, key, default)
   end
 
   defp unwrap_opts(opts) do
