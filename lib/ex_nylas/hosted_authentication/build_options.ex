@@ -9,9 +9,9 @@ defmodule ExNylas.HostedAuthentication.Options.Build do
   @primary_key false
 
   embedded_schema do
-    field :provider, Ecto.Enum, values: ~w(google microsoft imap)a
+    field :provider, Ecto.Enum, values: ~w(google microsoft imap yahoo)a
     field :redirect_uri, :string
-    field :response_type, :string
+    field :response_type, Ecto.Enum, values: ~w(code adminconsent)a, default: :code
     field :scope, {:array, :string}
     field :prompt, Ecto.Enum, values: ~w(select_provider detect select_provider,detect detect,select_provider)a
     field :state, :string
@@ -25,5 +25,6 @@ defmodule ExNylas.HostedAuthentication.Options.Build do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
+    |> validate_required([:redirect_uri, :response_type])
   end
 end

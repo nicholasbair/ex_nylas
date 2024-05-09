@@ -18,10 +18,9 @@ defmodule ExNylas.HostedAuthentication do
 
   Notes:
     1. `client_id` is required (on the connection struct)
-    2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
-    3. `response_type` is required (on the options map)
+    2. `redirect_uri` is required (in options) and must be registered on the Nylas application
 
-  Optionally use ExNylas.HostedAuthentication.build/1 to validate the options map.
+  Optionally use ExNylas.HostedAuthentication.build/1 to validate options.
 
   ## Examples
 
@@ -50,10 +49,9 @@ defmodule ExNylas.HostedAuthentication do
 
   Notes:
     1. `client_id` is required (on the connection struct)
-    2. `redirect_uri` is required (on the options map) and must be registered on the Nylas application
-    3. `response_type` is required (on the options map)
+    2. `redirect_uri` is required (in options) and must be registered on the Nylas application
 
-  Optionally use ExNylas.HostedAuthentication.build/1 to validate the options map.
+  Optionally use ExNylas.HostedAuthentication.build/1 to validate options.
 
   ## Examples
 
