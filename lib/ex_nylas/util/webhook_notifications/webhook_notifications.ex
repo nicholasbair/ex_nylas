@@ -62,6 +62,10 @@ defmodule ExNylas.WebhookNotifications do
     raise ExNylasError, "body should be passed as a string."
   end
 
+  def valid_signature?(_webhook_secret, _, signature) when not is_bitstring(signature) do
+    raise ExNylasError, "signature should be passed as a string."
+  end
+
   def valid_signature?(webhook_secret, body, signature) do
     :hmac
     |> :crypto.mac(:sha256, webhook_secret, body)
