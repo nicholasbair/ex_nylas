@@ -1,20 +1,32 @@
 defmodule ExNylasTest.WebhookNotifications do
   use ExUnit.Case, async: true
 
-  test "valid_signature? raises an error if webhook secret is not included" do
+  test "valid_signature! raises an error if webhook secret is not included" do
     assert_raise ExNylasError, fn ->
-      ExNylas.WebhookNotifications.valid_signature?(nil, "", "")
+      ExNylas.WebhookNotifications.valid_signature!(nil, "", "")
     end
   end
 
-  test "valid_signature? raises an error if body is not a string" do
+  test "valid_signature! raises an error if body is not a string" do
     assert_raise ExNylasError, fn ->
-      ExNylas.WebhookNotifications.valid_signature?("1234", %{}, "")
+      ExNylas.WebhookNotifications.valid_signature!("1234", %{}, "")
     end
   end
 
-  test "valid_signature? returns false if the signature does not match" do
-    assert ExNylas.WebhookNotifications.valid_signature?("1234", "", "") == false
+  test "valid_signature! returns false if the signature does not match" do
+    assert ExNylas.WebhookNotifications.valid_signature!("1234", "", "") == false
+  end
+
+  test "valid_signature returns an error if webhook secret is not included" do
+    assert {:error, _} = ExNylas.WebhookNotifications.valid_signature(nil, "", "")
+  end
+
+  test "valid_signature returns an error if body is not a string" do
+    assert {:error, _} = ExNylas.WebhookNotifications.valid_signature("1234", %{}, "")
+  end
+
+  test "valid_signature returns false if the signature does not match" do
+    {:ok, false} = ExNylas.WebhookNotifications.valid_signature("1234", "", "")
   end
 
   test "to_struct returns an error if the notification type is not recognized" do
