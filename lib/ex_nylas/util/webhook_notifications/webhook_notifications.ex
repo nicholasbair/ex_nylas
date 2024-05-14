@@ -51,27 +51,48 @@ defmodule ExNylas.WebhookNotifications do
 
   ## Examples
 
-      valid = ExNylas.WebhoookNotification.valid_signature?(webhook_secret, body, signature_from_webhook_request)
+      iex> {:ok, match?} = ExNylas.WebhoookNotification.valid_signature?(webhook_secret, body, signature_from_webhook_request)
   """
-  @spec valid_signature?(String.t(), String.t(), String.t()) :: boolean()
+  @spec valid_signature?(String.t(), String.t(), String.t()) :: {:ok, boolean()} | {:error, String.t()}
   def valid_signature?(webhook_secret, _body, _signature) when is_nil(webhook_secret) do
-    raise ExNylasError, "Webhook secret is required for this operation."
+    {:error, "Webhook secret is required for this operation."}
   end
 
   def valid_signature?(_webhook_secret, body, _signature) when not is_bitstring(body) do
-    raise ExNylasError, "body should be passed as a string."
+    {:error, "body should be passed as a string."}
   end
 
   def valid_signature?(_webhook_secret, _, signature) when not is_bitstring(signature) do
-    raise ExNylasError, "signature should be passed as a string."
+    {:error, "signature should be passed as a string."}
   end
 
   def valid_signature?(webhook_secret, body, signature) do
-    :hmac
-    |> :crypto.mac(:sha256, webhook_secret, body)
-    |> Base.encode16
-    |> String.downcase()
-    |> Kernel.==(String.downcase(signature))
+    match? =
+      :hmac
+      |> :crypto.mac(:sha256, webhook_secret, body)
+      |> Base.encode16
+      |> String.downcase()
+      |> Kernel.==(String.downcase(signature))
+
+    {:ok, match?}
+  end
+
+  @doc """
+  Validate the X-Nylas-Signature header from a webhook.
+
+  ## Examples
+
+      iex> valid = ExNylas.WebhoookNotification.valid_signature!(webhook_secret, body, signature_from_webhook_request)
+  """
+  @spec valid_signature!(String.t(), String.t(), String.t()) :: boolean()
+  def valid_signature!(webhook_secret, body, signature) do
+    case valid_signature?(webhook_secret, body, signature) do
+      {:ok, match?} ->
+        match?
+
+      {:error, msg} ->
+        raise ExNylasError, msg
+    end
   end
 
   defp type_to_schema(type) when type in ["grant.created", "grant.updated", "grant.deleted", "grant.expired"] do
