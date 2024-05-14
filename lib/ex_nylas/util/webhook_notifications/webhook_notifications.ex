@@ -51,22 +51,22 @@ defmodule ExNylas.WebhookNotifications do
 
   ## Examples
 
-      iex> {:ok, match?} = ExNylas.WebhoookNotification.valid_signature?(webhook_secret, body, signature_from_webhook_request)
+      iex> {:ok, match?} = ExNylas.WebhoookNotification.valid_signature(webhook_secret, body, signature_from_webhook_request)
   """
-  @spec valid_signature?(String.t(), String.t(), String.t()) :: {:ok, boolean()} | {:error, String.t()}
-  def valid_signature?(webhook_secret, _body, _signature) when is_nil(webhook_secret) do
+  @spec valid_signature(String.t(), String.t(), String.t()) :: {:ok, boolean()} | {:error, String.t()}
+  def valid_signature(webhook_secret, _body, _signature) when is_nil(webhook_secret) do
     {:error, "Webhook secret is required for this operation."}
   end
 
-  def valid_signature?(_webhook_secret, body, _signature) when not is_bitstring(body) do
+  def valid_signature(_webhook_secret, body, _signature) when not is_bitstring(body) do
     {:error, "body should be passed as a string."}
   end
 
-  def valid_signature?(_webhook_secret, _, signature) when not is_bitstring(signature) do
+  def valid_signature(_webhook_secret, _, signature) when not is_bitstring(signature) do
     {:error, "signature should be passed as a string."}
   end
 
-  def valid_signature?(webhook_secret, body, signature) do
+  def valid_signature(webhook_secret, body, signature) do
     match? =
       :hmac
       |> :crypto.mac(:sha256, webhook_secret, body)
@@ -86,7 +86,7 @@ defmodule ExNylas.WebhookNotifications do
   """
   @spec valid_signature!(String.t(), String.t(), String.t()) :: boolean()
   def valid_signature!(webhook_secret, body, signature) do
-    case valid_signature?(webhook_secret, body, signature) do
+    case valid_signature(webhook_secret, body, signature) do
       {:ok, match?} ->
         match?
 
