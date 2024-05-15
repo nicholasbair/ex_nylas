@@ -14,7 +14,8 @@ defmodule ExNylas.HostedAuthentication.Grant do
           scope: String.t(),
           token_type: String.t(),
           grant_id: String.t(),
-          provider: atom()
+          provider: atom(),
+          email: String.t()
         }
 
   @primary_key false
@@ -28,11 +29,12 @@ defmodule ExNylas.HostedAuthentication.Grant do
     field :token_type, :string
     field :grant_id, :string
     field :provider, Ecto.Enum, values: ~w(google microsoft icloud yahoo imap virtual-calendar)a
+    field :email, :string
   end
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:access_token, :expires_in, :id_token, :refresh_token, :scope, :token_type, :grant_id, :provider])
-    |> validate_required([:grant_id])
+    |> cast(params, [:access_token, :expires_in, :id_token, :refresh_token, :scope, :token_type, :grant_id, :provider, :email])
+    |> validate_required([:grant_id, :provider, :email])
   end
 end
