@@ -19,7 +19,7 @@ The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of th
 ```elixir
 def deps do
   [
-    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.3.8"}
+    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.3.9"}
   ]
 end
 ```
