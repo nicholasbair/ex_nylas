@@ -6,7 +6,7 @@ defmodule ExNylas.Webhook.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:description, :trigger_types, :webhook_url, :notification_email_addresses]}
+  @derive {Jason.Encoder, only: [:description, :trigger_types, :webhook_url, :notification_email_addresses, :topic, :encryption_key]}
   @primary_key false
 
   schema "webhook" do
@@ -14,6 +14,8 @@ defmodule ExNylas.Webhook.Build do
     field :trigger_types, {:array, :string}
     field :webhook_url, :string
     field :notification_email_addresses, {:array, :string}
+    field :topic, :string
+    field :encryption_key, :string
   end
 
   def changeset(struct, params \\ %{}) do
