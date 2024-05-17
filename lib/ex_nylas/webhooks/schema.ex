@@ -16,6 +16,8 @@ defmodule ExNylas.Webhook do
     field :status, Ecto.Enum, values: ~w(active pause failing failed)a
     field :webhook_secret, :string
     field :notification_email_addresses, {:array, :string}
+    field :topic, :string
+    field :encryption_key, :string
   end
 
   def changeset(struct, params \\ %{}) do

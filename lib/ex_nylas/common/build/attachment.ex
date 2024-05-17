@@ -7,10 +7,11 @@ defmodule ExNylas.Common.Build.Attachment do
   import Ecto.Changeset
 
   @primary_key false
-  @derive {Jason.Encoder, only: [:id, :content, :content_type, :size, :filename, :is_inline]}
+  @derive {Jason.Encoder, only: [:id, :content, :content_type, :content_id, :size, :filename, :is_inline]}
 
   embedded_schema do
     field :id, :string
+    field :content_id, :string
     field :content, :string
     field :content_type, :string
     field :size, :integer
