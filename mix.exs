@@ -5,7 +5,7 @@ defmodule ExNylas.MixProject do
     [
       app: :ex_nylas,
       version: "0.3.9",
-      elixir: "~> 1.14",
+      elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       dialyzer: [plt_add_apps: [:mix]],
