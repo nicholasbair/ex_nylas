@@ -12,7 +12,7 @@ defmodule ExNylas.Util do
     Keyword.put_new(keyword, key, value)
   end
 
-  @spec indifferent_get(map() | Keyword.t(), any(), any()) :: any()
+  @spec indifferent_get(map() | Keyword.t(), atom(), any()) :: any()
   def indifferent_get(map, key, default \\ nil)
   def indifferent_get(map, key, default) when is_map(map) do
     Map.get(map, key, default)
