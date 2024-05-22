@@ -24,6 +24,7 @@ defmodule ExNylas.Event do
     field :metadata, :map
     field :notifications, {:array, :map}
     field :hide_participants, :boolean
+    field :master_event_id, :string
 
     embeds_many :participants, Participant, primary_key: false do
       field :name, :string
@@ -67,7 +68,7 @@ defmodule ExNylas.Event do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :object, :grant_id, :calendar_id, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants])
+    |> cast(params, [:id, :object, :grant_id, :calendar_id, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :master_event_id])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_embed(:when, with: &Util.embedded_changeset/2)
     |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)
