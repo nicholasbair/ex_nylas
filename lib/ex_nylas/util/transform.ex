@@ -35,7 +35,9 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
-  @spec transform(map(), integer(), atom(), boolean(), boolean()) :: Response.t()
+  @spec transform(map(), integer(), atom(), true, true) :: Response.t()
+  @spec transform(map(), integer(), atom(), false, true) :: [struct()] | struct()
+  @spec transform(map(), integer(), atom(), boolean(), false) :: any()
   def transform(body, status, model, true = _use_common, true = _transform) do
     %Response{}
     |> Response.changeset(preprocess_body(model, body, status))
