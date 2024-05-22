@@ -3,7 +3,7 @@ defmodule ExNylas.Util do
   Utility functions for ExNylas
   """
 
-  @spec indifferent_put_new(map() | Keyword.t(), any(), any()) :: map() | Keyword.t()
+  @spec indifferent_put_new(map() | Keyword.t(), atom(), any()) :: map() | Keyword.t()
   def indifferent_put_new(map, key, value) when is_map(map) do
     Map.put_new(map, key, value)
   end
