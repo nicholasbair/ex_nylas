@@ -6,43 +6,45 @@ defmodule ExNylas.Paging do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Common.Response
 
-  import ExNylas.Util, only: [indifferent_get: 3, indifferent_put_new: 3]
+  import ExNylas.Util, only: [indifferent_get: 2, indifferent_put_new: 3]
 
   @limit 50
+
+  defstruct [
+    query: [],
+    delay: 0,
+    send_to: nil,
+    with_metadata: nil
+  ]
 
   @spec all(Conn.t(), atom(), boolean(), Keyword.t() | map()) :: {:ok, [struct()]} | {:error, Response.t()}
   def all(conn, resource, use_cursor_paging, opts \\ [])
   def all(%Conn{} = conn, resource, true = _use_cursor_paging, opts) do
-    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
-    page_with_cursor(conn, resource, query, delay, send_to, with_metadata)
+    page_with_cursor(conn, resource, opts_to_struct(opts))
   end
 
   def all(%Conn{} = conn, resource, false = _use_cursor_paging, opts) do
-    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
-    page_with_offset(conn, resource, query, delay, send_to, with_metadata)
+    page_with_offset(conn, resource, opts_to_struct(opts))
   end
 
   @spec all!(Conn.t(), atom(), boolean(), Keyword.t() | map()) :: [struct()]
   def all!(conn, resource, use_cursor_paging, opts \\ [])
   def all!(%Conn{} = conn, resource, true = _use_cursor_paging, opts) do
-    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
-
-    case page_with_cursor(conn, resource, query, delay, send_to, with_metadata) do
+    case page_with_cursor(conn, resource, opts_to_struct(opts)) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
   end
 
   def all!(%Conn{} = conn, resource, false = _use_cursor_paging, opts) do
-    {query, delay, send_to, with_metadata} = unwrap_opts(opts)
-
-    case page_with_offset(conn, resource, query, delay, send_to, with_metadata) do
+    case page_with_offset(conn, resource, opts_to_struct(opts)) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end
   end
 
-  defp page_with_cursor(%Conn{} = conn, resource, query, delay, send_to, with_metadata, next_cursor \\ nil, acc \\ []) do
+  defp page_with_cursor(%Conn{} = conn, resource, opts, next_cursor \\ nil, acc \\ []) do
+    %{query: query, delay: delay, send_to: send_to, with_metadata: with_metadata} = opts
     query = put_in(query, [:page_token], next_cursor)
 
     case apply(resource, :list, [conn, query]) do
@@ -55,7 +57,7 @@ defmodule ExNylas.Paging do
 
           _ ->
             maybe_delay(delay)
-            page_with_cursor(conn, resource, query, delay, send_to, with_metadata, res.next_cursor, new)
+            page_with_cursor(conn, resource, opts, res.next_cursor, new)
         end
 
       err ->
@@ -63,7 +65,9 @@ defmodule ExNylas.Paging do
     end
   end
 
-  defp page_with_offset(%Conn{} = conn, resource, query, delay, send_to, with_metadata, offset \\ 0, acc \\ []) do
+  defp page_with_offset(%Conn{} = conn, resource, opts, offset \\ 0, acc \\ []) do
+    %{query: query, delay: delay, send_to: send_to, with_metadata: with_metadata} = opts
+
     query =
       query
       |> indifferent_put_new(:limit, @limit)
@@ -78,7 +82,7 @@ defmodule ExNylas.Paging do
         case length(data) == limit do
           true ->
             maybe_delay(delay)
-            page_with_offset(conn, resource, query, delay, send_to, with_metadata, offset + limit, new)
+            page_with_offset(conn, resource, opts, offset + limit, new)
 
           false ->
             {:ok, new}
@@ -89,12 +93,12 @@ defmodule ExNylas.Paging do
     end
   end
 
-  defp unwrap_opts(opts) do
-    {
-      indifferent_get(opts, :query, []),
-      indifferent_get(opts, :delay, 0),
-      indifferent_get(opts, :send_to, nil),
-      indifferent_get(opts, :with_metadata, nil),
+  defp opts_to_struct(opts) do
+    %__MODULE__{
+      query: indifferent_get(opts, :query),
+      delay: indifferent_get(opts, :delay),
+      send_to: indifferent_get(opts, :send_to),
+      with_metadata: indifferent_get(opts, :with_metadata),
     }
   end
 
