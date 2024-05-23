@@ -1,6 +1,5 @@
 defmodule UtilTest.PagingTest do
   use ExUnit.Case, async: true
-  import ExNylas.Paging
 
   setup do
     bypass = Bypass.open()

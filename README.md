@@ -32,7 +32,6 @@ end
 conn = 
   %ExNylas.Connection{
     client_id: "1234",
-    client_secret: "1234",
     api_key: "1234",
     grant_id: "1234",
     access_token: "1234", # Omited if using `grant_id` + `api_key`

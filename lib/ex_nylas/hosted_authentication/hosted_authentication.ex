@@ -82,7 +82,7 @@ defmodule ExNylas.HostedAuthentication do
       headers: API.base_headers(),
       json: %{
         client_id: conn.client_id,
-        client_secret: conn.client_secret,
+        client_secret: conn.api_key,
         grant_type: grant_type,
         code: code,
         redirect_uri: redirect_uri

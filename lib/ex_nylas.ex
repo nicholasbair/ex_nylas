@@ -336,7 +336,6 @@ defmodule ExNylas do
   def generate_url(conn, false = _use_admin_url, object), do: "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{object}"
 
   def generate_auth(conn, :header_bearer), do: API.auth_bearer(conn)
-  def generate_auth(conn, :header_basic), do: API.auth_basic(conn)
 
   def format_module_name(module_name) do
     module_name

@@ -24,24 +24,6 @@ defmodule ExNylasTest.API do
     end
   end
 
-  describe "auth_basic/1" do
-    test "returns a basic tuple with client id and secret" do
-      assert ExNylas.API.auth_basic(%Conn{client_id: "1234", client_secret: "1234"}) == {:basic, "1234:1234"}
-    end
-
-    test "raises an error if client_id is not present" do
-      assert_raise ExNylasError, "Error: \"client_id must be present to use basic auth\"", fn ->
-        ExNylas.API.auth_basic(%Conn{client_secret: "1234"})
-      end
-    end
-
-    test "raises an error if client_secret is not present" do
-      assert_raise ExNylasError, "Error: \"client_secret must be present to use basic auth\"", fn ->
-        ExNylas.API.auth_basic(%Conn{client_id: "1234"})
-      end
-    end
-  end
-
   describe "base_headers/1" do
     test "returns the base headers with any additional headers" do
       h = ExNylas.API.base_headers(["X-Test": "test"])
