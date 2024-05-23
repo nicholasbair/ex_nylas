@@ -2,6 +2,8 @@
 
 Unofficial Elixir SDK for the Nylas API.
 
+To get started, first sign up for a free Nylas account [here](nylas.com), then follow the usage guide below.
+
 ## Notes
 
 *Caveat Emptor*
@@ -9,11 +11,11 @@ Unofficial Elixir SDK for the Nylas API.
 - This is my first attempt at metaprogramming
 
 ## Nylas API v2 vs v3
-The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though dev work on this SDK will largely focus on Nylas API v3.
+The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3.
 
 ## TODO / Known Issues
-- [ ] Tests 
-- [ ] Push to Hex 
+1. Limited test coverage
+2. Not yet available on hex
 
 ## Installation
 ```elixir
@@ -92,10 +94,12 @@ ExNylas.Folders.build(%{display_name: "Hello Error"})
 
 5. [Ecto](https://hex.pm/packages/ecto) is also used when transforming the API response from Nylas into structs.  Any validation errors are logged, but errors are not returned/raised in order to make to SDK resilient to changes to the API contract.
 
-6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned.  Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results and/or making this an async operation.
+6. Use `all/2` to fetch all of a given object and let the SDK page for you.  Req will handle retries on errors by default, if retries fail, partial results are not returned (unless `send_to` is used).
+
+Note - depending on the result set, this operation could take time, consider using a query/filter to reduce the number of results and/or making this an async operation.
 
 Optionally include:
-- `delay` to throttle requests and avoid 429s (note: this delay is independent of retry delays configured in the HTTP client)
+- `delay` to throttle requests and avoid 429s (note: strongly recommended; this delay is independent of retry delays configured in the HTTP client)
 - `send_to` to pass each page to your single arity function instead of accumulating all of the result set in memory
 - `with_metadata` any data that should be included when invoking the function provided in `send_to`, results are sent as a tuple `{metadata, page}`
 
@@ -110,5 +114,6 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 
 # Or handle paging on your own
 {:ok, first_page} = ExNylas.Messages.list(conn, limit: 50)
+{:ok, second_page} = ExNylas.Messages.list(conn, limit: 50, page_token: first_page.next_cursor)
 ```
 
