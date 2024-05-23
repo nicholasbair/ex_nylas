@@ -7,9 +7,14 @@ defmodule ExNylas.MixProject do
       version: "0.3.9",
       elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
+      description: "Unofficial Elixir SDK for the Nylas API",
+      package: package(),
       deps: deps(),
+      name: "ex_nylas",
       dialyzer: [plt_add_apps: [:mix]],
       aliases: aliases(),
+      source_url: "https://github.com/nicholasbair/ex_nylas",
+      homepage_url: "https://github.com/nicholasbair/ex_nylas",
     ]
   end
 
@@ -42,6 +47,16 @@ defmodule ExNylas.MixProject do
       {:multipart, "~> 0.4.0"},
       {:req, "~> 0.4.14"},
       {:req_telemetry, "~> 0.0.4"}
+    ]
+  end
+
+  defp package do
+    [
+      name: "ex_nylas",
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => "https://github.com/nicholasbair/ex_nylas",
+      }
     ]
   end
 end
