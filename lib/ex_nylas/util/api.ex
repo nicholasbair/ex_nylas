@@ -32,19 +32,6 @@ defmodule ExNylas.API do
     {:bearer, api_key}
   end
 
-  @spec auth_basic(Conn.t()) :: {:basic, String.t()}
-  def auth_basic(%Conn{client_id: client_id, client_secret: _client_secret}) when is_nil(client_id) do
-    raise ExNylasError, "client_id must be present to use basic auth"
-  end
-
-  def auth_basic(%Conn{client_id: _client_id, client_secret: client_secret}) when is_nil(client_secret) do
-    raise ExNylasError, "client_secret must be present to use basic auth"
-  end
-
-  def auth_basic(%Conn{client_id: client_id, client_secret: client_secret}) do
-    {:basic, "#{client_id}:#{client_secret}"}
-  end
-
   @spec base_headers([any()]) :: Keyword.t()
   def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
