@@ -2,7 +2,7 @@
 
 Unofficial Elixir SDK for the Nylas API.
 
-To get started, first sign up for a free Nylas account [here](nylas.com), then follow the usage guide below.
+To get started, first sign up for a free Nylas account [here](https://nylas.com), then follow the installation and usage guide below.
 
 ## Notes
 
