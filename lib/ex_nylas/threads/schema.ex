@@ -3,10 +3,15 @@ defmodule ExNylas.Thread do
   A struct representing a thread.
   """
 
-  alias ExNylas.Common.EmailParticipant
+  alias ExNylas.{
+    Common.EmailParticipant,
+    Draft,
+    Message
+  }
 
   use Ecto.Schema
   import Ecto.Changeset
+  import PolymorphicEmbed
 
   @primary_key false
 
@@ -25,14 +30,23 @@ defmodule ExNylas.Thread do
     field :unread, :boolean
     field :message_ids, {:array, :string}
     field :draft_ids, {:array, :string}
-    field :latest_draft_or_message, :map
+
+    polymorphic_embeds_one :latest_draft_or_message,
+      types: [
+        draft: Draft,
+        message: Message
+      ],
+      type_field: "object",
+      on_type_not_found: :changeset_error,
+      on_replace: :update
 
     embeds_many :participants, EmailParticipant
   end
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:grant_id, :id, :object, :has_attachments, :has_drafts, :earliest_message_timestamp, :last_message_received_at, :last_message_sent_at, :snippet, :starred, :subject, :unread, :message_ids, :draft_ids, :latest_draft_or_message])
+    |> cast(params, [:grant_id, :id, :object, :has_attachments, :has_drafts, :earliest_message_timestamp, :last_message_received_at, :last_message_sent_at, :snippet, :starred, :subject, :unread, :message_ids, :draft_ids])
+    |> cast_polymorphic_embed(:latest_draft_or_message, required: true)
     |> cast_embed(:participants)
     |> validate_required([:id, :grant_id])
   end
