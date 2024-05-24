@@ -23,6 +23,6 @@ defmodule ExNylas.Webhook do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :trigger_types, :webhook_url, :status, :webhook_secret])
+    |> validate_required([:id, :trigger_types, :webhook_url, :status])
   end
 end

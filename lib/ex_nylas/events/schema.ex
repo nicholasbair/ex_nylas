@@ -20,7 +20,7 @@ defmodule ExNylas.Event do
     field :location, :string
     field :busy, :boolean
     field :recurrence, {:array, :string}
-    field :visibility, :string
+    field :visibility, Ecto.Enum, values: ~w(public private)a
     field :metadata, :map
     field :notifications, {:array, :map}
     field :hide_participants, :boolean
@@ -39,7 +39,7 @@ defmodule ExNylas.Event do
       field :end_time, :integer
       field :start_timezone, :string
       field :end_timezone, :string
-      field :object, :string
+      field :object, Ecto.Enum, values: ~w(time timespan date datespan)a
       field :time, :integer
       field :timezone, :string
       field :start_date, :string
