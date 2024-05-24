@@ -45,6 +45,7 @@ defmodule ExNylas.MixProject do
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ecto, "~> 3.11"},
       {:multipart, "~> 0.4.0"},
+      {:polymorphic_embed, "~> 3.0"},
       {:req, "~> 0.4.14"},
       {:req_telemetry, "~> 0.0.4"}
     ]
