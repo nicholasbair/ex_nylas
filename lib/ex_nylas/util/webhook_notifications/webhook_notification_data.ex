@@ -1,4 +1,8 @@
 defmodule ExNylas.WebhookNotificationData do
+  @moduledoc """
+  A struct representing the data field of a webhook notification.
+  """
+
   use Ecto.Schema
   import Ecto.Changeset
   import PolymorphicEmbed
