@@ -13,8 +13,8 @@ defmodule ExNylas.MixProject do
       name: "ex_nylas",
       dialyzer: [plt_add_apps: [:mix]],
       aliases: aliases(),
-      source_url: "https://github.com/nicholasbair/ex_nylas",
-      homepage_url: "https://github.com/nicholasbair/ex_nylas",
+      source_url: url(),
+      homepage_url: url(),
     ]
   end
 
@@ -56,8 +56,10 @@ defmodule ExNylas.MixProject do
       name: "ex_nylas",
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/nicholasbair/ex_nylas",
+        "GitHub" => url(),
       }
     ]
   end
+
+  defp url, do: "https://github.com/nicholasbair/ex_nylas"
 end
