@@ -5,7 +5,7 @@ defmodule ExNylas.MixProject do
     [
       app: :ex_nylas,
       version: "0.4.0",
-      elixir: "~> 1.16",
+      elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       description: "Unofficial Elixir SDK for the Nylas API",
       package: package(),
