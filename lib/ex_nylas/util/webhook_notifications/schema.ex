@@ -28,10 +28,9 @@ defmodule ExNylas.WebhookNotification do
   end
 
   def changeset(struct, params \\ %{}) do
-    params = put_trigger(params)
-
-    struct
-    |> cast(params, [:specversion, :type, :source, :id, :time])
+    params
+    |> put_trigger()
+    |> then(&cast(struct, &1, [:specversion, :type, :source, :id, :time]))
     |> cast_embed(:data)
   end
 
