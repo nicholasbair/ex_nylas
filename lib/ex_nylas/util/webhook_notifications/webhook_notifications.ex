@@ -3,15 +3,8 @@ defmodule ExNylas.WebhookNotifications do
   Utility functions for webhook notifications.
   """
 
+  import Ecto.Changeset
   alias ExNylas.WebhookNotification, as: Notification
-  alias ExNylas.Transform, as: TF
-  alias ExNylas.WebhookNotification.{
-    Grant,
-    MessageBounceDetected,
-    MessageOpened,
-    MessageLinkClicked,
-    ThreadReplied
-  }
 
   @doc """
   Transform a raw webhook notification into an ExNylas struct.
@@ -20,15 +13,11 @@ defmodule ExNylas.WebhookNotifications do
 
       iex> {:ok, struct} = ExNylas.WebhookNotifications.to_struct(raw_payload)
   """
-  @spec to_struct(map()) :: {:ok, Notification.t()} | {:error, String.t()}
+  @spec to_struct(map()) :: {:ok, Notification.t()} | {:error, Ecto.Changeset.t()}
   def to_struct(raw_notification) do
-    notification = TF.preprocess_data(Notification, raw_notification)
-
-    with {:ok, schema} <- type_to_schema(notification.type), object <- TF.preprocess_data(schema, notification.data.object) do
-      {:ok, put_in(notification, [Access.key!(:data), Access.key!(:object)], object)}
-    else
-      {:error, _} -> {:error, "Failed to transform the webhook notification."}
-    end
+    %Notification{}
+    |> Notification.changeset(raw_notification)
+    |> apply_action(:create)
   end
 
   @doc """
@@ -42,7 +31,7 @@ defmodule ExNylas.WebhookNotifications do
   def to_struct!(raw_notification) do
     case to_struct(raw_notification) do
       {:ok, notification} -> notification
-      {:error, msg} -> raise ExNylasError, msg
+      {:error, _changeset} -> raise ExNylasError, "Failed to transform the webhook notification."
     end
   end
 
@@ -92,38 +81,6 @@ defmodule ExNylas.WebhookNotifications do
 
       {:error, msg} ->
         raise ExNylasError, msg
-    end
-  end
-
-  defp type_to_schema(type) when type in ["grant.created", "grant.updated", "grant.deleted", "grant.expired"] do
-    {:ok, Grant}
-  end
-
-  defp type_to_schema(type) when type in ["message.bounce_detected"] do
-    {:ok, MessageBounceDetected}
-  end
-
-  defp type_to_schema(type) when type in ["message.opened"] do
-    {:ok, MessageOpened}
-  end
-
-  defp type_to_schema(type) when type in ["message.link_clicked"] do
-    {:ok, MessageLinkClicked}
-  end
-
-  defp type_to_schema(type) when type in ["thread.replied"] do
-    {:ok, ThreadReplied}
-  end
-
-  # Use the webhook trigger/type to determine the schema to use for transforming the data.
-  # Non-standard cases are handled above.
-  defp type_to_schema(type) do
-    [hd | _] = String.split(type, ".")
-
-    try do
-      {:ok, Module.safe_concat([ExNylas, String.capitalize(hd)])}
-    rescue
-      _ -> {:error, "module not found"}
     end
   end
 end
