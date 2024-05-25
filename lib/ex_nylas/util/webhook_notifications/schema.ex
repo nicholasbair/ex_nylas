@@ -1,6 +1,6 @@
 defmodule ExNylas.WebhookNotification do
   @moduledoc """
-  A struct representing a webhook notification.
+  A struct representing an inbound webhook notification.
   """
 
   use Ecto.Schema
@@ -38,7 +38,6 @@ defmodule ExNylas.WebhookNotification do
   # Webhook trigger/type is the most reliable way to determine what notification.data.object should be transformed into.
   # Pass the trigger/type as params so it can be used by polymorphic_embeds_one.
   defp put_trigger(%{"type" => type, "data" => data} = params) do
-    data = Map.put(data, "trigger", type)
-    %{params | "data" => data}
+    %{params | "data" => Map.put(data, "trigger", type)}
   end
 end

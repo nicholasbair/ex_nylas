@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotificationData do
   @moduledoc """
   A struct representing the data field of a webhook notification.
+
+  Note - data points to the inflated object that the webhook notification is about; trunacted message webhooks omit the message body.
   """
 
   use Ecto.Schema
@@ -30,12 +32,14 @@ defmodule ExNylas.WebhookNotificationData do
 
     "message.created": ExNylas.Message,
     "message.updated": ExNylas.Message,
+    "message.created.truncated": ExNylas.Message,
+    "message.updated.truncated": ExNylas.Message,
     "message.send_success": ExNylas.Message,
     "message.send_failed": ExNylas.Message,
     "message.bounce_detected": ExNylas.WebhookNotification.MessageBounceDetected,
-
     "message.opened": ExNylas.WebhookNotification.MessageOpened,
     "message.link_clicked": ExNylas.WebhookNotification.MessageLinkClicked,
+
     "thread.replied": ExNylas.WebhookNotification.ThreadReplied,
   ]
 
@@ -66,7 +70,6 @@ defmodule ExNylas.WebhookNotificationData do
   # Webhook trigger/type is the most reliable way to determine what notification.data.object should be transformed into.
   # Pass the trigger/type as params so it can be used by polymorphic_embeds_one.
   defp put_trigger(%{"trigger" => trigger, "object" => object} = params) do
-    object = Map.put(object, "trigger", trigger)
-    %{params | "object" => object}
+    %{params | "object" => Map.put(object, "trigger", trigger)}
   end
 end
