@@ -1,11 +1,11 @@
 defmodule ExNylas.WebhookNotification do
   @moduledoc """
-  A struct representing a webhook notification.
+  A struct representing an inbound webhook notification.
   """
 
   use Ecto.Schema
   import Ecto.Changeset
-  import ExNylas.Schema.Util, only: [embedded_changeset: 2]
+  alias ExNylas.WebhookNotificationData, as: Data
 
   @type t :: %__MODULE__{
           specversion: String.t(),
@@ -13,10 +13,7 @@ defmodule ExNylas.WebhookNotification do
           source: String.t(),
           id: String.t(),
           time: integer(),
-          data: %__MODULE__.Data{
-            application_id: String.t(),
-            object: map()
-          }
+          data: Data.t()
         }
 
   @primary_key false
@@ -28,15 +25,19 @@ defmodule ExNylas.WebhookNotification do
     field :id, :string
     field :time, :integer
 
-    embeds_one :data, Data, primary_key: false do
-      field :application_id, :string
-      field :object, :map
-    end
+    embeds_one :data, Data
   end
 
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:specversion, :type, :source, :id, :time])
-    |> cast_embed(:data, with: &embedded_changeset/2)
+    params
+    |> put_trigger()
+    |> then(&cast(struct, &1, [:specversion, :type, :source, :id, :time]))
+    |> cast_embed(:data)
+  end
+
+  # Webhook trigger/type is the most reliable way to determine what notification.data.object should be transformed into.
+  # Pass the trigger/type as params so it can be used by polymorphic_embeds_one.
+  defp put_trigger(%{"type" => type, "data" => data} = params) do
+    %{params | "data" => Map.put(data, "trigger", type)}
   end
 end
