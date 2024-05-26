@@ -10,6 +10,18 @@ defmodule ExNylas.Common.EventBooking do
     EventReminder
   }
 
+  @type t :: %__MODULE__{
+          title: String.t(),
+          location: String.t(),
+          description: String.t(),
+          booking_type: atom(),
+          additional_fields: map(),
+          hide_participants: boolean(),
+          disable_emails: boolean(),
+          conference: EventConferencing.t(),
+          reminders: EventReminder.t()
+        }
+
   @primary_key false
 
   embedded_schema do

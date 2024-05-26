@@ -7,6 +7,26 @@ defmodule ExNylas.WebhookNotification.MessageLinkClicked do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          message_id: String.t(),
+          label: String.t(),
+          sender_app_id: String.t(),
+          timestamp: integer(),
+          link_data: %__MODULE__.LinkData{
+            count: non_neg_integer(),
+            url: String.t()
+          },
+          recents: [
+            %__MODULE__.Recent{
+              click_id: String.t(),
+              ip: String.t(),
+              link_index: String.t(),
+              timestamp: integer(),
+              user_agent: String.t()
+            }
+          ]
+        }
+
   @primary_key false
 
   embedded_schema do

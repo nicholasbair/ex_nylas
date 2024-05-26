@@ -7,6 +7,18 @@ defmodule ExNylas.Common.Build.SchedulingParticipant do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          name: String.t(),
+          email: String.t(),
+          is_organizer: boolean(),
+          availability: %__MODULE__.Availability{
+            calendar_ids: [String.t()]
+          },
+          booking: %__MODULE__.Booking{
+            calendar_id: String.t()
+          }
+        }
+
   @primary_key false
   @derive {Jason.Encoder, only: [:name, :email, :is_organizer, :availability, :booking]}
 

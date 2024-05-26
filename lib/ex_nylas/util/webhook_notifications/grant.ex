@@ -6,6 +6,14 @@ defmodule ExNylas.WebhookNotification.Grant do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          code: non_neg_integer(),
+          grant_id: String.t(),
+          integration_id: String.t(),
+          provider: String.t(),
+          reauthentication_flag: boolean()
+        }
+
   @primary_key false
 
   embedded_schema do

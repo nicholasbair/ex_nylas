@@ -6,6 +6,13 @@ defmodule ExNylas.Provider do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          provider: String.t(),
+          type: String.t(),
+          email_address: String.t(),
+          detected: boolean()
+        }
+
   @primary_key false
 
   embedded_schema do

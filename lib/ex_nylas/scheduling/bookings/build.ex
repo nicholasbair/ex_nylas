@@ -7,6 +7,16 @@ defmodule ExNylas.Scheduling.Booking.Build do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          start_time: non_neg_integer(),
+          end_time: non_neg_integer(),
+          participants: [String.t()],
+          guest: %__MODULE__.Guest{
+            email: String.t(),
+            name: String.t()
+          }
+        }
+
   @derive {Jason.Encoder, only: [:start_time, :end_time, :participants, :guest]}
   @primary_key false
 

@@ -10,8 +10,20 @@ defmodule ExNylas.Common.Build.EventBooking do
     EventConferencing
   }
 
-  @primary_key false
+  @type t :: %__MODULE__{
+          title: String.t(),
+          description: String.t(),
+          location: String.t(),
+          timezone: String.t(),
+          booking_type: String.t(),
+          additional_fields: map(),
+          hide_participants: boolean(),
+          disable_emails: boolean(),
+          conference: EventConferencing.t(),
+          reminders: EventReminder.t()
+        }
 
+  @primary_key false
   @derive {Jason.Encoder, only: [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails, :conference, :reminders]}
 
   embedded_schema do

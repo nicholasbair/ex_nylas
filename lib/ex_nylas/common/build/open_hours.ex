@@ -6,6 +6,14 @@ defmodule ExNylas.Common.Build.OpenHours do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          days: [integer()],
+          timezone: String.t(),
+          start: String.t(),
+          end: String.t(),
+          exdates: [String.t()]
+        }
+
   @primary_key false
   @derive {Jason.Encoder, only: [:days, :timezone, :start, :end, :exdates]}
 

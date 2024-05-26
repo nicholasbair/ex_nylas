@@ -6,6 +6,11 @@ defmodule ExNylas.ApplicationRedirect.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          url: String.t(),
+          platform: atom()
+        }
+
   @derive {Jason.Encoder, only: [:url, :platform]}
   @primary_key false
 

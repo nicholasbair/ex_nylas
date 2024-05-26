@@ -6,6 +6,11 @@ defmodule ExNylas.Common.MessageHeader do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          name: String.t(),
+          value: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

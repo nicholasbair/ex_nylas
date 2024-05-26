@@ -6,6 +6,10 @@ defmodule ExNylas.Scheduling.Session do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          session_id: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

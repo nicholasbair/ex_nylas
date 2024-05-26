@@ -6,6 +6,12 @@ defmodule ExNylas.ConnectorCredential.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          name: String.t(),
+          credential_type: atom(),
+          credential_data: map()
+        }
+
   @derive {Jason.Encoder, only: [:name, :credential_type, :credential_data]}
   @primary_key false
 

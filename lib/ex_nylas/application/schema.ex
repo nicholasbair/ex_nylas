@@ -11,6 +11,33 @@ defmodule ExNylas.Application do
     Schema.Util
   }
 
+  @type t :: %__MODULE__{
+          application_id: String.t(),
+          organization_id: String.t(),
+          region: String.t(),
+          created_at: non_neg_integer(),
+          updated_at: non_neg_integer(),
+          environment: String.t(),
+          v2_organization_id: String.t(),
+          branding: %__MODULE__.Branding{
+            name: String.t(),
+            icon_url: String.t(),
+            website_url: String.t(),
+            description: String.t()
+          },
+          hosted_authentication: %__MODULE__.HostedAuthentication{
+            background_image_url: String.t(),
+            alignment: atom(),
+            color_primary: String.t(),
+            color_secondary: String.t(),
+            title: String.t(),
+            subtitle: String.t(),
+            background_color: String.t(),
+            spacing: non_neg_integer()
+          },
+          callback_uris: [ApplicationRedirect.t()]
+        }
+
   @primary_key false
 
   embedded_schema do

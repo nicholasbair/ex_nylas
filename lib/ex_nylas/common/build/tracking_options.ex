@@ -6,6 +6,13 @@ defmodule ExNylas.Common.Build.TrackingOptions do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          links: boolean(),
+          opens: boolean(),
+          thread_replies: boolean(),
+          label: String.t()
+        }
+
   @primary_key false
   @derive {Jason.Encoder, only: [:links, :opens, :thread_replies, :label]}
 

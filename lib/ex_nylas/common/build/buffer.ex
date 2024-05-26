@@ -6,6 +6,11 @@ defmodule ExNylas.Common.Build.Buffer do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          before: non_neg_integer(),
+          after: non_neg_integer()
+        }
+
   @primary_key false
   @derive {Jason.Encoder, only: [:before, :after]}
 

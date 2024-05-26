@@ -6,6 +6,13 @@ defmodule ExNylas.Common.TrackingOptions do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          links: boolean(),
+          opens: boolean(),
+          thread_replies: boolean(),
+          label: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

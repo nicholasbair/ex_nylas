@@ -9,8 +9,14 @@ defmodule ExNylas.Common.Build.Availability do
     AvailabilityRules,
   }
 
-  @primary_key false
+  @type t :: %__MODULE__{
+          duration_minutes: non_neg_integer(),
+          interval_minutes: non_neg_integer(),
+          round_to_30_minutes: boolean(),
+          availability_rules: AvailabilityRules.t()
+        }
 
+  @primary_key false
   @derive {Jason.Encoder, only: [:duration_minutes, :interval_minutes, :round_to_30_minutes, :availability_rules]}
 
   embedded_schema do

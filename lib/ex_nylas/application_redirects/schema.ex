@@ -6,6 +6,12 @@ defmodule ExNylas.ApplicationRedirect do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          url: String.t(),
+          platform: atom()
+        }
+
   @primary_key false
 
   embedded_schema do

@@ -7,6 +7,22 @@ defmodule ExNylas.CustomAuthentication.Build do
   import Ecto.Changeset
   alias ExNylas.Schema.Util
 
+  @type t :: %__MODULE__{
+          provider: atom(),
+          state: String.t(),
+          settings: %__MODULE__.Settings{
+            refresh_token: String.t(),
+            credential_id: String.t(),
+            email_address: String.t(),
+            imap_username: String.t(),
+            imap_password: String.t(),
+            imap_host: String.t(),
+            imap_port: non_neg_integer(),
+            smtp_host: String.t(),
+            smtp_port: non_neg_integer()
+          }
+        }
+
   @derive {Jason.Encoder, only: [:provider, :state, :settings]}
   @primary_key false
 

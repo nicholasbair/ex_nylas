@@ -10,6 +10,13 @@ defmodule ExNylas.Common.AvailabilityRules do
     OpenHours
   }
 
+  @type t :: %__MODULE__{
+          availability_method: atom(),
+          round_robin_group_id: String.t(),
+          buffer: Buffer.t(),
+          default_open_hours: [OpenHours.t()]
+        }
+
   @primary_key false
 
   embedded_schema do

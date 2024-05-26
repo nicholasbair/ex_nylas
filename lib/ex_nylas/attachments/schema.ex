@@ -6,6 +6,15 @@ defmodule ExNylas.Attachment do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          grant_id: String.t(),
+          content_type: String.t(),
+          size: non_neg_integer(),
+          filename: String.t(),
+          is_inline: boolean()
+        }
+
   @primary_key false
 
   embedded_schema do

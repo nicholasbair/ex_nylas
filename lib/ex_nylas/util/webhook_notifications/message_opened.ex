@@ -7,6 +7,25 @@ defmodule ExNylas.WebhookNotification.MessageOpened do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          message_id: String.t(),
+          label: String.t(),
+          sender_app_id: String.t(),
+          timestamp: non_neg_integer(),
+          message_data: %__MODULE__.MessageData{
+            count: non_neg_integer(),
+            timestamp: non_neg_integer()
+          },
+          recents: [
+            %__MODULE__.Recent{
+              ip: String.t(),
+              opened_id: integer(),
+              timestamp: integer(),
+              user_agent: String.t()
+            }
+          ]
+        }
+
   @primary_key false
 
   embedded_schema do

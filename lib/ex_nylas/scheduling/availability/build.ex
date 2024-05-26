@@ -6,6 +6,11 @@ defmodule ExNylas.Scheduling.Availability.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          start_time: non_neg_integer(),
+          end_time: non_neg_integer()
+        }
+
   @derive {Jason.Encoder, only: [:start_time, :end_time]}
   @primary_key false
 

@@ -6,6 +6,15 @@ defmodule ExNylas.ConnectorCredential do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          name: String.t(),
+          credential_type: atom(),
+          hashed_data: String.t(),
+          created_at: integer(),
+          updated_at: integer()
+        }
+
   @primary_key false
 
   embedded_schema do

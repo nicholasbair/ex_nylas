@@ -6,6 +6,20 @@ defmodule ExNylas.HostedAuthentication.Options.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          provider: atom(),
+          redirect_uri: String.t(),
+          response_type: atom(),
+          scope: [String.t()],
+          prompt: atom(),
+          state: String.t(),
+          login_hint: String.t(),
+          access_type: atom(),
+          code_challenge: String.t(),
+          code_challenge_method: atom(),
+          credential_id: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

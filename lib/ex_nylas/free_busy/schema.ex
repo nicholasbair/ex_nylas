@@ -8,6 +8,19 @@ defmodule ExNylas.FreeBusy do
 
   alias ExNylas.Schema.Util
 
+  @type t :: %__MODULE__{
+          object: String.t(),
+          email: String.t(),
+          time_slots: [
+            %__MODULE__.TimeSlot{
+              object: String.t(),
+              status: String.t(),
+              start_time: non_neg_integer(),
+              end_time: non_neg_integer()
+            }
+          ]
+        }
+
   @primary_key false
 
   embedded_schema do

@@ -6,6 +6,16 @@ defmodule ExNylas.Common.Build.Attachment do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          content_id: String.t(),
+          content: String.t(),
+          content_type: String.t(),
+          size: non_neg_integer(),
+          filename: String.t(),
+          is_inline: boolean()
+        }
+
   @primary_key false
   @derive {Jason.Encoder, only: [:id, :content, :content_type, :content_id, :size, :filename, :is_inline]}
 

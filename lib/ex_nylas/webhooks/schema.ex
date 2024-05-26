@@ -6,6 +6,18 @@ defmodule ExNylas.Webhook do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          description: String.t(),
+          trigger_types: [String.t()],
+          webhook_url: String.t(),
+          status: atom(),
+          webhook_secret: String.t(),
+          notification_email_addresses: [String.t()],
+          topic: String.t(),
+          encryption_key: String.t()
+        }
+
   @primary_key false
 
   schema "webhook" do

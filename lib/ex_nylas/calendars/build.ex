@@ -6,6 +6,14 @@ defmodule ExNylas.Calendar.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          description: String.t(),
+          location: String.t(),
+          name: String.t(),
+          timezone: String.t(),
+          metadata: map()
+        }
+
   @derive {Jason.Encoder, only: [:description, :location, :name, :timezone, :metadata]}
   @primary_key false
 

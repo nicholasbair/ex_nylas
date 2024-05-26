@@ -7,6 +7,17 @@ defmodule ExNylas.Connector.Build do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          provider: atom(),
+          scope: [String.t()],
+          settings: %__MODULE__.Settings{
+            client_id: String.t(),
+            client_secret: String.t(),
+            tenant: String.t(),
+            topic_name: String.t()
+          }
+        }
+
   @derive {Jason.Encoder, only: [:provider, :settings, :scope]}
   @primary_key false
 

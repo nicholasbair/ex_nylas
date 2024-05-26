@@ -6,6 +6,10 @@ defmodule ExNylas.Schema.SmartCompose do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          suggestion: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

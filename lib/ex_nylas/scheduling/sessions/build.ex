@@ -6,6 +6,11 @@ defmodule ExNylas.Scheduling.Session.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          configuration_id: String.t(),
+          time_to_live: non_neg_integer()
+        }
+
   @derive {Jason.Encoder, only: [:configuration_id, :time_to_live]}
   @primary_key false
 

@@ -6,6 +6,20 @@ defmodule ExNylas.Folder do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          name: String.t(),
+          grant_id: String.t(),
+          system_folder: boolean(),
+          total_count: integer(),
+          unread_count: integer(),
+          child_count: integer(),
+          parent_id: String.t(),
+          background_color: String.t(),
+          object: String.t(),
+          text_color: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

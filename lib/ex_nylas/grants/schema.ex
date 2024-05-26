@@ -6,6 +6,19 @@ defmodule ExNylas.Grant do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          id: String.t(),
+          provider: atom(),
+          grant_status: atom(),
+          email: String.t(),
+          scope: [String.t()],
+          user_agent: String.t(),
+          ip: String.t(),
+          state: String.t(),
+          created_at: non_neg_integer(),
+          updated_at: non_neg_integer()
+        }
+
   @primary_key false
 
   embedded_schema do

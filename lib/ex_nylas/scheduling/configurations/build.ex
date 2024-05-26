@@ -12,6 +12,15 @@ defmodule ExNylas.Scheduling.Configuration.Build do
     SchedulingParticipant
   }
 
+  @type t :: %__MODULE__{
+          version: String.t(),
+          requires_session_auth: boolean(),
+          participants: [SchedulingParticipant.t()],
+          availability: [Availability.t()],
+          event_booking: EventBooking.t(),
+          scheduler: Scheduler.t()
+        }
+
   @derive {Jason.Encoder, only: [:version, :requires_session_auth, :participants, :availability, :event_booking]}
   @primary_key false
 

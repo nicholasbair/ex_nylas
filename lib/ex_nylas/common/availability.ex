@@ -8,6 +8,17 @@ defmodule ExNylas.Common.Availability do
 
   alias ExNylas.Schema.Util
 
+  @type t :: %__MODULE__{
+          order: [String.t()],
+          time_slots: [
+            %__MODULE__.TimeSlot{
+              emails: [String.t()],
+              start_time: non_neg_integer(),
+              end_time: non_neg_integer()
+            }
+          ]
+        }
+
   @primary_key false
 
   embedded_schema do

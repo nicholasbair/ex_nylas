@@ -6,6 +6,13 @@ defmodule ExNylas.Folder.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          name: String.t(),
+          parent_id: String.t(),
+          background_color: String.t(),
+          text_color: String.t()
+        }
+
   @derive {Jason.Encoder, only: [:name, :parent_id, :background_color, :text_color]}
   @primary_key false
 

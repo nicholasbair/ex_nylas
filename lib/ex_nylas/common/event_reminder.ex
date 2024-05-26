@@ -6,6 +6,11 @@ defmodule ExNylas.Common.EventReminder do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          overrides: [map()],
+          use_default: boolean()
+        }
+
   @primary_key false
 
   embedded_schema do

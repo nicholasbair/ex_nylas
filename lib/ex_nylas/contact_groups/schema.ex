@@ -6,6 +6,15 @@ defmodule ExNylas.ContactGroup do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          grant_id: String.t(),
+          group_type: String.t(),
+          id: String.t(),
+          name: String.t(),
+          object: String.t(),
+          path: String.t()
+        }
+
   @primary_key false
 
   embedded_schema do

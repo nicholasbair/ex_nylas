@@ -7,6 +7,12 @@ defmodule ExNylas.Common.EventConferencing do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          provider: atom(),
+          autocreate: map(),
+          details: Details
+        }
+
   @primary_key false
 
   embedded_schema do

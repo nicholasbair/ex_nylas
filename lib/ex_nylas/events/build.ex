@@ -9,6 +9,42 @@ defmodule ExNylas.Schema.Event.Build do
   alias ExNylas.Common.Build.EventReminder
   alias ExNylas.Common.Build.EventConferencing
 
+  @type t :: %__MODULE__{
+          title: String.t(),
+          description: String.t(),
+          location: String.t(),
+          busy: boolean(),
+          recurrence: list(String.t()),
+          visibility: String.t(),
+          metadata: map(),
+          notifications: list(map()),
+          hide_participants: boolean(),
+          when: %__MODULE__.When{
+            start_time: non_neg_integer(),
+            end_time: non_neg_integer(),
+            start_timezone: String.t(),
+            end_timezone: String.t(),
+            object: String.t(),
+            time: non_neg_integer(),
+            timezone: String.t(),
+            start_date: String.t(),
+            end_date: String.t(),
+            date: String.t()
+          },
+          conferencing: EventConferencing.t(),
+          reminders: EventReminder.t(),
+          participants: [
+            %__MODULE__.Participant{
+              name: String.t(),
+              email: String.t(),
+              status: String.t(),
+              comment: String.t(),
+              phone_number: String.t()
+            }
+          ],
+          master_event_id: String.t()
+        }
+
   @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants, :master_event_id]}
   @primary_key false
 

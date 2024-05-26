@@ -7,6 +7,23 @@ defmodule ExNylas.WebhookNotification.MessageBounceDetected do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
+  @type t :: %__MODULE__{
+          bounce_reason: String.t(),
+          bounce_date: String.t(),
+          bounced_address: String.t(),
+          type: String.t(),
+          code: integer(),
+          origin: %__MODULE__.Origin{
+            to: [String.t()],
+            from: String.t(),
+            cc: [String.t()],
+            bcc: [String.t()],
+            subject: String.t(),
+            mimeId: String.t(),
+            id: String.t()
+          }
+        }
+
   @primary_key false
 
   embedded_schema do

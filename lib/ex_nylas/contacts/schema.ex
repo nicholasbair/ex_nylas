@@ -8,6 +8,59 @@ defmodule ExNylas.Contact do
 
   alias ExNylas.Schema.Util
 
+  @type t :: %__MODULE__{
+          given_name: String.t(),
+          grant_id: String.t(),
+          id: String.t(),
+          job_title: String.t(),
+          manager_name: String.t(),
+          notes: String.t(),
+          office_location: String.t(),
+          object: String.t(),
+          source: String.t(),
+          emails: [
+            %__MODULE__.Email{
+              email: String.t(),
+              type: String.t()
+            }
+          ],
+          groups: [
+            %__MODULE__.ContactGroup{
+              id: String.t(),
+              name: String.t()
+            }
+          ],
+          im_addresses: [
+            %__MODULE__.ImAddress{
+              im_address: String.t(),
+              type: String.t()
+            }
+          ],
+          phone_numbers: [
+            %__MODULE__.PhoneNumber{
+              number: String.t(),
+              type: String.t()
+            }
+          ],
+          physical_addresses: [
+            %__MODULE__.PhysicalAddress{
+              type: String.t(),
+              format: String.t(),
+              street_address: String.t(),
+              city: String.t(),
+              state: String.t(),
+              postal_code: String.t(),
+              country: String.t()
+            }
+          ],
+          web_pages: [
+            %__MODULE__.WebPage{
+              url: String.t(),
+              type: String.t()
+            }
+          ]
+        }
+
   @primary_key false
 
   embedded_schema do
@@ -32,7 +85,7 @@ defmodule ExNylas.Contact do
     end
 
     embeds_many :im_addresses, ImAddress, primary_key: false do
-      field :address, :string
+      field :im_address, :string
       field :type, :string
     end
 

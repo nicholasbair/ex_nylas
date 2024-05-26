@@ -6,6 +6,12 @@ defmodule ExNylas.CalendarFreeBusy.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          emails: [String.t()],
+          start_time: non_neg_integer(),
+          end_time: non_neg_integer()
+        }
+
   @derive {Jason.Encoder, only: [:emails, :start_time, :end_time]}
   @primary_key false
 

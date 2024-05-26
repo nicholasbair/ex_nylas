@@ -6,6 +6,15 @@ defmodule ExNylas.Webhook.Build do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          description: String.t(),
+          trigger_types: [String.t()],
+          webhook_url: String.t(),
+          notification_email_addresses: [String.t()],
+          topic: String.t(),
+          encryption_key: String.t()
+        }
+
   @derive {Jason.Encoder, only: [:description, :trigger_types, :webhook_url, :notification_email_addresses, :topic, :encryption_key]}
   @primary_key false
 

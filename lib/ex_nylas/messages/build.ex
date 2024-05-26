@@ -12,6 +12,23 @@ defmodule ExNylas.Message.Build do
     MessageHeader
   }
 
+  @type t :: %__MODULE__{
+          body: String.t(),
+          reply_to_message_id: String.t(),
+          subject: String.t(),
+          metadata: map(),
+          send_at: integer(),
+          use_draft: boolean(),
+          attachments: list(Attachment.t()),
+          bcc: list(EmailParticipant.t()),
+          cc: list(EmailParticipant.t()),
+          from: list(EmailParticipant.t()),
+          reply_to: list(EmailParticipant.t()),
+          to: list(EmailParticipant.t()),
+          custom_headers: list(MessageHeader.t()),
+          tracking_options: TrackingOptions.t()
+        }
+
   @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 

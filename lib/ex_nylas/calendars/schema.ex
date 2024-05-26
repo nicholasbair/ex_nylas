@@ -6,6 +6,22 @@ defmodule ExNylas.Calendar do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          grant_id: String.t(),
+          description: String.t(),
+          id: String.t(),
+          is_primary: boolean(),
+          location: String.t(),
+          name: String.t(),
+          object: String.t(),
+          read_only: boolean(),
+          timezone: String.t(),
+          hex_color: String.t(),
+          hex_foreground_color: String.t(),
+          is_owned_by_user: boolean(),
+          metadata: map()
+        }
+
   @primary_key false
 
   embedded_schema do

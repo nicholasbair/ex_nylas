@@ -7,6 +7,30 @@ defmodule ExNylas.CalendarAvailability.Build do
   import Ecto.Changeset
   alias ExNylas.Common.Build.AvailabilityRules
 
+  @type t :: %__MODULE__{
+          start_time: non_neg_integer(),
+          end_time: non_neg_integer(),
+          duration_minutes: non_neg_integer(),
+          interval_minutes: non_neg_integer(),
+          round_to_30_minutes: boolean(),
+          availability_rules: [AvailabilityRules.t()],
+          participants: [
+            %__MODULE__.Participant{
+              email: String.t(),
+              calendar_ids: [String.t()],
+              open_hours: [
+                %__MODULE__.Participant.OpenHours{
+                  days: [integer()],
+                  timezone: String.t(),
+                  start: String.t(),
+                  end: String.t(),
+                  exdates: [String.t()]
+                }
+              ]
+            }
+          ]
+        }
+
   @derive {Jason.Encoder, only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to_30_minutes, :availability_rules]}
   @primary_key false
 

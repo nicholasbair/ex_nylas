@@ -6,6 +6,11 @@ defmodule ExNylas.WebhookIP do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{
+          ip_addresses: [String.t()],
+          updated_at: non_neg_integer()
+        }
+
   @primary_key false
 
   schema "webhook_ip" do
