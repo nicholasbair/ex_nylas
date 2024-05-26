@@ -9,38 +9,51 @@ defmodule ExNylas.WebhookNotificationData do
   import Ecto.Changeset
   import PolymorphicEmbed
 
+  alias ExNylas.{
+    Calendar,
+    Contact,
+    Event,
+    Folder,
+    Message,
+    WebhookNotification.Grant,
+    WebhookNotification.MessageBounceDetected,
+    WebhookNotification.MessageOpened,
+    WebhookNotification.MessageLinkClicked,
+    WebhookNotification.ThreadReplied
+  }
+
   @trigger_to_schema  [
-    "calendar.created": ExNylas.Calendar,
-    "calendar.updated": ExNylas.Calendar,
-    "calendar.deleted": ExNylas.Calendar,
+    "calendar.created": Calendar,
+    "calendar.updated": Calendar,
+    "calendar.deleted": Calendar,
 
-    "contact.updated": ExNylas.Contact,
-    "contact.deleted": ExNylas.Contact,
+    "contact.updated": Contact,
+    "contact.deleted": Contact,
 
-    "event.created": ExNylas.Event,
-    "event.updated": ExNylas.Event,
-    "event.deleted": ExNylas.Event,
+    "event.created": Event,
+    "event.updated": Event,
+    "event.deleted": Event,
 
-    "folder.created": ExNylas.Folder,
-    "folder.updated": ExNylas.Folder,
-    "folder.deleted": ExNylas.Folder,
+    "folder.created": Folder,
+    "folder.updated": Folder,
+    "folder.deleted": Folder,
 
-    "grant.created": ExNylas.WebhookNotification.Grant,
-    "grant.updated": ExNylas.WebhookNotification.Grant,
-    "grant.deleted": ExNylas.WebhookNotification.Grant,
-    "grant.expired": ExNylas.WebhookNotification.Grant,
+    "grant.created": Grant,
+    "grant.updated": Grant,
+    "grant.deleted": Grant,
+    "grant.expired": Grant,
 
-    "message.created": ExNylas.Message,
-    "message.updated": ExNylas.Message,
-    "message.created.truncated": ExNylas.Message,
-    "message.updated.truncated": ExNylas.Message,
-    "message.send_success": ExNylas.Message,
-    "message.send_failed": ExNylas.Message,
-    "message.bounce_detected": ExNylas.WebhookNotification.MessageBounceDetected,
-    "message.opened": ExNylas.WebhookNotification.MessageOpened,
-    "message.link_clicked": ExNylas.WebhookNotification.MessageLinkClicked,
+    "message.created": Message,
+    "message.updated": Message,
+    "message.created.truncated": Message,
+    "message.updated.truncated": Message,
+    "message.send_success": Message,
+    "message.send_failed": Message,
+    "message.bounce_detected": MessageBounceDetected,
+    "message.opened": MessageOpened,
+    "message.link_clicked": MessageLinkClicked,
 
-    "thread.replied": ExNylas.WebhookNotification.ThreadReplied,
+    "thread.replied": ThreadReplied,
   ]
 
   @type t :: %__MODULE__{

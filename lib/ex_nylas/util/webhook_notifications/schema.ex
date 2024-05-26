@@ -5,6 +5,7 @@ defmodule ExNylas.WebhookNotification do
 
   use Ecto.Schema
   import Ecto.Changeset
+  alias ExNylas.WebhookNotificationData, as: Data
 
   @type t :: %__MODULE__{
           specversion: String.t(),
@@ -12,7 +13,7 @@ defmodule ExNylas.WebhookNotification do
           source: String.t(),
           id: String.t(),
           time: integer(),
-          data: ExNylas.WebhookNotificationData.t()
+          data: Data.t()
         }
 
   @primary_key false
@@ -24,7 +25,7 @@ defmodule ExNylas.WebhookNotification do
     field :id, :string
     field :time, :integer
 
-    embeds_one :data, ExNylas.WebhookNotificationData
+    embeds_one :data, Data
   end
 
   def changeset(struct, params \\ %{}) do
