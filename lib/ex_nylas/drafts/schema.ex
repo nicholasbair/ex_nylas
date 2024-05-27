@@ -9,33 +9,12 @@ defmodule ExNylas.Draft do
     Common.TrackingOptions
   }
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          grant_id: String.t(),
-          object: String.t(),
-          thread_id: String.t(),
-          reply_to_message_id: String.t(),
-          date: non_neg_integer(),
-          snippet: String.t(),
-          starred: boolean(),
-          subject: String.t(),
-          body: String.t(),
-          folders: list(String.t()),
-          attachments: list(Attachment.t()),
-          bcc: list(EmailParticipant.t()),
-          cc: list(EmailParticipant.t()),
-          from: list(EmailParticipant.t()),
-          reply_to: list(EmailParticipant.t()),
-          to: list(EmailParticipant.t()),
-          tracking_options: TrackingOptions.t()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :grant_id, :string
     field :object, :string

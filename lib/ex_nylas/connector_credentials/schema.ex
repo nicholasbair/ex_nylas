@@ -3,21 +3,12 @@ defmodule ExNylas.ConnectorCredential do
   Structs for Nylas connector credentials.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          name: String.t(),
-          credential_type: atom(),
-          hashed_data: String.t(),
-          created_at: integer(),
-          updated_at: integer()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :name, :string
     field :credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a

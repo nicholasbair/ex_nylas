@@ -3,19 +3,12 @@ defmodule ExNylas.Provider do
   Structs for Nylas providers.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          provider: String.t(),
-          type: String.t(),
-          email_address: String.t(),
-          detected: boolean()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :provider, :string
     field :type, :string
     field :email_address, :string

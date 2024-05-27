@@ -3,16 +3,12 @@ defmodule ExNylas.Schema.SmartCompose do
   A struct for Nylas smart compose.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          suggestion: String.t()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :suggestion, :string
   end
 

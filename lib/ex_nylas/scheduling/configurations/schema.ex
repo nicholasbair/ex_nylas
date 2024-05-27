@@ -3,7 +3,7 @@ defmodule ExNylas.Scheduling.Configuration do
   A struct representing a scheduling configuration.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
@@ -13,29 +13,9 @@ defmodule ExNylas.Scheduling.Configuration do
     SchedulingParticipant
   }
 
-  @type t :: %__MODULE__{
-          version: String.t(),
-          id: String.t(),
-          requires_session_auth: boolean(),
-          participants: [SchedulingParticipant.t()],
-          availability: %__MODULE__.Availability{
-            duration_minutes: non_neg_integer(),
-            interval_minutes: non_neg_integer(),
-            round_to_30_minutes: boolean(),
-            availability_rules: AvailabilityRules.t()
-          },
-          scheduler: %__MODULE__.Scheduler{
-            available_days_in_future: non_neg_integer(),
-            min_cancellation_notice: non_neg_integer(),
-            rescheduling_url: String.t(),
-            cancellation_url: String.t()
-          },
-          event_booking: EventBooking.t()
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :version, :string
     field :id, :string
     field :requires_session_auth, :boolean

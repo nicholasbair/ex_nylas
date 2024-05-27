@@ -3,26 +3,12 @@ defmodule ExNylas.Folder do
   A struct representing a folder.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          name: String.t(),
-          grant_id: String.t(),
-          system_folder: boolean(),
-          total_count: integer(),
-          unread_count: integer(),
-          child_count: integer(),
-          parent_id: String.t(),
-          background_color: String.t(),
-          object: String.t(),
-          text_color: String.t()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :name, :string
     field :grant_id, :string

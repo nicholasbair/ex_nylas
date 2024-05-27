@@ -2,25 +2,14 @@ defmodule ExNylas.Connector do
   @moduledoc """
   A struct representing a Nylas connector.
   """
-
-  use Ecto.Schema
+  # use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
-  @type t :: %__MODULE__{
-          provider: String.t(),
-          scope: [String.t()],
-          settings: %__MODULE__.Settings{
-            client_id: String.t(),
-            project_id: String.t(),
-            topic_name: String.t(),
-            tenant: String.t()
-          }
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a
     field :scope, {:array, :string}
 

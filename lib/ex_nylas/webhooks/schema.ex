@@ -3,24 +3,12 @@ defmodule ExNylas.Webhook do
   A struct representing a webhook.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          description: String.t(),
-          trigger_types: [String.t()],
-          webhook_url: String.t(),
-          status: atom(),
-          webhook_secret: String.t(),
-          notification_email_addresses: [String.t()],
-          topic: String.t(),
-          encryption_key: String.t()
-        }
 
   @primary_key false
 
-  schema "webhook" do
+  typed_embedded_schema do
     field :id, :string
     field :description, :string
     field :trigger_types, {:array, :string}

@@ -3,25 +3,14 @@ defmodule ExNylas.Common.Availability do
   Struct for Nylas common availability.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   alias ExNylas.Schema.Util
 
-  @type t :: %__MODULE__{
-          order: [String.t()],
-          time_slots: [
-            %__MODULE__.TimeSlot{
-              emails: [String.t()],
-              start_time: non_neg_integer(),
-              end_time: non_neg_integer()
-            }
-          ]
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :order, {:array, :string}
 
     embeds_many :time_slots, TimeSlot, primary_key: false do

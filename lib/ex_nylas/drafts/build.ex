@@ -3,7 +3,7 @@ defmodule ExNylas.Draft.Build do
   Helper module for validating a draft before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.{
     Build.Attachment,
@@ -12,24 +12,10 @@ defmodule ExNylas.Draft.Build do
     MessageHeader
   }
 
-  @type t :: %__MODULE__{
-          reply_to_message_id: String.t(),
-          subject: String.t(),
-          body: String.t(),
-          attachments: list(Attachment.t()),
-          bcc: list(EmailParticipant.t()),
-          cc: list(EmailParticipant.t()),
-          from: list(EmailParticipant.t()),
-          reply_to: list(EmailParticipant.t()),
-          to: list(EmailParticipant.t()),
-          custom_headers: list(MessageHeader.t()),
-          tracking_options: TrackingOptions.t()
-        }
-
   @derive {Jason.Encoder, only: [:reply_to_message_id, :subject, :body, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :reply_to_message_id, :string
     field :subject, :string
     field :body, :string

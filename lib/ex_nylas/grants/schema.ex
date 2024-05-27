@@ -3,25 +3,12 @@ defmodule ExNylas.Grant do
   A struct represting a Nylas grant.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          provider: atom(),
-          grant_status: atom(),
-          email: String.t(),
-          scope: [String.t()],
-          user_agent: String.t(),
-          ip: String.t(),
-          state: String.t(),
-          created_at: non_neg_integer(),
-          updated_at: non_neg_integer()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
     field :grant_status, Ecto.Enum, values: ~w(valid invalid)a

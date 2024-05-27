@@ -3,67 +3,14 @@ defmodule ExNylas.Event do
   A struct representing a event.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   alias ExNylas.Schema.Util
 
-  @type t :: %__MODULE__{
-          id: String.t(),
-          object: String.t(),
-          grant_id: String.t(),
-          calendar_id: String.t(),
-          title: String.t(),
-          description: String.t(),
-          location: String.t(),
-          busy: boolean(),
-          recurrence: [String.t()],
-          visibility: String.t(),
-          metadata: map(),
-          notifications: [map()],
-          hide_participants: boolean(),
-          master_event_id: String.t(),
-          participants: [
-            %__MODULE__.Participant{
-              name: String.t(),
-              email: String.t(),
-              status: atom(),
-              comment: String.t(),
-              phone_number: String.t()
-            }
-          ],
-          when: %__MODULE__.When{
-            start_time: non_neg_integer(),
-            end_time: non_neg_integer(),
-            start_timezone: String.t(),
-            end_timezone: String.t(),
-            object: atom(),
-            time: non_neg_integer(),
-            timezone: String.t(),
-            start_date: String.t(),
-            end_date: String.t(),
-            date: String.t()
-          },
-          conferencing: %__MODULE__.Conferencing{
-            meeting_code: String.t(),
-            password: String.t(),
-            url: String.t(),
-            phone: [String.t()],
-            pin: String.t()
-          },
-          reminders: %__MODULE__.Reminder{
-            overrides: [map()],
-            use_default: boolean()
-          },
-          organizer: %__MODULE__.Organizer{
-            email: String.t(),
-            name: String.t()
-          }
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :object, :string
     field :grant_id, :string

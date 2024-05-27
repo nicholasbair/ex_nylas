@@ -3,24 +3,14 @@ defmodule ExNylas.Scheduling.Booking.Build do
   Helper module for validating a scheduling booking before sending it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
-
-  @type t :: %__MODULE__{
-          start_time: non_neg_integer(),
-          end_time: non_neg_integer(),
-          participants: [String.t()],
-          guest: %__MODULE__.Guest{
-            email: String.t(),
-            name: String.t()
-          }
-        }
 
   @derive {Jason.Encoder, only: [:start_time, :end_time, :participants, :guest]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :start_time, :integer
     field :end_time, :integer
     field :participants, {:array, :string}

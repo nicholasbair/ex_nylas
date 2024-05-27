@@ -3,18 +3,12 @@ defmodule ExNylas.Common.Error do
   A struct representing an error from the Nylas API.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          type: String.t(),
-          message: String.t(),
-          provider_error: map()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :type, :string
     field :message, :string
     field :provider_error, :map

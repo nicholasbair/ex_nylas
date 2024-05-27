@@ -3,18 +3,13 @@ defmodule ExNylas.Common.Build.EventReminder do
   Helper module for validating an event reminder before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          overrides: [map()],
-          use_default: boolean()
-        }
 
   @primary_key false
   @derive {Jason.Encoder, only: [:overrides, :use_default]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :overrides, {:array, :map}
     field :use_default, :boolean
   end

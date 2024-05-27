@@ -3,30 +3,17 @@ defmodule ExNylas.Common.Build.EventBooking do
   Helper module for validating an event booking before sending it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.Build.{
     EventReminder,
     EventConferencing
   }
 
-  @type t :: %__MODULE__{
-          title: String.t(),
-          description: String.t(),
-          location: String.t(),
-          timezone: String.t(),
-          booking_type: String.t(),
-          additional_fields: map(),
-          hide_participants: boolean(),
-          disable_emails: boolean(),
-          conference: EventConferencing.t(),
-          reminders: EventReminder.t()
-        }
-
   @primary_key false
   @derive {Jason.Encoder, only: [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails, :conference, :reminders]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :title, :string
     field :description, :string
     field :location, :string

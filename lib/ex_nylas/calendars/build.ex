@@ -3,21 +3,13 @@ defmodule ExNylas.Calendar.Build do
   Helper module for validating a calendar before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          description: String.t(),
-          location: String.t(),
-          name: String.t(),
-          timezone: String.t(),
-          metadata: map()
-        }
 
   @derive {Jason.Encoder, only: [:description, :location, :name, :timezone, :metadata]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :description, :string
     field :location, :string
     field :name, :string

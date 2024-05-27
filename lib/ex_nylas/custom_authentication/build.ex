@@ -3,30 +3,14 @@ defmodule ExNylas.CustomAuthentication.Build do
   Helper module for validating a custom authentication request.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
-
-  @type t :: %__MODULE__{
-          provider: atom(),
-          state: String.t(),
-          settings: %__MODULE__.Settings{
-            refresh_token: String.t(),
-            credential_id: String.t(),
-            email_address: String.t(),
-            imap_username: String.t(),
-            imap_password: String.t(),
-            imap_host: String.t(),
-            imap_port: non_neg_integer(),
-            smtp_host: String.t(),
-            smtp_port: non_neg_integer()
-          }
-        }
 
   @derive {Jason.Encoder, only: [:provider, :state, :settings]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
     field :state, :string
 

@@ -3,28 +3,16 @@ defmodule ExNylas.Common.EventBooking do
   A struct representing an event booking.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.{
     EventConferencing,
     EventReminder
   }
 
-  @type t :: %__MODULE__{
-          title: String.t(),
-          location: String.t(),
-          description: String.t(),
-          booking_type: atom(),
-          additional_fields: map(),
-          hide_participants: boolean(),
-          disable_emails: boolean(),
-          conference: EventConferencing.t(),
-          reminders: EventReminder.t()
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :title, :string
     field :location, :string
     field :description, :string

@@ -3,21 +3,12 @@ defmodule ExNylas.Attachment do
   A struct representing an attachment.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          id: String.t(),
-          grant_id: String.t(),
-          content_type: String.t(),
-          size: non_neg_integer(),
-          filename: String.t(),
-          is_inline: boolean()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :grant_id, :string
     field :content_type, :string

@@ -3,20 +3,12 @@ defmodule ExNylas.Common.OpenHours do
   A struct for open hours.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          days: [integer()],
-          timezone: String.t(),
-          start: String.t(),
-          end: String.t(),
-          exdates: [String.t()]
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :days, {:array, :integer}
     field :timezone, :string
     field :start, :string

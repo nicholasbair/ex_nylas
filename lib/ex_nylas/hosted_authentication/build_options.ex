@@ -3,26 +3,12 @@ defmodule ExNylas.HostedAuthentication.Options.Build do
   Helper module to validate options for hosted authentication.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          provider: atom(),
-          redirect_uri: String.t(),
-          response_type: atom(),
-          scope: [String.t()],
-          prompt: atom(),
-          state: String.t(),
-          login_hint: String.t(),
-          access_type: atom(),
-          code_challenge: String.t(),
-          code_challenge_method: atom(),
-          credential_id: String.t()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap yahoo)a
     field :redirect_uri, :string
     field :response_type, Ecto.Enum, values: ~w(code adminconsent)a, default: :code

@@ -3,7 +3,7 @@ defmodule ExNylas.Scheduling.Configuration.Build do
   Helper module for validating a scheduling configuration before sending it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.Build.{
     Availability,
@@ -12,19 +12,10 @@ defmodule ExNylas.Scheduling.Configuration.Build do
     SchedulingParticipant
   }
 
-  @type t :: %__MODULE__{
-          version: String.t(),
-          requires_session_auth: boolean(),
-          participants: [SchedulingParticipant.t()],
-          availability: [Availability.t()],
-          event_booking: EventBooking.t(),
-          scheduler: Scheduler.t()
-        }
-
   @derive {Jason.Encoder, only: [:version, :requires_session_auth, :participants, :availability, :event_booking]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :version, :string
     field :requires_session_auth, :boolean
 

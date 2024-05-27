@@ -3,20 +3,13 @@ defmodule ExNylas.Common.Build.Scheduler do
   Helper module for validating a scheduler configuration before sending it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          available_days_in_future: non_neg_integer(),
-          min_cancellation_notice: non_neg_integer(),
-          rescheduling_url: String.t(),
-          cancellation_url: String.t()
-        }
 
   @primary_key false
   @derive {Jason.Encoder, only: [:available_days_in_future, :min_cancellation_notice, :rescheduling_url, :cancellation_url]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :available_days_in_future, :integer
     field :min_cancellation_notice, :integer
     field :rescheduling_url, :string

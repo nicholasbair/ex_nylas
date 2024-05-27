@@ -3,26 +3,14 @@ defmodule ExNylas.Common.Build.EventConferencing do
   Helper module for validating an event conferencing before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
-
-  @type t :: %__MODULE__{
-          autocreate: map(),
-          provider: atom(),
-          details: %__MODULE__.Details{
-            meeting_code: String.t(),
-            password: String.t(),
-            url: String.t(),
-            phone: [String.t()],
-            pin: String.t()
-          }
-        }
 
   @primary_key false
   @derive {Jason.Encoder, only: [:autocreate, :provider, :details]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :autocreate, :map
     field :provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams')a
 
