@@ -3,24 +3,12 @@ defmodule ExNylas.HostedAuthentication.Grant do
   Structs for Nylas hosted authentication.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
-
-  @type t :: %__MODULE__{
-          access_token: String.t(),
-          expires_in: integer(),
-          id_token: String.t(),
-          refresh_token: String.t(),
-          scope: String.t(),
-          token_type: String.t(),
-          grant_id: String.t(),
-          provider: atom(),
-          email: String.t()
-        }
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :access_token, :string
     field :expires_in, :integer
     field :id_token, :string

@@ -3,12 +3,12 @@ defmodule ExNylas.Webhook do
   A struct representing a webhook.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
 
-  schema "webhook" do
+  typed_embedded_schema do
     field :id, :string
     field :description, :string
     field :trigger_types, {:array, :string}

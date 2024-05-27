@@ -56,6 +56,7 @@ defmodule ExNylas.WebhookNotificationData do
     "thread.replied": ThreadReplied,
   ]
 
+  # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
   @type t :: %__MODULE__{
           application_id: String.t(),
           object: struct()

@@ -3,13 +3,13 @@ defmodule ExNylas.WebhookNotification.ThreadReplied do
   A struct representing a bounce detected webhook notification.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :message_id, :string
     field :root_message_id, :string
     field :label, :string

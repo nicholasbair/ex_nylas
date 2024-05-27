@@ -3,14 +3,14 @@ defmodule ExNylas.CalendarAvailability.Build do
   Helper module for validating an availability request.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.Build.AvailabilityRules
 
   @derive {Jason.Encoder, only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to_30_minutes, :availability_rules]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :start_time, :integer
     field :end_time, :integer
     field :duration_minutes, :integer

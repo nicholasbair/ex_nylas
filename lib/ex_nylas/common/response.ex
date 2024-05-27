@@ -3,7 +3,7 @@ defmodule ExNylas.Common.Response do
   A struct representing a common response from Nylas.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   alias ExNylas.{
@@ -12,17 +12,9 @@ defmodule ExNylas.Common.Response do
     Type.Atom
   }
 
-  @type t :: %__MODULE__{
-          request_id: String.t(),
-          status: Atom.t(),
-          data: MapOrList.t(),
-          next_cursor: String.t(),
-          error: Error.t()
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :request_id, :string
     field :status, Atom
     field :data, MapOrList

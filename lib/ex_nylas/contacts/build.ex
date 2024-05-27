@@ -3,14 +3,14 @@ defmodule ExNylas.Contact.Build do
   Helper module for validating a contact before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
 
   @derive {Jason.Encoder, only: [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source, :emails, :im_addresses, :phone_numbers, :web_pages, :groups, :physical_addresses]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :given_name, :string
     field :job_title, :string
     field :manager_name, :string

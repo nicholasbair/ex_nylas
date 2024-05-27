@@ -3,12 +3,12 @@ defmodule ExNylas.Common.TrackingOptions do
   A struct representing tracking options for a message/draft.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :links, :boolean
     field :opens, :boolean
     field :thread_replies, :boolean

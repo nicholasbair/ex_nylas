@@ -3,7 +3,7 @@ defmodule ExNylas.Application do
   A struct representing a Nylas application.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   alias ExNylas.{
@@ -13,7 +13,7 @@ defmodule ExNylas.Application do
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :application_id, :string
     field :organization_id, :string
     field :region, Ecto.Enum, values: ~w(us eu)a

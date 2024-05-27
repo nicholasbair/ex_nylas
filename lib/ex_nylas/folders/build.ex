@@ -3,13 +3,13 @@ defmodule ExNylas.Folder.Build do
   Helper module for validating a folder before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @derive {Jason.Encoder, only: [:name, :parent_id, :background_color, :text_color]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :name, :string
     field :parent_id, :string
     field :background_color, :string

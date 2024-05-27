@@ -3,14 +3,14 @@ defmodule ExNylas.MessageSchedule do
   A struct for Nylas message schedules.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   alias ExNylas.Schema.Util
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :schedule_id, :string
     field :close_time, :integer
 

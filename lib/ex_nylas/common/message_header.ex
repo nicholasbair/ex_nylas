@@ -3,12 +3,12 @@ defmodule ExNylas.Common.MessageHeader do
   A struct representing the headers of a message.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :name, :string
     field :value, :string
   end

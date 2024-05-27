@@ -3,14 +3,14 @@ defmodule ExNylas.Contact do
   A struct representing a contact.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   alias ExNylas.Schema.Util
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :given_name, :string
     field :grant_id, :string
     field :id, :string
@@ -32,7 +32,7 @@ defmodule ExNylas.Contact do
     end
 
     embeds_many :im_addresses, ImAddress, primary_key: false do
-      field :address, :string
+      field :im_address, :string
       field :type, :string
     end
 

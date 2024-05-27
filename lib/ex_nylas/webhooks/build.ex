@@ -3,13 +3,13 @@ defmodule ExNylas.Webhook.Build do
   Helper module for validating a webhook before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @derive {Jason.Encoder, only: [:description, :trigger_types, :webhook_url, :notification_email_addresses, :topic, :encryption_key]}
   @primary_key false
 
-  schema "webhook" do
+  typed_embedded_schema do
     field :description, :string
     field :trigger_types, {:array, :string}
     field :webhook_url, :string

@@ -3,7 +3,7 @@ defmodule ExNylas.Message.Build do
   Helper module for validating a message before sending it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.{
     Build.Attachment,
@@ -15,7 +15,7 @@ defmodule ExNylas.Message.Build do
   @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :body, :string
     field :reply_to_message_id, :string
     field :subject, :string

@@ -3,7 +3,7 @@ defmodule ExNylas.Common.EventBooking do
   A struct representing an event booking.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.{
     EventConferencing,
@@ -12,7 +12,7 @@ defmodule ExNylas.Common.EventBooking do
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :title, :string
     field :location, :string
     field :description, :string

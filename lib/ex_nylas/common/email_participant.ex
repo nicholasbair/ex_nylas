@@ -3,12 +3,12 @@ defmodule ExNylas.Common.EmailParticipant do
   A struct representing an email participant.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :email, :string
     field :name, :string
   end

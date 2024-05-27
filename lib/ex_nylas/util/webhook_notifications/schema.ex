@@ -3,22 +3,13 @@ defmodule ExNylas.WebhookNotification do
   A struct representing an inbound webhook notification.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.WebhookNotificationData, as: Data
 
-  @type t :: %__MODULE__{
-          specversion: String.t(),
-          type: String.t(),
-          source: String.t(),
-          id: String.t(),
-          time: integer(),
-          data: Data.t()
-        }
-
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :specversion, :string
     field :type, :string
     field :source, :string

@@ -3,13 +3,13 @@ defmodule ExNylas.Scheduling.Availability.Build do
   Helper module for building scheduling availability objects.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @derive {Jason.Encoder, only: [:start_time, :end_time]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :start_time, :integer
     field :end_time, :integer
   end

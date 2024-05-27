@@ -3,7 +3,7 @@ defmodule ExNylas.Scheduling.Configuration do
   A struct representing a scheduling configuration.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
@@ -15,7 +15,7 @@ defmodule ExNylas.Scheduling.Configuration do
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :version, :string
     field :id, :string
     field :requires_session_auth, :boolean

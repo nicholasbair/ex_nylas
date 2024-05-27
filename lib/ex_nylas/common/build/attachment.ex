@@ -3,13 +3,13 @@ defmodule ExNylas.Common.Build.Attachment do
   Helper module for validating an attachment in a draft/message before submitting to the Nylas API.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
   @derive {Jason.Encoder, only: [:id, :content, :content_type, :content_id, :size, :filename, :is_inline]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :id, :string
     field :content_id, :string
     field :content, :string

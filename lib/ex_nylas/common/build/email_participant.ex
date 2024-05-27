@@ -3,13 +3,13 @@ defmodule ExNylas.Common.Build.EmailParticipant do
   Helper module for building an email participant.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
   @derive {Jason.Encoder, only: [:email, :name]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :email, :string
     field :name, :string
   end

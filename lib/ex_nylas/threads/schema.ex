@@ -13,6 +13,26 @@ defmodule ExNylas.Thread do
   import Ecto.Changeset
   import PolymorphicEmbed
 
+  # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
+  @type t :: %__MODULE__{
+          grant_id: String.t(),
+          id: String.t(),
+          object: String.t(),
+          has_attachments: boolean(),
+          has_drafts: boolean(),
+          earliest_message_timestamp: integer(),
+          last_message_received_at: integer(),
+          last_message_sent_at: integer(),
+          snippet: String.t(),
+          starred: boolean(),
+          subject: String.t(),
+          unread: boolean(),
+          message_ids: [String.t()],
+          draft_ids: [String.t()],
+          latest_draft_or_message: Draft.t() | Message.t(),
+          participants: [EmailParticipant.t()]
+        }
+
   @primary_key false
 
   embedded_schema do

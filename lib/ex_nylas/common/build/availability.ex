@@ -3,17 +3,16 @@ defmodule ExNylas.Common.Build.Availability do
   Helper module for building an availability request.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.Build.{
     AvailabilityRules,
   }
 
   @primary_key false
-
   @derive {Jason.Encoder, only: [:duration_minutes, :interval_minutes, :round_to_30_minutes, :availability_rules]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :duration_minutes, :integer
     field :interval_minutes, :integer
     field :round_to_30_minutes, :boolean

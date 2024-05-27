@@ -3,14 +3,14 @@ defmodule ExNylas.Connector.Build do
   Helper module for validating a contact before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
   @derive {Jason.Encoder, only: [:provider, :settings, :scope]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a
     field :scope, {:array, :string}
 

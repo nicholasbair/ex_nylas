@@ -3,13 +3,13 @@ defmodule ExNylas.Common.Build.OpenHours do
   Helper module for building open hours.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
   @derive {Jason.Encoder, only: [:days, :timezone, :start, :end, :exdates]}
 
-  embedded_schema do
+  typed_embedded_schema do
     field :days, {:array, :integer}
     field :timezone, :string
     field :start, :string

@@ -3,7 +3,7 @@ defmodule ExNylas.Common.AvailabilityRules do
   A struct for availability rules.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Common.{
     Buffer,
@@ -12,7 +12,7 @@ defmodule ExNylas.Common.AvailabilityRules do
 
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a
     field :round_robin_group_id, :string
 

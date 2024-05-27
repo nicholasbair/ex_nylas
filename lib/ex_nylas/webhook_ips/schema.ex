@@ -3,12 +3,12 @@ defmodule ExNylas.WebhookIP do
   A struct for Nylas webhook IP.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @primary_key false
 
-  schema "webhook_ip" do
+  typed_embedded_schema do
     field :ip_addresses, {:array, :string}
     field :updated_at, :integer
   end

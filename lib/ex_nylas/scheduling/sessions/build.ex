@@ -3,13 +3,13 @@ defmodule ExNylas.Scheduling.Session.Build do
   Helper module for validating a scheduling session before sending it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
 
   @derive {Jason.Encoder, only: [:configuration_id, :time_to_live]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :configuration_id, :string
     field :time_to_live, :integer, default: 5
   end

@@ -3,7 +3,7 @@ defmodule ExNylas.Schema.Event.Build do
   Helper module for validating an event before creating/updating it.
   """
 
-  use Ecto.Schema
+  use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
   alias ExNylas.Common.Build.EventReminder
@@ -12,7 +12,7 @@ defmodule ExNylas.Schema.Event.Build do
   @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants, :master_event_id]}
   @primary_key false
 
-  embedded_schema do
+  typed_embedded_schema do
     field :title, :string
     field :description, :string
     field :location, :string
