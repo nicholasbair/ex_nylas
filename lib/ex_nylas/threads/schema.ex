@@ -13,6 +13,7 @@ defmodule ExNylas.Thread do
   import Ecto.Changeset
   import PolymorphicEmbed
 
+  # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
   @type t :: %__MODULE__{
           grant_id: String.t(),
           id: String.t(),
