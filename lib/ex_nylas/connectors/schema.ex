@@ -2,7 +2,7 @@ defmodule ExNylas.Connector do
   @moduledoc """
   A struct representing a Nylas connector.
   """
-  # use Ecto.Schema
+
   use TypedEctoSchema
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
