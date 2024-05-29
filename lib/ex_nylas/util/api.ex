@@ -76,7 +76,7 @@ defmodule ExNylas.API do
 
   # Responses ###################################################################
 
-  @spec handle_response({atom(), Req.Response.t()}, any(), boolean()) :: {:ok, any()} | {:error, any()}
+  @spec handle_response({atom(), Req.Response.t() | map()}, any(), boolean()) :: {:ok, any()} | {:error, any()}
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     case format_response(res) do
       {:ok, body, status} ->

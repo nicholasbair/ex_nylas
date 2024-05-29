@@ -4,9 +4,9 @@ defmodule ExNylas.HostedAuthentication do
   """
 
   alias ExNylas.API
-  alias ExNylas.Common.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.HostedAuthentication.Grant, as: HA
+  alias ExNylas.HostedAuthentication.Error, as: HAError
 
   import ExNylas.Util, only: [indifferent_get: 2]
 
@@ -75,7 +75,7 @@ defmodule ExNylas.HostedAuthentication do
 
       iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
-  @spec exchange_code_for_token(Conn.t(), String.t(), String.t(), String.t()) :: {:ok, HA.t()} | {:error, Response.t()}
+  @spec exchange_code_for_token(Conn.t(), String.t(), String.t(), String.t()) :: {:ok, HA.t()} | {:error, HAError.t()}
   def exchange_code_for_token(%Conn{} = conn, code, redirect_uri, grant_type \\ "authorization_code") do
     Req.new(
       url: "#{conn.api_server}/v3/connect/token",
@@ -90,7 +90,7 @@ defmodule ExNylas.HostedAuthentication do
     )
     |> API.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(HA, false)
+    |> conditional_transform()
   end
 
   @doc """
@@ -132,4 +132,18 @@ defmodule ExNylas.HostedAuthentication do
   end
 
   defp parse_options({key, val}), do: "&#{key}=#{val}"
+
+  # The response from the API differs based on the whether the request was successful or not
+  # Pass the correct schema name to transform based on the response status
+  defp conditional_transform({:ok, %{status: 200}} = res) do
+    API.handle_response(res, HA, false)
+  end
+
+  defp conditional_transform({:ok, _} = res) do
+    API.handle_response(res, HAError, false)
+  end
+
+  defp conditional_transform({:error, _} = res) do
+    API.handle_response(res, HAError, false)
+  end
 end
