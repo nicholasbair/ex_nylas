@@ -14,6 +14,7 @@ defmodule ExNylas.ApplicationRedirect do
     field :platform, Ecto.Enum, values: ~w(web desktop js ios android)a
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))

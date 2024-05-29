@@ -37,6 +37,7 @@ defmodule ExNylas.CalendarAvailability.Build do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:start_time, :end_time, :duration_minutes, :interval_minutes, :round_to_30_minutes])
@@ -45,6 +46,7 @@ defmodule ExNylas.CalendarAvailability.Build do
     |> validate_required([:start_time, :end_time, :duration_minutes])
   end
 
+  @doc false
   def participant_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:email, :calendar_ids])

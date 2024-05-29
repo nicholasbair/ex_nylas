@@ -19,6 +19,7 @@ defmodule ExNylas.WebhookNotification do
     embeds_one :data, Data
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     params
     |> put_trigger()

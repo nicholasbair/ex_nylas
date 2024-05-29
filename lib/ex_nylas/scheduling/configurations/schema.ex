@@ -39,6 +39,7 @@ defmodule ExNylas.Scheduling.Configuration do
     embeds_many :participants, SchedulingParticipant
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:version, :id, :requires_session_auth])
@@ -49,6 +50,7 @@ defmodule ExNylas.Scheduling.Configuration do
     |> cast_embed(:scheduler, with: &embedded_changeset/2)
   end
 
+  @doc false
   def embedded_changeset_availability(changeset, params \\ %{}) do
     changeset
     |> cast(params, [:duration_minutes, :interval_minutes, :round_to_30_minutes])

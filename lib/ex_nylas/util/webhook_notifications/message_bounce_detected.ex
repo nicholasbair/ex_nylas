@@ -27,6 +27,7 @@ defmodule ExNylas.WebhookNotification.MessageBounceDetected do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:bounce_reason, :bounce_date, :bounced_address, :type, :code])

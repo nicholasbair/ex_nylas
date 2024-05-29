@@ -39,6 +39,7 @@ defmodule ExNylas.Message do
     embeds_many :headers, MessageHeader
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:body, :date, :folders, :grant_id, :id, :object, :snippet, :starred, :subject, :thread_id, :unread, :metadata, :schedule_id, :conversation])

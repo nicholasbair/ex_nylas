@@ -57,6 +57,7 @@ defmodule ExNylas.Contact do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:given_name, :grant_id, :id, :job_title, :manager_name, :notes, :office_location, :object, :source])

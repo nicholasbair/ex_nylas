@@ -1,7 +1,5 @@
 defmodule ExNylas.Transform do
-  @moduledoc """
-  Generic transform functions for data returned by the Nylas API
-  """
+  @moduledoc false
 
   alias ExNylas.Common.Response
   import Ecto.Changeset

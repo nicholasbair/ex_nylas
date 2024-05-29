@@ -16,6 +16,7 @@ defmodule ExNylas.Folder.Build do
     field :text_color, :string
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))

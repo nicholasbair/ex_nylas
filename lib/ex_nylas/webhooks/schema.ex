@@ -20,6 +20,7 @@ defmodule ExNylas.Webhook do
     field :encryption_key, :string
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))

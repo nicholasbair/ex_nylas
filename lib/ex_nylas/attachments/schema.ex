@@ -17,6 +17,7 @@ defmodule ExNylas.Attachment do
     field :is_inline, :boolean
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))

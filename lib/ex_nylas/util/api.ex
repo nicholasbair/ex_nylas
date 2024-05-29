@@ -1,7 +1,5 @@
 defmodule ExNylas.API do
-  @moduledoc """
-  Utility functions for headers, encoding requests, and decoding responses
-  """
+  @moduledoc false
 
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Transform, as: TF

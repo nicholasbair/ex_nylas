@@ -10,11 +10,15 @@ defmodule ExNylas.MixProject do
       description: "Unofficial Elixir SDK for the Nylas API",
       package: package(),
       deps: deps(),
-      name: "ex_nylas",
+      name: "ExNylas",
       dialyzer: [plt_add_apps: [:mix]],
       aliases: aliases(),
       source_url: url(),
       homepage_url: url(),
+      docs: [
+        main: "ExNylas",
+        extras: ["README.md", "LICENSE"]
+      ]
     ]
   end
 
@@ -44,6 +48,7 @@ defmodule ExNylas.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ecto, "~> 3.11"},
+      {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:multipart, "~> 0.4.0"},
       {:polymorphic_embed, "~> 3.0"},
       {:req, "~> 0.4.14"},

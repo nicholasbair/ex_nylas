@@ -15,6 +15,7 @@ defmodule ExNylas.CalendarFreeBusy.Build do
     field :end_time, :integer
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:emails, :start_time, :end_time])

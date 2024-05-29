@@ -20,6 +20,7 @@ defmodule ExNylas.Common.Availability do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:order])

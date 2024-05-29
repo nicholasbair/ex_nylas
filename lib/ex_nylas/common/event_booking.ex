@@ -25,6 +25,7 @@ defmodule ExNylas.Common.EventBooking do
     embeds_one :reminders, EventReminder
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :location, :description, :booking_type, :additional_fields, :hide_participants, :disable_emails])

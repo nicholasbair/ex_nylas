@@ -23,6 +23,7 @@ defmodule ExNylas.Common.SchedulingParticipant do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :email, :is_organizer])
