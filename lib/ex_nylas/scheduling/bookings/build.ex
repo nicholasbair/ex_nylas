@@ -23,6 +23,7 @@ defmodule ExNylas.Scheduling.Booking.Build do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:start_time, :end_time, :participants])

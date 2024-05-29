@@ -1,7 +1,5 @@
 defmodule ExNylas.Util do
-  @moduledoc """
-  Utility functions for ExNylas
-  """
+  @moduledoc false
 
   @spec indifferent_put_new(map() | Keyword.t(), atom(), any()) :: map() | Keyword.t()
   def indifferent_put_new(map, key, value) when is_map(map) do

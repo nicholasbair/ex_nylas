@@ -33,6 +33,7 @@ defmodule ExNylas.Message.Build do
     embeds_one :tracking_options, TrackingOptions
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft])

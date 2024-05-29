@@ -22,6 +22,7 @@ defmodule ExNylas.Common.EventConferencing do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:autocreate, :provider])

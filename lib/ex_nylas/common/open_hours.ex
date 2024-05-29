@@ -16,6 +16,7 @@ defmodule ExNylas.Common.OpenHours do
     field :exdates, {:array, :string}
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:days, :timezone, :start, :end, :exdates])

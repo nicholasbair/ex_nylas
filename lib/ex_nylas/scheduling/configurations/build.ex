@@ -25,6 +25,7 @@ defmodule ExNylas.Scheduling.Configuration.Build do
     embeds_one :scheduler, Scheduler
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:version, :requires_session_auth])

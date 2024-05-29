@@ -22,6 +22,7 @@ defmodule ExNylas.WebhookNotification.ThreadReplied do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:message_id, :root_message_id, :label, :sender_app_id, :thread_id, :timestamp])

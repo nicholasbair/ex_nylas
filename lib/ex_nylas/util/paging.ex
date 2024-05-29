@@ -1,7 +1,5 @@
 defmodule ExNylas.Paging do
-  @moduledoc """
-  Interface for Nylas paging.
-  """
+  @moduledoc false
 
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Common.Response

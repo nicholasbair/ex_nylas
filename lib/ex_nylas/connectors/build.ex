@@ -24,6 +24,7 @@ defmodule ExNylas.Connector.Build do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:provider, :scope])

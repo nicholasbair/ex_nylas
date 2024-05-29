@@ -14,6 +14,7 @@ defmodule ExNylas.Scheduling.Session.Build do
     field :time_to_live, :integer, default: 5
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:configuration_id, :time_to_live])

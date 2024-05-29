@@ -20,6 +20,7 @@ defmodule ExNylas.Common.AvailabilityRules do
     embeds_many :default_open_hours, OpenHours
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:availability_method, :round_robin_group_id])

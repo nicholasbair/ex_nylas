@@ -1,7 +1,5 @@
 defmodule Mix.Tasks.QualityCheck do
-  @moduledoc """
-  Runs mix test, mix credo, and mix dialyzer sequentially.
-  """
+  @moduledoc false
 
   use Mix.Task
 

@@ -43,6 +43,7 @@ defmodule ExNylas.Application do
     embeds_many :callback_uris, ApplicationRedirect
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:application_id, :organization_id, :region, :created_at, :updated_at, :environment, :v2_organization_id])

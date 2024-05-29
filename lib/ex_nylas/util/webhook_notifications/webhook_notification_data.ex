@@ -73,6 +73,7 @@ defmodule ExNylas.WebhookNotificationData do
       type_field: :trigger
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     params
     |> put_trigger()

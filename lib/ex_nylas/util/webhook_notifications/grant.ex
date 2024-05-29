@@ -16,6 +16,7 @@ defmodule ExNylas.WebhookNotification.Grant do
     field :reauthentication_flag, :boolean
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:code, :grant_id, :integration_id, :provider, :reauthentication_flag])

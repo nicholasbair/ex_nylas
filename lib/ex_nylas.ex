@@ -1,6 +1,6 @@
 defmodule ExNylas do
   @moduledoc """
-  Generate functions that follow the 'standard' path.
+  ExNylas - Unofficial Elixir SDK for Nylas API.
   """
 
   import Ecto.Changeset
@@ -42,11 +42,11 @@ defmodule ExNylas do
   defp generate_api(%{name: :all} = config, _object, _struct_name, readable_name, _header_type, _use_admin_url, use_cursor_paging) do
     quote do
       @doc """
-      Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
+      Fetch all #{unquote(readable_name)}(s) matching the provided query (the SDK will handle paging).
 
       The second argument can be a keyword list of options + query parameters to pass to the Nylas API (map is also supported).  Options supports:
       - `:send_to` - a single arity function to send each page of results (default is nil, e.g. results will be accumulated and returned as a list)
-      - `:delay` - the number of milliseconds to wait between each page request (default is 0)
+      - `:delay` - the number of milliseconds to wait between each page request (default is 0; strongly recommended to avoid rate limiting)
       - `:query` - a keyword list or map of query parameters to pass to the Nylas API (default is an empty list)
 
       ## Examples
@@ -59,11 +59,11 @@ defmodule ExNylas do
       end
 
       @doc """
-      Fetch all #{unquote(readable_name)}(s) matching the provided query (function will handle paging).
+      Fetch all #{unquote(readable_name)}(s) matching the provided query (the SDK will handle paging).
 
       The second argument can be a keyword list of options + query parameters to pass to the Nylas API (map is also supported).  Options supports:
       - `:send_to` - a single arity function to send each page of results (default is nil, e.g. results will be accumulated and returned as a list)
-      - `:delay` - the number of milliseconds to wait between each page request (default is 0)
+      - `:delay` - the number of milliseconds to wait between each page request (default is 0; strongly recommended to avoid rate limiting)
       - `:query` - a keyword list or map of query parameters to pass to the Nylas API (default is an empty list)
 
       ## Examples
@@ -103,7 +103,7 @@ defmodule ExNylas do
       end
 
       @doc """
-      Create and validate a #{unquote(readable_name)}, use the create/update to send to Nylas.
+      Create and validate a #{unquote(readable_name)}, use create/update to send to Nylas.
 
       ## Examples
 
@@ -332,11 +332,14 @@ defmodule ExNylas do
     end
   end
 
+  @doc false
   def generate_url(conn, true = _use_admin_url, object), do: "#{conn.api_server}/v3/#{object}"
   def generate_url(conn, false = _use_admin_url, object), do: "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{object}"
 
+  @doc false
   def generate_auth(conn, :header_bearer), do: API.auth_bearer(conn)
 
+  @doc false
   def format_module_name(module_name) do
     module_name
     |> Atom.to_string()

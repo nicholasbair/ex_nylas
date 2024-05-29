@@ -14,6 +14,7 @@ defmodule ExNylas.Scheduling.Availability.Build do
     field :end_time, :integer
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:start_time, :end_time])

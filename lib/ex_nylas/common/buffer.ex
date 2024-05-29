@@ -13,6 +13,7 @@ defmodule ExNylas.Common.Buffer do
     field :after, :integer
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:before, :after])

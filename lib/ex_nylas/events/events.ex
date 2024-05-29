@@ -1,6 +1,6 @@
 defmodule ExNylas.Events do
   @moduledoc """
-  Interface for Nylas event.
+  Interface for Nylas events.
   """
 
   alias ExNylas.API

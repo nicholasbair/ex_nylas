@@ -12,6 +12,7 @@ defmodule ExNylas.Scheduling.Booking do
     field :booking_id, :string
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:booking_id])

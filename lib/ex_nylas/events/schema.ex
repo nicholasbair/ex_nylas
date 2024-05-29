@@ -66,6 +66,7 @@ defmodule ExNylas.Event do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:id, :object, :grant_id, :calendar_id, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :master_event_id])

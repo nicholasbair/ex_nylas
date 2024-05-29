@@ -17,6 +17,7 @@ defmodule ExNylas.Calendar.Build do
     field :metadata, :map
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))

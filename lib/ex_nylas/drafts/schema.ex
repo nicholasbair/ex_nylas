@@ -36,6 +36,7 @@ defmodule ExNylas.Draft do
     embeds_one :tracking_options, TrackingOptions
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:id, :grant_id, :object, :thread_id, :reply_to_message_id, :date, :snippet, :starred, :subject, :body, :folders])

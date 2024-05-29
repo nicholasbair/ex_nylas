@@ -13,6 +13,7 @@ defmodule ExNylas.Common.EventReminder do
     field :use_default, :boolean
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:overrides, :use_default])

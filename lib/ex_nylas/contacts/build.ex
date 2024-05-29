@@ -67,6 +67,7 @@ defmodule ExNylas.Contact.Build do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source])
@@ -79,12 +80,14 @@ defmodule ExNylas.Contact.Build do
     |> validate_required([:given_name])
   end
 
+  @doc false
   def contact_group_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:id, :name])
     |> validate_required([:id, :name])
   end
 
+  @doc false
   def email_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:email, :type])
@@ -92,6 +95,7 @@ defmodule ExNylas.Contact.Build do
     |> validate_length(:email, min: 1, max: 255)
   end
 
+  @doc false
   def im_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:im_address, :type])
@@ -99,12 +103,14 @@ defmodule ExNylas.Contact.Build do
     |> validate_length(:im_address, min: 1, max: 255)
   end
 
+  @doc false
   def phone_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:number, :type])
     |> validate_required([:number])
   end
 
+  @doc false
   def web_changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:url, :type])

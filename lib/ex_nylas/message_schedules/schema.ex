@@ -20,6 +20,7 @@ defmodule ExNylas.MessageSchedule do
     end
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:schedule_id, :close_time])

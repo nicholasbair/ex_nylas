@@ -23,6 +23,7 @@ defmodule ExNylas.Common.Response do
     embeds_one :error, Error
   end
 
+  @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:request_id, :status, :data, :next_cursor])

@@ -1,7 +1,5 @@
 defmodule ExNylas.Schema.Util do
-  @moduledoc """
-  Utility functions for schemas.
-  """
+  @moduledoc false
 
   import Ecto.Changeset
 
