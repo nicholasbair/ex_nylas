@@ -20,6 +20,7 @@ defmodule ExNylas.Folder do
     field :background_color, :string
     field :object, :string
     field :text_color, :string
+    field :attributes, {:array, :string}
   end
 
   @doc false
