@@ -9,7 +9,7 @@ defmodule ExNylas.Scheduling.Session do
   @primary_key false
 
   typed_embedded_schema do
-    field :session_id, :string
+    field(:session_id, :string, null: false)
   end
 
   @doc false

@@ -10,8 +10,8 @@ defmodule ExNylas.ApplicationRedirect.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :url, :string
-    field :platform, Ecto.Enum, values: ~w(web desktop js ios android)a
+    field(:url, :string, null: false)
+    field(:platform, Ecto.Enum, values: ~w(web desktop js ios android)a)
   end
 
   @doc false

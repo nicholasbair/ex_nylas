@@ -9,8 +9,8 @@ defmodule ExNylas.WebhookIP do
   @primary_key false
 
   typed_embedded_schema do
-    field :ip_addresses, {:array, :string}
-    field :updated_at, :integer
+    field(:ip_addresses, {:array, :string}, null: false)
+    field(:updated_at, :integer, null: false) :: non_neg_integer()
   end
 
   @doc false

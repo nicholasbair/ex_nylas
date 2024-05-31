@@ -13,8 +13,8 @@ defmodule ExNylas.Common.AvailabilityRules do
   @primary_key false
 
   typed_embedded_schema do
-    field :availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a
-    field :round_robin_group_id, :string
+    field(:availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a, null: false)
+    field(:round_robin_group_id, :string)
 
     embeds_one :buffer, Buffer
     embeds_many :default_open_hours, OpenHours

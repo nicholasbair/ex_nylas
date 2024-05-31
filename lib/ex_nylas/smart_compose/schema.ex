@@ -9,7 +9,7 @@ defmodule ExNylas.Schema.SmartCompose do
   @primary_key false
 
   typed_embedded_schema do
-    field :suggestion, :string
+    field(:suggestion, :string, null: false)
   end
 
   @doc false

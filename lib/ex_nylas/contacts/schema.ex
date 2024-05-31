@@ -11,49 +11,49 @@ defmodule ExNylas.Contact do
   @primary_key false
 
   typed_embedded_schema do
-    field :given_name, :string
-    field :grant_id, :string
-    field :id, :string
-    field :job_title, :string
-    field :manager_name, :string
-    field :notes, :string
-    field :office_location, :string
-    field :object, :string
-    field :source, Ecto.Enum, values: ~w(address_book domain inbox)a
+    field(:given_name, :string)
+    field(:grant_id, :string, null: false)
+    field(:id, :string, null: false)
+    field(:job_title, :string)
+    field(:manager_name, :string)
+    field(:notes, :string)
+    field(:office_location, :string)
+    field(:object, :string, null: false)
+    field(:source, Ecto.Enum, values: ~w(address_book domain inbox)a, null: false)
 
     embeds_many :emails, Email, primary_key: false do
-      field :email, :string
-      field :type, :string
+      field(:email, :string, null: false)
+      field(:type, :string)
     end
 
     embeds_many :groups, ContactGroup, primary_key: false do
-      field :id, :string
-      field :name, :string
+      field(:id, :string, null: false)
+      field(:name, :string)
     end
 
     embeds_many :im_addresses, ImAddress, primary_key: false do
-      field :im_address, :string
-      field :type, :string
+      field(:im_address, :string, null: false)
+      field(:type, :string)
     end
 
     embeds_many :phone_numbers, PhoneNumber, primary_key: false do
-      field :number, :string
-      field :type, Ecto.Enum, values: ~w(work home other)a
+      field(:number, :string, null: false)
+      field(:type, Ecto.Enum, values: ~w(work home other)a)
     end
 
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
-      field :type, :string
-      field :format, :string
-      field :street_address, :string
-      field :city, :string
-      field :state, :string
-      field :postal_code, :string
-      field :country, :string
+      field(:type, :string)
+      field(:format, :string)
+      field(:street_address, :string)
+      field(:city, :string)
+      field(:state, :string)
+      field(:postal_code, :string)
+      field(:country, :string)
     end
 
     embeds_many :web_pages, WebPage, primary_key: false do
-      field :url, :string
-      field :type, Ecto.Enum, values: ~w(work home other)a
+      field(:url, :string, null: false)
+      field(:type, Ecto.Enum, values: ~w(work home other)a)
     end
   end
 

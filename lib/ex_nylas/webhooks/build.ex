@@ -10,12 +10,12 @@ defmodule ExNylas.Webhook.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :description, :string
-    field :trigger_types, {:array, :string}
-    field :webhook_url, :string
-    field :notification_email_addresses, {:array, :string}
-    field :topic, :string
-    field :encryption_key, :string
+    field(:description, :string)
+    field(:trigger_types, {:array, :string}, null: false)
+    field(:webhook_url, :string, null: false)
+    field(:notification_email_addresses, {:array, :string})
+    field(:topic, :string)
+    field(:encryption_key, :string)
   end
 
   @doc false

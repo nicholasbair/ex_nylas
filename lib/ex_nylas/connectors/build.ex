@@ -11,16 +11,16 @@ defmodule ExNylas.Connector.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a
-    field :scope, {:array, :string}
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a, null: false)
+    field(:scope, {:array, :string})
 
     embeds_one :settings, Settings, primary_key: false do
       @derive {Jason.Encoder, only: [:client_id, :client_secret, :tenant, :topic_name]}
 
-      field :client_id, :string
-      field :client_secret, :string
-      field :tenant, :string
-      field :topic_name, :string
+      field(:client_id, :string)
+      field(:client_secret, :string)
+      field(:tenant, :string)
+      field(:topic_name, :string)
     end
   end
 

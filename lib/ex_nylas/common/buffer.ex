@@ -9,8 +9,8 @@ defmodule ExNylas.Common.Buffer do
   @primary_key false
 
   typed_embedded_schema do
-    field :before, :integer
-    field :after, :integer
+    field(:before, :integer) :: non_neg_integer() | nil
+    field(:after, :integer) :: non_neg_integer() | nil
   end
 
   @doc false

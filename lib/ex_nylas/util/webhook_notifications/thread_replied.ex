@@ -10,15 +10,15 @@ defmodule ExNylas.WebhookNotification.ThreadReplied do
   @primary_key false
 
   typed_embedded_schema do
-    field :message_id, :string
-    field :root_message_id, :string
-    field :label, :string
-    field :sender_app_id, :string
-    field :thread_id, :string
-    field :timestamp, :integer
+    field(:message_id, :string)
+    field(:root_message_id, :string)
+    field(:label, :string)
+    field(:sender_app_id, :string)
+    field(:thread_id, :string)
+    field(:timestamp, :integer) :: non_neg_integer()
 
     embeds_one :reply_data, ReplyData, primary_key: false do
-      field :count, :integer
+      field(:count, :integer) :: non_neg_integer()
     end
   end
 

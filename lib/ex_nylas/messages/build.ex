@@ -16,12 +16,12 @@ defmodule ExNylas.Message.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :body, :string
-    field :reply_to_message_id, :string
-    field :subject, :string
-    field :metadata, :map
-    field :send_at, :integer
-    field :use_draft, :boolean
+    field(:body, :string)
+    field(:reply_to_message_id, :string)
+    field(:subject, :string)
+    field(:metadata, :map)
+    field(:send_at, :integer) :: non_neg_integer() | nil
+    field(:use_draft, :boolean)
 
     embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant

@@ -16,8 +16,8 @@ defmodule ExNylas.Scheduling.Configuration.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :version, :string
-    field :requires_session_auth, :boolean
+    field(:version, :string, null: false)
+    field(:requires_session_auth, :boolean)
 
     embeds_many :participants, SchedulingParticipant
     embeds_many :availability, Availability

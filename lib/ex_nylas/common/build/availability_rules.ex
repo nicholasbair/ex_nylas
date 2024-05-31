@@ -15,8 +15,8 @@ defmodule ExNylas.Common.Build.AvailabilityRules do
   @derive {Jason.Encoder, only: [:availability_method, :round_robin_group_id, :buffer, :default_open_hours]}
 
   typed_embedded_schema do
-    field :availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a
-    field :round_robin_group_id, :string
+    field(:availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a)
+    field(:round_robin_group_id, :string)
 
     embeds_one :buffer, Buffer
     embeds_many :default_open_hours, OpenHours

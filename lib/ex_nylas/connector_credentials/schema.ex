@@ -9,12 +9,12 @@ defmodule ExNylas.ConnectorCredential do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :name, :string
-    field :credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a
-    field :hashed_data, :string
-    field :created_at, :integer
-    field :updated_at, :integer
+    field(:id, :string, null: false)
+    field(:name, :string, null: false)
+    field(:credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a, null: false)
+    field(:hashed_data, :string)
+    field(:created_at, :integer) :: non_neg_integer()
+    field(:updated_at, :integer) :: non_neg_integer()
   end
 
   @doc false

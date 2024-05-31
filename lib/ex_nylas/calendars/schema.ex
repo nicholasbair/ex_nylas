@@ -9,19 +9,19 @@ defmodule ExNylas.Calendar do
   @primary_key false
 
   typed_embedded_schema do
-    field :grant_id, :string
-    field :description, :string
-    field :id, :string
-    field :is_primary, :boolean
-    field :location, :string
-    field :name, :string
-    field :object, :string
-    field :read_only, :boolean
-    field :timezone, :string
-    field :hex_color, :string
-    field :hex_foreground_color, :string
-    field :is_owned_by_user, :boolean
-    field :metadata, :map
+    field(:grant_id, :string, null: false)
+    field(:description, :string)
+    field(:id, :string, null: false)
+    field(:is_primary, :boolean, null: false)
+    field(:location, :string)
+    field(:name, :string, null: false)
+    field(:object, :string, null: false)
+    field(:read_only, :boolean, null: false)
+    field(:timezone, :string)
+    field(:hex_color, :string)
+    field(:hex_foreground_color, :string)
+    field(:is_owned_by_user, :boolean, null: false)
+    field(:metadata, :map)
   end
 
   @doc false

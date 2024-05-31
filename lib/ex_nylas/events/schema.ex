@@ -11,58 +11,59 @@ defmodule ExNylas.Event do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :object, :string
-    field :grant_id, :string
-    field :calendar_id, :string
-    field :title, :string
-    field :description, :string
-    field :location, :string
-    field :busy, :boolean
-    field :recurrence, {:array, :string}
-    field :visibility, Ecto.Enum, values: ~w(public private)a
-    field :metadata, :map
-    field :notifications, {:array, :map}
-    field :hide_participants, :boolean
-    field :master_event_id, :string
+    field(:id, :string, null: false)
+    field(:object, :string, null: false)
+    field(:grant_id, :string, null: false)
+    field(:calendar_id, :string, null: false)
+    field(:title, :string)
+    field(:description, :string)
+    field(:location, :string)
+    field(:busy, :boolean, null: false)
+    field(:recurrence, {:array, :string})
+    field(:visibility, Ecto.Enum, values: ~w(public private)a)
+    field(:metadata, :map)
+    field(:notifications, {:array, :map})
+    field(:hide_participants, :boolean)
+    field(:master_event_id, :string)
+    field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
 
     embeds_many :participants, Participant, primary_key: false do
-      field :name, :string
-      field :email, :string
-      field :status, Ecto.Enum, values: ~w(yes no maybe noreply)a
-      field :comment, :string
-      field :phone_number, :string
+      field(:name, :string)
+      field(:email, :string, null: false)
+      field(:status, Ecto.Enum, values: ~w(yes no maybe noreply)a, null: false)
+      field(:comment, :string)
+      field(:phone_number, :string)
     end
 
     embeds_one :when, When, primary_key: false do
-      field :start_time, :integer
-      field :end_time, :integer
-      field :start_timezone, :string
-      field :end_timezone, :string
-      field :object, Ecto.Enum, values: ~w(time timespan date datespan)a
-      field :time, :integer
-      field :timezone, :string
-      field :start_date, :string
-      field :end_date, :string
-      field :date, :string
+      field(:start_time, :integer) :: non_neg_integer() | nil
+      field(:end_time, :integer) :: non_neg_integer() | nil
+      field(:start_timezone, :string)
+      field(:end_timezone, :string)
+      field(:object, Ecto.Enum, values: ~w(time timespan date datespan)a, null: false)
+      field(:time, :integer) :: non_neg_integer() | nil
+      field(:timezone, :string)
+      field(:start_date, :string)
+      field(:end_date, :string)
+      field(:date, :string)
     end
 
     embeds_one :conferencing, Conferencing, primary_key: false do
-      field :meeting_code, :string
-      field :password, :string
-      field :url, :string
-      field :phone, {:array, :string}
-      field :pin, :string
+      field(:meeting_code, :string)
+      field(:password, :string)
+      field(:url, :string)
+      field(:phone, {:array, :string})
+      field(:pin, :string)
     end
 
     embeds_one :reminders, Reminder, primary_key: false do
-      field :overrides, {:array, :map}
-      field :use_default, :boolean
+      field(:overrides, {:array, :map})
+      field(:use_default, :boolean, null: false)
     end
 
     embeds_one :organizer, Organizer, primary_key: false do
-      field :email, :string
-      field :name, :string
+      field(:email, :string, null: false)
+      field(:name, :string)
     end
   end
 

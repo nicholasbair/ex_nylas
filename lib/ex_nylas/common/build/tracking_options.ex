@@ -10,10 +10,10 @@ defmodule ExNylas.Common.Build.TrackingOptions do
   @derive {Jason.Encoder, only: [:links, :opens, :thread_replies, :label]}
 
   typed_embedded_schema do
-    field :links, :boolean
-    field :opens, :boolean
-    field :thread_replies, :boolean
-    field :label, :string
+    field(:links, :boolean)
+    field(:opens, :boolean)
+    field(:thread_replies, :boolean)
+    field(:label, :string)
   end
 
   def changeset(struct, params \\ %{}) do

@@ -10,9 +10,9 @@ defmodule ExNylas.CalendarFreeBusy.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :emails, {:array, :string}
-    field :start_time, :integer
-    field :end_time, :integer
+    field(:emails, {:array, :string}, null: false)
+    field(:start_time, :integer, null: false) :: non_neg_integer()
+    field(:end_time, :integer, null: false) :: non_neg_integer()
   end
 
   @doc false

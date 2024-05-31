@@ -15,20 +15,20 @@ defmodule ExNylas.Message do
   @primary_key false
 
   typed_embedded_schema do
-    field :body, :string
-    field :date, :integer
-    field :folders, {:array, :string}
-    field :grant_id, :string
-    field :id, :string
-    field :object, :string
-    field :snippet, :string
-    field :starred, :boolean
-    field :subject, :string
-    field :thread_id, :string
-    field :unread, :boolean
-    field :metadata, :map
-    field :schedule_id, :string
-    field :conversation, :string
+    field(:body, :string)
+    field(:date, :integer) :: non_neg_integer()
+    field(:folders, {:array, :string}, null: false)
+    field(:grant_id, :string, null: false)
+    field(:id, :string, null: false)
+    field(:object, :string, null: false)
+    field(:snippet, :string)
+    field(:starred, :boolean)
+    field(:subject, :string)
+    field(:thread_id, :string)
+    field(:unread, :boolean)
+    field(:metadata, :map)
+    field(:schedule_id, :string)
+    field(:conversation, :string)
 
     embeds_many :bcc, EmailParticipant
     embeds_many :cc, EmailParticipant

@@ -10,21 +10,21 @@ defmodule ExNylas.WebhookNotification.MessageOpened do
   @primary_key false
 
   typed_embedded_schema do
-    field :message_id, :string
-    field :label, :string
-    field :sender_app_id, :string
-    field :timestamp, :integer
+    field(:message_id, :string)
+    field(:label, :string)
+    field(:sender_app_id, :string)
+    field(:timestamp, :integer) :: non_neg_integer()
 
     embeds_one :message_data, MessageData, primary_key: false do
-      field :count, :integer
-      field :timestamp, :integer
+      field(:count, :integer)
+      field(:timestamp, :integer) :: non_neg_integer()
     end
 
     embeds_many :recents, Recent, primary_key: false do
-      field :ip, :string
-      field :opened_id, :integer
-      field :timestamp, :integer
-      field :user_agent, :string
+      field(:ip, :string)
+      field(:opened_id, :integer) :: non_neg_integer()
+      field(:timestamp, :integer) :: non_neg_integer()
+      field(:user_agent, :string)
     end
   end
 

@@ -10,22 +10,22 @@ defmodule ExNylas.WebhookNotification.MessageLinkClicked do
   @primary_key false
 
   typed_embedded_schema do
-    field :message_id, :string
-    field :label, :string
-    field :sender_app_id, :string
-    field :timestamp, :integer
+    field(:message_id, :string)
+    field(:label, :string)
+    field(:sender_app_id, :string)
+    field(:timestamp, :integer) :: non_neg_integer()
 
     embeds_one :link_data, LinkData, primary_key: false do
-      field :count, :integer
-      field :url, :string
+      field(:count, :integer) :: non_neg_integer()
+      field(:url, :string)
     end
 
     embeds_many :recents, Recent, primary_key: false do
-      field :click_id, :string
-      field :ip, :string
-      field :link_index, :string
-      field :timestamp, :integer
-      field :user_agent, :string
+      field(:click_id, :string)
+      field(:ip, :string)
+      field(:link_index, :string)
+      field(:timestamp, :integer) :: non_neg_integer()
+      field(:user_agent, :string)
     end
   end
 

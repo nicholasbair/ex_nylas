@@ -9,15 +9,15 @@ defmodule ExNylas.HostedAuthentication.Grant do
   @primary_key false
 
   typed_embedded_schema do
-    field :access_token, :string
-    field :expires_in, :integer
-    field :id_token, :string
-    field :refresh_token, :string
-    field :scope, :string
-    field :token_type, :string
-    field :grant_id, :string
-    field :provider, Ecto.Enum, values: ~w(google microsoft icloud yahoo imap virtual-calendar)a
-    field :email, :string
+    field(:access_token, :string)
+    field(:expires_in, :integer) :: non_neg_integer()
+    field(:id_token, :string)
+    field(:refresh_token, :string)
+    field(:scope, :string)
+    field(:token_type, :string)
+    field(:grant_id, :string, null: false)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft icloud yahoo imap virtual-calendar)a, null: false)
+    field(:email, :string, null: false)
   end
 
   @doc false

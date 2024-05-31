@@ -16,9 +16,9 @@ defmodule ExNylas.Draft.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :reply_to_message_id, :string
-    field :subject, :string
-    field :body, :string
+    field(:reply_to_message_id, :string)
+    field(:subject, :string)
+    field(:body, :string)
 
     embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant

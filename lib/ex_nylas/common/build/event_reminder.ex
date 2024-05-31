@@ -10,8 +10,8 @@ defmodule ExNylas.Common.Build.EventReminder do
   @derive {Jason.Encoder, only: [:overrides, :use_default]}
 
   typed_embedded_schema do
-    field :overrides, {:array, :map}
-    field :use_default, :boolean
+    field(:overrides, {:array, :map})
+    field(:use_default, :boolean)
   end
 
   def changeset(struct, params \\ %{}) do

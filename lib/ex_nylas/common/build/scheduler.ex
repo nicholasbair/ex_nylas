@@ -10,10 +10,10 @@ defmodule ExNylas.Common.Build.Scheduler do
   @derive {Jason.Encoder, only: [:available_days_in_future, :min_cancellation_notice, :rescheduling_url, :cancellation_url]}
 
   typed_embedded_schema do
-    field :available_days_in_future, :integer
-    field :min_cancellation_notice, :integer
-    field :rescheduling_url, :string
-    field :cancellation_url, :string
+    field(:available_days_in_future, :integer) :: non_neg_integer()
+    field(:min_cancellation_notice, :integer) :: non_neg_integer()
+    field(:rescheduling_url, :string)
+    field(:cancellation_url, :string)
   end
 
   def changeset(struct, params \\ %{}) do

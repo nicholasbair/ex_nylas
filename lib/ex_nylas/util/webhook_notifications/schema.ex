@@ -10,11 +10,11 @@ defmodule ExNylas.WebhookNotification do
   @primary_key false
 
   typed_embedded_schema do
-    field :specversion, :string
-    field :type, :string
-    field :source, :string
-    field :id, :string
-    field :time, :integer
+    field(:specversion, :string, null: false)
+    field(:type, :string, null: false)
+    field(:source, :string, null: false)
+    field(:id, :string, null: false)
+    field(:time, :integer, null: false) :: non_neg_integer()
 
     embeds_one :data, Data
   end
