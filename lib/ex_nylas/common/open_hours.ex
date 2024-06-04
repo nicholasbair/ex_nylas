@@ -10,10 +10,10 @@ defmodule ExNylas.Common.OpenHours do
 
   typed_embedded_schema do
     field(:days, {:array, :integer})
-    field(:timezone, :string)
-    field(:start, :string)
     field(:end, :string)
     field(:exdates, {:array, :string})
+    field(:start, :string)
+    field(:timezone, :string)
   end
 
   @doc false

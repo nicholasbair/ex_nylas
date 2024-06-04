@@ -13,13 +13,13 @@ defmodule ExNylas.Common.EventBooking do
   @primary_key false
 
   typed_embedded_schema do
-    field(:title, :string, null: false)
-    field(:location, :string)
-    field(:description, :string)
-    field(:booking_type, Ecto.Enum, values: ~w(booking)a, null: false)
     field(:additional_fields, :map)
-    field(:hide_participants, :boolean, null: false)
+    field(:booking_type, Ecto.Enum, values: ~w(booking)a, null: false)
+    field(:description, :string)
     field(:disable_emails, :boolean, null: false)
+    field(:hide_participants, :boolean, null: false)
+    field(:location, :string)
+    field(:title, :string, null: false)
 
     embeds_one :conference, EventConferencing
     embeds_one :reminders, EventReminder

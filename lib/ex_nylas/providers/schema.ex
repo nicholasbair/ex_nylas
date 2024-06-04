@@ -9,10 +9,10 @@ defmodule ExNylas.Provider do
   @primary_key false
 
   typed_embedded_schema do
-    field(:provider, :string)
-    field(:type, :string)
     field(:email_address, :string)
     field(:detected, :boolean, null: false)
+    field(:provider, :string)
+    field(:type, :string)
   end
 
   @doc false

@@ -12,9 +12,9 @@ defmodule ExNylas.Calendar.Build do
   typed_embedded_schema do
     field(:description, :string)
     field(:location, :string)
+    field(:metadata, :map)
     field(:name, :string, null: false)
     field(:timezone, :string)
-    field(:metadata, :map)
   end
 
   @doc false

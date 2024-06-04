@@ -9,10 +9,10 @@ defmodule ExNylas.HostedAuthentication.Error do
   @primary_key false
 
   typed_embedded_schema do
-    field(:request_id, :string, null: false)
     field(:error, :string)
     field(:error_code, :integer)
     field(:error_uri, :string)
+    field(:request_id, :string, null: false)
   end
 
   @doc false

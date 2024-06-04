@@ -11,14 +11,14 @@ defmodule ExNylas.FreeBusy do
   @primary_key false
 
   typed_embedded_schema do
-    field(:object, :string, null: false)
     field(:email, :string, null: false)
+    field(:object, :string, null: false)
 
     embeds_many :time_slots, TimeSlot, primary_key: false do
-      field(:object, :string, null: false)
-      field(:status, :string, null: false)
-      field(:start_time, :integer, null: false) :: non_neg_integer()
       field(:end_time, :integer, null: false) :: non_neg_integer()
+      field(:object, :string, null: false)
+      field(:start_time, :integer, null: false) :: non_neg_integer()
+      field(:status, :string, null: false)
     end
   end
 

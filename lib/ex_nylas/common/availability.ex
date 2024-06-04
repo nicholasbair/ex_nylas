@@ -15,8 +15,8 @@ defmodule ExNylas.Common.Availability do
 
     embeds_many :time_slots, TimeSlot, primary_key: false do
       field(:emails, {:array, :string})
-      field(:start_time, :integer) :: non_neg_integer()
       field(:end_time, :integer) :: non_neg_integer()
+      field(:start_time, :integer) :: non_neg_integer()
     end
   end
 

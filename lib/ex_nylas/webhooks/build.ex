@@ -11,11 +11,11 @@ defmodule ExNylas.Webhook.Build do
 
   typed_embedded_schema do
     field(:description, :string)
-    field(:trigger_types, {:array, :string}, null: false)
-    field(:webhook_url, :string, null: false)
+    field(:encryption_key, :string)
     field(:notification_email_addresses, {:array, :string})
     field(:topic, :string)
-    field(:encryption_key, :string)
+    field(:trigger_types, {:array, :string}, null: false)
+    field(:webhook_url, :string, null: false)
   end
 
   @doc false

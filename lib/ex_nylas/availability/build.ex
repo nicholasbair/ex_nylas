@@ -11,10 +11,10 @@ defmodule ExNylas.CalendarAvailability.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field(:start_time, :integer) :: non_neg_integer()
-    field(:end_time, :integer) :: non_neg_integer()
     field(:duration_minutes, :integer) :: non_neg_integer()
+    field(:end_time, :integer) :: non_neg_integer()
     field(:interval_minutes, :integer) :: non_neg_integer() | nil
+    field(:start_time, :integer) :: non_neg_integer()
     field(:round_to_30_minutes, :boolean)
 
     embeds_many :availability_rules, AvailabilityRules
@@ -22,17 +22,17 @@ defmodule ExNylas.CalendarAvailability.Build do
     embeds_many :participants, Participant, primary_key: false do
       @derive {Jason.Encoder, only: [:email, :calendar_ids, :open_hours]}
 
-      field(:email, :string)
       field(:calendar_ids, {:array, :string})
+      field(:email, :string)
 
       embeds_many :open_hours, OpenHours, primary_key: false do
         @derive {Jason.Encoder, only: [:days, :timezone, :start, :end, :exdates]}
 
         field(:days, {:array, :integer})
-        field(:timezone, :string)
-        field(:start, :string)
         field(:end, :string)
         field(:exdates, {:array, :string})
+        field(:start, :string)
+        field(:timezone, :string)
       end
     end
   end

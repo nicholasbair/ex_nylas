@@ -18,9 +18,9 @@ defmodule ExNylas.Common.Build.EventConferencing do
       @derive {Jason.Encoder, only: [:meeting_code, :password, :url, :phone, :pin]}
       field(:meeting_code, :string)
       field(:password, :string)
-      field(:url, :string)
       field(:phone, {:array, :string})
       field(:pin, :string)
+      field(:url, :string)
     end
   end
 

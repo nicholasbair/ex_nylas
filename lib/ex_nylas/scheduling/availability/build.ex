@@ -10,8 +10,8 @@ defmodule ExNylas.Scheduling.Availability.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field(:start_time, :integer) :: non_neg_integer()
     field(:end_time, :integer) :: non_neg_integer()
+    field(:start_time, :integer) :: non_neg_integer()
   end
 
   @doc false

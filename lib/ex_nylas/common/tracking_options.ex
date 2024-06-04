@@ -9,10 +9,10 @@ defmodule ExNylas.Common.TrackingOptions do
   @primary_key false
 
   typed_embedded_schema do
+    field(:label, :string)
     field(:links, :boolean)
     field(:opens, :boolean)
     field(:thread_replies, :boolean)
-    field(:label, :string)
   end
 
   @doc false

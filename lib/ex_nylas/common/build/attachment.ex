@@ -10,13 +10,13 @@ defmodule ExNylas.Common.Build.Attachment do
   @derive {Jason.Encoder, only: [:id, :content, :content_type, :content_id, :size, :filename, :is_inline]}
 
   typed_embedded_schema do
-    field(:id, :string)
-    field(:content_id, :string)
     field(:content, :string)
+    field(:content_id, :string)
     field(:content_type, :string)
-    field(:size, :integer) :: non_neg_integer() | nil
     field(:filename, :string)
     field(:is_inline, :boolean)
+    field(:id, :string)
+    field(:size, :integer) :: non_neg_integer() | nil
   end
 
   def changeset(struct, params \\ %{}) do

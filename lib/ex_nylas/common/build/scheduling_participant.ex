@@ -11,9 +11,9 @@ defmodule ExNylas.Common.Build.SchedulingParticipant do
   @derive {Jason.Encoder, only: [:name, :email, :is_organizer, :availability, :booking]}
 
   typed_embedded_schema do
-    field(:name, :string)
     field(:email, :string)
     field(:is_organizer, :boolean)
+    field(:name, :string)
 
     embeds_one :availability, Availability, primary_key: false do
       @derive {Jason.Encoder, only: [:calendar_ids]}

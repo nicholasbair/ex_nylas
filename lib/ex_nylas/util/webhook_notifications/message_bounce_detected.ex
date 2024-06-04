@@ -10,20 +10,20 @@ defmodule ExNylas.WebhookNotification.MessageBounceDetected do
   @primary_key false
 
   typed_embedded_schema do
-    field(:bounce_reason, :string)
-    field(:bounce_date, :string)
     field(:bounced_address, :string)
-    field(:type, :string)
+    field(:bounce_date, :string)
+    field(:bounce_reason, :string)
     field(:code, :integer)
+    field(:type, :string)
 
     embeds_one :origin, Origin, primary_key: false do
-      field(:to, {:array, :string})
-      field(:from, :string)
-      field(:cc, {:array, :string})
       field(:bcc, {:array, :string})
-      field(:subject, :string)
-      field(:mimeId, :string)
+      field(:cc, {:array, :string})
+      field(:from, :string)
       field(:id, :string)
+      field(:mimeId, :string)
+      field(:subject, :string)
+      field(:to, {:array, :string})
     end
   end
 

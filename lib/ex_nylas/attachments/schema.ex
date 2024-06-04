@@ -9,12 +9,14 @@ defmodule ExNylas.Attachment do
   @primary_key false
 
   typed_embedded_schema do
-    field(:id, :string, null: false)
-    field(:grant_id, :string, null: false)
+    field(:content_disposition, :string)
+    field(:content_id, :string)
     field(:content_type, :string, null: false)
-    field(:size, :integer, null: false) :: non_neg_integer()
     field(:filename, :string, null: false)
+    field(:grant_id, :string, null: false)
+    field(:id, :string, null: false)
     field(:is_inline, :boolean, null: false)
+    field(:size, :integer, null: false) :: non_neg_integer()
   end
 
   @doc false

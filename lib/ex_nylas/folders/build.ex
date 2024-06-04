@@ -10,9 +10,9 @@ defmodule ExNylas.Folder.Build do
   @primary_key false
 
   typed_embedded_schema do
+    field(:background_color, :string)
     field(:name, :string, null: false)
     field(:parent_id, :string)
-    field(:background_color, :string)
     field(:text_color, :string)
   end
 

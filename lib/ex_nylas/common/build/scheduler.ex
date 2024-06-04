@@ -11,9 +11,9 @@ defmodule ExNylas.Common.Build.Scheduler do
 
   typed_embedded_schema do
     field(:available_days_in_future, :integer) :: non_neg_integer()
+    field(:cancellation_url, :string)
     field(:min_cancellation_notice, :integer) :: non_neg_integer()
     field(:rescheduling_url, :string)
-    field(:cancellation_url, :string)
   end
 
   def changeset(struct, params \\ %{}) do

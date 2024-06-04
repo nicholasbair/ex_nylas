@@ -16,27 +16,27 @@ defmodule ExNylas.Message do
 
   typed_embedded_schema do
     field(:body, :string)
+    field(:conversation, :string)
     field(:date, :integer) :: non_neg_integer()
     field(:folders, {:array, :string}, null: false)
     field(:grant_id, :string, null: false)
     field(:id, :string, null: false)
+    field(:metadata, :map)
     field(:object, :string, null: false)
+    field(:schedule_id, :string)
     field(:snippet, :string)
     field(:starred, :boolean)
     field(:subject, :string)
     field(:thread_id, :string)
     field(:unread, :boolean)
-    field(:metadata, :map)
-    field(:schedule_id, :string)
-    field(:conversation, :string)
 
+    embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant
     embeds_many :cc, EmailParticipant
-    embeds_many :attachments, Attachment
     embeds_many :from, EmailParticipant
+    embeds_many :headers, MessageHeader
     embeds_many :reply_to, EmailParticipant
     embeds_many :to, EmailParticipant
-    embeds_many :headers, MessageHeader
   end
 
   @doc false

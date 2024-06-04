@@ -10,9 +10,9 @@ defmodule ExNylas.WebhookNotification.ThreadReplied do
   @primary_key false
 
   typed_embedded_schema do
+    field(:label, :string)
     field(:message_id, :string)
     field(:root_message_id, :string)
-    field(:label, :string)
     field(:sender_app_id, :string)
     field(:thread_id, :string)
     field(:timestamp, :integer) :: non_neg_integer()

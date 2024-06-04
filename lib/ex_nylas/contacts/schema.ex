@@ -17,8 +17,8 @@ defmodule ExNylas.Contact do
     field(:job_title, :string)
     field(:manager_name, :string)
     field(:notes, :string)
-    field(:office_location, :string)
     field(:object, :string, null: false)
+    field(:office_location, :string)
     field(:source, Ecto.Enum, values: ~w(address_book domain inbox)a, null: false)
 
     embeds_many :emails, Email, primary_key: false do
@@ -42,13 +42,13 @@ defmodule ExNylas.Contact do
     end
 
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
-      field(:type, :string)
-      field(:format, :string)
-      field(:street_address, :string)
       field(:city, :string)
-      field(:state, :string)
-      field(:postal_code, :string)
       field(:country, :string)
+      field(:format, :string)
+      field(:postal_code, :string)
+      field(:state, :string)
+      field(:street_address, :string)
+      field(:type, :string)
     end
 
     embeds_many :web_pages, WebPage, primary_key: false do

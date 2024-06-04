@@ -10,8 +10,8 @@ defmodule ExNylas.Common.Build.Buffer do
   @derive {Jason.Encoder, only: [:before, :after]}
 
   typed_embedded_schema do
-    field(:before, :integer) :: non_neg_integer()
     field(:after, :integer) :: non_neg_integer()
+    field(:before, :integer) :: non_neg_integer()
   end
 
   def changeset(struct, params \\ %{}) do

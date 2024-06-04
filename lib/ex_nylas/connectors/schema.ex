@@ -16,8 +16,8 @@ defmodule ExNylas.Connector do
     embeds_one :settings, Settings, primary_key: false do
       field(:client_id, :string)
       field(:project_id, :string)
-      field(:topic_name, :string)
       field(:tenant, :string)
+      field(:topic_name, :string)
     end
   end
 

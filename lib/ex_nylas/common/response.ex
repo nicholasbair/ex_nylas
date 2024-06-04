@@ -15,10 +15,10 @@ defmodule ExNylas.Common.Response do
   @primary_key false
 
   typed_embedded_schema do
-    field(:request_id, :string, null: false)
-    field(:status, Atom, null: false)
     field(:data, MapOrList)
     field(:next_cursor, :string)
+    field(:request_id, :string, null: false)
+    field(:status, Atom, null: false)
 
     embeds_one :error, Error
   end

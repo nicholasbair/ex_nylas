@@ -11,9 +11,9 @@ defmodule ExNylas.Scheduling.Booking.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field(:start_time, :integer) :: non_neg_integer()
     field(:end_time, :integer) :: non_neg_integer()
     field(:participants, {:array, :string})
+    field(:start_time, :integer) :: non_neg_integer()
 
     embeds_one :guest, Guest, primary_key: false do
       @derive {Jason.Encoder, only: [:email, :name]}

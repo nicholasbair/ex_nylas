@@ -10,9 +10,9 @@ defmodule ExNylas.Common.SchedulingParticipant do
   @primary_key false
 
   typed_embedded_schema do
-    field(:name, :string)
     field(:email, :string)
     field(:is_organizer, :boolean)
+    field(:name, :string)
 
     embeds_one :availability, Availability, primary_key: false do
       field(:calendar_ids, {:array, :string})

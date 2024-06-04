@@ -9,18 +9,18 @@ defmodule ExNylas.Folder do
   @primary_key false
 
   typed_embedded_schema do
+    field(:attributes, {:array, :string})
+    field(:background_color, :string)
+    field(:child_count, :integer) :: non_neg_integer() | nil
+    field(:grant_id, :string, null: false)
     field(:id, :string, null: false)
     field(:name, :string, null: false)
-    field(:grant_id, :string, null: false)
+    field(:object, :string, null: false)
+    field(:parent_id, :string)
     field(:system_folder, :boolean)
+    field(:text_color, :string)
     field(:total_count, :integer) :: non_neg_integer() | nil
     field(:unread_count, :integer) :: non_neg_integer() | nil
-    field(:child_count, :integer) :: non_neg_integer() | nil
-    field(:parent_id, :string)
-    field(:background_color, :string)
-    field(:object, :string, null: false)
-    field(:text_color, :string)
-    field(:attributes, {:array, :string})
   end
 
   @doc false

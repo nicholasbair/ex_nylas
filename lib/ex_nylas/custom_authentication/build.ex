@@ -17,9 +17,9 @@ defmodule ExNylas.CustomAuthentication.Build do
     embeds_one :settings, Settings, primary_key: false do
       @derive {Jason.Encoder, only: [:refresh_token, :credential_id, :email_address, :imap_username, :imap_password, :imap_host, :imap_port, :smtp_host, :smtp_port]}
 
-      field(:refresh_token, :string)
       field(:credential_id, :string)
       field(:email_address, :string)
+      field(:refresh_token, :string)
 
       # IMAP specific fields
       field(:imap_username, :string)

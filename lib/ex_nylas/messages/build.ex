@@ -17,19 +17,19 @@ defmodule ExNylas.Message.Build do
 
   typed_embedded_schema do
     field(:body, :string)
+    field(:metadata, :map)
     field(:reply_to_message_id, :string)
     field(:subject, :string)
-    field(:metadata, :map)
     field(:send_at, :integer) :: non_neg_integer() | nil
     field(:use_draft, :boolean)
 
     embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant
     embeds_many :cc, EmailParticipant
+    embeds_many :custom_headers, MessageHeader
     embeds_many :from, EmailParticipant
     embeds_many :reply_to, EmailParticipant
     embeds_many :to, EmailParticipant
-    embeds_many :custom_headers, MessageHeader
     embeds_one :tracking_options, TrackingOptions
   end
 

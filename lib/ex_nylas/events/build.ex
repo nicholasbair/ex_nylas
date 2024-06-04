@@ -9,47 +9,47 @@ defmodule ExNylas.Schema.Event.Build do
   alias ExNylas.Common.Build.EventReminder
   alias ExNylas.Common.Build.EventConferencing
 
-  @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants, :master_event_id]}
+  @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
   @primary_key false
 
   typed_embedded_schema do
-    field(:title, :string)
-    field(:description, :string)
-    field(:location, :string)
     field(:busy, :boolean)
-    field(:recurrence, {:array, :string})
-    field(:visibility, :string)
+    field(:description, :string)
+    field(:hide_participants, :boolean)
+    field(:location, :string)
     field(:metadata, :map)
     field(:notifications, {:array, :map})
-    field(:hide_participants, :boolean)
-    field(:master_event_id, :string)
+    field(:recurrence, {:array, :string})
+    field(:title, :string)
+    field(:visibility, :string)
+
+    embeds_one :conferencing, EventConferencing
 
     embeds_many :participants, Participant do
       @derive {Jason.Encoder, only: [:name, :email, :status, :comment, :phone_number]}
 
-      field(:name, :string)
-      field(:email, :string, null: false)
-      field(:status, :string)
       field(:comment, :string)
+      field(:email, :string, null: false)
+      field(:name, :string)
       field(:phone_number, :string)
+      field(:status, :string)
     end
 
-    embeds_one :conferencing, EventConferencing
     embeds_one :reminders, EventReminder
 
     embeds_one :when, When do
       @derive {Jason.Encoder, only: [:start_time, :end_time, :start_timezone, :end_timezone, :object, :time, :timezone, :start_date, :end_date, :date]}
 
-      field(:start_time, :integer) :: non_neg_integer() | nil
+      field(:date, :string)
+      field(:end_date, :string)
       field(:end_time, :integer) :: non_neg_integer() | nil
-      field(:start_timezone, :string)
       field(:end_timezone, :string)
       field(:object, :string)
+      field(:start_date, :string)
+      field(:start_time, :integer) :: non_neg_integer() | nil
+      field(:start_timezone, :string)
       field(:time, :integer) :: non_neg_integer() | nil
       field(:timezone, :string)
-      field(:start_date, :string)
-      field(:end_date, :string)
-      field(:date, :string)
     end
   end
 

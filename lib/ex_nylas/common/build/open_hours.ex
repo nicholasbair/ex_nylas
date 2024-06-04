@@ -11,10 +11,10 @@ defmodule ExNylas.Common.Build.OpenHours do
 
   typed_embedded_schema do
     field(:days, {:array, :integer})
-    field(:timezone, :string)
-    field(:start, :string) :: non_neg_integer()
     field(:end, :string) :: non_neg_integer()
     field(:exdates, {:array, :string})
+    field(:start, :string) :: non_neg_integer()
+    field(:timezone, :string)
   end
 
   def changeset(struct, params \\ %{}) do

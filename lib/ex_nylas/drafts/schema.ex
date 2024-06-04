@@ -15,17 +15,17 @@ defmodule ExNylas.Draft do
   @primary_key false
 
   typed_embedded_schema do
-    field(:id, :string, null: false)
-    field(:grant_id, :string, null: false)
-    field(:object, :string, null: false)
-    field(:thread_id, :string)
-    field(:reply_to_message_id, :string)
+    field(:body, :string)
     field(:date, :integer) :: non_neg_integer()
+    field(:folders, {:array, :string}, null: false)
+    field(:grant_id, :string, null: false)
+    field(:id, :string, null: false)
+    field(:object, :string, null: false)
+    field(:reply_to_message_id, :string)
     field(:snippet, :string)
     field(:starred, :boolean)
     field(:subject, :string)
-    field(:body, :string)
-    field(:folders, {:array, :string}, null: false)
+    field(:thread_id, :string)
 
     embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant

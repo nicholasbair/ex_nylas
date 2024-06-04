@@ -43,8 +43,8 @@ defmodule ExNylas.Contact.Build do
     embeds_many :web_pages, WebPage, primary_key: false do
       @derive {Jason.Encoder, only: [:url, :type]}
 
-      field(:url, :string, null: false)
       field(:type, Ecto.Enum, values: ~w(work home other)a)
+      field(:url, :string, null: false)
     end
 
     embeds_many :groups, ContactGroup, primary_key: false do
@@ -57,13 +57,13 @@ defmodule ExNylas.Contact.Build do
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
       @derive {Jason.Encoder, only: [:type, :format, :street_address, :city, :state, :postal_code, :country]}
 
-      field(:type, :string)
-      field(:format, :string)
-      field(:street_address, :string)
       field(:city, :string)
-      field(:state, :string)
-      field(:postal_code, :string)
       field(:country, :string)
+      field(:format, :string)
+      field(:postal_code, :string)
+      field(:street_address, :string)
+      field(:state, :string)
+      field(:type, :string)
     end
   end
 
