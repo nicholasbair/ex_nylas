@@ -11,23 +11,23 @@ defmodule ExNylas.CustomAuthentication.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
-    field :state, :string
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a, null: false)
+    field(:state, :string)
 
     embeds_one :settings, Settings, primary_key: false do
       @derive {Jason.Encoder, only: [:refresh_token, :credential_id, :email_address, :imap_username, :imap_password, :imap_host, :imap_port, :smtp_host, :smtp_port]}
 
-      field :refresh_token, :string
-      field :credential_id, :string
-      field :email_address, :string
+      field(:credential_id, :string)
+      field(:email_address, :string)
+      field(:refresh_token, :string)
 
       # IMAP specific fields
-      field :imap_username, :string
-      field :imap_password, :string
-      field :imap_host, :string
-      field :imap_port, :integer
-      field :smtp_host, :string
-      field :smtp_port, :integer
+      field(:imap_username, :string)
+      field(:imap_password, :string)
+      field(:imap_host, :string)
+      field(:imap_port, :integer) :: non_neg_integer() | nil
+      field(:smtp_host, :string)
+      field(:smtp_port, :integer) :: non_neg_integer() | nil
     end
   end
 

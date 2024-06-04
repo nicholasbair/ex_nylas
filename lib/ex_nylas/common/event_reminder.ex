@@ -9,8 +9,8 @@ defmodule ExNylas.Common.EventReminder do
   @primary_key false
 
   typed_embedded_schema do
-    field :overrides, {:array, :map}
-    field :use_default, :boolean
+    field(:overrides, {:array, :map})
+    field(:use_default, :boolean, null: false)
   end
 
   @doc false

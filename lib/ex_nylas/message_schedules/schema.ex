@@ -11,12 +11,12 @@ defmodule ExNylas.MessageSchedule do
   @primary_key false
 
   typed_embedded_schema do
-    field :schedule_id, :string
-    field :close_time, :integer
+    field(:close_time, :integer) :: non_neg_integer() | nil
+    field(:schedule_id, :string, null: false)
 
     embeds_one :status, Status, primary_key: false do
-      field :code, :string
-      field :description, :string
+      field(:code, :string)
+      field(:description, :string)
     end
   end
 

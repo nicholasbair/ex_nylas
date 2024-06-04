@@ -16,23 +16,23 @@ defmodule ExNylas.Scheduling.Configuration do
   @primary_key false
 
   typed_embedded_schema do
-    field :version, :string
-    field :id, :string
-    field :requires_session_auth, :boolean
+    field(:id, :string, null: false)
+    field(:requires_session_auth, :boolean, null: false)
+    field(:version, :string, null: false)
 
     embeds_one :availability, Availability, primary_key: false do
-      field :duration_minutes, :integer
-      field :interval_minutes, :integer
-      field :round_to_30_minutes, :boolean
+      field(:duration_minutes, :integer) :: non_neg_integer()
+      field(:interval_minutes, :integer) :: non_neg_integer()
+      field(:round_to_30_minutes, :boolean, null: false)
 
       embeds_one :availability_rules, AvailabilityRules
     end
 
     embeds_one :scheduler, Scheduler, primary_key: false do
-      field :available_days_in_future, :integer
-      field :min_cancellation_notice, :integer
-      field :rescheduling_url, :string
-      field :cancellation_url, :string
+      field(:available_days_in_future, :integer) :: non_neg_integer()
+      field(:cancellation_url, :string)
+      field(:min_cancellation_notice, :integer) :: non_neg_integer()
+      field(:rescheduling_url, :string)
     end
 
     embeds_one :event_booking, EventBooking

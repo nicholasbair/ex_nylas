@@ -10,9 +10,9 @@ defmodule ExNylas.ConnectorCredential.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :name, :string
-    field :credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a
-    field :credential_data, :map
+    field(:credential_data, :map, null: false)
+    field(:credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a, null: false)
+    field(:name, :string, null: false)
   end
 
   @doc false

@@ -10,8 +10,8 @@ defmodule ExNylas.Scheduling.Session.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :configuration_id, :string
-    field :time_to_live, :integer, default: 5
+    field(:configuration_id, :string, null: false)
+    field(:time_to_live, :integer, default: 5) :: non_neg_integer()
   end
 
   @doc false

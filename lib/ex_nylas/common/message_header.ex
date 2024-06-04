@@ -9,8 +9,8 @@ defmodule ExNylas.Common.MessageHeader do
   @primary_key false
 
   typed_embedded_schema do
-    field :name, :string
-    field :value, :string
+    field(:name, :string, null: false)
+    field(:value, :string, null: false)
   end
 
   @doc false

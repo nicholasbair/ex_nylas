@@ -9,15 +9,15 @@ defmodule ExNylas.Webhook do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :description, :string
-    field :trigger_types, {:array, :string}
-    field :webhook_url, :string
-    field :status, Ecto.Enum, values: ~w(active pause failing failed)a
-    field :webhook_secret, :string
-    field :notification_email_addresses, {:array, :string}
-    field :topic, :string
-    field :encryption_key, :string
+    field(:description, :string)
+    field(:encryption_key, :string)
+    field(:id, :string, null: false)
+    field(:notification_email_addresses, {:array, :string}, null: false)
+    field(:status, Ecto.Enum, values: ~w(active pause failing failed)a, null: false)
+    field(:topic, :string)
+    field(:trigger_types, {:array, :string}, null: false)
+    field(:webhook_url, :string, null: false)
+    field(:webhook_secret, :string)
   end
 
   @doc false

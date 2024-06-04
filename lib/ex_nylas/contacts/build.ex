@@ -11,59 +11,59 @@ defmodule ExNylas.Contact.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :given_name, :string
-    field :job_title, :string
-    field :manager_name, :string
-    field :notes, :string
-    field :office_location, :string
-    field :object, :string
-    field :source, :string
+    field(:given_name, :string, null: false)
+    field(:job_title, :string)
+    field(:manager_name, :string)
+    field(:notes, :string)
+    field(:office_location, :string)
+    field(:object, :string)
+    field(:source, :string)
 
     embeds_many :emails, Email, primary_key: false do
       @derive {Jason.Encoder, only: [:email, :type]}
 
-      field :email, :string
-      field :type, Ecto.Enum, values: ~w(work home other)a
+      field(:email, :string, null: false)
+      field(:type, Ecto.Enum, values: ~w(work home other)a)
     end
 
     embeds_many :im_addresses, ImAddress, primary_key: false do
       @derive {Jason.Encoder, only: [:im_address, :type]}
 
-      field :im_address, :string
-      field :type, :string
+      field(:im_address, :string, null: false)
+      field(:type, :string)
     end
 
     embeds_many :phone_numbers, PhoneNumber, primary_key: false do
       @derive {Jason.Encoder, only: [:number, :type]}
 
-      field :number, :string
-      field :type, Ecto.Enum, values: ~w(work home other)a
+      field(:number, :string, null: false)
+      field(:type, Ecto.Enum, values: ~w(work home other)a)
     end
 
     embeds_many :web_pages, WebPage, primary_key: false do
       @derive {Jason.Encoder, only: [:url, :type]}
 
-      field :url, :string
-      field :type, Ecto.Enum, values: ~w(work home other)a
+      field(:type, Ecto.Enum, values: ~w(work home other)a)
+      field(:url, :string, null: false)
     end
 
     embeds_many :groups, ContactGroup, primary_key: false do
       @derive {Jason.Encoder, only: [:id, :name]}
 
-      field :id, :string
-      field :name, :string
+      field(:id, :string)
+      field(:name, :string)
     end
 
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
       @derive {Jason.Encoder, only: [:type, :format, :street_address, :city, :state, :postal_code, :country]}
 
-      field :type, :string
-      field :format, :string
-      field :street_address, :string
-      field :city, :string
-      field :state, :string
-      field :postal_code, :string
-      field :country, :string
+      field(:city, :string)
+      field(:country, :string)
+      field(:format, :string)
+      field(:postal_code, :string)
+      field(:street_address, :string)
+      field(:state, :string)
+      field(:type, :string)
     end
   end
 

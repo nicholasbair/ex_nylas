@@ -9,9 +9,9 @@ defmodule ExNylas.Common.Error do
   @primary_key false
 
   typed_embedded_schema do
-    field :type, :string
-    field :message, :string
-    field :provider_error, :map
+    field(:message, :string, null: false)
+    field(:provider_error, :map)
+    field(:type, :string)
   end
 
   @doc false

@@ -9,7 +9,7 @@ defmodule ExNylas.Scheduling.Booking do
   @primary_key false
 
   typed_embedded_schema do
-    field :booking_id, :string
+    field(:booking_id, :string, null: false)
   end
 
   @doc false

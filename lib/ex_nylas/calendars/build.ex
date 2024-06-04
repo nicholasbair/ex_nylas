@@ -10,11 +10,11 @@ defmodule ExNylas.Calendar.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field :description, :string
-    field :location, :string
-    field :name, :string
-    field :timezone, :string
-    field :metadata, :map
+    field(:description, :string)
+    field(:location, :string)
+    field(:metadata, :map)
+    field(:name, :string, null: false)
+    field(:timezone, :string)
   end
 
   @doc false

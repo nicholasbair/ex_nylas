@@ -10,8 +10,8 @@ defmodule ExNylas.Common.Build.EmailParticipant do
   @derive {Jason.Encoder, only: [:email, :name]}
 
   typed_embedded_schema do
-    field :email, :string
-    field :name, :string
+    field(:email, :string, null: false)
+    field(:name, :string)
   end
 
   def changeset(struct, params \\ %{}) do

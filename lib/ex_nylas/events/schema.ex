@@ -11,65 +11,70 @@ defmodule ExNylas.Event do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :object, :string
-    field :grant_id, :string
-    field :calendar_id, :string
-    field :title, :string
-    field :description, :string
-    field :location, :string
-    field :busy, :boolean
-    field :recurrence, {:array, :string}
-    field :visibility, Ecto.Enum, values: ~w(public private)a
-    field :metadata, :map
-    field :notifications, {:array, :map}
-    field :hide_participants, :boolean
-    field :master_event_id, :string
-
-    embeds_many :participants, Participant, primary_key: false do
-      field :name, :string
-      field :email, :string
-      field :status, Ecto.Enum, values: ~w(yes no maybe noreply)a
-      field :comment, :string
-      field :phone_number, :string
-    end
-
-    embeds_one :when, When, primary_key: false do
-      field :start_time, :integer
-      field :end_time, :integer
-      field :start_timezone, :string
-      field :end_timezone, :string
-      field :object, Ecto.Enum, values: ~w(time timespan date datespan)a
-      field :time, :integer
-      field :timezone, :string
-      field :start_date, :string
-      field :end_date, :string
-      field :date, :string
-    end
+    field(:busy, :boolean, null: false)
+    field(:calendar_id, :string, null: false)
+    field(:created_at, :integer)
+    field(:description, :string)
+    field(:hide_participants, :boolean)
+    field(:grant_id, :string, null: false)
+    field(:html_link, :string)
+    field(:ical_uid, :string)
+    field(:id, :string, null: false)
+    field(:location, :string)
+    field(:master_event_id, :string)
+    field(:metadata, :map)
+    field(:object, :string, null: false)
+    field(:read_only, :boolean)
+    field(:recurrence, {:array, :string})
+    field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
+    field(:title, :string)
+    field(:updated_at, :integer)
+    field(:visibility, Ecto.Enum, values: ~w(public private)a)
 
     embeds_one :conferencing, Conferencing, primary_key: false do
-      field :meeting_code, :string
-      field :password, :string
-      field :url, :string
-      field :phone, {:array, :string}
-      field :pin, :string
-    end
-
-    embeds_one :reminders, Reminder, primary_key: false do
-      field :overrides, {:array, :map}
-      field :use_default, :boolean
+      field(:meeting_code, :string)
+      field(:password, :string)
+      field(:phone, {:array, :string})
+      field(:pin, :string)
+      field(:url, :string)
     end
 
     embeds_one :organizer, Organizer, primary_key: false do
-      field :email, :string
-      field :name, :string
+      field(:email, :string, null: false)
+      field(:name, :string)
+    end
+
+    embeds_many :participants, Participant, primary_key: false do
+      field(:comment, :string)
+      field(:email, :string, null: false)
+      field(:name, :string)
+      field(:phone_number, :string)
+      field(:status, Ecto.Enum, values: ~w(yes no maybe noreply)a, null: false)
+    end
+
+    embeds_one :reminders, Reminder, primary_key: false do
+      field(:overrides, {:array, :map})
+      field(:use_default, :boolean, null: false)
+    end
+
+    embeds_one :when, When, primary_key: false do
+      field(:date, :string)
+      field(:end_date, :string)
+      field(:end_time, :integer) :: non_neg_integer() | nil
+      field(:end_timezone, :string)
+      field(:object, Ecto.Enum, values: ~w(time timespan date datespan)a, null: false)
+      field(:start_date, :string)
+      field(:start_time, :integer) :: non_neg_integer() | nil
+      field(:start_timezone, :string)
+      field(:time, :integer) :: non_neg_integer() | nil
+      field(:timezone, :string)
     end
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :object, :grant_id, :calendar_id, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :master_event_id])
+    |> cast(params, [:id, :grant_id, :calendar_id, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_embed(:when, with: &Util.embedded_changeset/2)
     |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)

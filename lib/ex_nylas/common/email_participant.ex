@@ -9,8 +9,8 @@ defmodule ExNylas.Common.EmailParticipant do
   @primary_key false
 
   typed_embedded_schema do
-    field :email, :string
-    field :name, :string
+    field(:email, :string, null: false)
+    field(:name, :string)
   end
 
   @doc false

@@ -9,16 +9,16 @@ defmodule ExNylas.Grant do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a
-    field :grant_status, Ecto.Enum, values: ~w(valid invalid)a
-    field :email, :string
-    field :scope, {:array, :string}
-    field :user_agent, :string
-    field :ip, :string
-    field :state, :string
-    field :created_at, :integer
-    field :updated_at, :integer
+    field(:created_at, :integer, null: false) :: non_neg_integer()
+    field(:email, :string, null: false)
+    field(:grant_status, Ecto.Enum, values: ~w(valid invalid)a, null: false)
+    field(:id, :string, null: false)
+    field(:ip, :string)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a, null: false)
+    field(:scope, {:array, :string})
+    field(:state, :string)
+    field(:updated_at, :integer, null: false) :: non_neg_integer()
+    field(:user_agent, :string)
   end
 
   @doc false

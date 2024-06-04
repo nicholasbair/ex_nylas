@@ -10,15 +10,15 @@ defmodule ExNylas.Common.EventConferencing do
   @primary_key false
 
   typed_embedded_schema do
-    field :provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams')a
-    field :autocreate, :map
+    field(:autocreate, :map)
+    field(:provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams')a)
 
     embeds_one :details, Details, primary_key: false do
-      field :meeting_code, :string
-      field :password, :string
-      field :url, :string
-      field :phone, {:array, :string}
-      field :pin, :string
+      field(:meeting_code, :string)
+      field(:password, :string)
+      field(:phone, {:array, :string})
+      field(:pin, :string)
+      field(:url, :string)
     end
   end
 

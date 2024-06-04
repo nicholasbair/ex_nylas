@@ -9,9 +9,9 @@ defmodule ExNylas.ApplicationRedirect do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :url, :string
-    field :platform, Ecto.Enum, values: ~w(web desktop js ios android)a
+    field(:id, :string, null: false)
+    field(:platform, Ecto.Enum, values: ~w(web desktop js ios android)a, null: false)
+    field(:url, :string, null: false)
   end
 
   @doc false

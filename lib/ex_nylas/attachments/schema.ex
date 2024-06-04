@@ -9,18 +9,20 @@ defmodule ExNylas.Attachment do
   @primary_key false
 
   typed_embedded_schema do
-    field :id, :string
-    field :grant_id, :string
-    field :content_type, :string
-    field :size, :integer
-    field :filename, :string
-    field :is_inline, :boolean
+    field(:content_disposition, :string)
+    field(:content_id, :string)
+    field(:content_type, :string, null: false)
+    field(:filename, :string, null: false)
+    field(:grant_id, :string, null: false)
+    field(:id, :string, null: false)
+    field(:is_inline, :boolean, null: false)
+    field(:size, :integer, null: false) :: non_neg_integer()
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id])
+    |> validate_required([:id, :grant_id])
   end
 end
