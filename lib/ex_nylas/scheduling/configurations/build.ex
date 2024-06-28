@@ -18,7 +18,7 @@ defmodule ExNylas.Scheduling.Configuration.Build do
   typed_embedded_schema do
     field(:requires_session_auth, :boolean)
 
-    embeds_many :availability, Availability
+    embeds_one :availability, Availability
     embeds_one :event_booking, EventBooking
     embeds_many :participants, SchedulingParticipant
     embeds_one :scheduler, Scheduler

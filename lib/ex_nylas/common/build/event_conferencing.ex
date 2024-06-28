@@ -12,7 +12,7 @@ defmodule ExNylas.Common.Build.EventConferencing do
 
   typed_embedded_schema do
     field(:autocreate, :map)
-    field(:provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams')a, null: false)
+    field(:provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams' 'Zoom Meeting')a, null: false)
 
     embeds_one :details, Details, primary_key: false do
       @derive {Jason.Encoder, only: [:meeting_code, :password, :url, :phone, :pin]}
@@ -26,7 +26,7 @@ defmodule ExNylas.Common.Build.EventConferencing do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:autocreate])
+    |> cast(params, [:autocreate, :provider])
     |> cast_embed(:details, with: &embedded_changeset/2)
     |> validate_type()
   end
