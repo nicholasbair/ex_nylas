@@ -14,7 +14,7 @@ defmodule ExNylas.Grant do
     field(:grant_status, Ecto.Enum, values: ~w(valid invalid)a, null: false)
     field(:id, :string, null: false)
     field(:ip, :string)
-    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a, null: false)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo zoom ews)a, null: false)
     field(:scope, {:array, :string})
     field(:state, :string)
     field(:updated_at, :integer, null: false) :: non_neg_integer()

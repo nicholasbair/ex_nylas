@@ -22,7 +22,7 @@ defmodule ExNylas.Common.EventBooking do
     field(:title, :string, null: false)
     field(:timezone, :string)
 
-    embeds_one :conference, EventConferencing
+    embeds_one :conferencing, EventConferencing
     embeds_one :reminders, EventReminder
   end
 
@@ -30,7 +30,7 @@ defmodule ExNylas.Common.EventBooking do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :location, :description, :booking_type, :additional_fields, :hide_participants, :disable_emails, :timezone])
-    |> cast_embed(:conference)
+    |> cast_embed(:conferencing)
     |> cast_embed(:reminders)
     |> validate_required([:title])
   end

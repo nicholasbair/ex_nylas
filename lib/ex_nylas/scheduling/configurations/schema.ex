@@ -22,14 +22,20 @@ defmodule ExNylas.Scheduling.Configuration do
     embeds_one :availability, Availability, primary_key: false do
       field(:duration_minutes, :integer) :: non_neg_integer()
       field(:interval_minutes, :integer) :: non_neg_integer()
-      field(:round_to_30_minutes, :boolean, null: false)
+      field(:round_to, :integer) :: non_neg_integer()
 
       embeds_one :availability_rules, AvailabilityRules
     end
 
     embeds_one :scheduler, Scheduler, primary_key: false do
+      field(:additional_fields, :map)
       field(:available_days_in_future, :integer) :: non_neg_integer()
+      field(:cancellation_policy, :string)
       field(:cancellation_url, :string)
+      field(:hide_additionl_fields, :boolean)
+      field(:hide_cancelation_options, :boolean)
+      field(:hide_rescheduling_options, :boolean)
+      field(:min_booking_notice, :integer) :: non_neg_integer()
       field(:min_cancellation_notice, :integer) :: non_neg_integer()
       field(:rescheduling_url, :string)
     end
