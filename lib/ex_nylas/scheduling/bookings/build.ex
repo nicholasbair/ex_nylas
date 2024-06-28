@@ -7,13 +7,14 @@ defmodule ExNylas.Scheduling.Booking.Build do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
-  @derive {Jason.Encoder, only: [:start_time, :end_time, :participants, :guest]}
+  @derive {Jason.Encoder, only: [:start_time, :end_time, :participants, :guest, :timezone, :additional_guests]}
   @primary_key false
 
   typed_embedded_schema do
     field(:end_time, :integer) :: non_neg_integer()
     field(:participants, {:array, :string})
     field(:start_time, :integer) :: non_neg_integer()
+    field(:timezone, :string)
 
     embeds_one :guest, Guest, primary_key: false do
       @derive {Jason.Encoder, only: [:email, :name]}
@@ -33,7 +34,7 @@ defmodule ExNylas.Scheduling.Booking.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:start_time, :end_time, :participants])
+    |> cast(params, [:start_time, :end_time, :participants, :timezone])
     |> validate_required([:start_time, :end_time])
     |> cast_embed(:guest, with: &embedded_changeset/2, required: true)
     |> cast_embed(:additional_guests, with: &embedded_changeset/2)

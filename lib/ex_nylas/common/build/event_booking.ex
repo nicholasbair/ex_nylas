@@ -11,7 +11,7 @@ defmodule ExNylas.Common.Build.EventBooking do
   }
 
   @primary_key false
-  @derive {Jason.Encoder, only: [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails, :conference, :reminders]}
+  @derive {Jason.Encoder, only: [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails, :conferencing, :reminders]}
 
   typed_embedded_schema do
     field(:additional_fields, :map)
@@ -23,14 +23,14 @@ defmodule ExNylas.Common.Build.EventBooking do
     field(:timezone, :string)
     field(:title, :string, null: false)
 
-    embeds_one :conference, EventConferencing
+    embeds_one :conferencing, EventConferencing
     embeds_one :reminders, EventReminder
   end
 
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails])
-    |> cast_embed(:conference)
+    |> cast_embed(:conferencing)
     |> cast_embed(:reminders)
     |> validate_required([:title])
   end

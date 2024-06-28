@@ -14,7 +14,7 @@ defmodule ExNylas.HostedAuthentication.Grant do
     field(:expires_in, :integer) :: non_neg_integer()
     field(:grant_id, :string, null: false)
     field(:id_token, :string)
-    field(:provider, Ecto.Enum, values: ~w(google microsoft icloud yahoo imap virtual-calendar)a, null: false)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft icloud yahoo imap virtual-calendar zoom ews)a, null: false)
     field(:refresh_token, :string)
     field(:scope, :string)
     field(:token_type, :string)

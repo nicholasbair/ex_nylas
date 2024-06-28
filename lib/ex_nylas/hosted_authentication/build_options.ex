@@ -15,7 +15,7 @@ defmodule ExNylas.HostedAuthentication.Options.Build do
     field(:credential_id, :string)
     field(:login_hint, :string)
     field(:prompt, Ecto.Enum, values: ~w(select_provider detect select_provider,detect detect,select_provider)a)
-    field(:provider, Ecto.Enum, values: ~w(google microsoft imap yahoo icloud)a)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft icloud yahoo imap virtual-calendar zoom ews)a)
     field(:scope, {:array, :string})
     field(:state, :string)
     field(:redirect_uri, :string)

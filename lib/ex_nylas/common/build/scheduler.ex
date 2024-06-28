@@ -7,17 +7,23 @@ defmodule ExNylas.Common.Build.Scheduler do
   import Ecto.Changeset
 
   @primary_key false
-  @derive {Jason.Encoder, only: [:available_days_in_future, :min_cancellation_notice, :rescheduling_url, :cancellation_url]}
+  @derive {Jason.Encoder, only: [:additional_fields, :available_days_in_future, :cancellation_policy, :cancellation_url, :hide_additionl_fields, :hide_cancelation_options, :hide_rescheduling_options, :min_booking_notice, :min_cancellation_notice, :rescheduling_url]}
 
   typed_embedded_schema do
+    field(:additional_fields, :map)
     field(:available_days_in_future, :integer) :: non_neg_integer()
+    field(:cancellation_policy, :string)
     field(:cancellation_url, :string)
+    field(:hide_additionl_fields, :boolean)
+    field(:hide_cancelation_options, :boolean)
+    field(:hide_rescheduling_options, :boolean)
+    field(:min_booking_notice, :integer) :: non_neg_integer()
     field(:min_cancellation_notice, :integer) :: non_neg_integer()
     field(:rescheduling_url, :string)
   end
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:available_days_in_future, :min_cancellation_notice, :rescheduling_url, :cancellation_url])
+    |> cast(params, [:additional_fields, :available_days_in_future, :cancellation_policy, :cancellation_url, :hide_additionl_fields, :hide_cancelation_options, :hide_rescheduling_options, :min_booking_notice, :min_cancellation_notice, :rescheduling_url])
   end
 end

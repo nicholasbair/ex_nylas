@@ -18,23 +18,25 @@ defmodule ExNylas.Scheduling.Availability do
   @doc """
   Get scheduling availability for a given time range.
 
-  - `session_id` = `nil` is used for public scheduling configurations, but `config_id` is required in such cases.
+  ## Params
+  - `session_id` needed for private scheduling configurations
+  - `config_id` needed for public scheduling configurations
+  - `booking_id` needed to check availability when rescheduling a round robin booking
 
   ## Examples
 
-      iex> {:ok, availability} = ExNylas.Scheduling.Availability.get(conn, 1614556800, 1614643200)
+      iex> {:ok, availability} = ExNylas.Scheduling.Availability.get(conn, 1614556800, 1614643200, config_id: "1234-5678")
   """
-  @spec get(Conn.t(), integer(), integer(), String.t() | nil, String.t() | nil) :: {:ok, Response.t()} | {:error, Response.t()}
-  def get(%Conn{} = conn, start_time, end_time, session_id \\ nil, config_id \\ nil) do
+  @spec get(Conn.t(), integer(), integer(), Keyword.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def get(%Conn{} = conn, start_time, end_time, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/scheduling/availability",
-      auth: auth_bearer(session_id),
+      auth: auth_bearer(params[:session_id]),
       headers: API.base_headers(),
-      query: %{
+      params: Keyword.merge(params, [
         start_time: start_time,
-        end_time: end_time,
-        config_id: config_id,
-      }
+        end_time: end_time
+      ])
     )
     |> API.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
@@ -44,15 +46,18 @@ defmodule ExNylas.Scheduling.Availability do
   @doc """
   Get scheduling availability for a given time range.
 
-  - `session_id` = `nil` is used for public scheduling configurations, but `config_id` is required in such cases.
+  ## Params
+  - `session_id` needed for private scheduling configurations
+  - `config_id` needed for public scheduling configurations
+  - `booking_id` needed to check availability when rescheduling a round robin booking
 
   ## Examples
 
-      iex> availability = ExNylas.Scheduling.Availability.get!(conn, 1614556800, 1614643200)
+      iex> availability = ExNylas.Scheduling.Availability.get!(conn, 1614556800, 1614643200, config_id: "1234-5678")
   """
-  @spec get!(Conn.t(), integer(), integer(), String.t() | nil, String.t() | nil) :: Response.t()
-  def get!(%Conn{} = conn, start_time, end_time, session_id \\ nil, config_id \\ nil) do
-    case get(conn, start_time, end_time, session_id, config_id) do
+  @spec get!(Conn.t(), integer(), integer(), Keyword.t()) :: Response.t()
+  def get!(%Conn{} = conn, start_time, end_time, params \\ []) do
+    case get(conn, start_time, end_time, params) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end
