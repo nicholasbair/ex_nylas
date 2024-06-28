@@ -18,7 +18,6 @@ defmodule ExNylas.Scheduling.Configuration do
   typed_embedded_schema do
     field(:id, :string, null: false)
     field(:requires_session_auth, :boolean, null: false)
-    field(:version, :string, null: false)
 
     embeds_one :availability, Availability, primary_key: false do
       field(:duration_minutes, :integer) :: non_neg_integer()
@@ -42,7 +41,7 @@ defmodule ExNylas.Scheduling.Configuration do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:version, :id, :requires_session_auth])
+    |> cast(params, [:id, :requires_session_auth])
     |> validate_required([:id])
     |> cast_embed(:participants)
     |> cast_embed(:event_booking)
