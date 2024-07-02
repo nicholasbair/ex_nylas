@@ -58,7 +58,7 @@ defmodule ExNylas.Scheduling.Configuration do
   @doc false
   def embedded_changeset_availability(changeset, params \\ %{}) do
     changeset
-    |> cast(params, [:duration_minutes, :interval_minutes, :round_to_30_minutes])
+    |> cast(params, [:duration_minutes, :interval_minutes, :round_to])
     |> cast_embed(:availability_rules)
   end
 end
