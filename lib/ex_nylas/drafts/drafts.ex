@@ -167,4 +167,36 @@ defmodule ExNylas.Drafts do
       {:error, reason} -> raise ExNylasError, reason
     end
   end
+
+  @doc """
+  Delete a draft.
+
+  Example
+      {:ok, response} = ExNylas.Draft.delete(conn, draft_id)
+  """
+  @spec delete(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def delete(%Conn{} = conn, draft_id) do
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers()
+    )
+    |> API.maybe_attach_telemetry(conn)
+    |> Req.delete(conn.options)
+    |> API.handle_response()
+  end
+
+  @doc """
+  Delete a draft.
+
+  Example
+      res = ExNylas.Drafts.delete!(conn, draft_id)
+  """
+  @spec delete!(Conn.t(), String.t()) :: Response.t()
+  def delete!(%Conn{} = conn, draft_id) do
+    case delete(conn, draft_id) do
+      {:ok, res} -> res
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
 end
