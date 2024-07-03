@@ -20,7 +20,7 @@ defmodule ExNylas.Application do
     field(:organization_id, :string, null: false)
     field(:region, Ecto.Enum, values: ~w(us eu)a, null: false)
     field(:updated_at, :integer, null: false) :: non_neg_integer()
-    field(:v2_organization_id, :string)
+    field(:v2_application_id, :string)
 
     embeds_one :branding, Branding, primary_key: false do
       field(:description, :string)
@@ -46,7 +46,7 @@ defmodule ExNylas.Application do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:application_id, :organization_id, :region, :created_at, :updated_at, :environment, :v2_organization_id])
+    |> cast(params, [:application_id, :organization_id, :region, :created_at, :updated_at, :environment, :v2_application_id])
     |> cast_embed(:branding, with: &Util.embedded_changeset/2)
     |> cast_embed(:hosted_authentication, with: &Util.embedded_changeset/2)
     |> cast_embed(:callback_uris)
