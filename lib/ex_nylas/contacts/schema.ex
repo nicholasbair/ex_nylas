@@ -11,6 +11,8 @@ defmodule ExNylas.Contact do
   @primary_key false
 
   typed_embedded_schema do
+    field(:birthday, :string)
+    field(:company_name, :string)
     field(:given_name, :string)
     field(:grant_id, :string, null: false)
     field(:id, :string, null: false)
@@ -60,7 +62,7 @@ defmodule ExNylas.Contact do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:given_name, :grant_id, :id, :job_title, :manager_name, :notes, :office_location, :object, :source])
+    |> cast(params, [:birthday, :company_name, :given_name, :grant_id, :id, :job_title, :manager_name, :notes, :office_location, :object, :source])
     |> cast_embed(:emails, with: &Util.embedded_changeset/2)
     |> cast_embed(:groups, with: &Util.embedded_changeset/2)
     |> cast_embed(:im_addresses, with: &Util.embedded_changeset/2)

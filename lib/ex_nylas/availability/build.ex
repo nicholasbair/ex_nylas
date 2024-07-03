@@ -7,7 +7,7 @@ defmodule ExNylas.CalendarAvailability.Build do
   import Ecto.Changeset
   alias ExNylas.Common.Build.AvailabilityRules
 
-  @derive {Jason.Encoder, only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to_30_minutes, :availability_rules]}
+  @derive {Jason.Encoder, only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to, :availability_rules]}
   @primary_key false
 
   typed_embedded_schema do
@@ -15,7 +15,7 @@ defmodule ExNylas.CalendarAvailability.Build do
     field(:end_time, :integer) :: non_neg_integer()
     field(:interval_minutes, :integer) :: non_neg_integer() | nil
     field(:start_time, :integer) :: non_neg_integer()
-    field(:round_to_30_minutes, :boolean)
+    field(:round_to, :integer) :: non_neg_integer()
 
     embeds_many :availability_rules, AvailabilityRules
 
@@ -40,7 +40,7 @@ defmodule ExNylas.CalendarAvailability.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:start_time, :end_time, :duration_minutes, :interval_minutes, :round_to_30_minutes])
+    |> cast(params, [:start_time, :end_time, :duration_minutes, :interval_minutes, :round_to])
     |> cast_embed(:availability_rules)
     |> cast_embed(:participants, with: &participant_changeset/2, required: true)
     |> validate_required([:start_time, :end_time, :duration_minutes])

@@ -18,19 +18,24 @@ defmodule ExNylas.Scheduling.Configuration do
   typed_embedded_schema do
     field(:id, :string, null: false)
     field(:requires_session_auth, :boolean, null: false)
-    field(:version, :string, null: false)
 
     embeds_one :availability, Availability, primary_key: false do
       field(:duration_minutes, :integer) :: non_neg_integer()
       field(:interval_minutes, :integer) :: non_neg_integer()
-      field(:round_to_30_minutes, :boolean, null: false)
+      field(:round_to, :integer) :: non_neg_integer()
 
       embeds_one :availability_rules, AvailabilityRules
     end
 
     embeds_one :scheduler, Scheduler, primary_key: false do
+      field(:additional_fields, :map)
       field(:available_days_in_future, :integer) :: non_neg_integer()
+      field(:cancellation_policy, :string)
       field(:cancellation_url, :string)
+      field(:hide_additionl_fields, :boolean)
+      field(:hide_cancelation_options, :boolean)
+      field(:hide_rescheduling_options, :boolean)
+      field(:min_booking_notice, :integer) :: non_neg_integer()
       field(:min_cancellation_notice, :integer) :: non_neg_integer()
       field(:rescheduling_url, :string)
     end
@@ -42,7 +47,7 @@ defmodule ExNylas.Scheduling.Configuration do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:version, :id, :requires_session_auth])
+    |> cast(params, [:id, :requires_session_auth])
     |> validate_required([:id])
     |> cast_embed(:participants)
     |> cast_embed(:event_booking)
@@ -53,7 +58,7 @@ defmodule ExNylas.Scheduling.Configuration do
   @doc false
   def embedded_changeset_availability(changeset, params \\ %{}) do
     changeset
-    |> cast(params, [:duration_minutes, :interval_minutes, :round_to_30_minutes])
+    |> cast(params, [:duration_minutes, :interval_minutes, :round_to])
     |> cast_embed(:availability_rules)
   end
 end

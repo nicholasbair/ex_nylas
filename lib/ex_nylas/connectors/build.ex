@@ -11,7 +11,7 @@ defmodule ExNylas.Connector.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo)a, null: false)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo zoom ews)a, null: false)
     field(:scope, {:array, :string})
 
     embeds_one :settings, Settings, primary_key: false do
