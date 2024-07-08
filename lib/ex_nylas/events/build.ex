@@ -9,11 +9,12 @@ defmodule ExNylas.Schema.Event.Build do
   alias ExNylas.Common.Build.EventReminder
   alias ExNylas.Common.Build.EventConferencing
 
-  @derive {Jason.Encoder, only: [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
+  @derive {Jason.Encoder, only: [:capacity, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
   @primary_key false
 
   typed_embedded_schema do
     field(:busy, :boolean)
+    field(:capacity, :integer)
     field(:description, :string)
     field(:hide_participants, :boolean)
     field(:location, :string)
@@ -56,7 +57,7 @@ defmodule ExNylas.Schema.Event.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :master_event_id])
+    |> cast(params, [:capacity, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :master_event_id])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_embed(:conferencing)
     |> cast_embed(:reminders)

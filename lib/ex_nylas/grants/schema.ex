@@ -28,6 +28,6 @@ defmodule ExNylas.Grant do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :provider, :scope, :grant_status])
+    |> validate_required([:id, :provider, :grant_status])
   end
 end

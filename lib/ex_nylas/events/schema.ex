@@ -13,6 +13,7 @@ defmodule ExNylas.Event do
   typed_embedded_schema do
     field(:busy, :boolean, null: false)
     field(:calendar_id, :string, null: false)
+    field(:capacity, :integer)
     field(:created_at, :integer)
     field(:description, :string)
     field(:hide_participants, :boolean)
@@ -74,7 +75,7 @@ defmodule ExNylas.Event do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :grant_id, :calendar_id, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
+    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_embed(:when, with: &Util.embedded_changeset/2)
     |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)
