@@ -89,13 +89,15 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.build(payload)
       """
-      @spec unquote(config.name)(map()) :: {:ok, struct()} | {:error, Ecto.Changeset.t()}
+      @spec unquote(config.name)(map() | struct()) :: {:ok, struct()} | {:error, Ecto.Changeset.t()}
       def unquote(config.name)(payload) do
         model =
           unquote(struct_name)
           |> to_string()
           |> Kernel.<>(".Build")
           |> String.to_atom()
+
+        payload = ExNylas.from_struct(payload)
 
         model.__struct__
         |> model.changeset(payload)
@@ -107,15 +109,17 @@ defmodule ExNylas do
 
       ## Examples
 
-          iex> result = #{ExNylas.format_module_name(__MODULE__)}.build(payload)!
+          iex> result = #{ExNylas.format_module_name(__MODULE__)}.build!(payload)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(map()) :: struct()
+      @spec unquote("#{config.name}!" |> String.to_atom())(map() | struct()) :: struct()
       def unquote("#{config.name}!" |> String.to_atom())(payload) do
         model =
           unquote(struct_name)
           |> to_string()
           |> Kernel.<>(".Build")
           |> String.to_atom()
+
+        payload = ExNylas.from_struct(payload)
 
         model.__struct__
         |> model.changeset(payload)
@@ -346,6 +350,14 @@ defmodule ExNylas do
     |> String.replace("Elixir.", "")
     |> String.to_atom()
   end
+
+  @doc false
+  def from_struct(payload) when is_struct(payload) do
+    payload
+    |> Miss.Map.from_nested_struct()
+  end
+
+  def from_struct(payload), do: payload
 
   defmacro __using__(opts) do
     quote do

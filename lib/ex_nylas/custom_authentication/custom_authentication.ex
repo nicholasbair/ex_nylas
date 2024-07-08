@@ -8,6 +8,11 @@ defmodule ExNylas.CustomAuthentication do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
 
+  use ExNylas,
+    struct: __MODULE__,
+    readable_name: "custom authentication",
+    include: [:build]
+
   @doc """
   Connect a grant using custom authentication.
 

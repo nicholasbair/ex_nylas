@@ -8,6 +8,11 @@ defmodule ExNylas.ConnectorCredentials do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.ConnectorCredential, as: Cred
 
+  use ExNylas,
+    struct: Cred,
+    readable_name: "connector credential",
+    include: [:build]
+
   @doc """
   List connector credentials.
 
