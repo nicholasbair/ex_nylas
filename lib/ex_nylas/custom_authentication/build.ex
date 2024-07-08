@@ -11,7 +11,7 @@ defmodule ExNylas.CustomAuthentication.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud)a, null: false)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar yahoo icloud zoom ews)a, null: false)
     field(:state, :string)
 
     embeds_one :settings, Settings, primary_key: false do
