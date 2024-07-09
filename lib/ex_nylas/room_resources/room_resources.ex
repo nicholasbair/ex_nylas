@@ -7,5 +7,5 @@ defmodule ExNylas.RoomResources do
     object: "resources",
     struct: ExNylas.RoomResource,
     readable_name: "room resource",
-    include: [:list, :all]
+    include: [:list, :all, :first]
 end
