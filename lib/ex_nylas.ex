@@ -70,8 +70,8 @@ defmodule ExNylas do
           iex> opts = [send_to: &IO.inspect/1, delay: 3_000, query: [key: "value"]]
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.all!(conn, opts)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(Conn.t(), Keyword.t() | map()) :: [struct()]
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, opts \\ []) do
+      @spec unquote(String.to_atom("#{config.name}!"))(Conn.t(), Keyword.t() | map()) :: [struct()]
+      def unquote(String.to_atom("#{config.name}!"))(%Conn{} = conn, opts \\ []) do
         case unquote(config.name)(conn, opts) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -91,16 +91,13 @@ defmodule ExNylas do
       """
       @spec unquote(config.name)(map() | struct()) :: {:ok, struct()} | {:error, Ecto.Changeset.t()}
       def unquote(config.name)(payload) do
-        model =
-          unquote(struct_name)
-          |> to_string()
-          |> Kernel.<>(".Build")
-          |> String.to_atom()
-
         payload = ExNylas.from_struct(payload)
 
-        model.__struct__
-        |> model.changeset(payload)
+        unquote(struct_name)
+        |> to_string()
+        |> Kernel.<>(".Build")
+        |> String.to_atom()
+        |> then(fn model -> model.changeset(model.__struct__, payload) end)
         |> apply_action(:build)
       end
 
@@ -111,18 +108,15 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.build!(payload)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(map() | struct()) :: struct()
-      def unquote("#{config.name}!" |> String.to_atom())(payload) do
-        model =
-          unquote(struct_name)
-          |> to_string()
-          |> Kernel.<>(".Build")
-          |> String.to_atom()
-
+      @spec unquote(String.to_atom("#{config.name}!"))(map() | struct()) :: struct()
+      def unquote(String.to_atom("#{config.name}!"))(payload) do
         payload = ExNylas.from_struct(payload)
 
-        model.__struct__
-        |> model.changeset(payload)
+        unquote(struct_name)
+        |> to_string()
+        |> Kernel.<>(".Build")
+        |> String.to_atom()
+        |> then(fn model -> model.changeset(model.__struct__, payload) end)
         |> apply_action!(:build)
       end
     end
@@ -164,8 +158,8 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.first!(conn, params)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(Conn.t(), Keyword.t() | map()) :: Response.t()
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ []) do
+      @spec unquote(String.to_atom("#{config.name}!"))(Conn.t(), Keyword.t() | map()) :: Response.t()
+      def unquote(String.to_atom("#{config.name}!"))(%Conn{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -177,7 +171,7 @@ defmodule ExNylas do
   defp generate_api(%{http_method: method, name: name} = config, object, struct_name, readable_name, header_type, use_admin_url, _use_cursor_paging) when name in [:find, :delete] do
     quote do
       @doc """
-      #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
+      #{ExNylas.format_config_name(unquote(config.name))} a(n) #{unquote(readable_name)}.
 
       ## Examples
 
@@ -198,14 +192,14 @@ defmodule ExNylas do
       end
 
       @doc """
-      #{unquote(config.name) |> to_string |> String.capitalize()} a(n) #{unquote(readable_name)}.
+      #{ExNylas.format_config_name(unquote(config.name))} a(n) #{unquote(readable_name)}.
 
       ## Examples
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, id, params)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(Conn.t(), String.t(), Keyword.t() | map()) :: Response.t()
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, params \\ []) do
+      @spec unquote(String.to_atom("#{config.name}!"))(Conn.t(), String.t(), Keyword.t() | map()) :: Response.t()
+      def unquote(String.to_atom("#{config.name}!"))(%Conn{} = conn, id, params \\ []) do
         case unquote(config.name)(conn, id, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -244,8 +238,8 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, params)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(Conn.t(), Keyword.t() | map()) :: Response.t()
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, params \\ []) do
+      @spec unquote(String.to_atom("#{config.name}!"))(Conn.t(), Keyword.t() | map()) :: Response.t()
+      def unquote(String.to_atom("#{config.name}!"))(%Conn{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -285,8 +279,8 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}!(conn, id, body, params)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(Conn.t(), String.t(), map(), Keyword.t() | map()) :: Response.t()
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, id, changeset, params \\ []) do
+      @spec unquote(String.to_atom("#{config.name}!"))(Conn.t(), String.t(), map(), Keyword.t() | map()) :: Response.t()
+      def unquote(String.to_atom("#{config.name}!"))(%Conn{} = conn, id, changeset, params \\ []) do
         case unquote(config.name)(conn, id, changeset, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -326,8 +320,8 @@ defmodule ExNylas do
 
           iex> result = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, body, params)
       """
-      @spec unquote("#{config.name}!" |> String.to_atom())(Conn.t(), map(), Keyword.t() | map()) :: Response.t()
-      def unquote("#{config.name}!" |> String.to_atom())(%Conn{} = conn, body, params \\ []) do
+      @spec unquote(String.to_atom("#{config.name}!"))(Conn.t(), map(), Keyword.t() | map()) :: Response.t()
+      def unquote(String.to_atom("#{config.name}!"))(%Conn{} = conn, body, params \\ []) do
         case unquote(config.name)(conn, body, params) do
           {:ok, body} -> body
           {:error, reason} -> raise ExNylasError, reason
@@ -349,6 +343,13 @@ defmodule ExNylas do
     |> Atom.to_string()
     |> String.replace("Elixir.", "")
     |> String.to_atom()
+  end
+
+  @doc false
+  def format_config_name(name) do
+    name
+    |> to_string()
+    |> String.capitalize()
   end
 
   @doc false
