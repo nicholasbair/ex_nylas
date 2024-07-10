@@ -52,8 +52,8 @@ defmodule ExNylas.MixProject do
       {:miss, "~> 0.1.5"},
       {:multipart, "~> 0.4.0"},
       {:polymorphic_embed, "~> 3.0"},
-      {:req, "~> 0.4.14"},
-      {:req_telemetry, "~> 0.0.4"},
+      {:req, "~> 0.5.2"},
+      {:req_telemetry, "~> 0.1.1"},
       {:typed_ecto_schema, "~> 0.4.1", runtime: false}
     ]
   end
