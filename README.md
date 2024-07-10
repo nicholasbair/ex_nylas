@@ -48,9 +48,8 @@ Options from `ExNylas.Connection` are passed directly to [Req](https://hexdocs.p
   cache: false,
   compress_body: false,
   compressed: true, # ask server to return compressed responses
-  receive_timeout: 15_000 # socket receive timeout,
-  pool_timeout: 5000 # pool checkout timeout,
-  redact_auth: true
+  receive_timeout: 15_000, # socket receive timeout
+  pool_timeout: 5000 # pool checkout timeout
 ]
 ```
 
