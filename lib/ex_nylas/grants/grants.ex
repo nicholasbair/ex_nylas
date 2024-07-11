@@ -28,7 +28,7 @@ defmodule ExNylas.Grants do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",
       auth: API.auth_bearer(conn),
-      headers: API.base_headers(["content-type": "application/json"])
+      headers: API.base_headers()
     )
     |> API.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
