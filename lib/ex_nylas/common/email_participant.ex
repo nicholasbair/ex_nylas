@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.EmailParticipant do
+defmodule ExNylas.EmailParticipant do
   @moduledoc """
   A struct representing an email participant.
   """
@@ -15,7 +15,6 @@ defmodule ExNylas.Common.EmailParticipant do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, __MODULE__.__schema__(:fields))
+    cast(struct, params, __MODULE__.__schema__(:fields))
   end
 end

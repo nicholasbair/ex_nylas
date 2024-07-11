@@ -5,7 +5,7 @@ defmodule ExNylas.Message.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Common.{
+  alias ExNylas.{
     Build.Attachment,
     EmailParticipant,
     TrackingOptions,

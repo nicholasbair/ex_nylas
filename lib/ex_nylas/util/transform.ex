@@ -1,7 +1,7 @@
 defmodule ExNylas.Transform do
   @moduledoc false
 
-  alias ExNylas.Common.Response
+  alias ExNylas.Response
   import Ecto.Changeset
   import ExNylas, only: [format_module_name: 1]
   require Logger

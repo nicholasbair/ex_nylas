@@ -7,7 +7,7 @@ defmodule ExNylas do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Common.Response
+  alias ExNylas.Response
 
   @funcs [
     %{name: :all},

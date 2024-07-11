@@ -5,7 +5,7 @@ defmodule ExNylas.Scheduling.Configuration.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Common.Build.{
+  alias ExNylas.Build.{
     Availability,
     EventBooking,
     Scheduler,

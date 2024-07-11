@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Build.TrackingOptions do
+defmodule ExNylas.Build.TrackingOptions do
   @moduledoc """
   A struct representing tracking options for a message/draft.
   """
@@ -17,7 +17,6 @@ defmodule ExNylas.Common.Build.TrackingOptions do
   end
 
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, __MODULE__.__schema__(:fields))
+    cast(struct, params, __MODULE__.__schema__(:fields))
   end
 end

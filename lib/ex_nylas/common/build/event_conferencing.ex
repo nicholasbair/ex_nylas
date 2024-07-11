@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Build.EventConferencing do
+defmodule ExNylas.Build.EventConferencing do
   @moduledoc """
   Helper module for validating an event conferencing before creating/updating it.
   """

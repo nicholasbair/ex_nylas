@@ -1,11 +1,11 @@
-defmodule ExNylas.Common.Build.AvailabilityRules do
+defmodule ExNylas.Build.AvailabilityRules do
   @moduledoc """
   Helper module for building an availability rules.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Common.Build.{
+  alias ExNylas.Build.{
     Buffer,
     OpenHours
   }

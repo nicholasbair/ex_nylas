@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Build.OpenHours do
+defmodule ExNylas.Build.OpenHours do
   @moduledoc """
   Helper module for building open hours.
   """
@@ -18,7 +18,6 @@ defmodule ExNylas.Common.Build.OpenHours do
   end
 
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:days, :timezone, :start, :end, :exdates])
+    cast(struct, params, [:days, :timezone, :start, :end, :exdates])
   end
 end

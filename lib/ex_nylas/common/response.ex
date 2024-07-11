@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Response do
+defmodule ExNylas.Response do
   @moduledoc """
   A struct representing a common response from Nylas.
   """
@@ -7,7 +7,7 @@ defmodule ExNylas.Common.Response do
   import Ecto.Changeset
 
   alias ExNylas.{
-    Common.Error,
+    Error,
     Type.MapOrList,
     Type.Atom
   }

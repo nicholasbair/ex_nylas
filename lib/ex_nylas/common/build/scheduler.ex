@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Build.Scheduler do
+defmodule ExNylas.Build.Scheduler do
   @moduledoc """
   Helper module for validating a scheduler configuration before sending it.
   """
@@ -23,7 +23,6 @@ defmodule ExNylas.Common.Build.Scheduler do
   end
 
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:additional_fields, :available_days_in_future, :cancellation_policy, :cancellation_url, :hide_additionl_fields, :hide_cancelation_options, :hide_rescheduling_options, :min_booking_notice, :min_cancellation_notice, :rescheduling_url])
+    cast(struct, params, [:additional_fields, :available_days_in_future, :cancellation_policy, :cancellation_url, :hide_additionl_fields, :hide_cancelation_options, :hide_rescheduling_options, :min_booking_notice, :min_cancellation_notice, :rescheduling_url])
   end
 end

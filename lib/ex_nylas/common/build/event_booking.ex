@@ -1,11 +1,11 @@
-defmodule ExNylas.Common.Build.EventBooking do
+defmodule ExNylas.Build.EventBooking do
   @moduledoc """
   Helper module for validating an event booking before sending it.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Common.Build.{
+  alias ExNylas.Build.{
     EventReminder,
     EventConferencing
   }

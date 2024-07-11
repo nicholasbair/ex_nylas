@@ -4,7 +4,7 @@ defmodule ExNylas.Thread do
   """
 
   alias ExNylas.{
-    Common.EmailParticipant,
+    EmailParticipant,
     Draft,
     Message
   }

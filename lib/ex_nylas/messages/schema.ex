@@ -5,8 +5,8 @@ defmodule ExNylas.Message do
 
   alias ExNylas.{
     Attachment,
-    Common.EmailParticipant,
-    Common.MessageHeader
+    EmailParticipant,
+    MessageHeader
   }
 
   use TypedEctoSchema

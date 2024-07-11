@@ -6,8 +6,8 @@ defmodule ExNylas.Schema.Event.Build do
   use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
-  alias ExNylas.Common.Build.EventReminder
-  alias ExNylas.Common.Build.EventConferencing
+  alias ExNylas.Build.EventReminder
+  alias ExNylas.Build.EventConferencing
 
   @derive {Jason.Encoder, only: [:capacity, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
   @primary_key false
