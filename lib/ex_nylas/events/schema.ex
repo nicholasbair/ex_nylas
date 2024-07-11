@@ -11,20 +11,20 @@ defmodule ExNylas.Event do
   @primary_key false
 
   typed_embedded_schema do
-    field(:busy, :boolean, null: false)
-    field(:calendar_id, :string, null: false)
+    field(:busy, :boolean)
+    field(:calendar_id, :string)
     field(:capacity, :integer)
     field(:created_at, :integer)
     field(:description, :string)
     field(:hide_participants, :boolean)
-    field(:grant_id, :string, null: false)
+    field(:grant_id, :string)
     field(:html_link, :string)
     field(:ical_uid, :string)
-    field(:id, :string, null: false)
+    field(:id, :string)
     field(:location, :string)
     field(:master_event_id, :string)
     field(:metadata, :map)
-    field(:object, :string, null: false)
+    field(:object, :string)
     field(:read_only, :boolean)
     field(:recurrence, {:array, :string})
     field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
@@ -41,21 +41,21 @@ defmodule ExNylas.Event do
     end
 
     embeds_one :organizer, Organizer, primary_key: false do
-      field(:email, :string, null: false)
+      field(:email, :string)
       field(:name, :string)
     end
 
     embeds_many :participants, Participant, primary_key: false do
       field(:comment, :string)
-      field(:email, :string, null: false)
+      field(:email, :string)
       field(:name, :string)
       field(:phone_number, :string)
-      field(:status, Ecto.Enum, values: ~w(yes no maybe noreply)a, null: false)
+      field(:status, Ecto.Enum, values: ~w(yes no maybe noreply)a)
     end
 
     embeds_one :reminders, Reminder, primary_key: false do
       field(:overrides, {:array, :map})
-      field(:use_default, :boolean, null: false)
+      field(:use_default, :boolean)
     end
 
     embeds_one :when, When, primary_key: false do
@@ -63,7 +63,7 @@ defmodule ExNylas.Event do
       field(:end_date, :string)
       field(:end_time, :integer) :: non_neg_integer() | nil
       field(:end_timezone, :string)
-      field(:object, Ecto.Enum, values: ~w(time timespan date datespan)a, null: false)
+      field(:object, Ecto.Enum, values: ~w(time timespan date datespan)a)
       field(:start_date, :string)
       field(:start_time, :integer) :: non_neg_integer() | nil
       field(:start_timezone, :string)
@@ -81,6 +81,5 @@ defmodule ExNylas.Event do
     |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)
     |> cast_embed(:reminders, with: &Util.embedded_changeset/2)
     |> cast_embed(:organizer, with: &Util.embedded_changeset/2)
-    |> validate_required([:id, :grant_id, :calendar_id])
   end
 end

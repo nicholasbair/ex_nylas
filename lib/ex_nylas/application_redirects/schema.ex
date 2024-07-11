@@ -9,15 +9,14 @@ defmodule ExNylas.ApplicationRedirect do
   @primary_key false
 
   typed_embedded_schema do
-    field(:id, :string, null: false)
-    field(:platform, Ecto.Enum, values: ~w(web desktop js ios android)a, null: false)
-    field(:url, :string, null: false)
+    field(:id, :string)
+    field(:platform, Ecto.Enum, values: ~w(web desktop js ios android)a)
+    field(:url, :string)
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:url, :id])
   end
 end

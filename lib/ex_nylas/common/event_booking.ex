@@ -14,12 +14,12 @@ defmodule ExNylas.Common.EventBooking do
 
   typed_embedded_schema do
     field(:additional_fields, :map)
-    field(:booking_type, Ecto.Enum, values: ~w(booking)a, null: false)
+    field(:booking_type, Ecto.Enum, values: ~w(booking)a)
     field(:description, :string)
-    field(:disable_emails, :boolean, null: false)
-    field(:hide_participants, :boolean, null: false)
+    field(:disable_emails, :boolean)
+    field(:hide_participants, :boolean)
     field(:location, :string)
-    field(:title, :string, null: false)
+    field(:title, :string)
     field(:timezone, :string)
 
     embeds_one :conferencing, EventConferencing
@@ -32,6 +32,5 @@ defmodule ExNylas.Common.EventBooking do
     |> cast(params, [:title, :location, :description, :booking_type, :additional_fields, :hide_participants, :disable_emails, :timezone])
     |> cast_embed(:conferencing)
     |> cast_embed(:reminders)
-    |> validate_required([:title])
   end
 end

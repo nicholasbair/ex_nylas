@@ -69,6 +69,5 @@ defmodule ExNylas.Thread do
     |> cast(params, [:grant_id, :id, :object, :has_attachments, :has_drafts, :earliest_message_timestamp, :last_message_received_at, :last_message_sent_at, :snippet, :starred, :subject, :unread, :message_ids, :draft_ids])
     |> cast_polymorphic_embed(:latest_draft_or_message, required: true)
     |> cast_embed(:participants)
-    |> validate_required([:id, :grant_id])
   end
 end

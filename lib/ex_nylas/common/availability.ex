@@ -11,12 +11,12 @@ defmodule ExNylas.Common.Availability do
   @primary_key false
 
   typed_embedded_schema do
-    field(:order, {:array, :string}, null: false)
+    field(:order, {:array, :string})
 
     embeds_many :time_slots, TimeSlot, primary_key: false do
       field(:emails, {:array, :string})
-      field(:end_time, :integer) :: non_neg_integer()
-      field(:start_time, :integer) :: non_neg_integer()
+      field(:end_time, :integer) :: non_neg_integer() | nil
+      field(:start_time, :integer) :: non_neg_integer() | nil
     end
   end
 

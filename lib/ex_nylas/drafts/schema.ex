@@ -16,11 +16,11 @@ defmodule ExNylas.Draft do
 
   typed_embedded_schema do
     field(:body, :string)
-    field(:date, :integer) :: non_neg_integer()
-    field(:folders, {:array, :string}, null: false)
-    field(:grant_id, :string, null: false)
-    field(:id, :string, null: false)
-    field(:object, :string, null: false)
+    field(:date, :integer) :: non_neg_integer() | nil
+    field(:folders, {:array, :string})
+    field(:grant_id, :string)
+    field(:id, :string)
+    field(:object, :string)
     field(:reply_to_message_id, :string)
     field(:snippet, :string)
     field(:starred, :boolean)
@@ -47,6 +47,5 @@ defmodule ExNylas.Draft do
     |> cast_embed(:bcc)
     |> cast_embed(:tracking_options)
     |> cast_embed(:reply_to)
-    |> validate_required([:id, :grant_id])
   end
 end

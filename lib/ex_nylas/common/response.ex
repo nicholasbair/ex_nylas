@@ -17,8 +17,8 @@ defmodule ExNylas.Common.Response do
   typed_embedded_schema do
     field(:data, MapOrList)
     field(:next_cursor, :string)
-    field(:request_id, :string, null: false)
-    field(:status, Atom, null: false)
+    field(:request_id, :string)
+    field(:status, Atom)
 
     embeds_one :error, Error
   end

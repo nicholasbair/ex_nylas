@@ -9,7 +9,7 @@ defmodule ExNylas.Common.EmailParticipant do
   @primary_key false
 
   typed_embedded_schema do
-    field(:email, :string, null: false)
+    field(:email, :string)
     field(:name, :string)
   end
 
@@ -17,6 +17,5 @@ defmodule ExNylas.Common.EmailParticipant do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:email])
   end
 end

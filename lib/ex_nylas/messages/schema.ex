@@ -17,12 +17,12 @@ defmodule ExNylas.Message do
   typed_embedded_schema do
     field(:body, :string)
     field(:conversation, :string)
-    field(:date, :integer) :: non_neg_integer()
-    field(:folders, {:array, :string}, null: false)
-    field(:grant_id, :string, null: false)
-    field(:id, :string, null: false)
+    field(:date, :integer) :: non_neg_integer() | nil
+    field(:folders, {:array, :string})
+    field(:grant_id, :string)
+    field(:id, :string)
     field(:metadata, :map)
-    field(:object, :string, null: false)
+    field(:object, :string)
     field(:schedule_id, :string)
     field(:snippet, :string)
     field(:starred, :boolean)
@@ -50,6 +50,5 @@ defmodule ExNylas.Message do
     |> cast_embed(:reply_to)
     |> cast_embed(:to)
     |> cast_embed(:headers)
-    |> validate_required([:id, :grant_id])
   end
 end

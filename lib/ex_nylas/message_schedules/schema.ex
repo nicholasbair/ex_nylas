@@ -12,7 +12,7 @@ defmodule ExNylas.MessageSchedule do
 
   typed_embedded_schema do
     field(:close_time, :integer) :: non_neg_integer() | nil
-    field(:schedule_id, :string, null: false)
+    field(:schedule_id, :string)
 
     embeds_one :status, Status, primary_key: false do
       field(:code, :string)
@@ -25,6 +25,5 @@ defmodule ExNylas.MessageSchedule do
     struct
     |> cast(params, [:schedule_id, :close_time])
     |> cast_embed(:status, with: &Util.embedded_changeset/2)
-    |> validate_required([:schedule_id])
   end
 end
