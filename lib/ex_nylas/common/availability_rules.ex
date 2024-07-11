@@ -1,11 +1,11 @@
-defmodule ExNylas.Common.AvailabilityRules do
+defmodule ExNylas.AvailabilityRules do
   @moduledoc """
   A struct for availability rules.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Common.{
+  alias ExNylas.{
     Buffer,
     OpenHours
   }

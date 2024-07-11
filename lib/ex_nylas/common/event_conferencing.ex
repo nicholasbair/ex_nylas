@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.EventConferencing do
+defmodule ExNylas.EventConferencing do
   @moduledoc """
   A struct representing event conferencing.
   """

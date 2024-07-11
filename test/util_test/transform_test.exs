@@ -2,7 +2,7 @@ defmodule UtilTest.TransformTest do
   use ExUnit.Case, async: true
   import ExNylas.Transform
   alias ExNylas.{
-    Common.Response,
+    Response,
     Folder,
     HostedAuthentication.Grant
   }

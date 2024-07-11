@@ -4,7 +4,7 @@ defmodule ExNylas.Events do
   """
 
   alias ExNylas.API
-  alias ExNylas.Common.Response
+  alias ExNylas.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Event
 

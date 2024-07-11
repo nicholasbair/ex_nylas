@@ -22,7 +22,6 @@ defmodule ExNylas.HostedAuthentication.Grant do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:access_token, :expires_in, :id_token, :refresh_token, :scope, :token_type, :grant_id, :provider, :email])
+    cast(struct, params, [:access_token, :expires_in, :id_token, :refresh_token, :scope, :token_type, :grant_id, :provider, :email])
   end
 end

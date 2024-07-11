@@ -16,7 +16,6 @@ defmodule ExNylas.ApplicationRedirect do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, __MODULE__.__schema__(:fields))
+    cast(struct, params, __MODULE__.__schema__(:fields))
   end
 end

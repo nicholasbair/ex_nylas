@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Build.EmailParticipant do
+defmodule ExNylas.Build.EmailParticipant do
   @moduledoc """
   Helper module for building an email participant.
   """

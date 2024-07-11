@@ -5,8 +5,8 @@ defmodule ExNylas.Draft do
 
   alias ExNylas.{
     Attachment,
-    Common.EmailParticipant,
-    Common.TrackingOptions
+    EmailParticipant,
+    TrackingOptions
   }
 
   use TypedEctoSchema

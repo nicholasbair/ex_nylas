@@ -5,8 +5,8 @@ defmodule ExNylas.CalendarAvailability do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Common.Availability, as: AV
-  alias ExNylas.Common.Response
+  alias ExNylas.Availability, as: AV
+  alias ExNylas.Response
 
   use ExNylas,
     struct: __MODULE__,

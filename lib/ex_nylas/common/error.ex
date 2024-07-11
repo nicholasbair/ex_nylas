@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Error do
+defmodule ExNylas.Error do
   @moduledoc """
   A struct representing an error from the Nylas API.
   """
@@ -16,7 +16,6 @@ defmodule ExNylas.Common.Error do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, __MODULE__.__schema__(:fields))
+    cast(struct, params, __MODULE__.__schema__(:fields))
   end
 end

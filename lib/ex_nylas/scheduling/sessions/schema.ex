@@ -14,7 +14,6 @@ defmodule ExNylas.Scheduling.Session do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:session_id])
+    cast(struct, params, [:session_id])
   end
 end

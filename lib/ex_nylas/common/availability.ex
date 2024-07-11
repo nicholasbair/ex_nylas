@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Availability do
+defmodule ExNylas.Availability do
   @moduledoc """
   Struct for Nylas common availability.
   """

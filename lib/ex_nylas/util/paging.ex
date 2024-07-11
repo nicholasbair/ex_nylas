@@ -2,7 +2,7 @@ defmodule ExNylas.Paging do
   @moduledoc false
 
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Common.Response
+  alias ExNylas.Response
 
   import ExNylas.Util, only: [indifferent_get: 2, indifferent_put_new: 3]
 

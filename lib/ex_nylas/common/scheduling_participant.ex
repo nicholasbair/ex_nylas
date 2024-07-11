@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.SchedulingParticipant do
+defmodule ExNylas.SchedulingParticipant do
   @moduledoc """
   A struct representing a scheduling participant.
   """

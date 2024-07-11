@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Buffer do
+defmodule ExNylas.Buffer do
   @moduledoc """
   A struct for buffer.
   """
@@ -15,7 +15,6 @@ defmodule ExNylas.Common.Buffer do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:before, :after])
+    cast(struct, params, [:before, :after])
   end
 end

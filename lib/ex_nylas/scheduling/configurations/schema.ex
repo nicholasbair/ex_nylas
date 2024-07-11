@@ -7,7 +7,7 @@ defmodule ExNylas.Scheduling.Configuration do
   import Ecto.Changeset
   import ExNylas.Schema.Util, only: [embedded_changeset: 2]
 
-  alias ExNylas.Common.{
+  alias ExNylas.{
     AvailabilityRules,
     EventBooking,
     SchedulingParticipant

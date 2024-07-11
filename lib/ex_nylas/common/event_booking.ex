@@ -1,11 +1,11 @@
-defmodule ExNylas.Common.EventBooking do
+defmodule ExNylas.EventBooking do
   @moduledoc """
   A struct representing an event booking.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Common.{
+  alias ExNylas.{
     EventConferencing,
     EventReminder
   }

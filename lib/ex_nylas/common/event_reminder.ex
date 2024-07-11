@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.EventReminder do
+defmodule ExNylas.EventReminder do
   @moduledoc """
   A struct for an event reminder.
   """
@@ -15,7 +15,6 @@ defmodule ExNylas.Common.EventReminder do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:overrides, :use_default])
+    cast(struct, params, [:overrides, :use_default])
   end
 end

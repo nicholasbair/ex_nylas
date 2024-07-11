@@ -1,4 +1,4 @@
-defmodule ExNylas.Common.Build.EventReminder do
+defmodule ExNylas.Build.EventReminder do
   @moduledoc """
   Helper module for validating an event reminder before creating/updating it.
   """
@@ -15,7 +15,6 @@ defmodule ExNylas.Common.Build.EventReminder do
   end
 
   def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:overrides, :use_default])
+    cast(struct, params, [:overrides, :use_default])
   end
 end

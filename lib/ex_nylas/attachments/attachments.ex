@@ -4,7 +4,7 @@ defmodule ExNylas.Attachments do
   """
 
   alias ExNylas.API
-  alias ExNylas.Common.Response
+  alias ExNylas.Response
   alias ExNylas.Connection, as: Conn
 
   use ExNylas,
