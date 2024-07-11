@@ -12,10 +12,10 @@ defmodule ExNylas.Folder do
     field(:attributes, {:array, :string})
     field(:background_color, :string)
     field(:child_count, :integer) :: non_neg_integer() | nil
-    field(:grant_id, :string, null: false)
-    field(:id, :string, null: false)
-    field(:name, :string, null: false)
-    field(:object, :string, null: false)
+    field(:grant_id, :string)
+    field(:id, :string)
+    field(:name, :string)
+    field(:object, :string)
     field(:parent_id, :string)
     field(:system_folder, :boolean)
     field(:text_color, :string)
@@ -27,6 +27,5 @@ defmodule ExNylas.Folder do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :grant_id])
   end
 end

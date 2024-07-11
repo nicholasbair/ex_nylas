@@ -10,7 +10,7 @@ defmodule ExNylas.Common.EventReminder do
 
   typed_embedded_schema do
     field(:overrides, {:array, :map})
-    field(:use_default, :boolean, null: false)
+    field(:use_default, :boolean)
   end
 
   @doc false

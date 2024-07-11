@@ -10,7 +10,7 @@ defmodule ExNylas.Connector do
   @primary_key false
 
   typed_embedded_schema do
-    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo zoom ews)a, null: false)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar icloud yahoo zoom ews)a)
     field(:scope, {:array, :string})
 
     embeds_one :settings, Settings, primary_key: false do
@@ -26,6 +26,5 @@ defmodule ExNylas.Connector do
     struct
     |> cast(params, [:provider, :scope])
     |> cast_embed(:settings, with: &embedded_changeset/2)
-    |> validate_required([:provider])
   end
 end

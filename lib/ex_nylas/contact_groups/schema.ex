@@ -9,11 +9,11 @@ defmodule ExNylas.ContactGroup do
   @primary_key false
 
   typed_embedded_schema do
-    field(:grant_id, :string, null: false)
-    field(:group_type, Ecto.Enum, values: ~w(system user other)a, null: false)
-    field(:id, :string, null: false)
+    field(:grant_id, :string)
+    field(:group_type, Ecto.Enum, values: ~w(system user other)a)
+    field(:id, :string)
     field(:name, :string)
-    field(:object, :string, null: false)
+    field(:object, :string)
     field(:path, :string)
   end
 
@@ -21,6 +21,5 @@ defmodule ExNylas.ContactGroup do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :grant_id])
   end
 end

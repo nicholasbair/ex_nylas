@@ -15,8 +15,8 @@ defmodule ExNylas.RoomResource do
     field(:floor_name, :string)
     field(:floor_number, :integer)
     field(:floor_section, :string)
-    field(:grant_id, :string, null: false)
-    field(:object, :string, null: false)
+    field(:grant_id, :string)
+    field(:object, :string)
   end
 
   @doc false

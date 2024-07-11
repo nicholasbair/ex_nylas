@@ -9,13 +9,12 @@ defmodule ExNylas.Schema.SmartCompose do
   @primary_key false
 
   typed_embedded_schema do
-    field(:suggestion, :string, null: false)
+    field(:suggestion, :string)
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:suggestion])
   end
 end

@@ -9,18 +9,17 @@ defmodule ExNylas.ConnectorCredential do
   @primary_key false
 
   typed_embedded_schema do
-    field(:created_at, :integer) :: non_neg_integer()
-    field(:credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a, null: false)
+    field(:created_at, :integer) :: non_neg_integer() | nil
+    field(:credential_type, Ecto.Enum, values: ~w(adminconsent serviceaccount)a)
     field(:hashed_data, :string)
-    field(:id, :string, null: false)
-    field(:name, :string, null: false)
-    field(:updated_at, :integer) :: non_neg_integer()
+    field(:id, :string)
+    field(:name, :string)
+    field(:updated_at, :integer) :: non_neg_integer() | nil
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id])
   end
 end

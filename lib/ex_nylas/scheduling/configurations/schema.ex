@@ -16,27 +16,27 @@ defmodule ExNylas.Scheduling.Configuration do
   @primary_key false
 
   typed_embedded_schema do
-    field(:id, :string, null: false)
-    field(:requires_session_auth, :boolean, null: false)
+    field(:id, :string)
+    field(:requires_session_auth, :boolean)
 
     embeds_one :availability, Availability, primary_key: false do
-      field(:duration_minutes, :integer) :: non_neg_integer()
-      field(:interval_minutes, :integer) :: non_neg_integer()
-      field(:round_to, :integer) :: non_neg_integer()
+      field(:duration_minutes, :integer) :: non_neg_integer() | nil
+      field(:interval_minutes, :integer) :: non_neg_integer() | nil
+      field(:round_to, :integer) :: non_neg_integer() | nil
 
       embeds_one :availability_rules, AvailabilityRules
     end
 
     embeds_one :scheduler, Scheduler, primary_key: false do
       field(:additional_fields, :map)
-      field(:available_days_in_future, :integer) :: non_neg_integer()
+      field(:available_days_in_future, :integer) :: non_neg_integer() | nil
       field(:cancellation_policy, :string)
       field(:cancellation_url, :string)
       field(:hide_additionl_fields, :boolean)
       field(:hide_cancelation_options, :boolean)
       field(:hide_rescheduling_options, :boolean)
-      field(:min_booking_notice, :integer) :: non_neg_integer()
-      field(:min_cancellation_notice, :integer) :: non_neg_integer()
+      field(:min_booking_notice, :integer) :: non_neg_integer() | nil
+      field(:min_cancellation_notice, :integer) :: non_neg_integer() | nil
       field(:rescheduling_url, :string)
     end
 

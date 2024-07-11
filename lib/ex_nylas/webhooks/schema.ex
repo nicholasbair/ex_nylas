@@ -10,11 +10,11 @@ defmodule ExNylas.Webhook do
 
   typed_embedded_schema do
     field(:description, :string)
-    field(:id, :string, null: false)
-    field(:notification_email_addresses, {:array, :string}, null: false)
-    field(:status, Ecto.Enum, values: ~w(active pause failing failed)a, null: false)
-    field(:trigger_types, {:array, :string}, null: false)
-    field(:webhook_url, :string, null: false)
+    field(:id, :string)
+    field(:notification_email_addresses, {:array, :string})
+    field(:status, Ecto.Enum, values: ~w(active pause failing failed)a)
+    field(:trigger_types, {:array, :string})
+    field(:webhook_url, :string)
     field(:webhook_secret, :string)
   end
 
@@ -22,6 +22,5 @@ defmodule ExNylas.Webhook do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, __MODULE__.__schema__(:fields))
-    |> validate_required([:id, :trigger_types, :webhook_url, :status])
   end
 end

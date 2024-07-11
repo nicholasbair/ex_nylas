@@ -14,12 +14,12 @@ defmodule ExNylas.Application do
   @primary_key false
 
   typed_embedded_schema do
-    field(:application_id, :string, null: false)
-    field(:created_at, :integer, null: false) :: non_neg_integer()
-    field(:environment, Ecto.Enum, values: ~w(production staging development sandbox)a, null: false)
-    field(:organization_id, :string, null: false)
-    field(:region, Ecto.Enum, values: ~w(us eu)a, null: false)
-    field(:updated_at, :integer, null: false) :: non_neg_integer()
+    field(:application_id, :string)
+    field(:created_at, :integer) :: non_neg_integer() | nil
+    field(:environment, Ecto.Enum, values: ~w(production staging development sandbox)a)
+    field(:organization_id, :string)
+    field(:region, Ecto.Enum, values: ~w(us eu)a)
+    field(:updated_at, :integer) :: non_neg_integer() | nil
     field(:v2_application_id, :string)
 
     embeds_one :branding, Branding, primary_key: false do
@@ -50,6 +50,5 @@ defmodule ExNylas.Application do
     |> cast_embed(:branding, with: &Util.embedded_changeset/2)
     |> cast_embed(:hosted_authentication, with: &Util.embedded_changeset/2)
     |> cast_embed(:callback_uris)
-    |> validate_required([:application_id, :organization_id, :region, :created_at, :updated_at, :environment])
   end
 end
