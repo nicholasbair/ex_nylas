@@ -22,40 +22,6 @@ defmodule ExNylas.WebhookNotificationData do
     WebhookNotification.ThreadReplied
   }
 
-  @trigger_to_schema  [
-    "calendar.created": Calendar,
-    "calendar.updated": Calendar,
-    "calendar.deleted": Calendar,
-
-    "contact.updated": Contact,
-    "contact.deleted": Contact,
-
-    "event.created": Event,
-    "event.updated": Event,
-    "event.deleted": Event,
-
-    "folder.created": Folder,
-    "folder.updated": Folder,
-    "folder.deleted": Folder,
-
-    "grant.created": Grant,
-    "grant.updated": Grant,
-    "grant.deleted": Grant,
-    "grant.expired": Grant,
-
-    "message.created": Message,
-    "message.updated": Message,
-    "message.created.truncated": Message,
-    "message.updated.truncated": Message,
-    "message.send_success": Message,
-    "message.send_failed": Message,
-    "message.bounce_detected": MessageBounceDetected,
-    "message.opened": MessageOpened,
-    "message.link_clicked": MessageLinkClicked,
-
-    "thread.replied": ThreadReplied,
-  ]
-
   # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
   @type t :: %__MODULE__{
           application_id: String.t(),
@@ -67,7 +33,39 @@ defmodule ExNylas.WebhookNotificationData do
   embedded_schema do
     field :application_id, :string
     polymorphic_embeds_one :object,
-      types: @trigger_to_schema,
+      types: [
+        "calendar.created": Calendar,
+        "calendar.updated": Calendar,
+        "calendar.deleted": Calendar,
+
+        "contact.updated": Contact,
+        "contact.deleted": Contact,
+
+        "event.created": Event,
+        "event.updated": Event,
+        "event.deleted": Event,
+
+        "folder.created": Folder,
+        "folder.updated": Folder,
+        "folder.deleted": Folder,
+
+        "grant.created": Grant,
+        "grant.updated": Grant,
+        "grant.deleted": Grant,
+        "grant.expired": Grant,
+
+        "message.created": Message,
+        "message.updated": Message,
+        "message.created.truncated": Message,
+        "message.updated.truncated": Message,
+        "message.send_success": Message,
+        "message.send_failed": Message,
+        "message.bounce_detected": MessageBounceDetected,
+        "message.opened": MessageOpened,
+        "message.link_clicked": MessageLinkClicked,
+
+        "thread.replied": ThreadReplied,
+      ],
       on_type_not_found: :changeset_error,
       on_replace: :update,
       type_field: :trigger
