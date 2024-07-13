@@ -21,8 +21,12 @@ jobs:
         otp: ['24.0', '25.0', '26.0', '27.0']
         exclude:
           - elixir: '1.14'
+            otp: '26.0'
+          - elixir: '1.14'
             otp: '27.0'
           - elixir: '1.15'
+            otp: '27.0'
+          - elixir: '1.16'
             otp: '27.0'
 
     steps:
