@@ -1,32 +1,32 @@
 defmodule ExNylasTest.WebhookNotifications do
   use ExUnit.Case, async: true
 
-  test "valid_signature! raises an error if webhook secret is not included" do
+  test "validate_signature! raises an error if webhook secret is not included" do
     assert_raise ExNylasError, fn ->
-      ExNylas.WebhookNotifications.valid_signature!(nil, "", "")
+      ExNylas.WebhookNotifications.validate_signature!(nil, "", "")
     end
   end
 
-  test "valid_signature! raises an error if body is not a string" do
+  test "validate_signature! raises an error if body is not a string" do
     assert_raise ExNylasError, fn ->
-      ExNylas.WebhookNotifications.valid_signature!("1234", %{}, "")
+      ExNylas.WebhookNotifications.validate_signature!("1234", %{}, "")
     end
   end
 
-  test "valid_signature! returns false if the signature does not match" do
-    assert ExNylas.WebhookNotifications.valid_signature!("1234", "", "") == false
+  test "validate_signature! returns false if the signature does not match" do
+    assert ExNylas.WebhookNotifications.validate_signature!("1234", "", "") == false
   end
 
-  test "valid_signature returns an error if webhook secret is not included" do
-    assert {:error, _} = ExNylas.WebhookNotifications.valid_signature(nil, "", "")
+  test "validate_signature returns an error if webhook secret is not included" do
+    assert {:error, _} = ExNylas.WebhookNotifications.validate_signature(nil, "", "")
   end
 
-  test "valid_signature returns an error if body is not a string" do
-    assert {:error, _} = ExNylas.WebhookNotifications.valid_signature("1234", %{}, "")
+  test "validate_signature returns an error if body is not a string" do
+    assert {:error, _} = ExNylas.WebhookNotifications.validate_signature("1234", %{}, "")
   end
 
-  test "valid_signature returns false if the signature does not match" do
-    {:ok, false} = ExNylas.WebhookNotifications.valid_signature("1234", "", "")
+  test "validate_signature returns false if the signature does not match" do
+    {:ok, false} = ExNylas.WebhookNotifications.validate_signature("1234", "", "")
   end
 
   test "to_struct returns an error if the notification type is not recognized" do
