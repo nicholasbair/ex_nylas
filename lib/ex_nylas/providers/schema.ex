@@ -11,7 +11,7 @@ defmodule ExNylas.Provider do
   typed_embedded_schema do
     field(:email_address, :string)
     field(:detected, :boolean)
-    field(:provider, :string)
+    field(:provider, Ecto.Enum, values: ~w(google microsoft imap icloud yahoo ews)a)
     field(:type, :string)
   end
 
