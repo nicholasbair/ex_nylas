@@ -38,6 +38,7 @@ jobs:
       with:
         elixir-version: ${{ matrix.elixir }}
         otp-version: ${{ matrix.otp }}
+        http-client-timeout: 300
     - name: Restore dependencies cache
       uses: actions/cache@v3
       with:
