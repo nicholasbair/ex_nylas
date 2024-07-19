@@ -15,7 +15,7 @@ defmodule ExNylas.Build.EventBooking do
 
   typed_embedded_schema do
     field(:additional_fields, :map)
-    field(:booking_type, Ecto.Enum, values: ~w(booking)a)
+    field(:booking_type, Ecto.Enum, values: ~w(booking organizer-confirmation custom-confirmation)a)
     field(:description, :string)
     field(:disable_emails, :boolean)
     field(:hide_participants, :boolean)

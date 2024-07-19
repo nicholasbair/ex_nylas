@@ -38,6 +38,15 @@ defmodule ExNylas.Scheduling.Configuration do
       field(:min_booking_notice, :integer) :: non_neg_integer() | nil
       field(:min_cancellation_notice, :integer) :: non_neg_integer() | nil
       field(:rescheduling_url, :string)
+
+      embeds_one :email_template, EmailTemplate, primary_key: false do
+        field(:logo, :string)
+
+        embeds_one :booking_confirmed, BookingConfirmed, primary_key: false do
+          field(:title, :string)
+          field(:body, :string)
+        end
+      end
     end
 
     embeds_one :event_booking, EventBooking
