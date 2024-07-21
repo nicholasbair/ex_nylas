@@ -19,6 +19,7 @@ defmodule ExNylasTest.Helper do
             api_key: "1234",
             grant_id: "1234",
             api_server: endpoint_url(bypass.port),
+            options: [retry: false]
           }
         ] ++ unquote(params)
 
