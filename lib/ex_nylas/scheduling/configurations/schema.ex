@@ -57,10 +57,9 @@ defmodule ExNylas.Scheduling.Configuration do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:id, :requires_session_auth])
-    |> validate_required([:id])
     |> cast_embed(:participants)
     |> cast_embed(:event_booking)
-    |> cast_embed(:availability, with: &embedded_changeset_availability/2, required: true)
+    |> cast_embed(:availability, with: &embedded_changeset_availability/2)
     |> cast_embed(:scheduler, with: &embedded_changeset/2)
   end
 

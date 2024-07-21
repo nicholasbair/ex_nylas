@@ -9,5 +9,5 @@ defmodule ExNylas.Scheduling.Configurations do
     object: "scheduling/configurations",
     struct: Configuration,
     readable_name: "scheduling configuration",
-    include: [:list, :find, :create, :update, :delete, :build]
+    include: [:list, :first, :find, :create, :update, :delete, :build]
 end
