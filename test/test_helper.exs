@@ -14,13 +14,13 @@ defmodule ExNylasTest.Helper do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
         end)
 
-        params = unquote(params) ++ [
+        params = [
           %ExNylas.Connection{
             api_key: "1234",
             grant_id: "1234",
             api_server: endpoint_url(bypass.port),
           }
-        ]
+        ] ++ unquote(params)
 
         res = apply(Module.concat(ExNylas, unquote(module)), unquote(function), params)
         pattern = unquote(expected)[:assert_pattern]
