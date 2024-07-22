@@ -8,6 +8,7 @@ defmodule ExNylas do
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
+  alias ExNylas.Util
 
   @funcs [
     %{name: :all},
@@ -139,7 +140,7 @@ defmodule ExNylas do
             url: ExNylas.generate_url(conn, unquote(use_admin_url), unquote(object)),
             auth: ExNylas.generate_auth(conn, unquote(header_type)),
             headers: API.base_headers(),
-            params: put_in(params, [:limit], 1)
+            params: Util.indifferent_put_new(params, :limit, 1)
           )
           |> API.maybe_attach_telemetry(conn)
           |> Req.request(conn.options)
