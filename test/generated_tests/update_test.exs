@@ -9,7 +9,6 @@ defmodule ExNylasTest.Update do
     Channels,
     Connectors,
     Contacts,
-    Drafts,
     Events,
     Folders,
     Grants,
@@ -29,7 +28,7 @@ defmodule ExNylasTest.Update do
     generate_test(
       @module,
       :update,
-      ["id", %{}],
+      ["id", %{foo: "bar"}],
       %{
         method: "PATCH",
         response: ~s<{"data": {}}>,
@@ -40,7 +39,7 @@ defmodule ExNylasTest.Update do
     generate_test(
       @module,
       :update!,
-      ["id", %{}],
+      ["id", %{foo: "bar"}],
       %{
         method: "PATCH",
         response: ~s<{"data": {}}>,
@@ -48,6 +47,4 @@ defmodule ExNylasTest.Update do
       }
     )
   end
-
-  defp endpoint_url(port), do: "http://localhost:#{port}/"
 end

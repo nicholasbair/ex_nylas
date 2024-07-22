@@ -49,6 +49,4 @@ defmodule ExNylasTest.Find do
       }
     )
   end
-
-  defp endpoint_url(port), do: "http://localhost:#{port}/"
 end

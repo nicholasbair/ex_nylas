@@ -8,7 +8,6 @@ defmodule ExNylasTest.Create do
     Channels,
     Connectors,
     Contacts,
-    Drafts,
     Events,
     Folders,
     Scheduling.Configurations,
@@ -26,7 +25,7 @@ defmodule ExNylasTest.Create do
     generate_test(
       @module,
       :create,
-      [%{}],
+      [%{foo: "bar"}],
       %{
         method: "POST",
         response: ~s<{"data": {}}>,
@@ -37,7 +36,7 @@ defmodule ExNylasTest.Create do
     generate_test(
       @module,
       :create!,
-      [%{}],
+      [%{foo: "bar"}],
       %{
         method: "POST",
         response: ~s<{"data": {}}>,
@@ -45,6 +44,4 @@ defmodule ExNylasTest.Create do
       }
     )
   end
-
-  defp endpoint_url(port), do: "http://localhost:#{port}/"
 end

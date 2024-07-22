@@ -29,7 +29,9 @@ defmodule ExNylasTest.First do
     generate_test(
       @module,
       :first,
-      [],
+      [
+        [foo: "bar"]
+      ],
       %{
         method: "GET",
         response: ~s<{"data": []}>,
@@ -40,7 +42,9 @@ defmodule ExNylasTest.First do
     generate_test(
       @module,
       :first!,
-      [],
+      [
+        [foo: "bar"]
+      ],
       %{
         method: "GET",
         response: ~s<{"data": []}>,
@@ -48,6 +52,4 @@ defmodule ExNylasTest.First do
       }
     )
   end
-
-  defp endpoint_url(port), do: "http://localhost:#{port}/"
 end

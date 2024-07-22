@@ -32,7 +32,9 @@ defmodule ExNylasTest.List do
     generate_test(
       @module,
       :list,
-      [],
+      [
+        [foo: "bar"]
+      ],
       %{
         method: "GET",
         response: ~s<{"data": []}>,
@@ -43,7 +45,9 @@ defmodule ExNylasTest.List do
     generate_test(
       @module,
       :list!,
-      [],
+      [
+        [foo: "bar"]
+      ],
       %{
         method: "GET",
         response: ~s<{"data": []}>,
@@ -51,6 +55,4 @@ defmodule ExNylasTest.List do
       }
     )
   end
-
-  defp endpoint_url(port), do: "http://localhost:#{port}/"
 end
