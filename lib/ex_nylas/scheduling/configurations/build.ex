@@ -12,11 +12,12 @@ defmodule ExNylas.Scheduling.Configuration.Build do
     SchedulingParticipant
   }
 
-  @derive {Jason.Encoder, only: [:requires_session_auth, :participants, :availability, :event_booking]}
+  @derive {Jason.Encoder, only: [:requires_session_auth, :slug, :participants, :availability, :event_booking]}
   @primary_key false
 
   typed_embedded_schema do
     field(:requires_session_auth, :boolean)
+    field(:slug, :string)
 
     embeds_one :availability, Availability
     embeds_one :event_booking, EventBooking
@@ -27,7 +28,7 @@ defmodule ExNylas.Scheduling.Configuration.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:requires_session_auth])
+    |> cast(params, [:requires_session_auth, :slug])
     |> cast_embed(:availability)
     |> cast_embed(:event_booking, required: true)
     |> cast_embed(:participants, required: true)

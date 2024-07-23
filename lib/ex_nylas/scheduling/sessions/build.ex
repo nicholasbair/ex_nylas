@@ -6,19 +6,19 @@ defmodule ExNylas.Scheduling.Session.Build do
   use TypedEctoSchema
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:configuration_id, :time_to_live]}
+  @derive {Jason.Encoder, only: [:configuration_id, :slug, :time_to_live]}
   @primary_key false
 
   typed_embedded_schema do
-    field(:configuration_id, :string, null: false)
+    field(:configuration_id, :string)
+    field(:slug, :string)
     field(:time_to_live, :integer, default: 5) :: non_neg_integer()
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:configuration_id, :time_to_live])
-    |> validate_required([:configuration_id])
+    |> cast(params, [:configuration_id, :slug, :time_to_live])
     |> validate_number(:time_to_live, less_than_or_equal_to: 30)
   end
 end

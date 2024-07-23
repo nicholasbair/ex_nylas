@@ -11,7 +11,6 @@ defmodule ExNylasTest.Update do
     Contacts,
     Events,
     Folders,
-    Grants,
     Messages,
     Scheduling.Bookings,
     Scheduling.Configurations,
