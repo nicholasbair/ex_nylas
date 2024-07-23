@@ -13,6 +13,7 @@ defmodule ExNylasTest.First do
     Grants,
     MessageSchedules,
     Messages,
+    RoomResources,
     Scheduling.Configurations,
     Threads,
     Webhooks

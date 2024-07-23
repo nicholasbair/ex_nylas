@@ -4,6 +4,7 @@ defmodule ExNylasTest.Find do
 
   @modules [
     ApplicationRedirects,
+    Attachments,
     Calendars,
     Channels,
     Connectors,

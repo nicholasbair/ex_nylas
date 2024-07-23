@@ -14,6 +14,7 @@ defmodule ExNylasTest.Delete do
     Grants,
     MessageSchedules,
     Messages,
+    Scheduling.Bookings,
     Scheduling.Configurations,
     Threads,
     Webhooks

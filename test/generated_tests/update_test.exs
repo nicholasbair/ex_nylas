@@ -13,6 +13,7 @@ defmodule ExNylasTest.Update do
     Folders,
     Grants,
     Messages,
+    Scheduling.Bookings,
     Scheduling.Configurations,
     Webhooks
   ]

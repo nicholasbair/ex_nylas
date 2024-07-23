@@ -10,6 +10,7 @@ defmodule ExNylasTest.Create do
     Contacts,
     Events,
     Folders,
+    Scheduling.Bookings,
     Scheduling.Configurations,
     Webhooks
   ]
