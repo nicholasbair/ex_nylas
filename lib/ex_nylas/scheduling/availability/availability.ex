@@ -21,6 +21,7 @@ defmodule ExNylas.Scheduling.Availability do
   ## Params
   - `session_id` needed for private scheduling configurations
   - `config_id` needed for public scheduling configurations
+  - `slug` slug of the scheduling configuration, can be used instead of `config_id`
   - `booking_id` needed to check availability when rescheduling a round robin booking
 
   ## Examples
@@ -49,6 +50,7 @@ defmodule ExNylas.Scheduling.Availability do
   ## Params
   - `session_id` needed for private scheduling configurations
   - `config_id` needed for public scheduling configurations
+  - `slug` slug of the scheduling configuration, can be used instead of `config_id`
   - `booking_id` needed to check availability when rescheduling a round robin booking
 
   ## Examples
