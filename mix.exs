@@ -18,7 +18,8 @@ defmodule ExNylas.MixProject do
       docs: [
         main: "ExNylas",
         extras: ["README.md", "LICENSE"]
-      ]
+      ],
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -48,6 +49,7 @@ defmodule ExNylas.MixProject do
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ecto, "~> 3.11"},
+      {:excoveralls, "~> 0.18.1", only: :test},
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:miss, "~> 0.1.5"},
       {:multipart, "~> 0.4.0"},

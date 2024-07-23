@@ -25,7 +25,7 @@ defmodule ExNylas.Scheduling.Booking do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, __MODULE__.__schema__(:fields))
+    |> cast(params, [:booking_id, :event_id, :title, :description, :status])
     |> cast_embed(:organizer, with: &embedded_changeset/2)
   end
 end

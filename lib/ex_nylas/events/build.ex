@@ -1,4 +1,4 @@
-defmodule ExNylas.Schema.Event.Build do
+defmodule ExNylas.Event.Build do
   @moduledoc """
   Helper module for validating an event before creating/updating it.
   """
