@@ -4,7 +4,7 @@ defmodule ExNylas.Paging do
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
 
-  import ExNylas.Util, only: [indifferent_get: 2, indifferent_put_new: 3]
+  import ExNylas.Util
 
   @limit 50
 
@@ -75,7 +75,7 @@ defmodule ExNylas.Paging do
       {:ok, res} ->
         data = Map.get(res, :data, [])
         new = send_or_accumulate(send_to, with_metadata, acc, data)
-        limit = Map.get(query, :limit)
+        limit = indifferent_get(query, :limit)
 
         case length(data) == limit do
           true ->
@@ -93,8 +93,8 @@ defmodule ExNylas.Paging do
 
   defp opts_to_struct(opts) do
     %__MODULE__{
-      query: indifferent_get(opts, :query),
-      delay: indifferent_get(opts, :delay),
+      query: indifferent_get(opts, :query, []),
+      delay: indifferent_get(opts, :delay, 0),
       send_to: indifferent_get(opts, :send_to),
       with_metadata: indifferent_get(opts, :with_metadata),
     }

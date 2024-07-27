@@ -34,4 +34,19 @@ defmodule ExNylas.Grants do
     |> Req.get(conn.options)
     |> API.handle_response(Grant)
   end
+
+  @doc """
+  Get a grant using the current access token.
+
+  ## Examples
+
+      iex> result = ExNylas.Grants.me!(conn)
+  """
+  @spec me!(Conn.t()) :: Response.t()
+  def me!(%Conn{} = conn) do
+    case me(conn) do
+      {:ok, response} -> response
+      {:error, response} -> raise ExNylasError, response
+    end
+  end
 end

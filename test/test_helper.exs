@@ -91,8 +91,8 @@ defmodule ExNylasTest.Helper do
 
   def default_connection(bypass) do
     %ExNylas.Connection{
-      api_key: "1234",
-      grant_id: "1234",
+      api_key: "api_key",
+      grant_id: "grant_id",
       api_server: endpoint_url(bypass.port),
       options: [retry: false]
     }
