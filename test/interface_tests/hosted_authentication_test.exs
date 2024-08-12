@@ -25,7 +25,7 @@ defmodule ExNylas.HostedAuthenticationTest do
     expected_url = "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
     {:ok, returned_url} = HostedAuthentication.get_auth_url(conn, options)
 
-    assert expected_url == returned_url
+    assert URI.parse(expected_url) == URI.parse(returned_url)
   end
 
   test "get_auth_url/2 returns the correct URL using options struct", %{bypass: bypass} do
@@ -45,7 +45,7 @@ defmodule ExNylas.HostedAuthenticationTest do
     expected_url = "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
     {:ok, returned_url} = HostedAuthentication.get_auth_url(conn, options)
 
-    assert expected_url == returned_url
+    assert URI.parse(expected_url) == URI.parse(returned_url)
   end
 
   test "get_auth_url/2 returns an error if client_id is missing", %{bypass: bypass} do
@@ -75,8 +75,16 @@ defmodule ExNylas.HostedAuthenticationTest do
 
     options = HostedAuthentication.build!(options)
 
-    expected_url = "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
-    assert expected_url == HostedAuthentication.get_auth_url!(conn, options)
+    expected_url =
+      "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
+      |> URI.parse()
+
+    returned_url =
+      conn
+      |> HostedAuthentication.get_auth_url!(options)
+      |> URI.parse()
+
+    assert expected_url == returned_url
   end
 
   test "get_auth_url!/2 raises an error if client_id is missing", %{bypass: bypass} do
