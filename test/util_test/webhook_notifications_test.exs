@@ -25,6 +25,10 @@ defmodule ExNylasTest.WebhookNotifications do
     assert {:error, _} = ExNylas.WebhookNotifications.validate_signature("1234", %{}, "")
   end
 
+  test "validate_signature returns an error if signature is not a string" do
+    assert {:error, _} = ExNylas.WebhookNotifications.validate_signature("1234", "", nil)
+  end
+
   test "validate_signature returns false if the signature does not match" do
     {:ok, false} = ExNylas.WebhookNotifications.validate_signature("1234", "", "")
   end
@@ -46,6 +50,16 @@ defmodule ExNylasTest.WebhookNotifications do
 
   test "to_struct transforms the child object into the correct struct" do
     {:ok, res} = ExNylas.WebhookNotifications.to_struct(good_webhook_type())
+    assert res.data.object.__struct__ == ExNylas.Message
+  end
+
+  test "to_struct! transforms a raw webhook notification into an ExNylas struct" do
+    res = ExNylas.WebhookNotifications.to_struct!(good_webhook_type())
+    assert res.__struct__ == ExNylas.WebhookNotification
+  end
+
+  test "to_struct! transforms the child object into the correct struct" do
+    res = ExNylas.WebhookNotifications.to_struct!(good_webhook_type())
     assert res.data.object.__struct__ == ExNylas.Message
   end
 
