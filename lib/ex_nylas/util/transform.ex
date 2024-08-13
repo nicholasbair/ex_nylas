@@ -65,11 +65,22 @@ defmodule ExNylas.Transform do
     {:cont, {req, resp}}
   end
 
-  defp preprocess_body(model, body, status) do
+  defp preprocess_body(model, body, status) when is_map(body) do
+    data = Map.get(body, "data")
+
     body
-    |> Map.put("data", preprocess_data(model, body["data"]))
+    |> Map.put("data", preprocess_data(model, data))
     |> Map.put("status", status_to_atom(status))
   end
+
+  # SmartCompose stream response can be an event stream if succussful or a JSON object in case of an error.
+  defp preprocess_body(model, body, status) when is_bitstring(body) do
+    body
+    |> Jason.decode!()
+    |> then(&preprocess_body(model, &1, status))
+  end
+
+  defp preprocess_body(_model, body, _status), do: body
 
   @spec preprocess_data(nil | atom(), map()) :: [Ecto.Schema.t()] | [map()] | Ecto.Schema.t() | map()
   def preprocess_data(nil, data), do: data

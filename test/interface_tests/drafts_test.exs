@@ -135,4 +135,116 @@ defmodule ExNylas.DraftsTest do
       Drafts.update!(default_connection(bypass), "draft-id", changeset)
     end
   end
+
+  test "update/4 returns success on success", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "PATCH", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, ~s<{}>)
+    end)
+
+    changeset = %{
+      subject: "Updated Hello",
+      body: "Updated body"
+    }
+
+    attachments = ["./test/fixtures/test_attachment.txt"]
+
+    assert {:ok, %Response{}} = Drafts.update(default_connection(bypass), "draft-id", changeset, attachments)
+  end
+
+  test "update/4 returns error on failure", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "PATCH", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(400, ~s<{}>)
+    end)
+
+    changeset = %{
+      subject: "Updated Hello",
+      body: "Updated body"
+    }
+
+    attachments = ["./test/fixtures/test_attachment.txt"]
+
+    assert {:error, %Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset, attachments)
+  end
+
+  test "update!/4 returns success on success", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "PATCH", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, ~s<{}>)
+    end)
+
+    changeset = %{
+      subject: "Updated Hello",
+      body: "Updated body"
+    }
+
+    attachments = ["./test/fixtures/test_attachment.txt"]
+
+    assert %Response{} = Drafts.update!(default_connection(bypass), "draft-id", changeset, attachments)
+  end
+
+  test "update!/4 raises error on failure", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "PATCH", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(400, ~s<{}>)
+    end)
+
+    changeset = %{
+      subject: "Updated Hello",
+      body: "Updated body"
+    }
+
+    attachments = ["./test/fixtures/test_attachment.txt"]
+
+    assert_raise ExNylasError, fn ->
+      Drafts.update!(default_connection(bypass), "draft-id", changeset, attachments)
+    end
+  end
+
+  test "send/2 returns success on success", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, ~s<{}>)
+    end)
+
+    assert {:ok, %Response{}} = Drafts.send(default_connection(bypass), "draft-id")
+  end
+
+  test "send/2 returns error on failure", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(400, ~s<{}>)
+    end)
+
+    assert {:error, %Response{status: :bad_request}} = Drafts.send(default_connection(bypass), "draft-id")
+  end
+
+  test "send!/2 returns success on success", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(200, ~s<{}>)
+    end)
+
+    assert %Response{status: :ok} = Drafts.send!(default_connection(bypass), "draft-id")
+  end
+
+  test "send!/2 raises error on failure", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/drafts/draft-id", fn conn ->
+      conn
+      |> put_resp_content_type("application/json")
+      |> send_resp(400, ~s<{"message": "Bad Request"}>)
+    end)
+
+    assert_raise ExNylasError, fn ->
+      Drafts.send!(default_connection(bypass), "draft-id")
+    end
+  end
 end
