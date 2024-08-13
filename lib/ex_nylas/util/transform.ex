@@ -86,7 +86,7 @@ defmodule ExNylas.Transform do
   def preprocess_data(nil, data), do: data
 
   def preprocess_data(model, data) when is_map(data) do
-    model.__struct__
+    model.__struct__()
     |> model.changeset(remove_nil_values(data))
     |> log_validations(model)
     |> apply_changes()
