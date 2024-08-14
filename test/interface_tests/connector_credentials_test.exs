@@ -155,7 +155,7 @@ defmodule ExNylasTest.ConnectorCredentials do
         err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
 
         assert_raise ExNylasError, err, fn ->
-          ConnectorCredentials.list!(default_connection(bypass), "google", %{})
+          ConnectorCredentials.create!(default_connection(bypass), "google", %{})
         end
     end
   end
