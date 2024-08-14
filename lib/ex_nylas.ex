@@ -18,7 +18,6 @@ defmodule ExNylas do
     %{name: :find, http_method: :get},
     %{name: :first, http_method: :get},
     %{name: :list, http_method: :get},
-    %{name: :send, http_method: :post},
     %{name: :update, http_method: :patch},
   ]
 
@@ -98,7 +97,7 @@ defmodule ExNylas do
         |> to_string()
         |> Kernel.<>(".Build")
         |> String.to_atom()
-        |> then(fn model -> model.changeset(model.__struct__, payload) end)
+        |> then(fn model -> model.changeset(model.__struct__(), payload) end)
         |> apply_action(:build)
       end
 
@@ -117,7 +116,7 @@ defmodule ExNylas do
         |> to_string()
         |> Kernel.<>(".Build")
         |> String.to_atom()
-        |> then(fn model -> model.changeset(model.__struct__, payload) end)
+        |> then(fn model -> model.changeset(model.__struct__(), payload) end)
         |> apply_action!(:build)
       end
     end

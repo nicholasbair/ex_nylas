@@ -139,11 +139,7 @@ defmodule ExNylas.HostedAuthentication do
     API.handle_response(res, HA, false)
   end
 
-  defp conditional_transform({:ok, _} = res) do
-    API.handle_response(res, HAError, false)
-  end
-
-  defp conditional_transform({:error, _} = res) do
+  defp conditional_transform(res) do
     API.handle_response(res, HAError, false)
   end
 end
