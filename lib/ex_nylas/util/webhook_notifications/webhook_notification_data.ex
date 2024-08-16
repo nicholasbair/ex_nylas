@@ -15,6 +15,7 @@ defmodule ExNylas.WebhookNotificationData do
     Event,
     Folder,
     Message,
+    WebhookNotification.Booking,
     WebhookNotification.Grant,
     WebhookNotification.MessageBounceDetected,
     WebhookNotification.MessageOpened,
@@ -34,6 +35,11 @@ defmodule ExNylas.WebhookNotificationData do
     field :application_id, :string
     polymorphic_embeds_one :object,
       types: [
+        "booking.created": Booking,
+        "booking.deleted": Booking,
+        "booking.pending": Booking,
+        "booking.rescheduled": Booking,
+
         "calendar.created": Calendar,
         "calendar.updated": Calendar,
         "calendar.deleted": Calendar,
