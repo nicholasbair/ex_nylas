@@ -30,11 +30,11 @@ defmodule ExNylas.API do
     {:bearer, api_key}
   end
 
-  @spec base_headers([any()]) :: Keyword.t()
+  @spec base_headers([{atom(), String.t()}]) :: Keyword.t()
   def base_headers(opts \\ []), do: Keyword.merge(@base_headers, opts)
 
   # Multipart - used by drafts, messages
-  @spec build_multipart(map(), [tuple()]) :: {Enum.t(), String.t(), integer()}
+  @spec build_multipart(map(), [String.t() | tuple()]) :: {Enum.t(), String.t(), integer()}
   def build_multipart(obj, attachments) do
     multipart =
       Multipart.new()
