@@ -74,7 +74,7 @@ defmodule ExNylas.WebhookNotificationData do
       ],
       on_type_not_found: :changeset_error,
       on_replace: :update,
-      type_field: :trigger
+      type_field_name: :trigger
   end
 
   @doc false
