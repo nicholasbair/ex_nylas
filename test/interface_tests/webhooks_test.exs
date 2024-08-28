@@ -8,6 +8,64 @@ defmodule ExNylasTest.Webhooks do
     {:ok, bypass: bypass}
   end
 
+  describe "webhooks update" do
+    test "calls PUT", %{bypass: bypass} do
+      Bypass.expect_once(bypass, fn conn ->
+        assert conn.method == "PUT"
+
+        conn
+        |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.send_resp(200, ~s<{}>)
+      end)
+
+      Webhooks.update(default_connection(bypass), "id", %{})
+    end
+
+    test "includes webhook ID in the path", %{bypass: bypass} do
+      Bypass.expect_once(bypass, "PUT", "/v3/webhooks/1234", fn conn ->
+        conn
+        |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.send_resp(200, ~s<{}>)
+      end)
+
+      Webhooks.update(default_connection(bypass), "1234", %{})
+    end
+  end
+
+  describe "webhooks update!" do
+    test "raises an error if the response is not successful", %{bypass: bypass} do
+      Bypass.expect_once(bypass, fn conn ->
+        conn
+        |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
+      end)
+
+      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+
+      assert_raise ExNylasError, err, fn ->
+        Webhooks.update!(default_connection(bypass), "id", %{})
+      end
+    end
+
+    test "returns the common response struct if the response is successful", %{bypass: bypass} do
+      Bypass.expect_once(bypass, fn conn ->
+        conn
+        |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.send_resp(200, ~s<{}>)
+      end)
+
+      result = Webhooks.update!(default_connection(bypass), "id", %{})
+
+      assert result == %ExNylas.Response{
+        data: nil,
+        next_cursor: nil,
+        request_id: nil,
+        status: :ok,
+        error: nil
+      }
+    end
+  end
+
   describe "webhooks rotate secret" do
     test "calls POST", %{bypass: bypass} do
       Bypass.expect_once(bypass, fn conn ->
