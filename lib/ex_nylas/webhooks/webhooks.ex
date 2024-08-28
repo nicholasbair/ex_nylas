@@ -13,7 +13,43 @@ defmodule ExNylas.Webhooks do
     struct: ExNylas.Webhook,
     readable_name: "webhook",
     use_admin_url: true,
-    include: [:list, :first, :find, :delete, :build, :update, :create, :all]
+    include: [:list, :first, :find, :delete, :build, :create, :all]
+
+  @doc """
+  Update a webhook.
+
+  ## Examples
+
+      iex> {:ok, result} = ExNylas.Webhooks.update(conn, id, body, params)
+  """
+  @spec update(Conn.t(), String.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def update(%Conn{} = conn, id, changeset, params \\ []) do
+    Req.new(
+      url: "#{conn.api_server}/v3/webhooks/#{id}",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": "application/json"]),
+      json: changeset,
+      params: params
+    )
+    |> API.maybe_attach_telemetry(conn)
+    |> Req.put(conn.options)
+    |> API.handle_response(Webhook)
+  end
+
+  @doc """
+  Update a webhook.
+
+  ## Examples
+
+      iex> result = ExNylas.Webhooks.update!(conn, id, body, params)
+  """
+  @spec update!(Conn.t(), String.t(), map(), Keyword.t() | map()) :: Response.t()
+  def update!(%Conn{} = conn, id, changeset, params \\ []) do
+    case update(conn, id, changeset, params) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
 
   @doc """
   Rotate a webhook secret.
