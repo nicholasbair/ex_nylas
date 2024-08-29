@@ -33,6 +33,7 @@ defmodule ExNylas.WebhookNotificationData do
 
   embedded_schema do
     field :application_id, :string
+    field :grant_id, :string # Message tracking webhooks include the grant_id here instead of within the nested object
     polymorphic_embeds_one :object,
       types: [
         "booking.created": Booking,
@@ -81,7 +82,7 @@ defmodule ExNylas.WebhookNotificationData do
   def changeset(struct, params \\ %{}) do
     params
     |> put_trigger()
-    |> then(&cast(struct, &1, [:application_id]))
+    |> then(&cast(struct, &1, [:application_id, :grant_id]))
     |> cast_polymorphic_embed(:object)
   end
 

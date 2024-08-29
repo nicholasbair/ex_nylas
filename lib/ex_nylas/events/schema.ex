@@ -25,6 +25,7 @@ defmodule ExNylas.Event do
     field(:master_event_id, :string)
     field(:metadata, :map)
     field(:object, :string)
+    field(:occurrences, {:array, :string})
     field(:read_only, :boolean)
     field(:recurrence, {:array, :string})
     field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
@@ -33,11 +34,15 @@ defmodule ExNylas.Event do
     field(:visibility, Ecto.Enum, values: ~w(public private default)a)
 
     embeds_one :conferencing, Conferencing, primary_key: false do
-      field(:meeting_code, :string)
-      field(:password, :string)
-      field(:phone, {:array, :string})
-      field(:pin, :string)
-      field(:url, :string)
+      field(:provider, :string)
+
+      embeds_one :details, Details, primary_key: false do
+        field(:meeting_code, :string)
+        field(:password, :string)
+        field(:phone, {:array, :string})
+        field(:pin, :string)
+        field(:url, :string)
+      end
     end
 
     embeds_one :organizer, Organizer, primary_key: false do
@@ -75,11 +80,17 @@ defmodule ExNylas.Event do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
+    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_embed(:when, with: &Util.embedded_changeset/2)
-    |> cast_embed(:conferencing, with: &Util.embedded_changeset/2)
+    |> cast_embed(:conferencing, with: &conferencing_changeset/2)
     |> cast_embed(:reminders, with: &Util.embedded_changeset/2)
     |> cast_embed(:organizer, with: &Util.embedded_changeset/2)
+  end
+
+  defp conferencing_changeset(schema, params) do
+    schema
+    |> cast(params, [:provider])
+    |> cast_embed(:details, with: &Util.embedded_changeset/2)
   end
 end
