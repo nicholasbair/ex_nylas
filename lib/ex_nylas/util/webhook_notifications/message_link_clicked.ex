@@ -21,9 +21,9 @@ defmodule ExNylas.WebhookNotification.MessageLinkClicked do
     end
 
     embeds_many :recents, Recent, primary_key: false do
-      field(:click_id, :string)
+      field(:click_id, :integer) :: non_neg_integer()
       field(:ip, :string)
-      field(:link_index, :string)
+      field(:link_index, :integer) :: non_neg_integer()
       field(:timestamp, :integer) :: non_neg_integer()
       field(:user_agent, :string)
     end

@@ -15,6 +15,7 @@ defmodule ExNylas.WebhookNotification do
     field(:specversion, :string, null: false)
     field(:time, :integer, null: false) :: non_neg_integer()
     field(:type, :string, null: false)
+    field(:webhook_delivery_attempt, :integer) :: non_neg_integer()
 
     embeds_one :data, Data
   end
@@ -23,7 +24,7 @@ defmodule ExNylas.WebhookNotification do
   def changeset(struct, params \\ %{}) do
     params
     |> put_trigger()
-    |> then(&cast(struct, &1, [:specversion, :type, :source, :id, :time]))
+    |> then(&cast(struct, &1, [:specversion, :type, :source, :id, :time, :webhook_delivery_attempt]))
     |> cast_embed(:data)
   end
 

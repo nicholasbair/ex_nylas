@@ -14,6 +14,7 @@ defmodule ExNylas.WebhookNotification.Booking do
     field(:booking_id, :string)
     field(:booking_ref, :string)
     field(:booking_type, :string)
+    field(:object, :string)
 
     embeds_one :booking_info, BookingInfo, primary_key: false do
       field(:event_id, :string)
@@ -29,6 +30,7 @@ defmodule ExNylas.WebhookNotification.Booking do
       field(:location, :string)
       field(:organizer_timezone, :string)
       field(:guest_timezone, :string)
+      field(:cancellation_reason, :string)
 
       embeds_many :participants, Participant do
         field(:email, :string)
@@ -40,7 +42,28 @@ defmodule ExNylas.WebhookNotification.Booking do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:configuration_id, :booking_id, :booking_ref, :booking_type])
-    |> cast_embed(:booking_info, with: &Util.embedded_changeset/2)
+    |> cast(params, [:configuration_id, :booking_id, :booking_ref, :booking_type, :object])
+    |> cast_embed(:booking_info, with: &booking_info_changeset/2)
+  end
+
+  defp booking_info_changeset(schema, params) do
+    schema
+    |> cast(params, [
+      :event_id,
+      :old_start_time,
+      :old_end_time,
+      :start_time,
+      :end_time,
+      :additional_fields,
+      :hide_cancellation_options,
+      :hide_rescheduling_options,
+      :title,
+      :duration,
+      :location,
+      :organizer_timezone,
+      :guest_timezone,
+      :cancellation_reason
+    ])
+    |> cast_embed(:participants, with: &Util.embedded_changeset/2)
   end
 end
