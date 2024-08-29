@@ -30,7 +30,7 @@ defmodule ExNylas.Event do
     field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
     field(:title, :string)
     field(:updated_at, :integer)
-    field(:visibility, Ecto.Enum, values: ~w(public private)a)
+    field(:visibility, Ecto.Enum, values: ~w(public private default)a)
 
     embeds_one :conferencing, Conferencing, primary_key: false do
       field(:meeting_code, :string)
