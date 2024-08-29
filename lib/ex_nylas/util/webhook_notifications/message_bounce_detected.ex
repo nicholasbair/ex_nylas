@@ -13,7 +13,7 @@ defmodule ExNylas.WebhookNotification.MessageBounceDetected do
     field(:bounced_address, :string)
     field(:bounce_date, :string)
     field(:bounce_reason, :string)
-    field(:code, :integer)
+    field(:code, :string)
     field(:type, :string)
 
     embeds_one :origin, Origin, primary_key: false do

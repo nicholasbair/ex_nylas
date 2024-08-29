@@ -36,7 +36,7 @@ defmodule ExNylas.WebhookNotificationData do
     polymorphic_embeds_one :object,
       types: [
         "booking.created": Booking,
-        "booking.deleted": Booking,
+        "booking.cancelled": Booking,
         "booking.pending": Booking,
         "booking.rescheduled": Booking,
 
