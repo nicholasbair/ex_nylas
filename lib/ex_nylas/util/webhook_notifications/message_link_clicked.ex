@@ -15,7 +15,7 @@ defmodule ExNylas.WebhookNotification.MessageLinkClicked do
     field(:sender_app_id, :string)
     field(:timestamp, :integer) :: non_neg_integer()
 
-    embeds_one :link_data, LinkData, primary_key: false do
+    embeds_many :link_data, LinkData, primary_key: false do
       field(:count, :integer) :: non_neg_integer()
       field(:url, :string)
     end
