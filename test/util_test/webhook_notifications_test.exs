@@ -53,6 +53,24 @@ defmodule ExNylasTest.WebhookNotifications do
     assert res.data.object.__struct__ == ExNylas.Message
   end
 
+  test "to_struct transforms message.created.truncated into the correct parent type" do
+    {:ok, res} =
+      good_webhook_type()
+      |> Map.put("type", "message.created.truncated")
+      |> ExNylas.WebhookNotifications.to_struct()
+
+    assert res.data.object.__struct__ == ExNylas.Message
+  end
+
+  test "to_struct transforms message.created.transformed into the correct parent type" do
+    {:ok, res} =
+      good_webhook_type()
+      |> Map.put("type", "message.created.transformed")
+      |> ExNylas.WebhookNotifications.to_struct()
+
+    assert res.data.object.__struct__ == ExNylas.Message
+  end
+
   test "to_struct! transforms a raw webhook notification into an ExNylas struct" do
     res = ExNylas.WebhookNotifications.to_struct!(good_webhook_type())
     assert res.__struct__ == ExNylas.WebhookNotification
