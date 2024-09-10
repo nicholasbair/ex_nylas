@@ -63,8 +63,6 @@ defmodule ExNylas.WebhookNotificationData do
 
         "message.created": Message,
         "message.updated": Message,
-        "message.created.truncated": Message,
-        "message.updated.truncated": Message,
         "message.send_success": Message,
         "message.send_failed": Message,
         "message.bounce_detected": MessageBounceDetected,
@@ -89,6 +87,10 @@ defmodule ExNylas.WebhookNotificationData do
   # Webhook trigger/type is the most reliable way to determine what notification.data.object should be transformed into.
   # Pass the trigger/type as params so it can be used by polymorphic_embeds_one.
   defp put_trigger(%{"trigger" => trigger, "object" => object} = params) do
-    %{params | "object" => Map.put(object, "trigger", trigger)}
+    %{params | "object" => Map.put(object, "trigger", to_parent_trigger(trigger))}
+  end
+
+  defp to_parent_trigger(trigger) when is_binary(trigger) do
+    String.replace(trigger, ~r/\.(truncated|transformed)$/, "")
   end
 end
