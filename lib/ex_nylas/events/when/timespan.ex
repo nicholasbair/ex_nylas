@@ -19,6 +19,6 @@ defmodule ExNylas.Event.Timespan do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:start_date, :end_date, :start_timezone, :end_timezone, :object])
+    |> cast(params, [:start_time, :end_time, :start_timezone, :end_timezone, :object])
   end
 end
