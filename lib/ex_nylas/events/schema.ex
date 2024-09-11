@@ -3,14 +3,87 @@ defmodule ExNylas.Event do
   A struct representing a event.
   """
 
-  use TypedEctoSchema
+  use Ecto.Schema
   import Ecto.Changeset
+  import PolymorphicEmbed
 
   alias ExNylas.Schema.Util
+  alias ExNylas.Event.{
+    Conferencing,
+    Conferencing.Details,
+    Date,
+    Datespan,
+    Organizer,
+    Participant,
+    Reminder,
+    Time,
+    Timespan
+  }
+
+  # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
+  @type t :: %__MODULE__{
+          busy: boolean() | nil,
+          calendar_id: String.t() | nil,
+          capacity: integer() | nil,
+          created_at: integer() | nil,
+          description: String.t() | nil,
+          hide_participants: boolean() | nil,
+          grant_id: String.t() | nil,
+          html_link: String.t() | nil,
+          ical_uid: String.t() | nil,
+          id: String.t() | nil,
+          location: String.t() | nil,
+          master_event_id: String.t() | nil,
+          metadata: %{optional(String.t()) => String.t()},
+          object: String.t() | nil,
+          occurrences: [String.t()] | nil,
+          read_only: boolean() | nil,
+          recurrence: [String.t()] | nil,
+          status: :confirmed | :canceled | :maybe,
+          title: String.t() | nil,
+          updated_at: integer() | nil,
+          visibility: :public | :private | :default,
+          conferencing: conferencing() | nil,
+          organizer: organizer() | nil,
+          participants: [participant()] | nil,
+          reminders: reminder() | nil,
+          when: Date.t() | Datespan.t() | Time.t() | Timespan.t() | nil
+        }
+
+  @type conferencing :: %Conferencing{
+          provider: String.t() | nil,
+          details: details() | nil
+        }
+
+  @type details :: %Details{
+          meeting_code: String.t() | nil,
+          password: String.t() | nil,
+          phone: [String.t()] | nil,
+          pin: String.t() | nil,
+          url: String.t() | nil
+        }
+
+  @type organizer :: %Organizer{
+          email: String.t() | nil,
+          name: String.t() | nil
+        }
+
+  @type participant :: %Participant{
+          comment: String.t() | nil,
+          email: String.t() | nil,
+          name: String.t() | nil,
+          phone_number: String.t() | nil,
+          status: :yes | :no | :maybe | :noreply
+        }
+
+  @type reminder :: %Reminder{
+          overrides: [map()] | nil,
+          use_default: boolean() | nil
+        }
 
   @primary_key false
 
-  typed_embedded_schema do
+  embedded_schema do
     field(:busy, :boolean)
     field(:calendar_id, :string)
     field(:capacity, :integer)
@@ -63,18 +136,16 @@ defmodule ExNylas.Event do
       field(:use_default, :boolean)
     end
 
-    embeds_one :when, When, primary_key: false do
-      field(:date, :string)
-      field(:end_date, :string)
-      field(:end_time, :integer) :: non_neg_integer() | nil
-      field(:end_timezone, :string)
-      field(:object, Ecto.Enum, values: ~w(time timespan date datespan)a)
-      field(:start_date, :string)
-      field(:start_time, :integer) :: non_neg_integer() | nil
-      field(:start_timezone, :string)
-      field(:time, :integer) :: non_neg_integer() | nil
-      field(:timezone, :string)
-    end
+    polymorphic_embeds_one :when,
+      types: [
+        date: Date,
+        datespan: Datespan,
+        time: Time,
+        timespan: Timespan
+      ],
+      type_field_name: :object,
+      on_type_not_found: :changeset_error,
+      on_replace: :update
   end
 
   @doc false
@@ -82,7 +153,7 @@ defmodule ExNylas.Event do
     struct
     |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
-    |> cast_embed(:when, with: &Util.embedded_changeset/2)
+    |> cast_polymorphic_embed(:when)
     |> cast_embed(:conferencing, with: &conferencing_changeset/2)
     |> cast_embed(:reminders, with: &Util.embedded_changeset/2)
     |> cast_embed(:organizer, with: &Util.embedded_changeset/2)
