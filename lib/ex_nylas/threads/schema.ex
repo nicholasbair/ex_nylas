@@ -36,20 +36,20 @@ defmodule ExNylas.Thread do
   @primary_key false
 
   embedded_schema do
-    field :draft_ids, {:array, :string}
-    field :earliest_message_timestamp, :integer
-    field :grant_id, :string
-    field :has_attachments, :boolean
-    field :has_drafts, :boolean
-    field :id, :string
-    field :last_message_received_at, :integer
-    field :last_message_sent_at, :integer
-    field :message_ids, {:array, :string}
-    field :object, :string
-    field :snippet, :string
-    field :starred, :boolean
-    field :subject, :string
-    field :unread, :boolean
+    field(:draft_ids, {:array, :string})
+    field(:earliest_message_timestamp, :integer)
+    field(:grant_id, :string)
+    field(:has_attachments, :boolean)
+    field(:has_drafts, :boolean)
+    field(:id, :string)
+    field(:last_message_received_at, :integer)
+    field(:last_message_sent_at, :integer)
+    field(:message_ids, {:array, :string})
+    field(:object, :string)
+    field(:snippet, :string)
+    field(:starred, :boolean)
+    field(:subject, :string)
+    field(:unread, :boolean)
 
     polymorphic_embeds_one :latest_draft_or_message,
       types: [

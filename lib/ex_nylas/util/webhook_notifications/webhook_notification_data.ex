@@ -32,8 +32,8 @@ defmodule ExNylas.WebhookNotificationData do
   @primary_key false
 
   embedded_schema do
-    field :application_id, :string
-    field :grant_id, :string # Message tracking webhooks include the grant_id here instead of within the nested object
+    field(:application_id, :string)
+    field(:grant_id, :string) # Message tracking webhooks include the grant_id here instead of within the nested object
     polymorphic_embeds_one :object,
       types: [
         "booking.created": Booking,
