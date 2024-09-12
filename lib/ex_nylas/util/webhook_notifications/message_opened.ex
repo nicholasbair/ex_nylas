@@ -11,6 +11,7 @@ defmodule ExNylas.WebhookNotification.MessageOpened do
 
   typed_embedded_schema do
     field(:label, :string)
+    field(:grant_id, :string)
     field(:message_id, :string)
     field(:sender_app_id, :string)
     field(:timestamp, :integer) :: non_neg_integer()
@@ -31,7 +32,7 @@ defmodule ExNylas.WebhookNotification.MessageOpened do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:message_id, :label, :sender_app_id, :timestamp])
+    |> cast(params, [:message_id, :label, :grant_id, :sender_app_id, :timestamp])
     |> cast_embed(:message_data, with: &embedded_changeset/2)
     |> cast_embed(:recents, with: &embedded_changeset/2)
   end
