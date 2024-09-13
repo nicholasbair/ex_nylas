@@ -14,6 +14,7 @@ defmodule ExNylas.WebhookNotification.MessageBounceDetected do
     field(:bounce_date, :string)
     field(:bounce_reason, :string)
     field(:code, :string)
+    field(:grant_id, :string)
     field(:type, :string)
 
     embeds_one :origin, Origin, primary_key: false do
@@ -30,7 +31,7 @@ defmodule ExNylas.WebhookNotification.MessageBounceDetected do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:bounce_reason, :bounce_date, :bounced_address, :type, :code])
+    |> cast(params, [:bounce_reason, :bounce_date, :bounced_address, :grant_id, :type, :code])
     |> cast_embed(:origin, with: &embedded_changeset/2)
   end
 end

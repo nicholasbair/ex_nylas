@@ -11,6 +11,7 @@ defmodule ExNylas.WebhookNotification.ThreadReplied do
 
   typed_embedded_schema do
     field(:label, :string)
+    field(:grant_id, :string)
     field(:message_id, :string)
     field(:root_message_id, :string)
     field(:sender_app_id, :string)
@@ -25,7 +26,7 @@ defmodule ExNylas.WebhookNotification.ThreadReplied do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:message_id, :root_message_id, :label, :sender_app_id, :thread_id, :timestamp])
+    |> cast(params, [:message_id, :grant_id, :root_message_id, :label, :sender_app_id, :thread_id, :timestamp])
     |> cast_embed(:reply_data, with: &embedded_changeset/2)
   end
 end

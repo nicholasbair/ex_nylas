@@ -16,7 +16,6 @@ defmodule ExNylas.Event do
     Organizer,
     Participant,
     Reminder,
-    Time,
     Timespan
   }
 
@@ -47,7 +46,7 @@ defmodule ExNylas.Event do
           organizer: organizer() | nil,
           participants: [participant()] | nil,
           reminders: reminder() | nil,
-          when: Date.t() | Datespan.t() | Time.t() | Timespan.t() | nil
+          when: Date.t() | Datespan.t() | Timespan.t() | nil
         }
 
   @type conferencing :: %Conferencing{
@@ -140,7 +139,6 @@ defmodule ExNylas.Event do
       types: [
         date: Date,
         datespan: Datespan,
-        time: Time,
         timespan: Timespan
       ],
       type_field_name: :object,
