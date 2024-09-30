@@ -90,6 +90,6 @@ defmodule ExNylas.WebhookNotificationData do
   end
 
   defp to_parent_trigger(trigger) when is_binary(trigger) do
-    String.replace(trigger, ~r/\.(truncated|transformed)$/, "")
+    String.replace(trigger, ~r/\.(truncated|transformed|transformed.truncated)$/, "")
   end
 end
