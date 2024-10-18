@@ -17,10 +17,12 @@ defmodule ExNylas.WebhookNotificationData do
     Message,
     WebhookNotification.Booking,
     WebhookNotification.Grant,
+    WebhookNotification.Order,
     WebhookNotification.MessageBounceDetected,
     WebhookNotification.MessageOpened,
     WebhookNotification.MessageLinkClicked,
-    WebhookNotification.ThreadReplied
+    WebhookNotification.ThreadReplied,
+    WebhookNotification.Tracking
   }
 
   # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
@@ -67,6 +69,8 @@ defmodule ExNylas.WebhookNotificationData do
         "message.bounce_detected": MessageBounceDetected,
         "message.opened": MessageOpened,
         "message.link_clicked": MessageLinkClicked,
+        "message.intelligence.order": Order,
+        "message.intelligence.tracking": Tracking,
 
         "thread.replied": ThreadReplied,
       ],
