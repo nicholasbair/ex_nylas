@@ -23,7 +23,7 @@ defmodule ExNylas.OrderConsolidation.Shipment do
 
     embeds_one :carrier_enrichment, CarrierEnrichment, primary_key: false do
       field(:delivery_date, :integer)
-      field(:deliver_estimate, :integer)
+      field(:delivery_estimate, :integer)
       field(:service_type, :string)
       field(:signature_required, :boolean)
 
@@ -75,7 +75,7 @@ defmodule ExNylas.OrderConsolidation.Shipment do
     struct
     |> cast(params, [
       :delivery_date,
-      :deliver_estimate,
+      :delivery_estimate,
       :service_type,
       :signature_required
     ])

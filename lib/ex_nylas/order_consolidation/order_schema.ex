@@ -20,18 +20,18 @@ defmodule ExNylas.OrderConsolidation.Order do
     field(:currency, :string)
     field(:merchant_name, :string)
     field(:merchant_domain, :string)
-    field(:order_total, :float)
-    field(:tax_total, :float)
-    field(:discount_total, :float)
-    field(:shipping_total, :float)
-    field(:gift_card_total, :float)
+    field(:order_total, :decimal)
+    field(:tax_total, :decimal)
+    field(:discount_total, :decimal)
+    field(:shipping_total, :decimal)
+    field(:gift_card_total, :decimal)
     field(:order_provider_message_ids, {:array, :string})
 
     embeds_many :products, Product, primary_key: false do
       field(:name, :string)
       field(:image_url, :string)
       field(:quantity, :integer)
-      field(:unit_price, :float)
+      field(:unit_price, :decimal)
     end
   end
 

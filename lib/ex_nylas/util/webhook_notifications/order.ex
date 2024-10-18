@@ -31,8 +31,8 @@ defmodule ExNylas.WebhookNotification.Order do
     embeds_many :orders, Order, primary_key: false do
       field(:coupon, :string)
       field(:currency, :string)
-      field(:discount, :string)
-      field(:gift_card, :string)
+      field(:discount, :decimal)
+      field(:gift_card, :decimal)
       embeds_many :line_items, LineItem, primary_key: false do
         field(:color, :string)
         field(:name, :string)
@@ -40,14 +40,14 @@ defmodule ExNylas.WebhookNotification.Order do
         field(:product_image_uri, :string)
         field(:quantity, :integer) :: non_neg_integer()
         field(:size, :string)
-        field(:unit_price, :float)
+        field(:unit_price, :decimal)
         field(:url, :string)
       end
-      field(:order_date, :string)
+      field(:order_date, :integer)
       field(:order_number, :string)
-      field(:shipping_total, :string)
-      field(:total_amount, :float)
-      field(:total_tax_amount, :float)
+      field(:shipping_total, :decimal)
+      field(:total_amount, :decimal)
+      field(:total_tax_amount, :decimal)
     end
 
     field(:status, :string)
