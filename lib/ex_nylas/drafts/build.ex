@@ -12,13 +12,14 @@ defmodule ExNylas.Draft.Build do
     MessageHeader
   }
 
-  @derive {Jason.Encoder, only: [:reply_to_message_id, :subject, :body, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
+  @derive {Jason.Encoder, only: [:reply_to_message_id, :metadata, :subject, :body, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 
   typed_embedded_schema do
     field(:body, :string)
     field(:subject, :string)
     field(:reply_to_message_id, :string)
+    field(:metadata, :map)
 
     embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant
@@ -33,7 +34,7 @@ defmodule ExNylas.Draft.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:reply_to_message_id, :subject, :body])
+    |> cast(params, [:reply_to_message_id, :subject, :body, :metadata])
     |> cast_embed(:attachments)
     |> cast_embed(:from)
     |> cast_embed(:to)
