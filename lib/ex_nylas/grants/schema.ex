@@ -22,6 +22,7 @@ defmodule ExNylas.Grant do
     field(:state, :string)
     field(:updated_at, :integer) :: non_neg_integer() | nil
     field(:user_agent, :string)
+    field(:name, :string)
   end
 
   @doc false

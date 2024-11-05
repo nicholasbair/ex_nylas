@@ -26,6 +26,7 @@ defmodule ExNylas.Draft do
     field(:starred, :boolean)
     field(:subject, :string)
     field(:thread_id, :string)
+    field(:metadata, :map)
 
     embeds_many :attachments, Attachment
     embeds_many :bcc, EmailParticipant
@@ -39,7 +40,7 @@ defmodule ExNylas.Draft do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :grant_id, :object, :thread_id, :reply_to_message_id, :date, :snippet, :starred, :subject, :body, :folders])
+    |> cast(params, [:id, :grant_id, :object, :thread_id, :reply_to_message_id, :date, :snippet, :starred, :subject, :body, :folders, :metadata])
     |> cast_embed(:attachments)
     |> cast_embed(:from)
     |> cast_embed(:to)
