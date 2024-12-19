@@ -23,7 +23,7 @@ defmodule ExNylas.Contact.Build do
       @derive {Jason.Encoder, only: [:email, :type]}
 
       field(:email, :string, null: false)
-      field(:type, Ecto.Enum, values: ~w(work home other)a)
+      field(:type, Ecto.Enum, values: ~w(work home other mobile)a)
     end
 
     embeds_many :im_addresses, ImAddress, primary_key: false do
