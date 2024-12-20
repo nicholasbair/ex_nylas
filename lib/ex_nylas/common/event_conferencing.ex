@@ -11,7 +11,7 @@ defmodule ExNylas.EventConferencing do
 
   typed_embedded_schema do
     field(:autocreate, :map)
-    field(:provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams' 'Zoom Meeting')a)
+    field(:provider, Ecto.Enum, values: [:"Google Meet", :"Zoom Meeting", :"Microsoft Teams", :"Teams for Business", :"Skype for Consumer", :"Skype for Business"], null: false)
 
     embeds_one :details, Details, primary_key: false do
       field(:meeting_code, :string)

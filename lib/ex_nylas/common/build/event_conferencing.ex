@@ -12,7 +12,7 @@ defmodule ExNylas.Build.EventConferencing do
 
   typed_embedded_schema do
     field(:autocreate, :map)
-    field(:provider, Ecto.Enum, values: ~w('Google Meet' 'Microsoft Teams' 'Zoom Meeting')a, null: false)
+    field(:provider, Ecto.Enum, values: [:"Google Meet", :"Zoom Meeting", :"Microsoft Teams", :"Teams for Business", :"Skype for Consumer", :"Skype for Business"], null: false)
 
     embeds_one :details, Details, primary_key: false do
       @derive {Jason.Encoder, only: [:meeting_code, :password, :url, :phone, :pin]}
