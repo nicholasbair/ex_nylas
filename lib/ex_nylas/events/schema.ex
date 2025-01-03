@@ -26,6 +26,7 @@ defmodule ExNylas.Event do
           capacity: integer() | nil,
           created_at: integer() | nil,
           description: String.t() | nil,
+          text_description: String.t() | nil,
           hide_participants: boolean() | nil,
           grant_id: String.t() | nil,
           html_link: String.t() | nil,
@@ -101,6 +102,7 @@ defmodule ExNylas.Event do
     field(:read_only, :boolean)
     field(:recurrence, {:array, :string})
     field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
+    field(:text_description, :string)
     field(:title, :string)
     field(:updated_at, :integer)
     field(:visibility, Ecto.Enum, values: ~w(public private default)a)
@@ -149,7 +151,7 @@ defmodule ExNylas.Event do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :read_only, :recurrence, :status, :title, :updated_at, :visibility])
+    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :read_only, :recurrence, :status, :text_description, :title, :updated_at, :visibility])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_polymorphic_embed(:when)
     |> cast_embed(:conferencing, with: &conferencing_changeset/2)
