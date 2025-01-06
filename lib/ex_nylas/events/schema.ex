@@ -37,6 +37,7 @@ defmodule ExNylas.Event do
           metadata: %{optional(String.t()) => String.t()},
           object: String.t() | nil,
           occurrences: [String.t()] | nil,
+          cancelled_occurrences: [String.t()] | nil,
           read_only: boolean() | nil,
           recurrence: [String.t()] | nil,
           status: :confirmed | :canceled | :maybe,
@@ -99,6 +100,7 @@ defmodule ExNylas.Event do
     field(:metadata, :map)
     field(:object, :string)
     field(:occurrences, {:array, :string})
+    field(:cancelled_occurrences, {:array, :string})
     field(:read_only, :boolean)
     field(:recurrence, {:array, :string})
     field(:status, Ecto.Enum, values: ~w(confirmed canceled maybe)a)
@@ -151,7 +153,7 @@ defmodule ExNylas.Event do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :read_only, :recurrence, :status, :text_description, :title, :updated_at, :visibility])
+    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :cancelled_occurrences, :read_only, :recurrence, :status, :text_description, :title, :updated_at, :visibility])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_polymorphic_embed(:when)
     |> cast_embed(:conferencing, with: &conferencing_changeset/2)
