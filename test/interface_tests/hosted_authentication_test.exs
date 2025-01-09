@@ -12,7 +12,7 @@ defmodule ExNylas.HostedAuthenticationTest do
   test "get_auth_url/2 returns the correct URL on success", %{bypass: bypass} do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
+      client_id: "client-id"
     }
 
     options = %{
@@ -22,7 +22,9 @@ defmodule ExNylas.HostedAuthenticationTest do
       foo: nil
     }
 
-    expected_url = "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
+    expected_url =
+      "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
+
     {:ok, returned_url} = HostedAuthentication.get_auth_url(conn, options)
 
     assert URI.decode_query(expected_url) == URI.decode_query(returned_url)
@@ -31,18 +33,20 @@ defmodule ExNylas.HostedAuthenticationTest do
   test "get_auth_url/2 returns the correct URL using options struct", %{bypass: bypass} do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
+      client_id: "client-id"
     }
 
     options = %{
       redirect_uri: "https://mycoolapp.com/auth",
       response_type: "code",
-      scope: ["Mail.ReadWrite", "Mail.Send"],
+      scope: ["Mail.ReadWrite", "Mail.Send"]
     }
 
     options = HostedAuthentication.build!(options)
 
-    expected_url = "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
+    expected_url =
+      "#{conn.api_server}/v3/connect/auth?client_id=#{conn.client_id}&scope=Mail.ReadWrite,Mail.Send&redirect_uri=https://mycoolapp.com/auth&response_type=code"
+
     {:ok, returned_url} = HostedAuthentication.get_auth_url(conn, options)
 
     assert URI.decode_query(expected_url) == URI.decode_query(returned_url)
@@ -50,7 +54,7 @@ defmodule ExNylas.HostedAuthenticationTest do
 
   test "get_auth_url/2 returns an error if client_id is missing", %{bypass: bypass} do
     conn = %Connection{
-      api_server: endpoint_url(bypass.port),
+      api_server: endpoint_url(bypass.port)
     }
 
     options = %{
@@ -58,19 +62,20 @@ defmodule ExNylas.HostedAuthenticationTest do
       response_type: "code"
     }
 
-    assert {:error, "client_id on the connection struct is required for this call"} = HostedAuthentication.get_auth_url(conn, options)
+    assert {:error, "client_id on the connection struct is required for this call"} =
+             HostedAuthentication.get_auth_url(conn, options)
   end
 
   test "get_auth_url!/2 returns the correct URL", %{bypass: bypass} do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
+      client_id: "client-id"
     }
 
     options = %{
       redirect_uri: "https://mycoolapp.com/auth",
       response_type: "code",
-      scope: ["Mail.ReadWrite", "Mail.Send"],
+      scope: ["Mail.ReadWrite", "Mail.Send"]
     }
 
     options = HostedAuthentication.build!(options)
@@ -89,7 +94,7 @@ defmodule ExNylas.HostedAuthenticationTest do
 
   test "get_auth_url!/2 raises an error if client_id is missing", %{bypass: bypass} do
     conn = %Connection{
-      api_server: endpoint_url(bypass.port),
+      api_server: endpoint_url(bypass.port)
     }
 
     options = %{
@@ -105,7 +110,7 @@ defmodule ExNylas.HostedAuthenticationTest do
   test "get_auth_url!/2 raises an error if redirect_uri is missing", %{bypass: bypass} do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
+      client_id: "client-id"
     }
 
     options = %{
@@ -115,6 +120,25 @@ defmodule ExNylas.HostedAuthenticationTest do
     assert_raise ExNylasError, fn ->
       HostedAuthentication.get_auth_url!(conn, options)
     end
+  end
+
+  test "get_auth_url/2 properly encodes login_hint with special characters", %{bypass: bypass} do
+    conn = %Connection{
+      api_server: endpoint_url(bypass.port),
+      client_id: "client-id"
+    }
+
+    options = %{
+      redirect_uri: "https://mycoolapp.com/auth",
+      response_type: "code",
+      login_hint: "user+test@example.com"
+    }
+
+    {:ok, returned_url} = HostedAuthentication.get_auth_url(conn, options)
+    decoded_params = URI.decode_query(URI.parse(returned_url).query)
+
+    assert decoded_params["login_hint"] == "user+test@example.com"
+    assert String.contains?(returned_url, "login_hint=user%2Btest%40example.com")
   end
 
   test "exchange_code_for_token/4 returns the access token on success", %{bypass: bypass} do
@@ -127,13 +151,14 @@ defmodule ExNylas.HostedAuthenticationTest do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
       client_id: "client-id",
-      api_key: "client-secret",
+      api_key: "client-secret"
     }
 
     code = "auth-code"
     redirect_uri = "https://mycoolapp.com/auth"
 
-    assert {:ok, %HostedAuthentication.Grant{access_token: "access-token"}} = HostedAuthentication.exchange_code_for_token(conn, code, redirect_uri)
+    assert {:ok, %HostedAuthentication.Grant{access_token: "access-token"}} =
+             HostedAuthentication.exchange_code_for_token(conn, code, redirect_uri)
   end
 
   test "exchange_code_for_token/4 returns an error tuple on failure", %{bypass: bypass} do
@@ -146,13 +171,14 @@ defmodule ExNylas.HostedAuthenticationTest do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
       client_id: "client-id",
-      api_key: "client-secret",
+      api_key: "client-secret"
     }
 
     code = "auth-code"
     redirect_uri = "https://mycoolapp.com/auth"
 
-    assert {:error, %HostedAuthentication.Error{error: "Bad Request"}} = HostedAuthentication.exchange_code_for_token(conn, code, redirect_uri)
+    assert {:error, %HostedAuthentication.Error{error: "Bad Request"}} =
+             HostedAuthentication.exchange_code_for_token(conn, code, redirect_uri)
   end
 
   test "exchange_code_for_token!/4 returns the access token on success", %{bypass: bypass} do
@@ -165,12 +191,23 @@ defmodule ExNylas.HostedAuthenticationTest do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
       client_id: "client-id",
-      api_key: "client-secret",
+      api_key: "client-secret"
     }
 
     code = "auth-code"
     redirect_uri = "https://mycoolapp.com/auth"
-    expected = %ExNylas.HostedAuthentication.Grant{access_token: "access-token", email: nil, expires_in: nil, grant_id: nil, id_token: nil, provider: nil, refresh_token: nil, scope: nil, token_type: nil}
+
+    expected = %ExNylas.HostedAuthentication.Grant{
+      access_token: "access-token",
+      email: nil,
+      expires_in: nil,
+      grant_id: nil,
+      id_token: nil,
+      provider: nil,
+      refresh_token: nil,
+      scope: nil,
+      token_type: nil
+    }
 
     assert expected == HostedAuthentication.exchange_code_for_token!(conn, code, redirect_uri)
   end
@@ -185,7 +222,7 @@ defmodule ExNylas.HostedAuthenticationTest do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
       client_id: "client-id",
-      api_key: "client-secret",
+      api_key: "client-secret"
     }
 
     code = "auth-code"
