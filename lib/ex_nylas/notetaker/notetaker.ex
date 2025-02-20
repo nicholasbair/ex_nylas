@@ -32,7 +32,7 @@ defmodule ExNylas.Notetakers do
       headers: API.base_headers()
     )
     |> API.maybe_attach_telemetry(conn)
-    |> Req.post(conn.options)
+    |> Req.delete(conn.options)
     |> API.handle_response(Notetaker)
   end
 

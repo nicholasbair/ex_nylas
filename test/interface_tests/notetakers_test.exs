@@ -75,7 +75,7 @@ defmodule ExNylas.NoteakersTest do
   end
 
   test "cancel/2 returns success on success", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
+    Bypass.expect_once(bypass, "DELETE", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(200, ~s<{"data": {"id": "notetaker-id"}}>)
@@ -86,7 +86,7 @@ defmodule ExNylas.NoteakersTest do
   end
 
   test "cancel/2 returns error on failure", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
+    Bypass.expect_once(bypass, "DELETE", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(404, ~s<{}>)
@@ -97,7 +97,7 @@ defmodule ExNylas.NoteakersTest do
   end
 
   test "cancel!/2 returns success on success", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
+    Bypass.expect_once(bypass, "DELETE", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(200, ~s<{"data": {"id": "notetaker-id"}}>)
@@ -108,7 +108,7 @@ defmodule ExNylas.NoteakersTest do
   end
 
   test "cancel!/2 raises error on failure", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
+    Bypass.expect_once(bypass, "DELETE", "/v3/grants/grant_id/notetakers/notetaker-id/cancel", fn conn ->
       conn
       |> put_resp_content_type("application/json")
       |> send_resp(404, ~s<{}>)
