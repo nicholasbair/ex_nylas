@@ -10,13 +10,13 @@ defmodule ExNylas.Notetaker.Media do
   @primary_key false
 
   typed_embedded_schema do
-    embeds_one :recording, Recording do
+    embeds_one :recording, Recording, primary_key: false do
       field(:url, :string)
       field(:size, :integer)
     end
 
-    embeds_one :transcript, Transcript do
-      field(:text, :string)
+    embeds_one :transcript, Transcript, primary_key: false do
+      field(:url, :string)
       field(:size, :integer)
     end
   end

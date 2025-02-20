@@ -168,7 +168,7 @@ defmodule ExNylas.NoteakersTest do
     Bypass.expect_once(bypass, "GET", "/v3/grants/grant_id/notetakers/notetaker-id/media", fn conn ->
       conn
       |> put_resp_content_type("application/json")
-      |> send_resp(200, ~s<{"data": {"recording": {"url": "https://example.com/recording", "size": 12345}, "transcript": {"text": "Meeting transcript", "size": 67890}}}>)
+      |> send_resp(200, ~s<{"data": {"recording": {"url": "https://example.com/recording", "size": 12345}, "transcript": {"url": "https://example.com/transcript", "size": 67890}}}>)
     end)
 
     assert {:ok, %Response{data: %ExNylas.Notetaker.Media{
@@ -177,7 +177,7 @@ defmodule ExNylas.NoteakersTest do
         size: 12345
       },
       transcript: %ExNylas.Notetaker.Media.Transcript{
-        text: "Meeting transcript",
+        url: "https://example.com/transcript",
         size: 67890
       }
     }}} = Notetakers.media(default_connection(bypass), "notetaker-id")
@@ -198,7 +198,7 @@ defmodule ExNylas.NoteakersTest do
     Bypass.expect_once(bypass, "GET", "/v3/grants/grant_id/notetakers/notetaker-id/media", fn conn ->
       conn
       |> put_resp_content_type("application/json")
-      |> send_resp(200, ~s<{"data": {"recording": {"url": "https://example.com/recording", "size": 12345}, "transcript": {"text": "Meeting transcript", "size": 67890}}}>)
+      |> send_resp(200, ~s<{"data": {"recording": {"url": "https://example.com/recording", "size": 12345}, "transcript": {"url": "https://example.com/transcript", "size": 67890}}}>)
     end)
 
     assert %Response{data: %ExNylas.Notetaker.Media{
@@ -207,7 +207,7 @@ defmodule ExNylas.NoteakersTest do
         size: 12345
       },
       transcript: %ExNylas.Notetaker.Media.Transcript{
-        text: "Meeting transcript",
+        url: "https://example.com/transcript",
         size: 67890
       }
     }} = Notetakers.media!(default_connection(bypass), "notetaker-id")

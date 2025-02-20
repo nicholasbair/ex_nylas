@@ -15,7 +15,7 @@ defmodule ExNylas.Notetakers do
     object: "notetakers",
     struct: Notetaker,
     readable_name: "notetaker",
-    include: [:list, :first, :find, :create, :update, :all]
+    include: [:list, :first, :find, :create, :update, :all, :build]
 
   @doc """
   Cancel a scheduled notetaker.

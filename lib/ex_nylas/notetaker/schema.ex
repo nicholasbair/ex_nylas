@@ -17,7 +17,7 @@ defmodule ExNylas.Notetaker do
     field(:meeting_provider, Ecto.Enum, values: [:"Google Meet"])
     field(:notetaker_state, Ecto.Enum, values: [:scheduled, :joining, :waiting_for_admission, :attending, :leaving, :done])
 
-    embeds_one :meeting_settings, MeetingSettings do
+    embeds_one :meeting_settings, MeetingSettings, primary_key: false do
       field(:video_recording, :boolean)
       field(:audio_recording, :boolean)
       field(:transcription, :boolean)

@@ -15,7 +15,9 @@ defmodule ExNylas.Notetaker.Build do
     field(:join_time, :integer)
     field(:notetaker_name, :string)
 
-    embeds_one :meeting_settings, MeetingSettings do
+    embeds_one :meeting_settings, MeetingSettings, primary_key: false do
+      @derive {Jason.Encoder, only: [:video_recording, :audio_recording, :transcription]}
+
       field(:video_recording, :boolean)
       field(:audio_recording, :boolean)
       field(:transcription, :boolean)
