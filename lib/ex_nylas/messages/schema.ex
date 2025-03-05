@@ -23,6 +23,7 @@ defmodule ExNylas.Message do
     field(:id, :string)
     field(:metadata, :map)
     field(:object, :string)
+    field(:raw_mime, :string)
     field(:schedule_id, :string)
     field(:snippet, :string)
     field(:starred, :boolean)
@@ -42,7 +43,7 @@ defmodule ExNylas.Message do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:body, :date, :folders, :grant_id, :id, :object, :snippet, :starred, :subject, :thread_id, :unread, :metadata, :schedule_id, :conversation])
+    |> cast(params, [:body, :date, :folders, :grant_id, :id, :object, :snippet, :starred, :subject, :thread_id, :unread, :metadata, :schedule_id, :conversation, :raw_mime])
     |> cast_embed(:bcc)
     |> cast_embed(:cc)
     |> cast_embed(:attachments)
