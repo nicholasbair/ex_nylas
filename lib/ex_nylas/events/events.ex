@@ -15,7 +15,43 @@ defmodule ExNylas.Events do
     include: [:list, :first, :find, :build, :all, :create, :update, :delete]
 
   @doc """
-  Send an RSVP for a given event
+  Import events.
+
+  ## Examples
+
+      iex> {:ok, result} = ExNylas.Events.import_events(conn, params)
+  """
+  @spec import_events(Conn.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def import_events(%Conn{} = conn, params \\ []) do
+    Req.new(
+      method: :get,
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/import",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(),
+      params: params
+    )
+    |> API.maybe_attach_telemetry(conn)
+    |> Req.request(conn.options)
+    |> API.handle_response(Event)
+  end
+
+  @doc """
+  Import events.
+
+  ## Examples
+
+      iex> result = ExNylas.Events.import_events!(conn, params)
+  """
+  @spec import_events!(Conn.t(), Keyword.t() | map()) :: Response.t()
+  def import_events!(%Conn{} = conn, params \\ []) do
+    case import_events(conn, params) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
+  Send an RSVP for a given event.
 
   ## Examples
 
@@ -36,7 +72,7 @@ defmodule ExNylas.Events do
   end
 
   @doc """
-  Send an RSVP for a given event
+  Send an RSVP for a given event.
 
   ## Examples
 
