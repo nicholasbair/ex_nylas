@@ -66,4 +66,46 @@ defmodule ExNylasTest.Events do
       Events.rsvp!(default_connection(bypass), event_id, status, calendar_id)
     end
   end
+
+  test "import_events/2 returns success on success", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      conn
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(200, ~s<{}>)
+    end)
+
+    assert {:ok, %Response{}} = Events.import_events(default_connection(bypass))
+  end
+
+  test "import_events/2 returns error on failure", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      conn
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(404, ~s<{}>)
+    end)
+
+    assert {:error, %Response{status: :not_found}} = Events.import_events(default_connection(bypass))
+  end
+
+  test "import_events!/2 returns success on success", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      conn
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(200, ~s<{}>)
+    end)
+
+    assert %Response{} = Events.import_events!(default_connection(bypass))
+  end
+
+  test "import_events!/2 raises error on failure", %{bypass: bypass} do
+    Bypass.expect_once(bypass, fn conn ->
+      conn
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(404, ~s<{}>)
+    end)
+
+    assert_raise ExNylasError, fn ->
+      Events.import_events!(default_connection(bypass))
+    end
+  end
 end
