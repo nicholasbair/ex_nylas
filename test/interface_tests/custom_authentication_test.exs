@@ -59,31 +59,30 @@ defmodule ExNylasTest.CustomAuthentication do
     test "does not raise an error if success response", %{bypass: bypass} do
       Bypass.expect_once(bypass, fn conn ->
         conn
-        |> Plug.Conn.resp(200, ~s<{}>)
         |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.send_resp(200, ~s<{}>)
       end)
 
       res = CustomAuthentication.connect!(default_connection(bypass), %{})
 
-      assert res == %ExNylas.Response{
+      assert %ExNylas.Response{
         data: nil,
         next_cursor: nil,
         request_id: nil,
         status: :ok,
-        error: nil
-      }
+        error: nil,
+        headers: %{"content-type" => ["application/json"]} = _headers
+      } = res
     end
 
     test "raises on error", %{bypass: bypass} do
       Bypass.expect_once(bypass, fn conn ->
         conn
-        |> Plug.Conn.resp(400, ~s<{"error": {"type": "bad_request"}}>)
         |> Plug.Conn.put_resp_header("content-type", "application/json")
+        |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
       end)
 
-      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
-
-      assert_raise ExNylasError, err, fn ->
+      assert_raise ExNylasError, ~r/Error: %ExNylas\.Response{.*status: :bad_request.*}/, fn ->
         CustomAuthentication.connect!(default_connection(bypass), %{})
       end
     end

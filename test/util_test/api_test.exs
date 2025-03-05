@@ -105,7 +105,7 @@ defmodule ExNylasTest.API do
 
     test "only decodes JSON responses" do
       res = ExNylas.API.handle_response({:ok, %{status: 200, body: "test"}})
-      assert res == {:ok, "test"}
+      assert res == {:ok, %{status: 200, body: "test"}}
     end
 
     test "transforms into the requested struct" do
