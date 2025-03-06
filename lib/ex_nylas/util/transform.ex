@@ -33,20 +33,20 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
-  @spec transform(map(), integer(), atom(), true, true) :: Response.t()
-  @spec transform(map(), integer(), atom(), false, true) :: [struct()] | struct()
-  @spec transform(map(), integer(), atom(), boolean(), false) :: any()
-  def transform(body, status, model, true = _use_common, true = _transform) do
+  @spec transform(map() | binary(), integer(), map(), atom(), true, true) :: Response.t()
+  @spec transform(map() | binary(), integer(), map(), atom(), false, true) :: [struct()] | struct()
+  @spec transform(map() | binary(), integer(), map(), atom(), boolean(), false) :: any()
+  def transform(body, status, headers, model, true = _use_common, true = _transform) do
     %Response{}
-    |> Response.changeset(preprocess_body(model, body, status))
+    |> Response.changeset(preprocess_body(model, body, status, headers))
     |> apply_changes()
   end
 
-  def transform(body, _status, model, false = _use_common, true = _transform) do
+  def transform(body, _status, _headers, model, false = _use_common, true = _transform) do
     preprocess_data(model, body)
   end
 
-  def transform(body, _status, _model, _use_common, false = _transform), do: body
+  def transform(body, _status, _headers, _model, _use_common, false = _transform), do: body
 
   @spec transfrom_stream({:data, binary()}, {map(), map()}, (-> any())) :: {:cont, {map(), map()}}
   def transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
@@ -65,22 +65,23 @@ defmodule ExNylas.Transform do
     {:cont, {req, resp}}
   end
 
-  defp preprocess_body(model, body, status) when is_map(body) do
+  defp preprocess_body(model, body, status, headers) when is_map(body) do
     data = Map.get(body, "data")
 
     body
     |> Map.put("data", preprocess_data(model, data))
     |> Map.put("status", status_to_atom(status))
+    |> Map.put("headers", headers)
   end
 
   # SmartCompose stream response can be an event stream if succussful or a JSON object in case of an error.
-  defp preprocess_body(model, body, status) when is_bitstring(body) do
+  defp preprocess_body(model, body, status, headers) when is_bitstring(body) do
     body
     |> Jason.decode!()
-    |> then(&preprocess_body(model, &1, status))
+    |> then(&preprocess_body(model, &1, status, headers))
   end
 
-  defp preprocess_body(_model, body, _status), do: body
+  defp preprocess_body(_model, body, _status, _headers), do: body
 
   @spec preprocess_data(nil | atom(), map()) :: [Ecto.Schema.t()] | [map()] | Ecto.Schema.t() | map()
   def preprocess_data(nil, data), do: data
