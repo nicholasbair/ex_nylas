@@ -62,21 +62,30 @@ defmodule ExNylas.Grants do
   """
   @spec refresh(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def refresh(%Conn{} = conn, refresh_token) do
-    body = %{
-      client_id: conn.client_id,
-      client_secret: conn.api_key,
-      grant_type: "refresh_token",
-      refresh_token: refresh_token
-    }
+    # Validate refresh token
+    if is_nil(refresh_token) or refresh_token == "" do
+      {:error, %Response{
+        status: :bad_request, 
+        data: nil, 
+        error: %ExNylas.Error{message: "refresh_token cannot be nil or empty"}
+      }}
+    else
+      body = %{
+        client_id: conn.client_id,
+        client_secret: conn.api_key,
+        grant_type: "refresh_token",
+        refresh_token: refresh_token
+      }
 
-    Req.new(
-      url: "#{conn.api_server}/v3/connect/token",
-      headers: API.base_headers(),
-      json: body
-    )
-    |> API.maybe_attach_telemetry(conn)
-    |> Req.post(conn.options)
-    |> conditional_transform()
+      Req.new(
+        url: "#{conn.api_server}/v3/connect/token",
+        headers: API.base_headers(),
+        json: body
+      )
+      |> API.maybe_attach_telemetry(conn)
+      |> Req.post(conn.options)
+      |> conditional_transform()
+    end
   end
 
   @doc """
@@ -99,10 +108,13 @@ defmodule ExNylas.Grants do
   
   # The response from the API differs based on whether the request was successful or not
   # Pass the correct schema name to transform based on the response status
+  # For successful responses (status 200), we use the ExNylas.HostedAuthentication.Grant schema
+  # which matches the structure of the token endpoint response
   defp conditional_transform({:ok, %{status: 200}} = res) do
     API.handle_response(res, ExNylas.HostedAuthentication.Grant, false)
   end
 
+  # For error responses, we use the default error handling
   defp conditional_transform(res) do
     API.handle_response(res)
   end

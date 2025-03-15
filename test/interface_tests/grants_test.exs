@@ -7,9 +7,6 @@ defmodule ExNylasTest.Grants do
     Response,
     Connection
   }
-  
-  # ExNylasError is defined at the top level
-  alias ExNylasError
 
   setup do
     bypass = Bypass.open()
@@ -81,31 +78,38 @@ defmodule ExNylasTest.Grants do
       options: []
     }
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylasError, ~r/Error: %ExNylas\.Response{.*status: :not_found.*}/, fn ->
       Grants.me!(conn)
     end
   end
 
-  test "refresh/2 returns new token on success", %{bypass: bypass} do
+  # Helper function for refresh token tests setup
+  defp setup_refresh_test(bypass, status, response) do
     Bypass.expect_once(bypass, "POST", "/v3/connect/token", fn conn ->
       conn
       |> Plug.Conn.put_resp_header("content-type", "application/json")
-      |> Plug.Conn.send_resp(200, ~s<{
-        "access_token": "new-access-token",
-        "refresh_token": "new-refresh-token",
-        "scope": "https://www.googleapis.com/auth/gmail.readonly profile",
-        "token_type": "Bearer",
-        "id_token": "id-token",
-        "grant_id": "grant-id"
-      }>)
+      |> Plug.Conn.send_resp(status, response)
     end)
 
-    conn = %Connection{
+    %Connection{
       api_server: endpoint_url(bypass.port),
       client_id: "client-id",
       api_key: "api-key",
       options: []
     }
+  end
+
+  test "refresh/2 returns new token on success", %{bypass: bypass} do
+    success_response = ~s<{
+      "access_token": "new-access-token",
+      "refresh_token": "new-refresh-token",
+      "scope": "https://www.googleapis.com/auth/gmail.readonly profile",
+      "token_type": "Bearer",
+      "id_token": "id-token",
+      "grant_id": "grant-id"
+    }>
+    
+    conn = setup_refresh_test(bypass, 200, success_response)
 
     assert {:ok, grant} = Grants.refresh(conn, "refresh-token")
     assert grant.access_token == "new-access-token"
@@ -114,42 +118,23 @@ defmodule ExNylasTest.Grants do
   end
 
   test "refresh/2 returns error on failure", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/connect/token", fn conn ->
-      conn
-      |> Plug.Conn.put_resp_header("content-type", "application/json")
-      |> Plug.Conn.send_resp(400, ~s<{"error": "invalid_grant", "error_description": "Refresh token invalid"}>)
-    end)
-
-    conn = %Connection{
-      api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
-      api_key: "api-key",
-      options: []
-    }
+    error_response = ~s<{"error": "invalid_grant", "error_description": "Refresh token invalid"}>
+    conn = setup_refresh_test(bypass, 400, error_response)
 
     assert {:error, %Response{status: :bad_request}} = Grants.refresh(conn, "invalid-refresh-token")
   end
 
   test "refresh!/2 returns new token on success", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/connect/token", fn conn ->
-      conn
-      |> Plug.Conn.put_resp_header("content-type", "application/json")
-      |> Plug.Conn.send_resp(200, ~s<{
-        "access_token": "new-access-token",
-        "refresh_token": "new-refresh-token",
-        "scope": "https://www.googleapis.com/auth/gmail.readonly profile",
-        "token_type": "Bearer",
-        "id_token": "id-token",
-        "grant_id": "grant-id"
-      }>)
-    end)
-
-    conn = %Connection{
-      api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
-      api_key: "api-key",
-      options: []
-    }
+    success_response = ~s<{
+      "access_token": "new-access-token",
+      "refresh_token": "new-refresh-token",
+      "scope": "https://www.googleapis.com/auth/gmail.readonly profile",
+      "token_type": "Bearer",
+      "id_token": "id-token",
+      "grant_id": "grant-id"
+    }>
+    
+    conn = setup_refresh_test(bypass, 200, success_response)
 
     assert grant = Grants.refresh!(conn, "refresh-token")
     assert grant.access_token == "new-access-token"
@@ -158,20 +143,10 @@ defmodule ExNylasTest.Grants do
   end
 
   test "refresh!/2 raises error on failure", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/connect/token", fn conn ->
-      conn
-      |> Plug.Conn.put_resp_header("content-type", "application/json")
-      |> Plug.Conn.send_resp(400, ~s<{"error": "invalid_grant", "error_description": "Refresh token invalid"}>)
-    end)
+    error_response = ~s<{"error": "invalid_grant", "error_description": "Refresh token invalid"}>
+    conn = setup_refresh_test(bypass, 400, error_response)
 
-    conn = %Connection{
-      api_server: endpoint_url(bypass.port),
-      client_id: "client-id",
-      api_key: "api-key",
-      options: []
-    }
-
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylasError, ~r/Error: %ExNylas\.Response{.*status: :bad_request.*}/, fn ->
       Grants.refresh!(conn, "invalid-refresh-token")
     end
   end
