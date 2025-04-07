@@ -5,6 +5,7 @@ defmodule ExNylas.Calendar do
 
   use TypedEctoSchema
   import Ecto.Changeset
+  alias ExNylas.Notetaker
 
   @primary_key false
 
@@ -22,6 +23,8 @@ defmodule ExNylas.Calendar do
     field(:object, :string)
     field(:read_only, :boolean)
     field(:timezone, :string)
+
+    embeds_one :notetaker, Notetaker
   end
 
   @doc false

@@ -17,6 +17,7 @@ defmodule ExNylas.Response do
   typed_embedded_schema do
     field(:data, MapOrList)
     field(:next_cursor, :string)
+    field(:prev_cursor, :string)
     field(:request_id, :string)
     field(:status, Atom)
 
@@ -26,7 +27,7 @@ defmodule ExNylas.Response do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:request_id, :status, :data, :next_cursor])
+    |> cast(params, [:request_id, :status, :data, :next_cursor, :prev_cursor])
     |> cast_embed(:error)
   end
 end
