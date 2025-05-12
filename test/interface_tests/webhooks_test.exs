@@ -40,7 +40,7 @@ defmodule ExNylasTest.Webhooks do
         |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
       end)
 
-      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, prev_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
 
       assert_raise ExNylasError, err, fn ->
         Webhooks.update!(default_connection(bypass), "id", %{})
@@ -59,6 +59,7 @@ defmodule ExNylasTest.Webhooks do
       assert result == %ExNylas.Response{
         data: nil,
         next_cursor: nil,
+        prev_cursor: nil,
         request_id: nil,
         status: :ok,
         error: nil
@@ -98,7 +99,7 @@ defmodule ExNylasTest.Webhooks do
         |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
       end)
 
-      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, prev_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
 
       assert_raise ExNylasError, err, fn ->
         Webhooks.rotate_secret!(default_connection(bypass), "id")
@@ -160,7 +161,7 @@ defmodule ExNylasTest.Webhooks do
         |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
       end)
 
-      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, prev_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
 
       assert_raise ExNylasError, err, fn ->
         Webhooks.mock_payload!(default_connection(bypass), "foo.bar")
@@ -208,7 +209,7 @@ defmodule ExNylasTest.Webhooks do
         |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
       end)
 
-      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, prev_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
 
       assert_raise ExNylasError, err, fn ->
         Webhooks.send_test_event!(default_connection(bypass), "foo.bar", "https://example.com/webhooks")
@@ -227,6 +228,7 @@ defmodule ExNylasTest.Webhooks do
       assert result == %ExNylas.Response{
         data: nil,
         next_cursor: nil,
+        prev_cursor: nil,
         request_id: nil,
         status: :ok,
         error: nil

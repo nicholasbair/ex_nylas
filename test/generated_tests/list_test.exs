@@ -16,6 +16,7 @@ defmodule ExNylasTest.List do
     Grants,
     MessageSchedules,
     Messages,
+    Notetakers,
     RoomResources,
     Scheduling.Configurations,
     Threads,

@@ -29,6 +29,8 @@ defmodule ExNylas.Calendar do
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    cast(struct, params, __MODULE__.__schema__(:fields))
+    struct
+    |> cast(params, [:description, :grant_id, :hex_color, :hex_foreground_color, :id, :is_owned_by_user, :is_primary, :location, :metadata, :name, :object, :read_only, :timezone])
+    |> cast_embed(:notetaker)
   end
 end

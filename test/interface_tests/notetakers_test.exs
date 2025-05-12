@@ -1,4 +1,4 @@
-defmodule ExNylas.NoteakersTest do
+defmodule ExNylas.NotetakersTest do
   use ExUnit.Case, async: true
   alias ExNylas.{Notetakers, Response, Notetaker}
   import Plug.Conn

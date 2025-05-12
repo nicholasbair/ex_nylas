@@ -15,6 +15,7 @@ defmodule ExNylasTest.Find do
     Grants,
     MessageSchedules,
     Messages,
+    Notetakers,
     Scheduling.Configurations,
     Threads,
     Webhooks
