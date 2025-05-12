@@ -17,7 +17,7 @@ defmodule ExNylas.Notetaker do
     field(:join_time, :integer)
     field(:meeting_link, :string)
     field(:meeting_provider, Ecto.Enum, values: [:"Google Meet", :"Zoom Meeting", :"Microsoft Teams"])
-    field(:status, Ecto.Enum, values: [:scheduled, :connecting, :waiting_for_entry, :failed_entry, :attending, :media_processing, :media_available, :media_error, :media_deleted])
+    field(:state, Ecto.Enum, values: [:scheduled, :connecting, :waiting_for_entry, :failed_entry, :attending, :media_processing, :media_available, :media_error, :media_deleted])
 
     embeds_one :meeting_settings, MeetingSettings, primary_key: false do
       field(:video_recording, :boolean)
@@ -38,7 +38,7 @@ defmodule ExNylas.Notetaker do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :created_at, :grant_id, :name, :join_time, :meeting_link, :meeting_provider, :status])
+    |> cast(params, [:id, :created_at, :grant_id, :name, :join_time, :meeting_link, :meeting_provider, :state])
     |> cast_embed(:meeting_settings, with: &Util.embedded_changeset/2)
     |> cast_embed(:rules, with: &cast_rules/2)
   end

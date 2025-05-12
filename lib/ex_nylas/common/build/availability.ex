@@ -1,13 +1,11 @@
-defmodule ExNylas.Build.Availability do
+defmodule ExNylas.Availability.Build do
   @moduledoc """
   Helper module for building an availability request.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Build.{
-    AvailabilityRules,
-  }
+  alias ExNylas.AvailabilityRules.Build, as: AvailabilityRulesBuild
 
   @primary_key false
   @derive {Jason.Encoder, only: [:duration_minutes, :interval_minutes, :round_to, :availability_rules]}
@@ -17,7 +15,7 @@ defmodule ExNylas.Build.Availability do
     field(:interval_minutes, :integer) :: non_neg_integer()
     field(:round_to, :integer) :: non_neg_integer()
 
-    embeds_one :availability_rules, AvailabilityRules
+    embeds_one :availability_rules, AvailabilityRulesBuild
   end
 
   def changeset(struct, params \\ %{}) do

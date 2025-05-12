@@ -7,7 +7,7 @@ defmodule ExNylas.Notetaker.Build do
   import Ecto.Changeset
   alias ExNylas.Schema.Util
 
-  @derive {Jason.Encoder, only: [:meeting_link, :join_time, :name, :meeting_settings]}
+  @derive {Jason.Encoder, only: [:meeting_link, :join_time, :name, :meeting_settings, :rules]}
   @primary_key false
 
   typed_embedded_schema do

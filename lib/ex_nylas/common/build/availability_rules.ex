@@ -1,14 +1,12 @@
-defmodule ExNylas.Build.AvailabilityRules do
+defmodule ExNylas.AvailabilityRules.Build do
   @moduledoc """
   Helper module for building an availability rules.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Build.{
-    Buffer,
-    OpenHours
-  }
+  alias ExNylas.Buffer.Build, as: BufferBuild
+  alias ExNylas.OpenHours.Build, as: OpenHoursBuild
 
   @primary_key false
 
@@ -18,8 +16,8 @@ defmodule ExNylas.Build.AvailabilityRules do
     field(:availability_method, Ecto.Enum, values: ~w(collective max-fairness max-availability)a)
     field(:round_robin_group_id, :string)
 
-    embeds_one :buffer, Buffer
-    embeds_many :default_open_hours, OpenHours
+    embeds_one :buffer, BufferBuild
+    embeds_many :default_open_hours, OpenHoursBuild
   end
 
   def changeset(struct, params \\ %{}) do

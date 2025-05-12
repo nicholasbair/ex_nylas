@@ -5,24 +5,22 @@ defmodule ExNylas.Scheduling.Configuration.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Build.{
-    Availability,
-    EventBooking,
-    Scheduler,
-    SchedulingParticipant
-  }
+  alias ExNylas.Availability.Build, as: AvailabilityBuild
+  alias ExNylas.EventBooking.Build, as: EventBookingBuild
+  alias ExNylas.Scheduler.Build, as: SchedulerBuild
+  alias ExNylas.SchedulingParticipant.Build, as: SchedulingParticipantBuild
 
-  @derive {Jason.Encoder, only: [:requires_session_auth, :slug, :participants, :availability, :event_booking]}
+  @derive {Jason.Encoder, only: [:requires_session_auth, :slug, :participants, :availability, :event_booking, :scheduler]}
   @primary_key false
 
   typed_embedded_schema do
     field(:requires_session_auth, :boolean)
     field(:slug, :string)
 
-    embeds_one :availability, Availability
-    embeds_one :event_booking, EventBooking
-    embeds_many :participants, SchedulingParticipant
-    embeds_one :scheduler, Scheduler
+    embeds_one :availability, AvailabilityBuild
+    embeds_one :event_booking, EventBookingBuild
+    embeds_many :participants, SchedulingParticipantBuild
+    embeds_one :scheduler, SchedulerBuild
   end
 
   @doc false

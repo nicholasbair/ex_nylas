@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.TrackingOptions do
+defmodule ExNylas.TrackingOptions.Build do
   @moduledoc """
   A struct representing tracking options for a message/draft.
   """

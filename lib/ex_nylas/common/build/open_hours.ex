@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.OpenHours do
+defmodule ExNylas.OpenHours.Build do
   @moduledoc """
   Helper module for building open hours.
   """

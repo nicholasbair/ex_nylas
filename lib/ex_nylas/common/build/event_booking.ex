@@ -1,14 +1,12 @@
-defmodule ExNylas.Build.EventBooking do
+defmodule ExNylas.EventBooking.Build do
   @moduledoc """
   Helper module for validating an event booking before sending it.
   """
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Build.{
-    EventReminder,
-    EventConferencing
-  }
+  alias ExNylas.EventReminder.Build, as: EventReminderBuild
+  alias ExNylas.EventConferencing.Build, as: EventConferencingBuild
 
   @primary_key false
   @derive {Jason.Encoder, only: [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails, :conferencing, :reminders]}
@@ -23,8 +21,8 @@ defmodule ExNylas.Build.EventBooking do
     field(:timezone, :string)
     field(:title, :string, null: false)
 
-    embeds_one :conferencing, EventConferencing
-    embeds_one :reminders, EventReminder
+    embeds_one :conferencing, EventConferencingBuild
+    embeds_one :reminders, EventReminderBuild
   end
 
   def changeset(struct, params \\ %{}) do

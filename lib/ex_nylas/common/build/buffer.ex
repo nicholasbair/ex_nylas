@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.Buffer do
+defmodule ExNylas.Buffer.Build do
   @moduledoc """
   A struct for buffer.
   """
