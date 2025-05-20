@@ -19,6 +19,7 @@ defmodule ExNylasTest.List do
     Notetakers,
     RoomResources,
     Scheduling.Configurations,
+    StandaloneNotetakers,
     Threads,
     Webhooks
   ]

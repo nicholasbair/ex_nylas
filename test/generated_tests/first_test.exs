@@ -16,6 +16,7 @@ defmodule ExNylasTest.First do
     Notetakers,
     RoomResources,
     Scheduling.Configurations,
+    StandaloneNotetakers,
     Threads,
     Webhooks
   ]

@@ -14,7 +14,8 @@ defmodule ExNylasTest.Update do
     Messages,
     Notetakers,
     Scheduling.Bookings,
-    Scheduling.Configurations
+    Scheduling.Configurations,
+    StandaloneNotetakers
   ]
 
   setup do
