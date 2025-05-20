@@ -11,7 +11,7 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
 - This is my first attempt at metaprogramming
 
 ## Nylas API v2 vs v3
-The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3.
+The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
 ## TODO / Known Issues
 1. Limited test coverage
@@ -21,7 +21,7 @@ The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of th
 ```elixir
 def deps do
   [
-    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.7.4"}
+    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.8.0"}
   ]
 end
 ```
