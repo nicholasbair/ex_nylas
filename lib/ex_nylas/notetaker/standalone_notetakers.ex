@@ -23,7 +23,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   ## Examples
 
-      iex> {:ok, response} = ExNylas.Notetakers.cancel(conn, id)
+      iex> {:ok, response} = ExNylas.StandaloneNotetakers.cancel(conn, id)
   """
   @spec cancel(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def cancel(%Conn{} = conn, id) do
@@ -42,7 +42,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   ## Examples
 
-      iex> response = ExNylas.Notetakers.cancel!(conn, id)
+      iex> response = ExNylas.StandaloneNotetakers.cancel!(conn, id)
   """
   @spec cancel!(Conn.t(), String.t()) :: Response.t()
   def cancel!(%Conn{} = conn, id) do
@@ -57,7 +57,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   ## Examples
 
-      iex> {:ok, response} = ExNylas.Notetakers.leave(conn, id)
+      iex> {:ok, response} = ExNylas.StandaloneNotetakers.leave(conn, id)
   """
   @spec leave(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def leave(%Conn{} = conn, id) do
@@ -76,7 +76,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   ## Examples
 
-      iex> response = ExNylas.Notetakers.leave!(conn, id)
+      iex> response = ExNylas.StandaloneNotetakers.leave!(conn, id)
   """
   @spec leave!(Conn.t(), String.t()) :: Response.t()
   def leave!(%Conn{} = conn, id) do
@@ -91,7 +91,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   ## Examples
 
-      iex> {:ok, response} = ExNylas.Notetakers.media(conn, id)
+      iex> {:ok, response} = ExNylas.StandaloneNotetakers.media(conn, id)
   """
   @spec media(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def media(%Conn{} = conn, id) do
@@ -110,7 +110,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   ## Examples
 
-      iex> response = ExNylas.Notetakers.media!(conn, id)
+      iex> response = ExNylas.StandaloneNotetakers.media!(conn, id)
   """
   @spec media!(Conn.t(), String.t()) :: Response.t()
   def media!(%Conn{} = conn, id) do
