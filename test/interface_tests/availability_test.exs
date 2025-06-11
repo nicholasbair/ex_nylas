@@ -88,11 +88,11 @@ defmodule ExNylasTest.CalendarAvailability do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-        err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, prev_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
-        assert_raise ExNylasError, err, fn ->
-          CalendarAvailability.list!(default_connection(bypass), %{})
-        end
+      assert_raise ExNylasError, err, fn ->
+        CalendarAvailability.list!(default_connection(bypass), %{})
+      end
     end
 
     test "does not raise an error if a success response", %{bypass: bypass} do

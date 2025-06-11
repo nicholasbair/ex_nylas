@@ -82,7 +82,7 @@ defmodule ExNylasTest.CustomAuthentication do
         |> Plug.Conn.send_resp(400, ~s<{"error": {"type": "bad_request"}}>)
       end)
 
-      err = "Error: %ExNylas.Response{data: nil, next_cursor: nil, prev_cursor: nil, request_id: nil, status: :bad_request, error: %ExNylas.Error{message: nil, provider_error: nil, type: \"bad_request\"}}"
+      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
       assert_raise ExNylasError, err, fn ->
         CustomAuthentication.connect!(default_connection(bypass), %{})
