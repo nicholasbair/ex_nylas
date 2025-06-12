@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.Scheduler do
+defmodule ExNylas.Scheduler.Build do
   @moduledoc """
   Helper module for validating a scheduler configuration before sending it.
   """

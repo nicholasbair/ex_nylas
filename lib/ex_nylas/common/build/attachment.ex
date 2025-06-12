@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.Attachment do
+defmodule ExNylas.Attachment.Build do
   @moduledoc """
   Helper module for validating an attachment in a draft/message before submitting to the Nylas API.
   """

@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.SchedulingParticipant do
+defmodule ExNylas.SchedulingParticipant.Build do
   @moduledoc """
   Helper for validating a scheduling participant before sending it.
   """

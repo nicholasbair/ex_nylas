@@ -5,14 +5,12 @@ defmodule ExNylas.Message.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.{
-    Build.Attachment,
-    EmailParticipant,
-    TrackingOptions,
-    MessageHeader
-  }
+  alias ExNylas.Attachment.Build, as: AttachmentBuild
+  alias ExNylas.EmailParticipant.Build, as: EmailParticipantBuild
+  alias ExNylas.MessageHeader.Build, as: MessageHeaderBuild
+  alias ExNylas.TrackingOptions.Build, as: TrackingOptionsBuild
 
-  @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :from, :reply_to, :to, :tracking_options]}
+  @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :custom_headers, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 
   typed_embedded_schema do
@@ -23,14 +21,14 @@ defmodule ExNylas.Message.Build do
     field(:send_at, :integer) :: non_neg_integer() | nil
     field(:use_draft, :boolean)
 
-    embeds_many :attachments, Attachment
-    embeds_many :bcc, EmailParticipant
-    embeds_many :cc, EmailParticipant
-    embeds_many :custom_headers, MessageHeader
-    embeds_many :from, EmailParticipant
-    embeds_many :reply_to, EmailParticipant
-    embeds_many :to, EmailParticipant
-    embeds_one :tracking_options, TrackingOptions
+    embeds_many :attachments, AttachmentBuild
+    embeds_many :bcc, EmailParticipantBuild
+    embeds_many :cc, EmailParticipantBuild
+    embeds_many :custom_headers, MessageHeaderBuild
+    embeds_many :from, EmailParticipantBuild
+    embeds_many :reply_to, EmailParticipantBuild
+    embeds_many :to, EmailParticipantBuild
+    embeds_one :tracking_options, TrackingOptionsBuild
   end
 
   @doc false

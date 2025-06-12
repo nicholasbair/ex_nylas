@@ -10,6 +10,8 @@ defmodule ExNylasTest.Create do
     Contacts,
     Events,
     Folders,
+    Notetakers,
+    StandaloneNotetakers,
     Scheduling.Bookings,
     Scheduling.Configurations,
     Webhooks

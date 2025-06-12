@@ -21,6 +21,8 @@ defmodule ExNylas.WebhookNotificationData do
     WebhookNotification.MessageBounceDetected,
     WebhookNotification.MessageOpened,
     WebhookNotification.MessageLinkClicked,
+    WebhookNotification.Notetaker,
+    WebhookNotification.NotetakerMedia,
     WebhookNotification.ThreadReplied,
     WebhookNotification.Tracking
   }
@@ -71,6 +73,12 @@ defmodule ExNylas.WebhookNotificationData do
         "message.link_clicked": MessageLinkClicked,
         "message.intelligence.order": Order,
         "message.intelligence.tracking": Tracking,
+
+        "notetaker.created": Notetaker,
+        "notetaker.updated": Notetaker,
+        "notetaker.meeting_state": Notetaker,
+        "notetaker.deleted": Notetaker,
+        "notetaker.media": NotetakerMedia,
 
         "thread.replied": ThreadReplied,
       ],

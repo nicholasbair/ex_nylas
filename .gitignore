@@ -31,3 +31,4 @@ ex_nylas-*.tar
 .env
 
 .idea
+.lexical

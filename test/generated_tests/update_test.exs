@@ -12,8 +12,10 @@ defmodule ExNylasTest.Update do
     Events,
     Folders,
     Messages,
+    Notetakers,
     Scheduling.Bookings,
-    Scheduling.Configurations
+    Scheduling.Configurations,
+    StandaloneNotetakers
   ]
 
   setup do

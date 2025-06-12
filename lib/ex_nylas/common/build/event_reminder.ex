@@ -1,4 +1,4 @@
-defmodule ExNylas.Build.EventReminder do
+defmodule ExNylas.EventReminder.Build do
   @moduledoc """
   Helper module for validating an event reminder before creating/updating it.
   """

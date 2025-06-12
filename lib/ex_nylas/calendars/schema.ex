@@ -5,6 +5,7 @@ defmodule ExNylas.Calendar do
 
   use TypedEctoSchema
   import Ecto.Changeset
+  alias ExNylas.Notetaker
 
   @primary_key false
 
@@ -22,10 +23,14 @@ defmodule ExNylas.Calendar do
     field(:object, :string)
     field(:read_only, :boolean)
     field(:timezone, :string)
+
+    embeds_one :notetaker, Notetaker
   end
 
   @doc false
   def changeset(struct, params \\ %{}) do
-    cast(struct, params, __MODULE__.__schema__(:fields))
+    struct
+    |> cast(params, [:description, :grant_id, :hex_color, :hex_foreground_color, :id, :is_owned_by_user, :is_primary, :location, :metadata, :name, :object, :read_only, :timezone])
+    |> cast_embed(:notetaker)
   end
 end

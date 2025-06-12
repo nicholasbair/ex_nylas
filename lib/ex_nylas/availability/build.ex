@@ -5,7 +5,7 @@ defmodule ExNylas.CalendarAvailability.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Build.AvailabilityRules
+  alias ExNylas.AvailabilityRules.Build, as: AvailabilityRulesBuild
 
   @derive {Jason.Encoder, only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to, :availability_rules]}
   @primary_key false
@@ -17,7 +17,7 @@ defmodule ExNylas.CalendarAvailability.Build do
     field(:start_time, :integer) :: non_neg_integer()
     field(:round_to, :integer) :: non_neg_integer()
 
-    embeds_many :availability_rules, AvailabilityRules
+    embeds_many :availability_rules, AvailabilityRulesBuild
 
     embeds_many :participants, Participant, primary_key: false do
       @derive {Jason.Encoder, only: [:email, :calendar_ids, :open_hours]}

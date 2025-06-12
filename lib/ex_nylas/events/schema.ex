@@ -8,6 +8,7 @@ defmodule ExNylas.Event do
   import PolymorphicEmbed
 
   alias ExNylas.Schema.Util
+  alias ExNylas.Notetaker
   alias ExNylas.Event.{
     Conferencing,
     Conferencing.Details,
@@ -35,6 +36,7 @@ defmodule ExNylas.Event do
           location: String.t() | nil,
           master_event_id: String.t() | nil,
           metadata: %{optional(String.t()) => String.t()},
+          notetaker: Notetaker.t() | nil,
           object: String.t() | nil,
           occurrences: [String.t()] | nil,
           cancelled_occurrences: [String.t()] | nil,
@@ -121,6 +123,8 @@ defmodule ExNylas.Event do
       end
     end
 
+    embeds_one :notetaker, Notetaker
+
     embeds_one :organizer, Organizer, primary_key: false do
       field(:email, :string)
       field(:name, :string)
@@ -159,6 +163,7 @@ defmodule ExNylas.Event do
     |> cast_embed(:conferencing, with: &conferencing_changeset/2)
     |> cast_embed(:reminders, with: &Util.embedded_changeset/2)
     |> cast_embed(:organizer, with: &Util.embedded_changeset/2)
+    |> cast_embed(:notetaker, with: &Util.embedded_changeset/2)
   end
 
   defp conferencing_changeset(schema, params) do
