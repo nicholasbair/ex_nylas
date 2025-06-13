@@ -1,6 +1,8 @@
 defmodule ExNylas.Contacts do
   @moduledoc """
   A module for interacting with the Nylas Contacts API.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/contacts)
   """
 
   use ExNylas,

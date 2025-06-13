@@ -1,6 +1,8 @@
 defmodule ExNylas.ApplicationRedirects do
   @moduledoc """
   Interface for Nylas application redirects.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/applications)
   """
 
   use ExNylas,

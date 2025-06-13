@@ -1,6 +1,8 @@
 defmodule ExNylas.Webhook.Build do
   @moduledoc """
   Helper module for validating a webhook before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/webhook-notifications)
   """
 
   use TypedEctoSchema

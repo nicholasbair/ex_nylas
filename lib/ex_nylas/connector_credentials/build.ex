@@ -1,6 +1,8 @@
 defmodule ExNylas.ConnectorCredential.Build do
   @moduledoc """
   Helper module for validating a connector credential before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connector-credentials)
   """
 
   use TypedEctoSchema

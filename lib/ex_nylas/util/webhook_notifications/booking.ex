@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.Booking do
   @moduledoc """
-  A struct representing a grant webhook notification.
+  A struct representing a booking notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#scheduler-notifications)
   """
 
   use TypedEctoSchema

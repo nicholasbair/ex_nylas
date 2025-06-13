@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.Grant do
   @moduledoc """
   A struct representing a grant webhook notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#grant-notifications)
   """
 
   use TypedEctoSchema

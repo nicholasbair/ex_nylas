@@ -1,6 +1,8 @@
 defmodule ExNylas.Event do
   @moduledoc """
   A struct representing a event.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/events)
   """
 
   use Ecto.Schema

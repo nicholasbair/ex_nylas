@@ -1,6 +1,8 @@
 defmodule ExNylas.Folder do
   @moduledoc """
   A struct representing a folder.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/folders)
   """
 
   use TypedEctoSchema

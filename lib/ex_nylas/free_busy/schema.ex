@@ -1,6 +1,8 @@
 defmodule ExNylas.FreeBusy do
   @moduledoc """
   Structs for Nylas calendar free/busy.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
   use TypedEctoSchema

@@ -1,6 +1,8 @@
 defmodule ExNylas.CalendarFreeBusy.Build do
   @moduledoc """
   Helper module for validating the free/busy request.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
   use TypedEctoSchema

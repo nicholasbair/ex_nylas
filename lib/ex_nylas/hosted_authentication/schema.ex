@@ -1,6 +1,8 @@
 defmodule ExNylas.HostedAuthentication.Grant do
   @moduledoc """
   Structs for Nylas hosted authentication.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
   use TypedEctoSchema

@@ -1,6 +1,8 @@
 defmodule ExNylas.CalendarAvailability.Build do
   @moduledoc """
   Helper module for validating an availability request.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
   use TypedEctoSchema

@@ -1,6 +1,8 @@
 defmodule ExNylas.HostedAuthentication.Error do
   @moduledoc """
   A struct representing an error response from Nylas during the hosted auth code exchange.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
   use TypedEctoSchema

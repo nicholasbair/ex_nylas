@@ -1,6 +1,8 @@
 defmodule ExNylas.OrderConsolidation.Shipment do
   @moduledoc """
   Schema for Nylas order consolidation shipment.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/extractai)
   """
 
   use TypedEctoSchema

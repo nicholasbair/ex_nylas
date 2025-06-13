@@ -1,6 +1,8 @@
 defmodule ExNylas.HostedAuthentication.Options.Build do
   @moduledoc """
   Helper module to validate options for hosted authentication.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
   use TypedEctoSchema

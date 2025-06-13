@@ -1,6 +1,8 @@
 defmodule ExNylas.CalendarFreeBusy do
   @moduledoc """
   Interface for Nylas calendar free/busy.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
   alias ExNylas.API

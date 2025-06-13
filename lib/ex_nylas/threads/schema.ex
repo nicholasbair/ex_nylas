@@ -1,6 +1,8 @@
 defmodule ExNylas.Thread do
   @moduledoc """
   A struct representing a thread.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/threads)
   """
 
   alias ExNylas.{

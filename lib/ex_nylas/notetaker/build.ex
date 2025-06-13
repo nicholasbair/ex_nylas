@@ -1,6 +1,8 @@
 defmodule ExNylas.Notetaker.Build do
   @moduledoc """
   Helper module for validating a notetaker before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/notetaker)
   """
 
   use TypedEctoSchema

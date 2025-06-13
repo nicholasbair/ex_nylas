@@ -1,6 +1,8 @@
 defmodule ExNylas.Connector.Build do
   @moduledoc """
   Helper module for validating a contact before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connectors-integrations)
   """
 
   use TypedEctoSchema

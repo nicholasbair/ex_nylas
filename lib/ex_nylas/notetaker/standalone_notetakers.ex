@@ -1,6 +1,8 @@
 defmodule ExNylas.StandaloneNotetakers do
   @moduledoc """
   Interface for Standalone Notetakers (Notetakers not associated with a grant).
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/standalone-notetaker)
   """
 
   alias ExNylas.Connection, as: Conn

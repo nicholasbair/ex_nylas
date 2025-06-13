@@ -1,6 +1,8 @@
 defmodule ExNylas.Contact do
   @moduledoc """
   A struct representing a contact.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/contacts)
   """
 
   use TypedEctoSchema

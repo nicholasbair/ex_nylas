@@ -1,6 +1,8 @@
 defmodule ExNylas.Webhook do
   @moduledoc """
   A struct representing a webhook.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/webhook-notifications)
   """
 
   use TypedEctoSchema

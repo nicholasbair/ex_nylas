@@ -1,6 +1,8 @@
 defmodule ExNylas.SmartCompose do
   @moduledoc """
   Interface for Nylas smart compose.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/smart-compose)
   """
 
   alias ExNylas.API

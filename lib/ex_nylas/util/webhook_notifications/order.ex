@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.Order do
   @moduledoc """
   Schema for order notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#extractai-notifications)
   """
 
   use TypedEctoSchema

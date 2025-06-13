@@ -1,6 +1,8 @@
 defmodule ExNylas.ConnectorCredentials do
   @moduledoc """
   Interface for Nylas connector credentials.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connector-credentials)
   """
 
   alias ExNylas.API

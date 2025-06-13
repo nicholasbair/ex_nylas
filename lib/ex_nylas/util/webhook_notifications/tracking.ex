@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.Tracking do
   @moduledoc """
   Schema for tracking notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#extractai-notifications)
   """
 
   use TypedEctoSchema

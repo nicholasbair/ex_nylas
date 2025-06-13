@@ -1,6 +1,8 @@
 defmodule ExNylas.Messages do
   @moduledoc """
   Interface for Nylas messages.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/messages)
   """
 
   alias ExNylas.API

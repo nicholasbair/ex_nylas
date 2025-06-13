@@ -1,6 +1,8 @@
 defmodule ExNylas.Connector do
   @moduledoc """
   A struct representing a Nylas connector.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connectors-integrations)
   """
 
   use TypedEctoSchema

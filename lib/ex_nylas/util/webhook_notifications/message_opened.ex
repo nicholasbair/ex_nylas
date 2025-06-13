@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.MessageOpened do
   @moduledoc """
   A struct representing a message opened webhook notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#message-tracking-notifications)
   """
 
   use TypedEctoSchema

@@ -1,6 +1,8 @@
 defmodule ExNylas.Channel.Build do
   @moduledoc """
   Helper module for validating a channel before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/pubsub-notifications)
   """
 
   use TypedEctoSchema

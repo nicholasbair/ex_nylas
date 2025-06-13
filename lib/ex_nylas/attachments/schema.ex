@@ -1,6 +1,8 @@
 defmodule ExNylas.Attachment do
   @moduledoc """
   A struct representing an attachment.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/attachments)
   """
 
   use TypedEctoSchema

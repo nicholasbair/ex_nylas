@@ -1,6 +1,8 @@
 defmodule ExNylas.Drafts do
   @moduledoc """
   Interface for Nylas Drafts.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/drafts)
   """
 
   alias ExNylas.API
