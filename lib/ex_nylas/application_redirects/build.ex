@@ -1,6 +1,8 @@
 defmodule ExNylas.ApplicationRedirect.Build do
   @moduledoc """
   Helper module for validating an application redirect before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/applications)
   """
 
   use TypedEctoSchema

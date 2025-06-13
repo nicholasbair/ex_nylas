@@ -1,6 +1,8 @@
 defmodule ExNylas.Threads do
   @moduledoc """
   Interface for Nylas threads.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/threads)
   """
 
   use ExNylas,

@@ -1,6 +1,8 @@
 defmodule ExNylas.Notetaker.Media do
   @moduledoc """
   Struct for Notetaker Media.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/notetaker)
   """
 
   use TypedEctoSchema

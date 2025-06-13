@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.MessageLinkClicked do
   @moduledoc """
   A struct representing a link clicked webhook notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#message-tracking-notifications)
   """
 
   use TypedEctoSchema

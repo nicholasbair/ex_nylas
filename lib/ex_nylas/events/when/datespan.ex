@@ -1,6 +1,8 @@
 defmodule ExNylas.Event.Datespan do
   @moduledoc """
   A struct representing an event datespan.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/events)
   """
 
   use TypedEctoSchema

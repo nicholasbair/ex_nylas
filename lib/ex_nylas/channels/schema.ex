@@ -1,6 +1,8 @@
 defmodule ExNylas.Channel do
   @moduledoc """
   A struct representing a channel.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/pubsub-notifications)
   """
 
   use TypedEctoSchema

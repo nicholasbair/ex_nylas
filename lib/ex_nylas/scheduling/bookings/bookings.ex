@@ -1,6 +1,8 @@
 defmodule ExNylas.Scheduling.Bookings do
   @moduledoc """
   Interface for Nylas scheduling bookings.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/scheduler/)
   """
 
   alias ExNylas.Scheduling.Booking

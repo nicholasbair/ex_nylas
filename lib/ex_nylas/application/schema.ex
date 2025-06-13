@@ -1,6 +1,8 @@
 defmodule ExNylas.Application do
   @moduledoc """
   A struct representing a Nylas application.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/applications)
   """
 
   use TypedEctoSchema

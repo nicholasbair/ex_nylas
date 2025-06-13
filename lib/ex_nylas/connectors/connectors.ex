@@ -1,6 +1,8 @@
 defmodule ExNylas.Connectors do
   @moduledoc """
   Interface for Nylas connector.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connectors-integrations)
   """
 
   use ExNylas,

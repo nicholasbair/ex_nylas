@@ -1,6 +1,8 @@
 defmodule ExNylas.Scheduling.Availability.Build do
   @moduledoc """
   Helper module for building scheduling availability objects.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/scheduler/)
   """
 
   use TypedEctoSchema

@@ -1,6 +1,8 @@
 defmodule ExNylas.CalendarAvailability do
   @moduledoc """
   Interface for Nylas calendar availability.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
   alias ExNylas.API

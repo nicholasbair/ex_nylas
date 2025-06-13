@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotifications do
   @moduledoc """
   Utility functions for webhook notifications.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/)
   """
 
   import Ecto.Changeset

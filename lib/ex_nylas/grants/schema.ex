@@ -1,6 +1,8 @@
 defmodule ExNylas.Grant do
   @moduledoc """
   A struct represting a Nylas grant.
+
+  https://developer.nylas.com/docs/api/v3/admin/#tag/manage-grants
   """
 
   use TypedEctoSchema

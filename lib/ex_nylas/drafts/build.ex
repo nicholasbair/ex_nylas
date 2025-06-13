@@ -1,6 +1,8 @@
 defmodule ExNylas.Draft.Build do
   @moduledoc """
   Helper module for validating a draft before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/drafts)
   """
 
   use TypedEctoSchema

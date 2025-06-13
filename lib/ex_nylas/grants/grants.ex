@@ -1,6 +1,8 @@
 defmodule ExNylas.Grants do
   @moduledoc """
   Interface for Nylas grants.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/manage-grants)
   """
 
   alias ExNylas.API
@@ -52,8 +54,8 @@ defmodule ExNylas.Grants do
 
   @doc """
   Refresh a grant's access token using its refresh token.
-  
-  OAuth 2.0 access tokens expire after one hour. When the access token expires, 
+
+  OAuth 2.0 access tokens expire after one hour. When the access token expires,
   you can use the refresh token to get a new access token.
 
   ## Examples
@@ -65,8 +67,8 @@ defmodule ExNylas.Grants do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do
       {:error, %Response{
-        status: :bad_request, 
-        data: nil, 
+        status: :bad_request,
+        data: nil,
         error: %ExNylas.Error{message: "refresh_token cannot be nil or empty"}
       }}
     else
@@ -90,7 +92,7 @@ defmodule ExNylas.Grants do
 
   @doc """
   Refresh a grant's access token using its refresh token.
-  
+
   OAuth 2.0 access tokens expire after one hour. This function will raise an error
   if the refresh operation fails.
 
@@ -105,7 +107,7 @@ defmodule ExNylas.Grants do
       {:error, response} -> raise ExNylasError, response
     end
   end
-  
+
   # The response from the API differs based on whether the request was successful or not
   # Pass the correct schema name to transform based on the response status
   # For successful responses (status 200), we use the ExNylas.HostedAuthentication.Grant schema

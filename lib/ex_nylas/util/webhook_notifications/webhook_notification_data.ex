@@ -3,6 +3,8 @@ defmodule ExNylas.WebhookNotificationData do
   A struct representing the data field of a webhook notification.
 
   Note - data points to the inflated object that the webhook notification is about; trunacted message webhooks omit the message body.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/)
   """
 
   use Ecto.Schema

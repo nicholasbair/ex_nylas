@@ -1,6 +1,8 @@
 defmodule ExNylas.Message do
   @moduledoc """
   A struct representing a message.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/messages)
   """
 
   alias ExNylas.{

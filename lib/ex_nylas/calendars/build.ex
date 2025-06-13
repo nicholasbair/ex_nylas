@@ -1,6 +1,8 @@
 defmodule ExNylas.Calendar.Build do
   @moduledoc """
   Helper module for validating a calendar before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendars)
   """
 
   use TypedEctoSchema

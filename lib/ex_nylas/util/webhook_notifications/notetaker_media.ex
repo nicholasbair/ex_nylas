@@ -1,6 +1,8 @@
 defmodule ExNylas.WebhookNotification.NotetakerMedia do
   @moduledoc """
   Schema for notetaker media notification.
+
+  [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#notetaker-notifications)
   """
 
   use TypedEctoSchema

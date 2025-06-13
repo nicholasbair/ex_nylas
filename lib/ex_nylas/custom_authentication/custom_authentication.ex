@@ -1,6 +1,8 @@
 defmodule ExNylas.CustomAuthentication do
   @moduledoc """
   Interface for Nylas custom authentication
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
   alias ExNylas.API

@@ -1,6 +1,8 @@
 defmodule ExNylas.Scheduling.Configurations do
   @moduledoc """
   Interface for Nylas scheduling configurations.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/scheduler/)
   """
 
   alias ExNylas.Scheduling.Configuration

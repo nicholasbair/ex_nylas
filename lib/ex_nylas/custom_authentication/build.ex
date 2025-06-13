@@ -1,6 +1,8 @@
 defmodule ExNylas.CustomAuthentication.Build do
   @moduledoc """
   Helper module for validating a custom authentication request.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
   use TypedEctoSchema

@@ -1,6 +1,8 @@
 defmodule ExNylas.MessageSchedule do
   @moduledoc """
   A struct for Nylas message schedules.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/messages)
   """
 
   use TypedEctoSchema

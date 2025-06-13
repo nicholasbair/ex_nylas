@@ -1,6 +1,8 @@
 defmodule ExNylas.ContactGroup do
   @moduledoc """
   A struct representing a contact group.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/contacts)
   """
 
   use TypedEctoSchema

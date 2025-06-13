@@ -1,6 +1,8 @@
 defmodule ExNylas.Attachments do
   @moduledoc """
   Interface for Nylas attachments.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/attachments)
   """
 
   alias ExNylas.API

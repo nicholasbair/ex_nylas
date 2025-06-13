@@ -1,6 +1,8 @@
 defmodule ExNylas.ApplicationRedirect do
   @moduledoc """
   A struct for Nylas application redirect.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/applications)
   """
 
   use TypedEctoSchema

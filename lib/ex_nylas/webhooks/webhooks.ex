@@ -1,6 +1,8 @@
 defmodule ExNylas.Webhooks do
   @moduledoc """
   Interface for Nylas webhook.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/webhook-notifications)
   """
 
   alias ExNylas.API

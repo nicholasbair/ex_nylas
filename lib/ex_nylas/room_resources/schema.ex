@@ -1,6 +1,8 @@
 defmodule ExNylas.RoomResource do
   @moduledoc """
   Structs for Nylas room resources.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/room-resources)
   """
 
   use TypedEctoSchema

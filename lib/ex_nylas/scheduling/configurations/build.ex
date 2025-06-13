@@ -1,6 +1,8 @@
 defmodule ExNylas.Scheduling.Configuration.Build do
   @moduledoc """
   Helper module for validating a scheduling configuration before sending it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/scheduler/)
   """
 
   use TypedEctoSchema

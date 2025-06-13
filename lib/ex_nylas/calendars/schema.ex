@@ -1,6 +1,8 @@
 defmodule ExNylas.Calendar do
   @moduledoc """
   A struct representing a calendar.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendars)
   """
 
   use TypedEctoSchema

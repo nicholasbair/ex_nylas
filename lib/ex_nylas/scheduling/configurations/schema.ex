@@ -1,6 +1,8 @@
 defmodule ExNylas.Scheduling.Configuration do
   @moduledoc """
   A struct representing a scheduling configuration.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/scheduler/)
   """
 
   use TypedEctoSchema

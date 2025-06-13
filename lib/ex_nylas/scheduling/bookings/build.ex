@@ -1,6 +1,8 @@
 defmodule ExNylas.Scheduling.Booking.Build do
   @moduledoc """
   Helper module for validating a scheduling booking before sending it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/scheduler/)
   """
 
   use TypedEctoSchema

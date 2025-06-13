@@ -1,6 +1,8 @@
 defmodule ExNylas.Event.Build do
   @moduledoc """
   Helper module for validating an event before creating/updating it.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/events)
   """
 
   use TypedEctoSchema

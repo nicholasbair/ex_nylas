@@ -1,6 +1,8 @@
 defmodule ExNylas.Providers do
   @moduledoc """
   Interface for Nylas providers.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connectors-integrations)
   """
 
   alias ExNylas.API

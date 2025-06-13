@@ -1,6 +1,8 @@
 defmodule ExNylas.Provider do
   @moduledoc """
   Structs for Nylas providers.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connectors-integrations)
   """
 
   use TypedEctoSchema

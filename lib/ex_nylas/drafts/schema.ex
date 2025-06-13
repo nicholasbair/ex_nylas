@@ -1,6 +1,8 @@
 defmodule ExNylas.Draft do
   @moduledoc """
   A struct representing a draft.
+
+  [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/drafts)
   """
 
   alias ExNylas.{
