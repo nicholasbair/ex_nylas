@@ -1,6 +1,6 @@
 defmodule ExNylas.WebhookNotification.ThreadReplied do
   @moduledoc """
-  A struct representing a bounce detected webhook notification.
+  A struct representing a thread replied webhook notification.
 
   [Nylas docs](https://developer.nylas.com/docs/v3/notifications/notification-schemas/#message-tracking-notifications)
   """

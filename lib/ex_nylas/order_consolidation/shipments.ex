@@ -1,6 +1,6 @@
 defmodule ExNylas.OrderConsolidation.Shipments do
   @moduledoc """
-  Interface for Nylas order consolidation orders.
+  Interface for Nylas order consolidation shipments.
 
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/extractai)
   """
