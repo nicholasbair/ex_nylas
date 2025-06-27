@@ -116,7 +116,7 @@ defmodule ExNylas.API do
   @spec handle_stream(function()) :: function()
   def handle_stream(fun) do
     fn {:data, data}, {req, resp} ->
-      TF.transfrom_stream({:data, data}, {req, resp}, fun)
+      TF.transform_stream({:data, data}, {req, resp}, fun)
     end
   end
 

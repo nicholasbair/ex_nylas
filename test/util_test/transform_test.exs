@@ -151,20 +151,20 @@ defmodule UtilTest.TransformTest do
     end
   end
 
-  describe "transfrom_stream" do
-    test "transfrom_stream handles non-200 status codes" do
+  describe "transform_stream" do
+    test "transform_stream handles non-200 status codes" do
       data = "some data"
       req = %{}
       resp = %{status: 400}
       fun = fn _ -> :ok end
 
-      {cont, {_req_result, resp_result}} = transfrom_stream({:data, data}, {req, resp}, fun)
+      {cont, {_req_result, resp_result}} = transform_stream({:data, data}, {req, resp}, fun)
 
       assert cont == :cont
       assert resp_result.body == data
     end
 
-    test "transfrom_stream handles data without suggestion field" do
+    test "transform_stream handles data without suggestion field" do
       data = ~s({"other_field": "value"})
       req = %{}
       resp = %{status: 200}
@@ -173,18 +173,18 @@ defmodule UtilTest.TransformTest do
         :ok
       end
 
-      {cont, {_req_result, _resp_result}} = transfrom_stream({:data, data}, {req, resp}, fun)
+      {cont, {_req_result, _resp_result}} = transform_stream({:data, data}, {req, resp}, fun)
 
       assert cont == :cont
     end
 
-    test "transfrom_stream handles data without JSON objects" do
+    test "transform_stream handles data without JSON objects" do
       data = "plain text without json"
       req = %{}
       resp = %{status: 200}
       fun = fn _ -> :ok end
 
-      {cont, {_req_result, resp_result}} = transfrom_stream({:data, data}, {req, resp}, fun)
+      {cont, {_req_result, resp_result}} = transform_stream({:data, data}, {req, resp}, fun)
 
       assert cont == :cont
       # When there are no JSON objects, the function doesn't add body to resp

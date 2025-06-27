@@ -40,8 +40,8 @@ defmodule ExNylas.ContactTest do
         params = %{"source" => source}
         changeset = Contact.changeset(%Contact{}, params)
         refute changeset.valid?, "Source #{source} should be invalid"
-        event = Ecto.Changeset.apply_changes(changeset)
-        assert event.source == nil
+        contact = Ecto.Changeset.apply_changes(changeset)
+        assert contact.source == nil
       end
     end
 
@@ -161,8 +161,8 @@ defmodule ExNylas.ContactTest do
         }
         changeset = Contact.changeset(%Contact{}, params)
         refute changeset.valid?, "Phone number type #{type} should be invalid"
-        event = Ecto.Changeset.apply_changes(changeset)
-        assert event.phone_numbers |> List.first() |> Map.get(:type) == nil
+        contact = Ecto.Changeset.apply_changes(changeset)
+        assert contact.phone_numbers |> List.first() |> Map.get(:type) == nil
       end
     end
   end
@@ -221,8 +221,8 @@ defmodule ExNylas.ContactTest do
         }
         changeset = Contact.changeset(%Contact{}, params)
         refute changeset.valid?, "Web page type #{type} should be invalid"
-        event = Ecto.Changeset.apply_changes(changeset)
-        assert event.web_pages |> List.first() |> Map.get(:type) == nil
+        contact = Ecto.Changeset.apply_changes(changeset)
+        assert contact.web_pages |> List.first() |> Map.get(:type) == nil
       end
     end
   end

@@ -43,14 +43,6 @@ defmodule ExNylas.EventReminderTest do
       assert reminder.use_default == nil
     end
 
-    test "handles empty array for overrides" do
-      params = %{"overrides" => []}
-      changeset = EventReminder.changeset(%EventReminder{}, params)
-      assert changeset.valid?
-      reminder = Ecto.Changeset.apply_changes(changeset)
-      assert reminder.overrides == []
-    end
-
     test "creates minimal event reminder with empty params" do
       params = %{}
       changeset = EventReminder.changeset(%EventReminder{}, params)

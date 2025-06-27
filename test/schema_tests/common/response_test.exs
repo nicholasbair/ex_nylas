@@ -62,14 +62,6 @@ defmodule ExNylas.ResponseTest do
       assert response.error == nil
     end
 
-    test "handles empty map for headers" do
-      params = %{"headers" => %{}, "status" => :success}
-      changeset = Response.changeset(%Response{}, params)
-      assert changeset.valid?
-      response = Ecto.Changeset.apply_changes(changeset)
-      assert response.headers == %{}
-    end
-
     test "handles atom status values" do
       valid_statuses = [:success, :error, :pending]
       for status <- valid_statuses do

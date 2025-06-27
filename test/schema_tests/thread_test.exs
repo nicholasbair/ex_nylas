@@ -81,9 +81,6 @@ defmodule ExNylas.ThreadTest do
         "participants" => []
       }
       changeset = Thread.changeset(%Thread{}, params)
-      if not changeset.valid? do
-        IO.inspect(changeset.errors, label: "Changeset errors")
-      end
       assert changeset.valid?
       thread = Ecto.Changeset.apply_changes(changeset)
       assert thread.draft_ids == []

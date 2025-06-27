@@ -33,8 +33,7 @@ defmodule ExNylas.ApplicationRedirectTest do
         params = %{"platform" => platform}
         changeset = ApplicationRedirect.changeset(%ApplicationRedirect{}, params)
         refute changeset.valid?, "Platform #{platform} should be invalid"
-        redirect = Ecto.Changeset.apply_changes(changeset)
-        assert redirect.platform == nil
+        assert changeset.errors[:platform] != nil
       end
     end
 
