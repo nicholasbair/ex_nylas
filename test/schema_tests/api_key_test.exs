@@ -43,8 +43,7 @@ defmodule ExNylas.APIKeyTest do
         params = %{"status" => status}
         changeset = APIKey.changeset(%APIKey{}, params)
         refute changeset.valid?, "Status #{status} should be invalid"
-        key = Ecto.Changeset.apply_changes(changeset)
-        assert key.status == nil
+        assert {:status, _} = List.keyfind(changeset.errors, :status, 0)
       end
     end
 

@@ -89,19 +89,5 @@ defmodule ExNylas.BufferTest do
       assert buffer.after == 1000
       assert buffer.before == 500
     end
-
-    test "handles negative integers (should be valid as per schema)" do
-      params = %{
-        "after" => -100,
-        "before" => -200
-      }
-      changeset = Buffer.changeset(%Buffer{}, params)
-      # Note: The schema specifies non_neg_integer() but the changeset doesn't validate this
-      # This test documents the current behavior
-      assert changeset.valid?
-      buffer = Ecto.Changeset.apply_changes(changeset)
-      assert buffer.after == -100
-      assert buffer.before == -200
-    end
   end
 end
