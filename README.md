@@ -1,6 +1,6 @@
 # ExNylas
 
-[![Hex.pm](https://img.shields.io/hexpm/v/ex_nylas)](https://hex.pm/packages/ex_nylas)
+[![Hex.pm version](https://img.shields.io/hexpm/v/ex_nylas)](https://hex.pm/packages/ex_nylas)
 
 Unofficial Elixir SDK for the Nylas API.
 
