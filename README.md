@@ -1,15 +1,17 @@
 # ExNylas
 
+[![Hex.pm version](https://img.shields.io/hexpm/v/ex_nylas)](https://hex.pm/packages/ex_nylas)
+
 Unofficial Elixir SDK for the Nylas API.
 
 To get started, first sign up for a free Nylas account [here](https://nylas.com), then follow the installation and usage guide below.
 
 ## Notes
 
-## Nylas API v2 vs v3
+### Nylas API v2 vs v3
 The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
-## TODO / Known Issues
+### TODO / Known Issues
 1. Build schemas (optional) are not well tested
 
 ## Installation
@@ -65,9 +67,10 @@ message = ExNylas.Messages.first!(conn)
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 {:ok, threads} = ExNylas.Threads.list(conn, limit: 5)
+{:ok, threads} = ExNylas.Threads.list(conn, %{limit: 5})
 ```
 
-4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` will accept either a map or a struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition and in the case of an error, the Ecto changeset is returned.  For example:
+4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` will accept either a map or a struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition and in the case of an error, the Ecto changeset is returned.  Please note, this functionality is not well tested.  Example usage:
 ```elixir
 {:ok, folder} = ExNylas.Folders.build(%{name: "Hello World"})
 
