@@ -63,7 +63,7 @@ defmodule ExNylas.Scheduling.Configuration do
     |> cast_embed(:participants)
     |> cast_embed(:event_booking)
     |> cast_embed(:availability, with: &embedded_changeset_availability/2)
-    |> cast_embed(:scheduler, with: &embedded_changeset/2)
+    |> cast_embed(:scheduler, with: &embedded_changeset_scheduler/2)
   end
 
   @doc false
@@ -71,5 +71,19 @@ defmodule ExNylas.Scheduling.Configuration do
     changeset
     |> cast(params, [:duration_minutes, :interval_minutes, :round_to])
     |> cast_embed(:availability_rules)
+  end
+
+  @doc false
+  def embedded_changeset_scheduler(changeset, params \\ %{}) do
+    changeset
+    |> cast(params, [:additional_fields, :available_days_in_future, :cancellation_policy, :cancellation_url, :hide_additionl_fields, :hide_cancelation_options, :hide_rescheduling_options, :min_booking_notice, :min_cancellation_notice, :rescheduling_url])
+    |> cast_embed(:email_template, with: &embedded_changeset_email_template/2)
+  end
+
+  @doc false
+  def embedded_changeset_email_template(changeset, params \\ %{}) do
+    changeset
+    |> cast(params, [:logo])
+    |> cast_embed(:booking_confirmed, with: &embedded_changeset/2)
   end
 end
