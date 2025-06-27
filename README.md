@@ -1,18 +1,20 @@
 # ExNylas
 
+[![Hex.pm](https://img.shields.io/hexpm/v/ex_nylas)](https://hex.pm/packages/ex_nylas)
+
 Unofficial Elixir SDK for the Nylas API.
 
 To get started, first sign up for a free Nylas account [here](https://nylas.com), then follow the installation and usage guide below.
 
 ## Notes
 
-## Nylas API v2 vs v3
+### Nylas API v2 vs v3
 The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
-## TODO / Known Issues
+### TODO / Known Issues
 1. Build schemas (optional) are not well tested
 
-## Installation
+### Installation
 ```elixir
 def deps do
   [
@@ -21,7 +23,7 @@ def deps do
 end
 ```
 
-## Usage
+### Usage
 1. Connection is a struct that stores your Nylas API credentials.
 ```elixir
 conn = 
