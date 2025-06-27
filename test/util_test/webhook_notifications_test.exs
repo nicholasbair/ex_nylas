@@ -151,6 +151,37 @@ defmodule ExNylasTest.WebhookNotifications do
       assert res.data.application_id == nil
       assert res.data.object.__struct__ == ExNylas.Message
     end
+
+    test "handles webhook with empty object" do
+      webhook = %{
+        "data" => %{
+          "application_id" => "mock-application-id",
+          "object" => %{}
+        },
+        "id" => "mock-id",
+        "source" => "/google/emails/realtime",
+        "specversion" => "1.0",
+        "time" => 1_234_567_891,
+        "type" => "message.created"
+      }
+
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(webhook)
+      assert res.data.object.__struct__ == ExNylas.Message
+    end
+
+    test "handles webhook with invalid time field" do
+      webhook = good_webhook_type() |> Map.put("time", "invalid_time")
+
+      {:error, changeset} = ExNylas.WebhookNotifications.to_struct(webhook)
+      refute changeset.valid?
+    end
+
+    test "handles webhook with invalid webhook_delivery_attempt field" do
+      webhook = good_webhook_type() |> Map.put("webhook_delivery_attempt", -1)
+
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(webhook)
+      assert res.webhook_delivery_attempt == -1
+    end
   end
 
   describe "specific webhook notification types" do
@@ -272,66 +303,6 @@ defmodule ExNylasTest.WebhookNotifications do
       assert res.data.object.__struct__ == ExNylas.WebhookNotification.ThreadReplied
       assert res.data.object.thread_id == "thread_123"
       assert res.data.object.message_id == "msg_123"
-    end
-  end
-
-  describe "edge cases and error handling" do
-    test "handles webhook with missing data field" do
-      webhook = %{
-        "id" => "mock-id",
-        "source" => "/google/emails/realtime",
-        "specversion" => "1.0",
-        "time" => 1_234_567_891,
-        "type" => "message.created"
-      }
-
-      assert catch_error(ExNylas.WebhookNotifications.to_struct(webhook))
-    end
-
-    test "handles webhook with missing object field" do
-      webhook = %{
-        "data" => %{
-          "application_id" => "mock-application-id"
-        },
-        "id" => "mock-id",
-        "source" => "/google/emails/realtime",
-        "specversion" => "1.0",
-        "time" => 1_234_567_891,
-        "type" => "message.created"
-      }
-
-      assert catch_error(ExNylas.WebhookNotifications.to_struct(webhook))
-    end
-
-    test "handles webhook with empty object" do
-      webhook = %{
-        "data" => %{
-          "application_id" => "mock-application-id",
-          "object" => %{}
-        },
-        "id" => "mock-id",
-        "source" => "/google/emails/realtime",
-        "specversion" => "1.0",
-        "time" => 1_234_567_891,
-        "type" => "message.created"
-      }
-
-      {:ok, res} = ExNylas.WebhookNotifications.to_struct(webhook)
-      assert res.data.object.__struct__ == ExNylas.Message
-    end
-
-    test "handles webhook with invalid time field" do
-      webhook = good_webhook_type() |> Map.put("time", "invalid_time")
-
-      {:error, changeset} = ExNylas.WebhookNotifications.to_struct(webhook)
-      refute changeset.valid?
-    end
-
-    test "handles webhook with invalid webhook_delivery_attempt field" do
-      webhook = good_webhook_type() |> Map.put("webhook_delivery_attempt", -1)
-
-      {:ok, res} = ExNylas.WebhookNotifications.to_struct(webhook)
-      assert res.webhook_delivery_attempt == -1
     end
   end
 
