@@ -48,8 +48,8 @@ defmodule ExNylas.Transform do
 
   def transform(body, _status, _headers, _model, _use_common, false = _transform), do: body
 
-  @spec transfrom_stream({:data, binary()}, {map(), map()}, (-> any())) :: {:cont, {map(), map()}}
-  def transfrom_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
+  @spec transform_stream({:data, binary()}, {map(), map()}, (-> any())) :: {:cont, {map(), map()}}
+  def transform_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
     ~r/\{.*?\}/
     |> Regex.scan(data)
     |> List.first("{}")
@@ -60,7 +60,7 @@ defmodule ExNylas.Transform do
     {:cont, {req, resp}}
   end
 
-  def transfrom_stream({:data, data}, {req, resp}, _fun) do
+  def transform_stream({:data, data}, {req, resp}, _fun) do
     resp = Map.put(resp, :body, data)
     {:cont, {req, resp}}
   end

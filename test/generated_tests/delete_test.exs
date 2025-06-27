@@ -16,6 +16,7 @@ defmodule ExNylasTest.Delete do
     Messages,
     Scheduling.Bookings,
     Scheduling.Configurations,
+    Scheduling.Sessions,
     Threads,
     Webhooks
   ]

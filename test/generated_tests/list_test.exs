@@ -17,6 +17,8 @@ defmodule ExNylasTest.List do
     MessageSchedules,
     Messages,
     Notetakers,
+    OrderConsolidation.Orders,
+    OrderConsolidation.Shipments,
     RoomResources,
     Scheduling.Configurations,
     StandaloneNotetakers,
