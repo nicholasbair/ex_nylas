@@ -17,6 +17,7 @@ defmodule ExNylasTest.Find do
     Messages,
     Notetakers,
     Scheduling.Configurations,
+    Scheduling.Bookings,
     StandaloneNotetakers,
     Threads,
     Webhooks

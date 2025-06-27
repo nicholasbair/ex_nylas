@@ -14,6 +14,7 @@ defmodule ExNylasTest.Create do
     StandaloneNotetakers,
     Scheduling.Bookings,
     Scheduling.Configurations,
+    Scheduling.Sessions,
     Webhooks
   ]
 
