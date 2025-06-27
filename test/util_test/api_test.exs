@@ -51,6 +51,11 @@ defmodule ExNylasTest.API do
       {_, _, content_length} = ExNylas.API.build_multipart(%{test: "test"}, [])
       assert content_length > 0
     end
+
+    test "handles attachments with CID" do
+      {stream, _, _} = ExNylas.API.build_multipart(%{test: "test"}, [{"cid:123", "./test/fixtures/test_attachment.txt"}])
+      assert is_function(stream)
+    end
   end
 
   describe "build_multipart/2 without attachments" do
@@ -116,11 +121,54 @@ defmodule ExNylasTest.API do
       }
       assert match?({:ok, %ExNylas.Response{data: %ExNylas.Folder{}}}, ExNylas.API.handle_response({:ok, res}, ExNylas.Folder))
     end
+
+    test "handles responses with missing headers" do
+      res = %{status: 200, body: "test"}
+      result = ExNylas.API.handle_response({:ok, res})
+      assert match?({:ok, _}, result)
+    end
+
+    test "handles responses with nil content-type" do
+      res = %{
+        status: 200,
+        body: "test",
+        headers: %{}
+      }
+      result = ExNylas.API.handle_response({:ok, res})
+      assert match?({:ok, _}, result)
+    end
   end
 
   describe "handle_stream/1" do
     test "returns a function" do
       assert is_function(ExNylas.API.handle_stream(fn -> {:ok, "test"} end))
+    end
+  end
+
+  describe "maybe_attach_telemetry/2" do
+    test "attaches telemetry when telemetry is true" do
+      conn = %Conn{telemetry: true}
+      req = Req.new()
+
+      # This should not raise an error
+      result = ExNylas.API.maybe_attach_telemetry(req, conn)
+      assert is_map(result)
+    end
+
+    test "does not attach telemetry when telemetry is false" do
+      conn = %Conn{telemetry: false}
+      req = Req.new()
+
+      result = ExNylas.API.maybe_attach_telemetry(req, conn)
+      assert result == req
+    end
+
+    test "does not attach telemetry when telemetry is not set" do
+      conn = %Conn{}
+      req = Req.new()
+
+      result = ExNylas.API.maybe_attach_telemetry(req, conn)
+      assert result == req
     end
   end
 end

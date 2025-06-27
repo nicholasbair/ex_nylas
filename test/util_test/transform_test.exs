@@ -1,6 +1,7 @@
 defmodule UtilTest.TransformTest do
   use ExUnit.Case, async: true
   import ExNylas.Transform
+  import ExUnit.CaptureLog
   alias ExNylas.{
     Response,
     Folder,
@@ -149,6 +150,48 @@ defmodule UtilTest.TransformTest do
 
       assert transformed.data == []
     end
+
+    test "transform_stream handles malformed JSON" do
+      data = "{invalid json"
+      req = %{}
+      resp = %{status: 200}
+      fun = fn _ -> :ok end
+
+      {cont, {_req_result, resp_result}} = transform_stream({:data, data}, {req, resp}, fun)
+      assert cont == :cont
+      assert resp_result == resp
+    end
+  end
+
+  describe "preprocess_data" do
+    test "handles nil data" do
+      result = preprocess_data(Folder, nil)
+      assert result == nil
+    end
+
+    test "handles non-map, non-list data" do
+      result = preprocess_data(Folder, "string data")
+      assert result == "string data"
+    end
+
+    test "handles empty list data" do
+      result = preprocess_data(Folder, [])
+      assert result == []
+    end
+
+    test "handles list with mixed data types" do
+      data = [
+        %{"id" => "123", "grant_id" => "456"},
+        "string data",
+        nil
+      ]
+      result = preprocess_data(Folder, data)
+
+      assert length(result) == 3
+      assert is_struct(Enum.at(result, 0))
+      assert Enum.at(result, 1) == "string data"
+      assert Enum.at(result, 2) == nil
+    end
   end
 
   describe "transform_stream" do
@@ -190,6 +233,102 @@ defmodule UtilTest.TransformTest do
       # When there are no JSON objects, the function doesn't add body to resp
       # It just returns the original resp unchanged
       assert resp_result == resp
+    end
+
+    test "transform_stream handles empty data" do
+      data = ""
+      req = %{}
+      resp = %{status: 200}
+      fun = fn _ -> :ok end
+
+      {cont, {_req_result, resp_result}} = transform_stream({:data, data}, {req, resp}, fun)
+
+      assert cont == :cont
+      assert resp_result == resp
+    end
+
+    test "transform_stream handles malformed JSON" do
+      data = "{invalid json"
+      req = %{}
+      resp = %{status: 200}
+      fun = fn _ -> :ok end
+
+      {cont, {_req_result, resp_result}} = transform_stream({:data, data}, {req, resp}, fun)
+      assert cont == :cont
+      assert resp_result == resp
+    end
+  end
+
+  describe "validation error logging" do
+    test "logs validation errors when changeset is invalid" do
+      # Create a module that will have validation errors
+      defmodule TestSchema do
+        use Ecto.Schema
+        import Ecto.Changeset
+
+        schema "test_schema" do
+          field :email, :string
+          field :age, :integer
+        end
+
+        def changeset(schema, attrs) do
+          schema
+          |> cast(attrs, [:email, :age])
+          |> validate_required([:email])
+          |> validate_format(:email, ~r/@/)
+          |> validate_number(:age, greater_than: 0)
+        end
+      end
+
+      # This should trigger validation errors and log them
+      body = %{
+        "data" => %{
+          "email" => "invalid-email",
+          "age" => -5
+        }
+      }
+
+      # Capture log messages
+      log_capture = capture_log(fn ->
+        transformed = transform(body, 200, %{}, TestSchema, true, true)
+        assert %Response{} = transformed
+      end)
+
+      # Should contain validation error messages
+      assert log_capture =~ "Validation error while transforming"
+      assert log_capture =~ "email"
+      assert log_capture =~ "age"
+    end
+
+    test "does not log when changeset is valid" do
+      defmodule ValidTestSchema do
+        use Ecto.Schema
+        import Ecto.Changeset
+
+        schema "valid_test_schema" do
+          field :email, :string
+        end
+
+        def changeset(schema, attrs) do
+          schema
+          |> cast(attrs, [:email])
+          |> validate_required([:email])
+        end
+      end
+
+      body = %{
+        "data" => %{
+          "email" => "valid@example.com"
+        }
+      }
+
+      log_capture = capture_log(fn ->
+        transformed = transform(body, 200, %{}, ValidTestSchema, true, true)
+        assert %Response{} = transformed
+      end)
+
+      # Should not contain validation error messages
+      refute log_capture =~ "Validation error while transforming"
     end
   end
 end
