@@ -6,22 +6,17 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
 
 ## Notes
 
-*Caveat Emptor*
-- VERY much a work in progress
-- This is my first attempt at metaprogramming
-
 ## Nylas API v2 vs v3
 The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
 ## TODO / Known Issues
-1. Limited test coverage
-2. Not yet available on hex
+1. Build schemas (optional) are not well tested
 
 ## Installation
 ```elixir
 def deps do
   [
-    {:ex_nylas, git: "https://github.com/nicholasbair/ex_nylas.git", tag: "v0.8.0"}
+    {:ex_nylas, "~> 0.9.0"}
   ]
 end
 ```
@@ -68,9 +63,8 @@ message = ExNylas.Messages.first!(conn)
 
 3. Where supported, queries and filters can be passed as a map or keyword list:
 ```elixir
-{:ok, threads} = 
-  %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
-  |> ExNylas.Threads.list(limit: 5)
+conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
+{:ok, threads} = ExNylas.Threads.list(conn, limit: 5)
 ```
 
 4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` will accept either a map or a struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition and in the case of an error, the Ecto changeset is returned.  For example:
