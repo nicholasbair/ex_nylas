@@ -57,6 +57,43 @@ defmodule ExNylas.Messages do
   end
 
   @doc """
+  Send a message using raw MIME format.
+
+  ## Examples
+
+      iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime, metadata)
+  """
+  @spec send_raw(Conn.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def send_raw(%Conn{} = conn, mime, metadata \\ %{}) do
+    {body, content_type, len} = build_raw_multipart(mime, metadata)
+
+    Req.new(
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send?type=mime",
+      auth: API.auth_bearer(conn),
+      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+      body: body
+    )
+    |> API.maybe_attach_telemetry(conn)
+    |> Req.post(conn.options)
+    |> API.handle_response(Message)
+  end
+
+  @doc """
+  Send a message using raw MIME format.
+
+  ## Examples
+
+      iex> sent_message = ExNylas.Messages.send_raw!(conn, mime, metadata)
+  """
+  @spec send_raw!(Conn.t(), String.t(), map()) :: Response.t()
+  def send_raw!(%Conn{} = conn, mime, metadata \\ %{}) do
+    case send_raw(conn, mime, metadata) do
+      {:ok, body} -> body
+      {:error, reason} -> raise ExNylasError, reason
+    end
+  end
+
+  @doc """
   Clean a message.
 
   ## Examples
@@ -89,5 +126,19 @@ defmodule ExNylas.Messages do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end
+  end
+
+  @spec build_raw_multipart(String.t(), map()) :: {Enum.t(), String.t(), integer()}
+  defp build_raw_multipart(mime, metadata) do
+    multipart =
+      Multipart.new()
+      |> Multipart.add_part(Multipart.Part.text_field(mime, :mime))
+      |> Multipart.add_part(Multipart.Part.text_field(Jason.encode!(metadata), :metadata))
+
+    {
+      Multipart.body_stream(multipart),
+      Multipart.content_type(multipart, "multipart/form-data"),
+      Multipart.content_length(multipart)
+    }
   end
 end
