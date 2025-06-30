@@ -141,7 +141,7 @@ defmodule ExNylasTest.Messages do
       Messages.send_raw(default_connection(bypass), mime_content)
   end
 
-  test "send_raw/3 returns success with default metadata", %{bypass: bypass} do
+  test "send_raw/3 returns success with basic MIME", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
       conn
@@ -214,7 +214,7 @@ defmodule ExNylasTest.Messages do
     end
   end
 
-  test "send_raw!/3 returns success with default metadata", %{bypass: bypass} do
+  test "send_raw!/3 returns success with basic MIME", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
       conn

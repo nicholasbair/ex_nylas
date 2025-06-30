@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- New `send_raw/2` and `send_raw!/2 functions in `ExNylas.Messages` module for sending with raw mime
+- New `send_raw/2` and `send_raw!/2` functions in `ExNylas.Messages` module for sending with raw mime
 
 ## [0.9.0] - 2024-12-19
 
