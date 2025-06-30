@@ -65,7 +65,8 @@ defmodule ExNylas.MixProject do
       name: "ex_nylas",
       licenses: ["MIT"],
       links: %{
-        "GitHub" => url(),
+        "Changelog" => "#{url()}/blob/main/CHANGELOG.md",
+        "GitHub" => url()
       }
     ]
   end
