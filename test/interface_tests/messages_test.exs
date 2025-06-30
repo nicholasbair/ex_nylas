@@ -117,7 +117,7 @@ defmodule ExNylasTest.Messages do
     end
   end
 
-  test "send_raw/3 returns success on success", %{bypass: bypass} do
+  test "send_raw/3 returns success", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
       assert get_req_header(conn, "content-type") |> List.first() |> String.starts_with?("multipart/form-data")
@@ -137,10 +137,8 @@ defmodule ExNylasTest.Messages do
     This is a test message sent via raw MIME.
     """
 
-    metadata = %{thread_id: "thread-123", account_id: "account-456"}
-
     assert {:ok, %Response{data: %Message{id: "raw-message-id"}}} =
-      Messages.send_raw(default_connection(bypass), mime_content, metadata)
+      Messages.send_raw(default_connection(bypass), mime_content)
   end
 
   test "send_raw/3 returns success with default metadata", %{bypass: bypass} do
@@ -176,10 +174,10 @@ defmodule ExNylasTest.Messages do
     mime_content = "Invalid MIME content"
 
     assert {:error, %Response{status: :bad_request}} =
-      Messages.send_raw(default_connection(bypass), mime_content, %{})
+      Messages.send_raw(default_connection(bypass), mime_content)
   end
 
-  test "send_raw!/3 returns success on success", %{bypass: bypass} do
+  test "send_raw!/3 returns success", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
       conn
@@ -197,10 +195,8 @@ defmodule ExNylasTest.Messages do
     This is a test message sent via raw MIME.
     """
 
-    metadata = %{thread_id: "thread-123"}
-
     assert %Response{data: %Message{id: "raw-message-id"}} =
-      Messages.send_raw!(default_connection(bypass), mime_content, metadata)
+      Messages.send_raw!(default_connection(bypass), mime_content)
   end
 
   test "send_raw!/3 raises error on failure", %{bypass: bypass} do
@@ -214,7 +210,7 @@ defmodule ExNylasTest.Messages do
     mime_content = "Invalid MIME content"
 
     assert_raise ExNylasError, fn ->
-      Messages.send_raw!(default_connection(bypass), mime_content, %{})
+      Messages.send_raw!(default_connection(bypass), mime_content)
     end
   end
 
@@ -266,13 +262,11 @@ defmodule ExNylasTest.Messages do
     Test content
     """
 
-    metadata = %{thread_id: "thread-123", account_id: "account-456"}
-
     assert {:ok, %Response{data: %Message{id: "raw-message-id"}}} =
-      Messages.send_raw(default_connection(bypass), mime_content, metadata)
+      Messages.send_raw(default_connection(bypass), mime_content)
   end
 
-  test "send_raw/3 handles empty metadata", %{bypass: bypass} do
+  test "send_raw/3 handles basic MIME content", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
 
@@ -289,9 +283,8 @@ defmodule ExNylasTest.Messages do
     end)
 
     mime_content = "MIME-Version: 1.0\nSimple MIME content"
-    metadata = %{}
 
     assert {:ok, %Response{data: %Message{id: "raw-message-id"}}} =
-      Messages.send_raw(default_connection(bypass), mime_content, metadata)
+      Messages.send_raw(default_connection(bypass), mime_content)
   end
 end

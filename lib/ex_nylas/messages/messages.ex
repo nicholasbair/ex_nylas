@@ -61,11 +61,11 @@ defmodule ExNylas.Messages do
 
   ## Examples
 
-      iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime, metadata)
+      iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime)
   """
-  @spec send_raw(Conn.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def send_raw(%Conn{} = conn, mime, metadata \\ %{}) do
-    {body, content_type, len} = build_raw_multipart(mime, metadata)
+  @spec send_raw(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def send_raw(%Conn{} = conn, mime) do
+    {body, content_type, len} = build_raw_multipart(mime)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send?type=mime",
@@ -83,11 +83,11 @@ defmodule ExNylas.Messages do
 
   ## Examples
 
-      iex> sent_message = ExNylas.Messages.send_raw!(conn, mime, metadata)
+      iex> sent_message = ExNylas.Messages.send_raw!(conn, mime)
   """
-  @spec send_raw!(Conn.t(), String.t(), map()) :: Response.t()
-  def send_raw!(%Conn{} = conn, mime, metadata \\ %{}) do
-    case send_raw(conn, mime, metadata) do
+  @spec send_raw!(Conn.t(), String.t()) :: Response.t()
+  def send_raw!(%Conn{} = conn, mime) do
+    case send_raw(conn, mime) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end
@@ -128,12 +128,11 @@ defmodule ExNylas.Messages do
     end
   end
 
-  @spec build_raw_multipart(String.t(), map()) :: {Enum.t(), String.t(), integer()}
-  defp build_raw_multipart(mime, metadata) do
+  @spec build_raw_multipart(String.t()) :: {Enum.t(), String.t(), integer()}
+  defp build_raw_multipart(mime) do
     multipart =
       Multipart.new()
       |> Multipart.add_part(Multipart.Part.text_field(mime, :mime))
-      |> Multipart.add_part(Multipart.Part.text_field(Jason.encode!(metadata), :metadata))
 
     {
       Multipart.body_stream(multipart),
