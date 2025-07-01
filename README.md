@@ -1,8 +1,8 @@
 # ExNylas
 
 [![Hex.pm version](https://img.shields.io/hexpm/v/ex_nylas)](https://hex.pm/packages/ex_nylas)
-[![hexdocs.pm](https://img.shields.io/badge/docs-latest-green.svg?style=flat-square)](https://hexdocs.pm/ex_nylas/)
-[![Elixir CI](https://github.com/nicholasbair/ex_nylas/workflows/Elixir%20CI/badge.svg)](https://github.com/nicholasbair/ex_nylas/actions?query=workflow%3A%22Elixir+CI%22)
+[![Latest HexDocs](https://img.shields.io/badge/docs-latest-green.svg?style=flat-square)](https://hexdocs.pm/ex_nylas/)
+[![Elixir CI Status](https://github.com/nicholasbair/ex_nylas/workflows/Elixir%20CI/badge.svg)](https://github.com/nicholasbair/ex_nylas/actions?query=workflow%3A%22Elixir+CI%22)
 
 
 Unofficial Elixir SDK for the Nylas API.
@@ -73,7 +73,7 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 {:ok, threads} = ExNylas.Threads.list(conn, %{limit: 5})
 ```
 
-4. Where `create/update` is supported, optionally use `build/1` (or `build!/1`) to validate data before sending to the Nylas API.  This is strictly optional--`create/update` functions will accept either a map or a build struct.  Build leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes so fields are validated against the schema/struct definition and in the case of an error, the Ecto changeset is returned.  Please note, this functionality is not yet well tested.  Example usage:
+4. Where `create/update` is supported, you can optionally use `build/1` (or `build!/1`) to validate data before sending it to the Nylas API. This is strictly optional — `create/update` functions accept either a map or a build struct. `build/1` leverages [Ecto](https://hex.pm/packages/ecto) behind the scenes, so fields are validated against the schema/struct definition, and on error the Ecto changeset is returned. Please note that this functionality is not yet well-tested. Example usage:
 ```elixir
 {:ok, folder} = ExNylas.Folders.build(%{name: "Hello World"})
 
