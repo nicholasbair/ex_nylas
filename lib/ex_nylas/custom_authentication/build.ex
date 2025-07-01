@@ -13,11 +13,14 @@ defmodule ExNylas.CustomAuthentication.Build do
   @primary_key false
 
   typed_embedded_schema do
-    field(:provider, Ecto.Enum, values: ~w(google microsoft imap virtual-calendar yahoo icloud zoom ews)a, null: false)
+    field(:provider, Ecto.Enum,
+      values: ~w(google microsoft imap virtual-calendar yahoo icloud zoom ews)a, null: false)
     field(:state, :string)
 
     embeds_one :settings, Settings, primary_key: false do
-      @derive {Jason.Encoder, only: [:refresh_token, :credential_id, :email_address, :imap_username, :imap_password, :imap_host, :imap_port, :smtp_host, :smtp_port]}
+      @derive {Jason.Encoder,
+        only: [:refresh_token, :credential_id, :email_address, :imap_username, :imap_password,
+               :imap_host, :imap_port, :smtp_host, :smtp_port]}
 
       field(:credential_id, :string)
       field(:email_address, :string)

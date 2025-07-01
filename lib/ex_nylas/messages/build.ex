@@ -12,7 +12,9 @@ defmodule ExNylas.Message.Build do
   alias ExNylas.MessageHeader.Build, as: MessageHeaderBuild
   alias ExNylas.TrackingOptions.Build, as: TrackingOptionsBuild
 
-  @derive {Jason.Encoder, only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments, :bcc, :cc, :custom_headers, :from, :reply_to, :to, :tracking_options]}
+  @derive {Jason.Encoder,
+    only: [:body, :reply_to_message_id, :subject, :metadata, :send_at, :use_draft, :attachments,
+           :bcc, :cc, :custom_headers, :from, :reply_to, :to, :tracking_options]}
   @primary_key false
 
   typed_embedded_schema do

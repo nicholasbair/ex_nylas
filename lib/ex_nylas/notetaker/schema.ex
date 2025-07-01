@@ -19,7 +19,9 @@ defmodule ExNylas.Notetaker do
     field(:join_time, :integer)
     field(:meeting_link, :string)
     field(:meeting_provider, Ecto.Enum, values: [:"Google Meet", :"Zoom Meeting", :"Microsoft Teams"])
-    field(:state, Ecto.Enum, values: [:scheduled, :connecting, :waiting_for_entry, :failed_entry, :attending, :media_processing, :media_available, :media_error, :media_deleted])
+    field(:state, Ecto.Enum,
+      values: [:scheduled, :connecting, :waiting_for_entry, :failed_entry, :attending,
+               :media_processing, :media_available, :media_error, :media_deleted])
 
     embeds_one :meeting_settings, MeetingSettings, primary_key: false do
       field(:video_recording, :boolean)

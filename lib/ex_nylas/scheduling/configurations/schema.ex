@@ -76,7 +76,18 @@ defmodule ExNylas.Scheduling.Configuration do
   @doc false
   def embedded_changeset_scheduler(changeset, params \\ %{}) do
     changeset
-    |> cast(params, [:additional_fields, :available_days_in_future, :cancellation_policy, :cancellation_url, :hide_additionl_fields, :hide_cancelation_options, :hide_rescheduling_options, :min_booking_notice, :min_cancellation_notice, :rescheduling_url])
+    |> cast(params, [
+      :additional_fields,
+      :available_days_in_future,
+      :cancellation_policy,
+      :cancellation_url,
+      :hide_additionl_fields,
+      :hide_cancelation_options,
+      :hide_rescheduling_options,
+      :min_booking_notice,
+      :min_cancellation_notice,
+      :rescheduling_url
+    ])
     |> cast_embed(:email_template, with: &embedded_changeset_email_template/2)
   end
 

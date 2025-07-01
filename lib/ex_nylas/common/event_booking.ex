@@ -29,7 +29,10 @@ defmodule ExNylas.EventBooking do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :location, :description, :booking_type, :additional_fields, :hide_participants, :disable_emails, :timezone])
+    |> cast(params, [
+      :title, :location, :description, :booking_type, :additional_fields,
+      :hide_participants, :disable_emails, :timezone
+    ])
     |> cast_embed(:conferencing)
     |> cast_embed(:reminders)
   end

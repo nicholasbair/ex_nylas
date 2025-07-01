@@ -7,8 +7,8 @@ defmodule ExNylas.Calendar.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Schema.Util
   alias ExNylas.Notetaker.Build, as: NotetakerBuild
+  alias ExNylas.Schema.Util
 
   @derive {Jason.Encoder, only: [:description, :location, :name, :timezone, :metadata, :notetaker]}
   @primary_key false

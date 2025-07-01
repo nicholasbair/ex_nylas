@@ -55,7 +55,7 @@ defmodule ExNylas do
       """
       @spec unquote(config.name)(Conn.t(), Keyword.t() | map()) :: {:ok, [struct()]} | {:error, Response.t()}
       def unquote(config.name)(%Conn{} = conn, opts \\ []) do
-        ExNylas.Paging.all(conn, __MODULE__, unquote(use_cursor_paging), opts)
+        ExNylas.Paging.all(conn, &__MODULE__.list/2, unquote(use_cursor_paging), opts)
       end
 
       @doc """

@@ -6,8 +6,8 @@ defmodule ExNylas.CalendarAvailability do
   """
 
   alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
   alias ExNylas.Availability, as: AV
+  alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
 
   use ExNylas,

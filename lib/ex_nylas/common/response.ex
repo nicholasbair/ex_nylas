@@ -8,8 +8,8 @@ defmodule ExNylas.Response do
 
   alias ExNylas.{
     Error,
-    Type.MapOrList,
-    Type.Atom
+    Type.Atom,
+    Type.MapOrList
   }
 
   @primary_key false

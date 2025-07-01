@@ -6,8 +6,8 @@ defmodule ExNylas.SmartCompose do
   """
 
   alias ExNylas.API
-  alias ExNylas.Response
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Response
   alias ExNylas.Schema.SmartCompose, as: SC
 
   @doc """
@@ -118,7 +118,8 @@ defmodule ExNylas.SmartCompose do
       iex> Dear [Recipient], ...
       iex> {:ok, ""}
   """
-  @spec create_reply_stream(Conn.t(), String.t(), String.t(), function()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec create_reply_stream(Conn.t(), String.t(), String.t(), function()) ::
+          {:ok, Response.t()} | {:error, Response.t()}
   def create_reply_stream(%Conn{} = conn, message_id, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",

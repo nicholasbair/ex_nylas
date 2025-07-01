@@ -6,9 +6,9 @@ defmodule ExNylas.CustomAuthentication do
   """
 
   alias ExNylas.API
-  alias ExNylas.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
+  alias ExNylas.Response
 
   use ExNylas,
     struct: __MODULE__,

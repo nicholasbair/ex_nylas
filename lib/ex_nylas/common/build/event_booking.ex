@@ -5,11 +5,13 @@ defmodule ExNylas.EventBooking.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.EventReminder.Build, as: EventReminderBuild
   alias ExNylas.EventConferencing.Build, as: EventConferencingBuild
+  alias ExNylas.EventReminder.Build, as: EventReminderBuild
 
   @primary_key false
-  @derive {Jason.Encoder, only: [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails, :conferencing, :reminders]}
+  @derive {Jason.Encoder,
+    only: [:title, :description, :location, :timezone, :booking_type, :additional_fields,
+           :hide_participants, :disable_emails, :conferencing, :reminders]}
 
   typed_embedded_schema do
     field(:additional_fields, :map)
@@ -27,7 +29,10 @@ defmodule ExNylas.EventBooking.Build do
 
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:title, :description, :location, :timezone, :booking_type, :additional_fields, :hide_participants, :disable_emails])
+    |> cast(params, [
+      :title, :description, :location, :timezone, :booking_type, :additional_fields,
+      :hide_participants, :disable_emails
+    ])
     |> cast_embed(:conferencing)
     |> cast_embed(:reminders)
     |> validate_required([:title])

@@ -28,7 +28,6 @@ defmodule UtilTest.PagingTest do
 
   describe "cursor-based paging" do
     test "pages with cursor when next_cursor is present", %{bypass: bypass} do
-      # Track request count and log all requests
       request_count = :counters.new(1, [])
 
       Bypass.expect(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
@@ -36,19 +35,16 @@ defmodule UtilTest.PagingTest do
         :counters.add(request_count, 1, 1)
         case count do
           0 ->
-            # First request - should have page_token="" (empty string)
             assert conn.params["page_token"] == ""
             conn
             |> Plug.Conn.resp(200, ~s<{"data": [{"id": "1"}], "next_cursor": "next_page"}>)
             |> Plug.Conn.put_resp_header("content-type", "application/json")
           1 ->
-            # Second request - should have page_token=next_page
             assert conn.params["page_token"] == "next_page"
             conn
             |> Plug.Conn.resp(200, ~s<{"data": [{"id": "2"}]}>)
             |> Plug.Conn.put_resp_header("content-type", "application/json")
           _ ->
-            # Unexpected additional requests
             conn
             |> Plug.Conn.resp(500, ~s<{"error": "unexpected request"}>)
             |> Plug.Conn.put_resp_header("content-type", "application/json")
@@ -62,7 +58,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         true,
         [query: [limit: 1]]
       )
@@ -85,7 +81,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         true,
         [query: [limit: 1]]
       )
@@ -107,7 +103,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         false,
         [query: [limit: 50]]
       )
@@ -127,7 +123,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         false,
         [query: [limit: 50]]
       )
@@ -157,7 +153,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         true,
         [send_to: send_to_fn]
       )
@@ -187,7 +183,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         true,
         [send_to: send_to_fn, with_metadata: %{page: 1}]
       )
@@ -201,14 +197,12 @@ defmodule UtilTest.PagingTest do
     test "respects delay between requests", %{bypass: bypass} do
       start_time = System.monotonic_time(:millisecond)
 
-      # First page
       Bypass.expect_once(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
         conn
         |> Plug.Conn.resp(200, ~s<{"data": [{"id": "1"}], "next_cursor": "next_page"}>)
         |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-      # Second page
       Bypass.expect_once(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
         conn
         |> Plug.Conn.resp(200, ~s<{"data": [{"id": "2"}]}>)
@@ -222,16 +216,16 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         true,
-        [delay: 10]  # 10ms delay
+        [delay: 10]
       )
 
       end_time = System.monotonic_time(:millisecond)
       duration = end_time - start_time
 
       assert match?({:ok, _}, res)
-      assert duration >= 0  # Lowered threshold to avoid flakiness
+      assert duration >= 0
     end
   end
 
@@ -250,7 +244,7 @@ defmodule UtilTest.PagingTest do
             api_server: endpoint_url(bypass.port),
             options: [retry: false]
           },
-          ExNylas.Messages,
+          &ExNylas.Messages.list/2,
           true
         )
       end
@@ -270,7 +264,7 @@ defmodule UtilTest.PagingTest do
           api_server: endpoint_url(bypass.port),
           options: [retry: false]
         },
-        ExNylas.Messages,
+        &ExNylas.Messages.list/2,
         true
       )
 

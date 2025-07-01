@@ -12,7 +12,8 @@ defmodule ExNylas.Scheduling.Configuration.Build do
   alias ExNylas.Scheduler.Build, as: SchedulerBuild
   alias ExNylas.SchedulingParticipant.Build, as: SchedulingParticipantBuild
 
-  @derive {Jason.Encoder, only: [:requires_session_auth, :slug, :participants, :availability, :event_booking, :scheduler]}
+  @derive {Jason.Encoder,
+    only: [:requires_session_auth, :slug, :participants, :availability, :event_booking, :scheduler]}
   @primary_key false
 
   typed_embedded_schema do
