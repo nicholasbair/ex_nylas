@@ -6,9 +6,9 @@ defmodule ExNylas.Grants do
   """
 
   alias ExNylas.API
-  alias ExNylas.Response
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
+  alias ExNylas.Response
 
   use ExNylas,
     object: "grants",

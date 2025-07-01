@@ -6,8 +6,8 @@ defmodule ExNylas.Webhooks do
   """
 
   alias ExNylas.API
-  alias ExNylas.Response
   alias ExNylas.Connection, as: Conn
+  alias ExNylas.Response
   alias ExNylas.Webhook
 
   use ExNylas,

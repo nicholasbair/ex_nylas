@@ -19,12 +19,12 @@ defmodule ExNylas.WebhookNotificationData do
     Message,
     WebhookNotification.Booking,
     WebhookNotification.Grant,
-    WebhookNotification.Order,
     WebhookNotification.MessageBounceDetected,
-    WebhookNotification.MessageOpened,
     WebhookNotification.MessageLinkClicked,
+    WebhookNotification.MessageOpened,
     WebhookNotification.Notetaker,
     WebhookNotification.NotetakerMedia,
+    WebhookNotification.Order,
     WebhookNotification.ThreadReplied,
     WebhookNotification.Tracking
   }

@@ -7,8 +7,8 @@ defmodule ExNylas.HostedAuthentication do
 
   alias ExNylas.API
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.HostedAuthentication.Grant, as: HA
   alias ExNylas.HostedAuthentication.Error, as: HAError
+  alias ExNylas.HostedAuthentication.Grant, as: HA
 
   import ExNylas.Util, only: [indifferent_get: 2]
 

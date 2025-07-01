@@ -17,8 +17,11 @@ defmodule ExNylas.WebhookNotification.Notetaker do
     field(:join_time, :integer) :: non_neg_integer()
     field(:calendar_id, :string)
     field(:object, :string)
-    field(:state, Ecto.Enum, values: [:attending, :connecting, :disconnected, :failed_entry, :scheduled, :waiting_for_entry])
-    field(:meeting_state, Ecto.Enum, values: [:api_request, :bad_meeting_code, :dispatched, :entry_denied, :internal_error, :kicked, :no_meeting_activity, :no_participants, :no_response, :recording_active, :waiting_for_entry])
+    field(:state, Ecto.Enum,
+      values: [:attending, :connecting, :disconnected, :failed_entry, :scheduled, :waiting_for_entry])
+    field(:meeting_state, Ecto.Enum,
+      values: [:api_request, :bad_meeting_code, :dispatched, :entry_denied, :internal_error, :kicked,
+               :no_meeting_activity, :no_participants, :no_response, :recording_active, :waiting_for_entry])
 
     embeds_one :meeting_settings, MeetingSettings, primary_key: false do
       field(:video_recording, :boolean)

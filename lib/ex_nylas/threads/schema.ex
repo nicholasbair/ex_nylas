@@ -6,8 +6,8 @@ defmodule ExNylas.Thread do
   """
 
   alias ExNylas.{
-    EmailParticipant,
     Draft,
+    EmailParticipant,
     Message
   }
 
@@ -68,7 +68,11 @@ defmodule ExNylas.Thread do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:grant_id, :id, :object, :has_attachments, :has_drafts, :earliest_message_date, :latest_message_received_date, :latest_message_sent_date, :snippet, :starred, :subject, :unread, :message_ids, :draft_ids])
+    |> cast(params, [
+      :grant_id, :id, :object, :has_attachments, :has_drafts, :earliest_message_date,
+      :latest_message_received_date, :latest_message_sent_date, :snippet, :starred,
+      :subject, :unread, :message_ids, :draft_ids
+    ])
     |> cast_polymorphic_embed(:latest_draft_or_message)
     |> cast_embed(:participants)
   end

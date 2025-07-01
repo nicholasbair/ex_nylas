@@ -9,7 +9,9 @@ defmodule ExNylas.CalendarAvailability.Build do
   import Ecto.Changeset
   alias ExNylas.AvailabilityRules.Build, as: AvailabilityRulesBuild
 
-  @derive {Jason.Encoder, only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to, :availability_rules]}
+  @derive {Jason.Encoder,
+    only: [:participants, :start_time, :end_time, :duration_minutes, :interval_minutes, :round_to,
+           :availability_rules]}
   @primary_key false
 
   typed_embedded_schema do

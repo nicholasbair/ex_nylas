@@ -7,12 +7,14 @@ defmodule ExNylas.Event.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Schema.Util
-  alias ExNylas.EventReminder.Build, as: EventReminderBuild
   alias ExNylas.EventConferencing.Build, as: EventConferencingBuild
+  alias ExNylas.EventReminder.Build, as: EventReminderBuild
   alias ExNylas.Notetaker.Build, as: NotetakerBuild
+  alias ExNylas.Schema.Util
 
-  @derive {Jason.Encoder, only: [:capacity, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
+  @derive {Jason.Encoder,
+    only: [:capacity, :title, :description, :location, :busy, :recurrence, :visibility,
+           :metadata, :notifications, :hide_participants, :when, :conferencing, :reminders, :participants]}
   @primary_key false
 
   typed_embedded_schema do
@@ -43,7 +45,9 @@ defmodule ExNylas.Event.Build do
     embeds_one :notetaker, NotetakerBuild
 
     embeds_one :when, When do
-      @derive {Jason.Encoder, only: [:start_time, :end_time, :start_timezone, :end_timezone, :object, :time, :timezone, :start_date, :end_date, :date]}
+      @derive {Jason.Encoder,
+        only: [:start_time, :end_time, :start_timezone, :end_timezone, :object, :time, :timezone,
+               :start_date, :end_date, :date]}
 
       field(:date, :string)
       field(:end_date, :string)
@@ -61,7 +65,8 @@ defmodule ExNylas.Event.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:capacity, :title, :description, :location, :busy, :recurrence, :visibility, :metadata, :notifications, :hide_participants, :master_event_id])
+    |> cast(params, [:capacity, :title, :description, :location, :busy, :recurrence, :visibility,
+                     :metadata, :notifications, :hide_participants, :master_event_id])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_embed(:conferencing)
     |> cast_embed(:reminders)

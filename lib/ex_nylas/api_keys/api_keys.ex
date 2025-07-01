@@ -6,10 +6,9 @@ defmodule ExNylas.APIKeys do
   """
 
   alias ExNylas.API
-  alias ExNylas.Response
-  alias ExNylas.Connection, as: Conn
   alias ExNylas.APIKey
-
+  alias ExNylas.Connection, as: Conn
+  alias ExNylas.Response
 
   @doc"""
   Create an API key for an application.
@@ -18,7 +17,8 @@ defmodule ExNylas.APIKeys do
 
       iex> {:ok, result} = ExNylas.APIKeys.create(conn, "application_id", %{name: "My API Key", expires_in: 90  }, "signature", "kid", "nonce", "timestamp")
   """
-  @spec create(Conn.t(), String.t(), map(), String.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec create(Conn.t(), String.t(), map(), String.t(), String.t(), String.t(), String.t()) ::
+    {:ok, Response.t()} | {:error, Response.t()}
   def create(%Conn{} = conn, application_id, body, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys",
@@ -37,7 +37,8 @@ defmodule ExNylas.APIKeys do
 
       iex> result = ExNylas.APIKeys.create!(conn, "application_id", %{name: "My API Key", expires_in: 90  }, "signature", "kid", "nonce", "timestamp")
   """
-  @spec create!(Conn.t(), String.t(), map(), String.t(), String.t(), String.t(), String.t()) :: Response.t()
+  @spec create!(Conn.t(), String.t(), map(), String.t(), String.t(), String.t(), String.t()) ::
+    Response.t()
   def create!(%Conn{} = conn, application_id, body, signature, kid, nonce, timestamp) do
     case create(conn, application_id, body, signature, kid, nonce, timestamp) do
       {:ok, response} -> response
@@ -52,7 +53,8 @@ defmodule ExNylas.APIKeys do
 
       iex> {:ok, result} = ExNylas.APIKeys.list(conn, "application_id", "signature", "kid", "nonce", "timestamp")
   """
-  @spec list(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec list(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
+    {:ok, Response.t()} | {:error, Response.t()}
   def list(%Conn{} = conn, application_id, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys",
@@ -70,7 +72,8 @@ defmodule ExNylas.APIKeys do
 
       iex> result = ExNylas.APIKeys.list!(conn, "application_id", "signature", "kid", "nonce", "timestamp")
   """
-  @spec list!(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: Response.t()
+  @spec list!(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
+    Response.t()
   def list!(%Conn{} = conn, application_id, signature, kid, nonce, timestamp) do
     case list(conn, application_id, signature, kid, nonce, timestamp) do
       {:ok, response} -> response
@@ -85,7 +88,8 @@ defmodule ExNylas.APIKeys do
 
       iex> {:ok, result} = ExNylas.APIKeys.find(conn, "application_id", "api_key_id", "signature", "kid", "nonce", "timestamp")
   """
-  @spec find(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec find(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
+    {:ok, Response.t()} | {:error, Response.t()}
   def find(%Conn{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys/#{api_key_id}",
@@ -103,7 +107,8 @@ defmodule ExNylas.APIKeys do
 
       iex> result = ExNylas.APIKeys.find!(conn, "application_id", "api_key_id", "signature", "kid", "nonce", "timestamp")
   """
-  @spec find!(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: Response.t()
+  @spec find!(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
+    Response.t()
   def find!(%Conn{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     case find(conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
       {:ok, response} -> response
@@ -118,7 +123,8 @@ defmodule ExNylas.APIKeys do
 
       iex> {:ok, result} = ExNylas.APIKeys.delete(conn, "application_id", "api_key_id", "signature", "kid", "nonce", "timestamp")
   """
-  @spec delete(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec delete(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
+    {:ok, Response.t()} | {:error, Response.t()}
   def delete(%Conn{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys/#{api_key_id}",
@@ -136,7 +142,8 @@ defmodule ExNylas.APIKeys do
 
       iex> result = ExNylas.APIKeys.delete!(conn, "application_id", "api_key_id", "signature", "kid", "nonce", "timestamp")
   """
-  @spec delete!(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) :: Response.t()
+  @spec delete!(Conn.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
+    Response.t()
   def delete!(%Conn{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     case delete(conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
       {:ok, response} -> response

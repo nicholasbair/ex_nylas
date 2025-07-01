@@ -16,7 +16,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(200, ~s<{"data": ["result1"]}>)
     end)
 
-    assert {:ok, ["result1"]} = Paging.all(default_connection(bypass), Messages, true)
+    assert {:ok, ["result1"]} = Paging.all(default_connection(bypass), &Messages.list/2, true)
   end
 
   test "all/4 returns error on failure with cursor paging", %{bypass: bypass} do
@@ -26,7 +26,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} = Paging.all(default_connection(bypass), Messages, true)
+    assert {:error, %Response{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, true)
   end
 
   test "all/4 returns paginated results with offset paging", %{bypass: bypass} do
@@ -36,7 +36,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(200, ~s<{"data": ["result1"], "limit": 50, "offset": 0}>)
     end)
 
-    assert {:ok, ["result1"]} = Paging.all(default_connection(bypass), Messages, false)
+    assert {:ok, ["result1"]} = Paging.all(default_connection(bypass), &Messages.list/2, false)
   end
 
   test "all/4 returns error on failure with offset paging", %{bypass: bypass} do
@@ -46,7 +46,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} = Paging.all(default_connection(bypass), Messages, false)
+    assert {:error, %Response{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, false)
   end
 
   test "all!/4 returns paginated results with cursor paging", %{bypass: bypass} do
@@ -56,7 +56,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(200, ~s<{"data": ["result1"]}>)
     end)
 
-    assert ["result1"] = Paging.all!(default_connection(bypass), Messages, true)
+    assert ["result1"] = Paging.all!(default_connection(bypass), &Messages.list/2, true)
   end
 
   test "all!/4 raises error on failure with cursor paging", %{bypass: bypass} do
@@ -67,7 +67,7 @@ defmodule ExNylasTest.Paging do
     end)
 
     assert_raise ExNylasError, fn ->
-      Paging.all!(default_connection(bypass), Messages, true)
+      Paging.all!(default_connection(bypass), &Messages.list/2, true)
     end
   end
 
@@ -78,7 +78,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(200, ~s<{"data": ["result1"], "limit": 50, "offset": 0}>)
     end)
 
-    assert ["result1"] = Paging.all!(default_connection(bypass), Messages, false)
+    assert ["result1"] = Paging.all!(default_connection(bypass), &Messages.list/2, false)
   end
 
   test "all!/4 raises error on failure with offset paging", %{bypass: bypass} do
@@ -89,7 +89,7 @@ defmodule ExNylasTest.Paging do
     end)
 
     assert_raise ExNylasError, fn ->
-      Paging.all!(default_connection(bypass), Messages, false)
+      Paging.all!(default_connection(bypass), &Messages.list/2, false)
     end
   end
 end

@@ -9,7 +9,9 @@ defmodule ExNylas.Contact.Build do
   import Ecto.Changeset
   alias ExNylas.Schema.Util
 
-  @derive {Jason.Encoder, only: [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source, :emails, :im_addresses, :phone_numbers, :web_pages, :groups, :physical_addresses]}
+  @derive {Jason.Encoder,
+    only: [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source,
+           :emails, :im_addresses, :phone_numbers, :web_pages, :groups, :physical_addresses]}
   @primary_key false
 
   typed_embedded_schema do
@@ -72,7 +74,9 @@ defmodule ExNylas.Contact.Build do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:given_name, :job_title, :manager_name, :notes, :office_location, :object, :source])
+    |> cast(params, [
+      :given_name, :job_title, :manager_name, :notes, :office_location, :object, :source
+    ])
     |> cast_embed(:emails, with: &email_changeset/2)
     |> cast_embed(:im_addresses, with: &im_changeset/2)
     |> cast_embed(:phone_numbers, with: &phone_changeset/2)

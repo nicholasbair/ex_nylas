@@ -48,7 +48,8 @@ defmodule ExNylas.Application do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:application_id, :organization_id, :region, :created_at, :updated_at, :environment, :v2_application_id])
+    |> cast(params, [:application_id, :organization_id, :region, :created_at, :updated_at,
+                     :environment, :v2_application_id])
     |> cast_embed(:branding, with: &Util.embedded_changeset/2)
     |> cast_embed(:hosted_authentication, with: &Util.embedded_changeset/2)
     |> cast_embed(:callback_uris)

@@ -9,8 +9,8 @@ defmodule ExNylas.Event do
   import Ecto.Changeset
   import PolymorphicEmbed
 
-  alias ExNylas.Schema.Util
   alias ExNylas.Notetaker
+  alias ExNylas.Schema.Util
   alias ExNylas.Event.{
     Conferencing,
     Conferencing.Details,
@@ -159,7 +159,12 @@ defmodule ExNylas.Event do
   @doc false
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description, :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata, :object, :occurrences, :cancelled_occurrences, :read_only, :recurrence, :status, :text_description, :title, :updated_at, :visibility])
+    |> cast(params, [
+      :id, :grant_id, :calendar_id, :capacity, :busy, :created_at, :description,
+      :hide_participants, :html_link, :ical_uid, :location, :master_event_id, :metadata,
+      :object, :occurrences, :cancelled_occurrences, :read_only, :recurrence, :status,
+      :text_description, :title, :updated_at, :visibility
+    ])
     |> cast_embed(:participants, with: &Util.embedded_changeset/2)
     |> cast_polymorphic_embed(:when)
     |> cast_embed(:conferencing, with: &conferencing_changeset/2)
