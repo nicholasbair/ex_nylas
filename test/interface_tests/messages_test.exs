@@ -141,28 +141,6 @@ defmodule ExNylasTest.Messages do
       Messages.send_raw(default_connection(bypass), mime_content)
   end
 
-  test "send_raw/3 returns success with basic MIME", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
-      assert conn.query_string == "type=mime"
-      conn
-      |> put_resp_content_type("application/json")
-      |> send_resp(200, ~s<{"data": {"id": "raw-message-id"}}>)
-    end)
-
-    mime_content = """
-    MIME-Version: 1.0
-    From: sender@example.com
-    To: recipient@example.com
-    Subject: Test Raw MIME
-    Content-Type: text/plain
-
-    This is a test message sent via raw MIME.
-    """
-
-    assert {:ok, %Response{data: %Message{id: "raw-message-id"}}} =
-      Messages.send_raw(default_connection(bypass), mime_content)
-  end
-
   test "send_raw/3 returns error on failure", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
@@ -214,28 +192,6 @@ defmodule ExNylasTest.Messages do
     end
   end
 
-  test "send_raw!/3 returns success with basic MIME", %{bypass: bypass} do
-    Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
-      assert conn.query_string == "type=mime"
-      conn
-      |> put_resp_content_type("application/json")
-      |> send_resp(200, ~s<{"data": {"id": "raw-message-id"}}>)
-    end)
-
-    mime_content = """
-    MIME-Version: 1.0
-    From: sender@example.com
-    To: recipient@example.com
-    Subject: Test Raw MIME
-    Content-Type: text/plain
-
-    This is a test message sent via raw MIME.
-    """
-
-    assert %Response{data: %Message{id: "raw-message-id"}} =
-      Messages.send_raw!(default_connection(bypass), mime_content)
-  end
-
   test "send_raw/3 creates proper multipart structure", %{bypass: bypass} do
     Bypass.expect_once(bypass, "POST", "/v3/grants/grant_id/messages/send", fn conn ->
       assert conn.query_string == "type=mime"
@@ -243,9 +199,42 @@ defmodule ExNylasTest.Messages do
       content_type = get_req_header(conn, "content-type") |> List.first()
       assert String.starts_with?(content_type, "multipart/form-data")
 
+      # Extract boundary from content-type header
+      boundary = case Regex.run(~r/boundary=([^;]+)/, content_type) do
+        [_, boundary_value] -> String.trim(boundary_value, "\"")
+        nil -> flunk("No boundary found in content-type header")
+      end
+      assert String.length(boundary) > 0
+
       content_length = get_req_header(conn, "content-length") |> List.first()
       assert content_length
       assert String.to_integer(content_length) > 0
+
+      # Read and validate the multipart body
+      {:ok, body, _conn} = Plug.Conn.read_body(conn)
+      assert String.length(body) > 0
+
+      # Validate boundary markers are present
+      assert String.contains?(body, "--#{boundary}")
+      assert String.contains?(body, "--#{boundary}--")
+
+      # Validate Content-Disposition header is present (case-insensitive)
+      assert String.contains?(String.downcase(body), "content-disposition: form-data")
+
+      # Validate the MIME content is properly encoded in the multipart body
+      expected_mime_content = """
+      MIME-Version: 1.0
+      From: test@example.com
+      To: recipient@example.com
+      Subject: Test
+      Content-Type: text/plain
+
+      Test content
+      """
+      |> String.trim()
+
+      # The MIME content should be present in the body after the Content-Disposition header
+      assert String.contains?(body, expected_mime_content)
 
       conn
       |> put_resp_content_type("application/json")
@@ -273,9 +262,31 @@ defmodule ExNylasTest.Messages do
       content_type = get_req_header(conn, "content-type") |> List.first()
       assert String.starts_with?(content_type, "multipart/form-data")
 
+      # Extract boundary from content-type header
+      boundary = case Regex.run(~r/boundary=([^;]+)/, content_type) do
+        [_, boundary_value] -> String.trim(boundary_value, "\"")
+        nil -> flunk("No boundary found in content-type header")
+      end
+      assert String.length(boundary) > 0
+
       content_length = get_req_header(conn, "content-length") |> List.first()
       assert content_length
       assert String.to_integer(content_length) > 0
+
+      # Read and validate the multipart body
+      {:ok, body, _conn} = Plug.Conn.read_body(conn)
+      assert String.length(body) > 0
+
+      # Validate boundary markers are present
+      assert String.contains?(body, "--#{boundary}")
+      assert String.contains?(body, "--#{boundary}--")
+
+      # Validate Content-Disposition header is present (case-insensitive)
+      assert String.contains?(String.downcase(body), "content-disposition: form-data")
+
+      # Validate the MIME content is properly encoded in the multipart body
+      expected_mime_content = "MIME-Version: 1.0\nSimple MIME content"
+      assert String.contains?(body, expected_mime_content)
 
       conn
       |> put_resp_content_type("application/json")
