@@ -133,17 +133,31 @@ defmodule UtilTest.PagingTest do
 
   describe "send_to functionality" do
     test "sends data to function when send_to is provided", %{bypass: bypass} do
-      received_data = []
+      request_count = :counters.new(1, [])
 
       send_to_fn = fn data ->
         send(self(), {:data_received, data})
-        received_data ++ [data]
       end
 
-      Bypass.expect_once(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
-        conn
-        |> Plug.Conn.resp(200, ~s<{"data": [{"id": "1"}]}> )
-        |> Plug.Conn.put_resp_header("content-type", "application/json")
+      Bypass.expect(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
+        count = :counters.get(request_count, 1)
+        :counters.add(request_count, 1, 1)
+        case count do
+          0 ->
+            assert conn.params["page_token"] == ""
+            conn
+            |> Plug.Conn.resp(200, ~s<{"data": [{"id": "1"}], "next_cursor": "next_page"}>)
+            |> Plug.Conn.put_resp_header("content-type", "application/json")
+          1 ->
+            assert conn.params["page_token"] == "next_page"
+            conn
+            |> Plug.Conn.resp(200, ~s<{"data": [{"id": "2"}]}>)
+            |> Plug.Conn.put_resp_header("content-type", "application/json")
+          _ ->
+            conn
+            |> Plug.Conn.resp(500, ~s<{"error": "unexpected request"}>)
+            |> Plug.Conn.put_resp_header("content-type", "application/json")
+        end
       end)
 
       res = ExNylas.Paging.all(
@@ -159,21 +173,38 @@ defmodule UtilTest.PagingTest do
       )
 
       assert match?({:ok, []}, res)
+      assert :counters.get(request_count, 1) == 2
+
       assert_receive {:data_received, [%ExNylas.Message{id: "1"}]}
+      assert_receive {:data_received, [%ExNylas.Message{id: "2"}]}
     end
 
     test "sends data with metadata when both send_to and with_metadata are provided", %{bypass: bypass} do
-      received_data = []
+      request_count = :counters.new(1, [])
 
       send_to_fn = fn {metadata, data} ->
         send(self(), {:data_received, metadata, data})
-        received_data ++ [{metadata, data}]
       end
 
-      Bypass.expect_once(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
-        conn
-        |> Plug.Conn.resp(200, ~s<{"data": [{"id": "1"}]}> )
-        |> Plug.Conn.put_resp_header("content-type", "application/json")
+      Bypass.expect(bypass, "GET", "/v3/grants/1234/messages", fn conn ->
+        count = :counters.get(request_count, 1)
+        :counters.add(request_count, 1, 1)
+        case count do
+          0 ->
+            assert conn.params["page_token"] == ""
+            conn
+            |> Plug.Conn.resp(200, ~s<{"data": [{"id": "1"}], "next_cursor": "next_page"}>)
+            |> Plug.Conn.put_resp_header("content-type", "application/json")
+          1 ->
+            assert conn.params["page_token"] == "next_page"
+            conn
+            |> Plug.Conn.resp(200, ~s<{"data": [{"id": "2"}]}>)
+            |> Plug.Conn.put_resp_header("content-type", "application/json")
+          _ ->
+            conn
+            |> Plug.Conn.resp(500, ~s<{"error": "unexpected request"}>)
+            |> Plug.Conn.put_resp_header("content-type", "application/json")
+        end
       end)
 
       res = ExNylas.Paging.all(
@@ -185,11 +216,14 @@ defmodule UtilTest.PagingTest do
         },
         &ExNylas.Messages.list/2,
         true,
-        [send_to: send_to_fn, with_metadata: %{page: 1}]
+        [send_to: send_to_fn, with_metadata: :task_1234]
       )
 
       assert match?({:ok, []}, res)
-      assert_receive {:data_received, %{page: 1}, [%ExNylas.Message{id: "1"}]}
+      assert :counters.get(request_count, 1) == 2
+
+      assert_receive {:data_received, :task_1234, [%ExNylas.Message{id: "1"}]}
+      assert_receive {:data_received, :task_1234, [%ExNylas.Message{id: "2"}]}
     end
   end
 
