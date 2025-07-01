@@ -199,29 +199,26 @@ defmodule ExNylasTest.Messages do
       content_type = get_req_header(conn, "content-type") |> List.first()
       assert String.starts_with?(content_type, "multipart/form-data")
 
-      # Extract boundary from content-type header
-      boundary = case Regex.run(~r/boundary=([^;]+)/, content_type) do
-        [_, boundary_value] -> String.trim(boundary_value, "\"")
-        nil -> flunk("No boundary found in content-type header")
-      end
+      boundary =
+        case Regex.run(~r/boundary=([^;]+)/, content_type) do
+          [_, boundary_value] -> String.trim(boundary_value, "\"")
+          nil -> flunk("No boundary found in content-type header")
+        end
+
       assert String.length(boundary) > 0
 
       content_length = get_req_header(conn, "content-length") |> List.first()
       assert content_length
       assert String.to_integer(content_length) > 0
 
-      # Read and validate the multipart body
       {:ok, body, _conn} = Plug.Conn.read_body(conn)
       assert String.length(body) > 0
 
-      # Validate boundary markers are present
       assert String.contains?(body, "--#{boundary}")
       assert String.contains?(body, "--#{boundary}--")
 
-      # Validate Content-Disposition header is present (case-insensitive)
       assert String.contains?(String.downcase(body), "content-disposition: form-data")
 
-      # Validate the MIME content is properly encoded in the multipart body
       expected_mime_content = """
       MIME-Version: 1.0
       From: test@example.com
@@ -233,7 +230,6 @@ defmodule ExNylasTest.Messages do
       """
       |> String.trim()
 
-      # The MIME content should be present in the body after the Content-Disposition header
       assert String.contains?(body, expected_mime_content)
 
       conn
@@ -262,7 +258,6 @@ defmodule ExNylasTest.Messages do
       content_type = get_req_header(conn, "content-type") |> List.first()
       assert String.starts_with?(content_type, "multipart/form-data")
 
-      # Extract boundary from content-type header
       boundary = case Regex.run(~r/boundary=([^;]+)/, content_type) do
         [_, boundary_value] -> String.trim(boundary_value, "\"")
         nil -> flunk("No boundary found in content-type header")
@@ -273,18 +268,14 @@ defmodule ExNylasTest.Messages do
       assert content_length
       assert String.to_integer(content_length) > 0
 
-      # Read and validate the multipart body
       {:ok, body, _conn} = Plug.Conn.read_body(conn)
       assert String.length(body) > 0
 
-      # Validate boundary markers are present
       assert String.contains?(body, "--#{boundary}")
       assert String.contains?(body, "--#{boundary}--")
 
-      # Validate Content-Disposition header is present (case-insensitive)
       assert String.contains?(String.downcase(body), "content-disposition: form-data")
 
-      # Validate the MIME content is properly encoded in the multipart body
       expected_mime_content = "MIME-Version: 1.0\nSimple MIME content"
       assert String.contains?(body, expected_mime_content)
 
