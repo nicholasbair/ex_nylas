@@ -5,10 +5,16 @@ defmodule ExNylas.Messages do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/messages)
   """
 
-  alias ExNylas.{API, Auth, Multipart, ResponseHandler, Telemetry}
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Message
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Message,
+    Multipart,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]
@@ -26,8 +32,8 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send(conn, message, ["path_to_attachment"])
   """
-  @spec send(Conn.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def send(%Conn{} = conn, message, attachments \\ []) do
+  @spec send(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def send(%Connection{} = conn, message, attachments \\ []) do
     {body, content_type, len} = Multipart.build_multipart(message, attachments)
 
     Req.new(
@@ -48,8 +54,8 @@ defmodule ExNylas.Messages do
 
       iex> sent_message = ExNylas.Messages.send!(conn, message, ["path_to_attachment"])
   """
-  @spec send!(Conn.t(), map(), list()) :: Response.t()
-  def send!(%Conn{} = conn, message, attachments \\ []) do
+  @spec send!(Connection.t(), map(), list()) :: Response.t()
+  def send!(%Connection{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -63,8 +69,8 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime)
   """
-  @spec send_raw(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def send_raw(%Conn{} = conn, mime) do
+  @spec send_raw(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def send_raw(%Connection{} = conn, mime) do
     {body, content_type, len} = Multipart.build_raw_multipart(mime)
 
     Req.new(
@@ -85,8 +91,8 @@ defmodule ExNylas.Messages do
 
       iex> sent_message = ExNylas.Messages.send_raw!(conn, mime)
   """
-  @spec send_raw!(Conn.t(), String.t()) :: Response.t()
-  def send_raw!(%Conn{} = conn, mime) do
+  @spec send_raw!(Connection.t(), String.t()) :: Response.t()
+  def send_raw!(%Connection{} = conn, mime) do
     case send_raw(conn, mime) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -100,8 +106,8 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, message} = ExNylas.Messages.clean(conn, payload)
   """
-  @spec clean(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def clean(%Conn{} = conn, payload) do
+  @spec clean(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def clean(%Connection{} = conn, payload) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",
       auth: Auth.auth_bearer(conn),
@@ -120,8 +126,8 @@ defmodule ExNylas.Messages do
 
       iex> message = ExNylas.Messages.clean!(conn, payload)
   """
-  @spec clean!(Conn.t(), map()) :: Response.t()
-  def clean!(%Conn{} = conn, payload) do
+  @spec clean!(Connection.t(), map()) :: Response.t()
+  def clean!(%Connection{} = conn, payload) do
     case clean(conn, payload) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason

@@ -5,12 +5,15 @@ defmodule ExNylas.StandaloneNotetakers do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/standalone-notetaker)
   """
 
-  alias ExNylas.Connection, as: Conn
   alias ExNylas.{
-    API,Auth, ResponseHandler, Telemetry,
+    API,
+    Auth,
+    Connection,
     Notetaker,
     Notetaker.Media,
-    Response
+    Response,
+    ResponseHandler,
+    Telemetry
   }
 
   use ExNylas,
@@ -27,8 +30,8 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> {:ok, response} = ExNylas.StandaloneNotetakers.cancel(conn, id)
   """
-  @spec cancel(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def cancel(%Conn{} = conn, id) do
+  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/cancel",
       auth: Auth.auth_bearer(conn),
@@ -46,8 +49,8 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> response = ExNylas.StandaloneNotetakers.cancel!(conn, id)
   """
-  @spec cancel!(Conn.t(), String.t()) :: Response.t()
-  def cancel!(%Conn{} = conn, id) do
+  @spec cancel!(Connection.t(), String.t()) :: Response.t()
+  def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
       {:ok, response} -> response
       {:error, reason} -> raise ExNylasError, reason
@@ -61,8 +64,8 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> {:ok, response} = ExNylas.StandaloneNotetakers.leave(conn, id)
   """
-  @spec leave(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def leave(%Conn{} = conn, id) do
+  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/leave",
       auth: Auth.auth_bearer(conn),
@@ -80,8 +83,8 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> response = ExNylas.StandaloneNotetakers.leave!(conn, id)
   """
-  @spec leave!(Conn.t(), String.t()) :: Response.t()
-  def leave!(%Conn{} = conn, id) do
+  @spec leave!(Connection.t(), String.t()) :: Response.t()
+  def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
       {:ok, response} -> response
       {:error, reason} -> raise ExNylasError, reason
@@ -95,8 +98,8 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> {:ok, response} = ExNylas.StandaloneNotetakers.media(conn, id)
   """
-  @spec media(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def media(%Conn{} = conn, id) do
+  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/media",
       auth: Auth.auth_bearer(conn),
@@ -114,8 +117,8 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> response = ExNylas.StandaloneNotetakers.media!(conn, id)
   """
-  @spec media!(Conn.t(), String.t()) :: Response.t()
-  def media!(%Conn{} = conn, id) do
+  @spec media!(Connection.t(), String.t()) :: Response.t()
+  def media!(%Connection{} = conn, id) do
     case media(conn, id) do
       {:ok, response} -> response
       {:error, reason} -> raise ExNylasError, reason

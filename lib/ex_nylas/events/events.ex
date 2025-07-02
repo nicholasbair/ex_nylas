@@ -5,10 +5,15 @@ defmodule ExNylas.Events do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/events)
   """
 
-  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Event
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Event,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   use ExNylas,
     object: "events",
@@ -23,8 +28,8 @@ defmodule ExNylas.Events do
 
       iex> {:ok, result} = ExNylas.Events.import_events(conn, params)
   """
-  @spec import_events(Conn.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def import_events(%Conn{} = conn, params \\ []) do
+  @spec import_events(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def import_events(%Connection{} = conn, params \\ []) do
     Req.new(
       method: :get,
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/import",
@@ -44,8 +49,8 @@ defmodule ExNylas.Events do
 
       iex> result = ExNylas.Events.import_events!(conn, params)
   """
-  @spec import_events!(Conn.t(), Keyword.t() | map()) :: Response.t()
-  def import_events!(%Conn{} = conn, params \\ []) do
+  @spec import_events!(Connection.t(), Keyword.t() | map()) :: Response.t()
+  def import_events!(%Connection{} = conn, params \\ []) do
     case import_events(conn, params) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -59,8 +64,8 @@ defmodule ExNylas.Events do
 
       iex> {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
   """
-  @spec rsvp(Conn.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def rsvp(%Conn{} = conn, event_id, status, calendar_id) do
+  @spec rsvp(Connection.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def rsvp(%Connection{} = conn, event_id, status, calendar_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
       auth: Auth.auth_bearer(conn),
@@ -80,8 +85,8 @@ defmodule ExNylas.Events do
 
       iex> success = ExNylas.Events.rsvp!(conn, event_id, status, calendar_id)
   """
-  @spec rsvp!(Conn.t(), String.t(), String.t(), String.t()) :: Response.t()
-  def rsvp!(%Conn{} = conn, event_id, status, calendar_id) do
+  @spec rsvp!(Connection.t(), String.t(), String.t(), String.t()) :: Response.t()
+  def rsvp!(%Connection{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason

@@ -1,23 +1,25 @@
 defmodule ExNylas.Paging.Cursor do
   @moduledoc false
 
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Paging.Helpers
-  alias ExNylas.Paging.Options
-  alias ExNylas.Response
+  alias ExNylas.{
+    Connection,
+    Paging.Helpers,
+    Paging.Options,
+    Response
+  }
 
   @spec all(
-    Conn.t(),
-    (Conn.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+    Connection.t(),
+    (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
     Keyword.t() | map()
   ) :: {:ok, [struct()]} | {:error, Response.t()}
   def all(conn, list_function, opts \\ []) do
     page_with_cursor(conn, list_function, Options.from_opts(opts))
   end
 
-  @spec page_with_cursor(Conn.t(), (Conn.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+  @spec page_with_cursor(Connection.t(), (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
     Keyword.t() | map(), any() | nil, [any()]) :: {:ok, [any()]} | {:error, Response.t()}
-  defp page_with_cursor(%Conn{} = conn, list_function, opts, next_cursor \\ nil, acc \\ []) do
+  defp page_with_cursor(%Connection{} = conn, list_function, opts, next_cursor \\ nil, acc \\ []) do
     %{query: query, delay: delay, send_to: send_to, with_metadata: with_metadata} = opts
     query = put_in(query, [:page_token], next_cursor)
 

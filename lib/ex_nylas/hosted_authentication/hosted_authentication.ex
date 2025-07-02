@@ -5,8 +5,12 @@ defmodule ExNylas.HostedAuthentication do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
-  alias ExNylas.{API, ResponseHandler, Telemetry}
-  alias ExNylas.Connection, as: Conn
+  alias ExNylas.{
+    API,
+    Connection,
+    ResponseHandler,
+    Telemetry
+  }
   alias ExNylas.HostedAuthentication.Error, as: HAError
   alias ExNylas.HostedAuthentication.Grant, as: HA
 
@@ -31,8 +35,8 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
-  @spec get_auth_url(Conn.t(), map() | Keyword.t()) :: {:ok, String.t()} | {:error, String.t()}
-  def get_auth_url(%Conn{} = conn, options) do
+  @spec get_auth_url(Connection.t(), map() | Keyword.t()) :: {:ok, String.t()} | {:error, String.t()}
+  def get_auth_url(%Connection{} = conn, options) do
     cond do
       is_nil(conn.client_id) ->
         {:error, "client_id on the connection struct is required for this call"}
@@ -63,8 +67,8 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> uri = ExNylas.HostedAuthentication.get_auth_url!(conn, options)
   """
-  @spec get_auth_url!(Conn.t(), map() | Keyword.t()) :: String.t()
-  def get_auth_url!(%Conn{} = conn, options) do
+  @spec get_auth_url!(Connection.t(), map() | Keyword.t()) :: String.t()
+  def get_auth_url!(%Connection{} = conn, options) do
     case get_auth_url(conn, options) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
@@ -78,10 +82,10 @@ defmodule ExNylas.HostedAuthentication do
 
       iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
-  @spec exchange_code_for_token(Conn.t(), String.t(), String.t(), String.t()) ::
+  @spec exchange_code_for_token(Connection.t(), String.t(), String.t(), String.t()) ::
           {:ok, HA.t()} | {:error, HAError.t()}
   def exchange_code_for_token(
-        %Conn{} = conn,
+        %Connection{} = conn,
         code,
         redirect_uri,
         grant_type \\ "authorization_code"
@@ -109,9 +113,9 @@ defmodule ExNylas.HostedAuthentication do
 
       iex> access_token = ExNylas.HostedAuthentication.exchange_code_for_token!(conn, code, redirect)
   """
-  @spec exchange_code_for_token!(Conn.t(), String.t(), String.t(), String.t()) :: HA.t()
+  @spec exchange_code_for_token!(Connection.t(), String.t(), String.t(), String.t()) :: HA.t()
   def exchange_code_for_token!(
-        %Conn{} = conn,
+        %Connection{} = conn,
         code,
         redirect_uri,
         grant_type \\ "authorization_code"

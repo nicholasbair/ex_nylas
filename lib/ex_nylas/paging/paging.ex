@@ -1,12 +1,14 @@
 defmodule ExNylas.Paging do
   @moduledoc false
 
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Paging.Cursor
-  alias ExNylas.Paging.Offset
-  alias ExNylas.Response
+  alias ExNylas.{
+    Connection,
+    Paging.Cursor,
+    Paging.Offset,
+    Response
+  }
 
-  @spec all(Conn.t(), (Conn.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), boolean(),
+  @spec all(Connection.t(), (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), boolean(),
     Keyword.t() | map()) :: {:ok, [struct()]} | {:error, Response.t()}
   def all(conn, list_function, use_cursor_paging, opts \\ [])
   def all(conn, list_function, true = _use_cursor_paging, opts) do
@@ -17,7 +19,7 @@ defmodule ExNylas.Paging do
     Offset.all(conn, list_function, opts)
   end
 
-  @spec all!(Conn.t(), (Conn.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), boolean(),
+  @spec all!(Connection.t(), (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), boolean(),
     Keyword.t() | map()) :: [struct()]
   def all!(conn, list_function, use_cursor_paging, opts \\ [])
   def all!(conn, list_function, true = _use_cursor_paging, opts) do

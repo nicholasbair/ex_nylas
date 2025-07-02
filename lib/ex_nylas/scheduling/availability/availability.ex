@@ -6,9 +6,11 @@ defmodule ExNylas.Scheduling.Availability do
   """
 
   alias ExNylas.{
-    API, ResponseHandler, Telemetry,
+    API,
     Availability,
-    Response
+    Response,
+    ResponseHandler,
+    Telemetry
   }
   alias ExNylas.Connection, as: Conn
 

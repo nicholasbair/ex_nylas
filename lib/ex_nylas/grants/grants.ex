@@ -5,10 +5,15 @@ defmodule ExNylas.Grants do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/manage-grants)
   """
 
-  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Grant
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Grant,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   use ExNylas,
     object: "grants",
@@ -25,8 +30,8 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
-  @spec me(Conn.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def me(%Conn{} = conn) do
+  @spec me(Connection.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def me(%Connection{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",
       auth: Auth.auth_bearer(conn),
@@ -44,8 +49,8 @@ defmodule ExNylas.Grants do
 
       iex> result = ExNylas.Grants.me!(conn)
   """
-  @spec me!(Conn.t()) :: Response.t()
-  def me!(%Conn{} = conn) do
+  @spec me!(Connection.t()) :: Response.t()
+  def me!(%Connection{} = conn) do
     case me(conn) do
       {:ok, response} -> response
       {:error, response} -> raise ExNylasError, response
@@ -62,8 +67,8 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.refresh(conn, "refresh-token")
   """
-  @spec refresh(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def refresh(%Conn{} = conn, refresh_token) do
+  @spec refresh(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def refresh(%Connection{} = conn, refresh_token) do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do
       {:error, %Response{
@@ -100,8 +105,8 @@ defmodule ExNylas.Grants do
 
       iex> result = ExNylas.Grants.refresh!(conn, "refresh-token")
   """
-  @spec refresh!(Conn.t(), String.t()) :: Response.t()
-  def refresh!(%Conn{} = conn, refresh_token) do
+  @spec refresh!(Connection.t(), String.t()) :: Response.t()
+  def refresh!(%Connection{} = conn, refresh_token) do
     case refresh(conn, refresh_token) do
       {:ok, response} -> response
       {:error, response} -> raise ExNylasError, response

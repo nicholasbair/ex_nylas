@@ -1,7 +1,5 @@
 defmodule ExNylas.API do
-  @moduledoc """
-  Core API utilities for Nylas API requests.
-  """
+  @moduledoc false
 
   @base_headers [
     accept: "application/json",
