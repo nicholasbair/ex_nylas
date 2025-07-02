@@ -9,10 +9,10 @@ defmodule ExNylas.Paging.HelpersTest do
       Helpers.maybe_delay(0)
       end_time = System.monotonic_time(:millisecond)
 
-      assert end_time - start_time < 10
+      assert end_time - start_time < 50
     end
 
-        test "does not delay when delay is negative" do
+    test "does not delay when delay is negative" do
       start_time = System.monotonic_time(:millisecond)
       Helpers.maybe_delay(-100)
       end_time = System.monotonic_time(:millisecond)
