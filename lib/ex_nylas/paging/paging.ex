@@ -1,11 +1,5 @@
 defmodule ExNylas.Paging do
-  @moduledoc """
-  Pagination utilities for Nylas API requests.
-
-  This module provides a unified interface for both cursor-based and offset-based pagination.
-  """
-
-
+  @moduledoc false
 
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Paging.Cursor

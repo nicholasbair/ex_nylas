@@ -2,15 +2,19 @@ defmodule ExNylas.Paging.Offset do
   @moduledoc false
 
   alias ExNylas.Connection, as: Conn
-  alias ExNylas.Response
-  alias ExNylas.Paging.Options
   alias ExNylas.Paging.Helpers
+  alias ExNylas.Paging.Options
+  alias ExNylas.Response
 
   import ExNylas.Util
 
   @limit 50
 
-  @spec all(Conn.t(), (Conn.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), Keyword.t() | map()) :: {:ok, [struct()]} | {:error, Response.t()}
+  @spec all(
+    Conn.t(),
+    (Conn.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+    Keyword.t() | map()
+  ) :: {:ok, [struct()]} | {:error, Response.t()}
   def all(conn, list_function, opts \\ []) do
     page_with_offset(conn, list_function, Options.from_opts(opts))
   end
