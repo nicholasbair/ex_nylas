@@ -8,8 +8,12 @@ defmodule ExNylas.Paging do
     Response
   }
 
-  @spec all(Connection.t(), (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), boolean(),
-    Keyword.t() | map()) :: {:ok, [struct()]} | {:error, Response.t()}
+  @spec all(
+          Connection.t(),
+          (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+          boolean(),
+          Keyword.t() | map()
+        ) :: {:ok, [struct()]} | {:error, Response.t()}
   def all(conn, list_function, use_cursor_paging, opts \\ [])
   def all(conn, list_function, true = _use_cursor_paging, opts) do
     Cursor.all(conn, list_function, opts)
@@ -19,8 +23,12 @@ defmodule ExNylas.Paging do
     Offset.all(conn, list_function, opts)
   end
 
-  @spec all!(Connection.t(), (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}), boolean(),
-    Keyword.t() | map()) :: [struct()]
+  @spec all!(
+          Connection.t(),
+          (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+          boolean(),
+          Keyword.t() | map()
+        ) :: [struct()]
   def all!(conn, list_function, use_cursor_paging, opts \\ [])
   def all!(conn, list_function, true = _use_cursor_paging, opts) do
     case Cursor.all(conn, list_function, opts) do
