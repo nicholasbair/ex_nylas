@@ -5,7 +5,7 @@ defmodule ExNylas.Messages do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/messages)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, Multipart, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Message
   alias ExNylas.Response
@@ -28,17 +28,17 @@ defmodule ExNylas.Messages do
   """
   @spec send(Conn.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def send(%Conn{} = conn, message, attachments \\ []) do
-    {body, content_type, len} = API.build_multipart(message, attachments)
+    {body, content_type, len} = Multipart.build_multipart(message, attachments)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Message)
+    |> ResponseHandler.handle_response(Message)
   end
 
   @doc """
@@ -65,17 +65,17 @@ defmodule ExNylas.Messages do
   """
   @spec send_raw(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
   def send_raw(%Conn{} = conn, mime) do
-    {body, content_type, len} = build_raw_multipart(mime)
+    {body, content_type, len} = Multipart.build_raw_multipart(mime)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send?type=mime",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Message)
+    |> ResponseHandler.handle_response(Message)
   end
 
   @doc """
@@ -104,13 +104,13 @@ defmodule ExNylas.Messages do
   def clean(%Conn{} = conn, payload) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: payload
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.put(conn.options)
-    |> API.handle_response(Message)
+    |> ResponseHandler.handle_response(Message)
   end
 
   @doc """
@@ -126,18 +126,5 @@ defmodule ExNylas.Messages do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
     end
-  end
-
-  @spec build_raw_multipart(String.t()) :: {Enum.t(), String.t(), integer()}
-  defp build_raw_multipart(mime) do
-    multipart =
-      Multipart.new()
-      |> Multipart.add_part(Multipart.Part.text_field(mime, :mime))
-
-    {
-      Multipart.body_stream(multipart),
-      Multipart.content_type(multipart, "multipart/form-data"),
-      Multipart.content_length(multipart)
-    }
   end
 end

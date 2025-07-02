@@ -5,7 +5,7 @@ defmodule ExNylas.CalendarFreeBusy do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.FreeBusy, as: FB
   alias ExNylas.Response
@@ -26,13 +26,13 @@ defmodule ExNylas.CalendarFreeBusy do
   def list(%Conn{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(FB)
+    |> ResponseHandler.handle_response(FB)
   end
 
   @doc """

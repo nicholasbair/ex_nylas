@@ -5,7 +5,7 @@ defmodule ExNylas.HostedAuthentication do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.HostedAuthentication.Error, as: HAError
   alias ExNylas.HostedAuthentication.Grant, as: HA
@@ -97,7 +97,7 @@ defmodule ExNylas.HostedAuthentication do
         redirect_uri: redirect_uri
       }
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
     |> conditional_transform()
   end
@@ -150,10 +150,10 @@ defmodule ExNylas.HostedAuthentication do
   # The response from the API differs based on the whether the request was successful or not
   # Pass the correct schema name to transform based on the response status
   defp conditional_transform({:ok, %{status: 200}} = res) do
-    API.handle_response(res, HA, false)
+    ResponseHandler.handle_response(res, HA, false)
   end
 
   defp conditional_transform(res) do
-    API.handle_response(res, HAError, false)
+    ResponseHandler.handle_response(res, HAError, false)
   end
 end

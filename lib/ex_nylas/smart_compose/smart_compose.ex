@@ -5,7 +5,7 @@ defmodule ExNylas.SmartCompose do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/smart-compose)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
   alias ExNylas.Schema.SmartCompose, as: SC
@@ -21,13 +21,13 @@ defmodule ExNylas.SmartCompose do
   def create(%Conn{} = conn, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{prompt: prompt}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(SC)
+    |> ResponseHandler.handle_response(SC)
   end
 
   @doc """
@@ -56,13 +56,13 @@ defmodule ExNylas.SmartCompose do
   def create_reply(%Conn{} = conn, message_id, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{prompt: prompt}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(SC)
+    |> ResponseHandler.handle_response(SC)
   end
 
   @doc """
@@ -95,16 +95,16 @@ defmodule ExNylas.SmartCompose do
   def create_stream(%Conn{} = conn, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers([accept: "text/event-stream"]),
       json: %{prompt: prompt},
       decode_body: false,
-      into: API.handle_stream(stream_to),
+      into: ResponseHandler.handle_stream(stream_to),
       compressed: false
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """
@@ -123,15 +123,15 @@ defmodule ExNylas.SmartCompose do
   def create_reply_stream(%Conn{} = conn, message_id, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers([accept: "text/event-stream"]),
       json: %{prompt: prompt},
       decode_body: false,
-      into: API.handle_stream(stream_to),
+      into: ResponseHandler.handle_stream(stream_to),
       compressed: false
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 end

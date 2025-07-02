@@ -6,7 +6,7 @@ defmodule ExNylas.Scheduling.Availability do
   """
 
   alias ExNylas.{
-    API,
+    API, ResponseHandler, Telemetry,
     Availability,
     Response
   }
@@ -41,9 +41,9 @@ defmodule ExNylas.Scheduling.Availability do
         end_time: end_time
       ])
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(Availability)
+    |> ResponseHandler.handle_response(Availability)
   end
 
   @doc """

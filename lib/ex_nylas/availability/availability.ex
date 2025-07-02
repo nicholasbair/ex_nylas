@@ -5,7 +5,7 @@ defmodule ExNylas.CalendarAvailability do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Availability, as: AV
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
@@ -26,13 +26,13 @@ defmodule ExNylas.CalendarAvailability do
   def list(%Conn{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/calendars/availability",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(AV)
+    |> ResponseHandler.handle_response(AV)
   end
 
   @doc """

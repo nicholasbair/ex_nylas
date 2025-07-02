@@ -5,7 +5,7 @@ defmodule ExNylas.ConnectorCredentials do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connector-credentials)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.ConnectorCredential, as: Cred
   alias ExNylas.Response
@@ -25,13 +25,13 @@ defmodule ExNylas.ConnectorCredentials do
   def list(%Conn{} = conn, provider, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       params: params
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(Cred)
+    |> ResponseHandler.handle_response(Cred)
   end
 
   @doc """
@@ -58,13 +58,13 @@ defmodule ExNylas.ConnectorCredentials do
   def create(%Conn{} = conn, provider, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Cred)
+    |> ResponseHandler.handle_response(Cred)
   end
 
   @doc """
@@ -91,12 +91,12 @@ defmodule ExNylas.ConnectorCredentials do
   def find(%Conn{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(Cred)
+    |> ResponseHandler.handle_response(Cred)
   end
 
   @doc """
@@ -123,12 +123,12 @@ defmodule ExNylas.ConnectorCredentials do
   def delete(%Conn{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.delete(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """
@@ -156,13 +156,13 @@ defmodule ExNylas.ConnectorCredentials do
   def update(%Conn{} = conn, provider, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
-    |> API.handle_response(Cred)
+    |> ResponseHandler.handle_response(Cred)
   end
 
   @doc """

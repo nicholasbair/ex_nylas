@@ -7,7 +7,7 @@ defmodule ExNylas.StandaloneNotetakers do
 
   alias ExNylas.Connection, as: Conn
   alias ExNylas.{
-    API,
+    API,Auth, ResponseHandler, Telemetry,
     Notetaker,
     Notetaker.Media,
     Response
@@ -31,12 +31,12 @@ defmodule ExNylas.StandaloneNotetakers do
   def cancel(%Conn{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/cancel",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.delete(conn.options)
-    |> API.handle_response(Notetaker)
+    |> ResponseHandler.handle_response(Notetaker)
   end
 
   @doc """
@@ -65,12 +65,12 @@ defmodule ExNylas.StandaloneNotetakers do
   def leave(%Conn{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/leave",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Notetaker)
+    |> ResponseHandler.handle_response(Notetaker)
   end
 
   @doc """
@@ -99,12 +99,12 @@ defmodule ExNylas.StandaloneNotetakers do
   def media(%Conn{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/media",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(Media)
+    |> ResponseHandler.handle_response(Media)
   end
 
   @doc """

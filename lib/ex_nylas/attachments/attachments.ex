@@ -5,7 +5,7 @@ defmodule ExNylas.Attachments do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/attachments)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
 
@@ -26,14 +26,14 @@ defmodule ExNylas.Attachments do
   def download(%Conn{} = conn, id, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/attachments/#{id}/download",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers([accept: "application/octet-stream"]),
       params: params,
       decode_body: false
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """

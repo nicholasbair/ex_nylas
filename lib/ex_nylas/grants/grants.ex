@@ -5,7 +5,7 @@ defmodule ExNylas.Grants do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/manage-grants)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
   alias ExNylas.Response
@@ -29,12 +29,12 @@ defmodule ExNylas.Grants do
   def me(%Conn{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(Grant)
+    |> ResponseHandler.handle_response(Grant)
   end
 
   @doc """
@@ -84,7 +84,7 @@ defmodule ExNylas.Grants do
         headers: API.base_headers(),
         json: body
       )
-      |> API.maybe_attach_telemetry(conn)
+      |> Telemetry.maybe_attach_telemetry(conn)
       |> Req.post(conn.options)
       |> conditional_transform()
     end
@@ -113,11 +113,11 @@ defmodule ExNylas.Grants do
   # For successful responses (status 200), we use the ExNylas.HostedAuthentication.Grant schema
   # which matches the structure of the token endpoint response
   defp conditional_transform({:ok, %{status: 200}} = res) do
-    API.handle_response(res, ExNylas.HostedAuthentication.Grant, false)
+    ResponseHandler.handle_response(res, ExNylas.HostedAuthentication.Grant, false)
   end
 
   # For error responses, we use the default error handling
   defp conditional_transform(res) do
-    API.handle_response(res)
+    ResponseHandler.handle_response(res)
   end
 end

@@ -6,6 +6,7 @@ defmodule ExNylas.APIKeys do
   """
 
   alias ExNylas.API
+  alias ExNylas.{Telemetry, ResponseHandler}
   alias ExNylas.APIKey
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
@@ -25,9 +26,9 @@ defmodule ExNylas.APIKeys do
       headers: build_headers(signature, kid, nonce, timestamp),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(APIKey)
+    |> ResponseHandler.handle_response(APIKey)
   end
 
   @doc"""
@@ -60,9 +61,9 @@ defmodule ExNylas.APIKeys do
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys",
       headers: build_headers(signature, kid, nonce, timestamp)
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(APIKey)
+    |> ResponseHandler.handle_response(APIKey)
   end
 
   @doc"""
@@ -95,9 +96,9 @@ defmodule ExNylas.APIKeys do
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys/#{api_key_id}",
       headers: build_headers(signature, kid, nonce, timestamp)
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(APIKey)
+    |> ResponseHandler.handle_response(APIKey)
   end
 
   @doc"""
@@ -130,9 +131,9 @@ defmodule ExNylas.APIKeys do
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys/#{api_key_id}",
       headers: build_headers(signature, kid, nonce, timestamp)
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.delete(conn.options)
-    |> API.handle_response(APIKey)
+    |> ResponseHandler.handle_response(APIKey)
   end
 
   @doc"""

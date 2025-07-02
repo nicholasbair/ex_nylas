@@ -5,7 +5,7 @@ defmodule ExNylas do
 
   import Ecto.Changeset
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
   alias ExNylas.Util
@@ -141,9 +141,9 @@ defmodule ExNylas do
             headers: API.base_headers(),
             params: Util.indifferent_put_new(params, :limit, 1)
           )
-          |> API.maybe_attach_telemetry(conn)
+          |> Telemetry.maybe_attach_telemetry(conn)
           |> Req.request(conn.options)
-          |> API.handle_response(unquote(struct_name))
+          |> ResponseHandler.handle_response(unquote(struct_name))
 
         case res do
           {:ok, val} -> {:ok, %{val | data: Enum.at(val.data, 0)}}
@@ -186,9 +186,9 @@ defmodule ExNylas do
           headers: API.base_headers(),
           params: params
         )
-        |> API.maybe_attach_telemetry(conn)
+        |> Telemetry.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(unquote(struct_name))
+        |> ResponseHandler.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -226,9 +226,9 @@ defmodule ExNylas do
           headers: API.base_headers(),
           params: params
         )
-        |> API.maybe_attach_telemetry(conn)
+        |> Telemetry.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(unquote(struct_name))
+        |> ResponseHandler.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -267,9 +267,9 @@ defmodule ExNylas do
           json: changeset,
           params: params
         )
-        |> API.maybe_attach_telemetry(conn)
+        |> Telemetry.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(unquote(struct_name))
+        |> ResponseHandler.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -308,9 +308,9 @@ defmodule ExNylas do
           json: body,
           params: params
         )
-        |> API.maybe_attach_telemetry(conn)
+        |> Telemetry.maybe_attach_telemetry(conn)
         |> Req.request(conn.options)
-        |> API.handle_response(unquote(struct_name))
+        |> ResponseHandler.handle_response(unquote(struct_name))
       end
 
       @doc """
@@ -335,7 +335,7 @@ defmodule ExNylas do
   def generate_url(conn, false = _use_admin_url, object), do: "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{object}"
 
   @doc false
-  def generate_auth(conn, :header_bearer), do: API.auth_bearer(conn)
+  def generate_auth(conn, :header_bearer), do: Auth.auth_bearer(conn)
 
   @doc false
   def format_module_name(module_name) do

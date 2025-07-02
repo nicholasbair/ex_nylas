@@ -5,7 +5,7 @@ defmodule ExNylas.Events do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/events)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Event
   alias ExNylas.Response
@@ -28,13 +28,13 @@ defmodule ExNylas.Events do
     Req.new(
       method: :get,
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/import",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       params: params
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.request(conn.options)
-    |> API.handle_response(Event)
+    |> ResponseHandler.handle_response(Event)
   end
 
   @doc """
@@ -63,14 +63,14 @@ defmodule ExNylas.Events do
   def rsvp(%Conn{} = conn, event_id, status, calendar_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{status: status, calendar_id: calendar_id},
       params: %{calendar_id: calendar_id}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Event)
+    |> ResponseHandler.handle_response(Event)
   end
 
   @doc """

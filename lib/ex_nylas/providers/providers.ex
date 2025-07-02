@@ -5,7 +5,7 @@ defmodule ExNylas.Providers do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/connectors-integrations)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Provider
   alias ExNylas.Response
@@ -21,13 +21,13 @@ defmodule ExNylas.Providers do
   def detect(%Conn{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       params: params
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Provider)
+    |> ResponseHandler.handle_response(Provider)
   end
 
   @doc """

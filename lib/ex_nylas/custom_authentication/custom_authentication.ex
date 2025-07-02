@@ -5,7 +5,7 @@ defmodule ExNylas.CustomAuthentication do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Grant
   alias ExNylas.Response
@@ -26,13 +26,13 @@ defmodule ExNylas.CustomAuthentication do
   def connect(%Conn{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connect/custom",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Grant)
+    |> ResponseHandler.handle_response(Grant)
   end
 
   @doc """

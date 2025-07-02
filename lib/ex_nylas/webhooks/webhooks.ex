@@ -5,7 +5,7 @@ defmodule ExNylas.Webhooks do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/webhook-notifications)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Response
   alias ExNylas.Webhook
@@ -28,14 +28,14 @@ defmodule ExNylas.Webhooks do
   def update(%Conn{} = conn, id, changeset, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset,
       params: params
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.put(conn.options)
-    |> API.handle_response(Webhook)
+    |> ResponseHandler.handle_response(Webhook)
   end
 
   @doc """
@@ -64,12 +64,12 @@ defmodule ExNylas.Webhooks do
   def rotate_secret(%Conn{} = conn, webhook_id) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Webhook)
+    |> ResponseHandler.handle_response(Webhook)
   end
 
   @doc """
@@ -98,13 +98,13 @@ defmodule ExNylas.Webhooks do
   def mock_payload(%Conn{} = conn, trigger) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{trigger_type: trigger}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """
@@ -133,13 +133,13 @@ defmodule ExNylas.Webhooks do
   def send_test_event(%Conn{} = conn, trigger, webhook_url) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{trigger_type: trigger, webhook_url: webhook_url}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """

@@ -5,7 +5,7 @@ defmodule ExNylas.Drafts do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/drafts)
   """
 
-  alias ExNylas.API
+  alias ExNylas.{API, Auth, Multipart, ResponseHandler, Telemetry}
   alias ExNylas.Connection, as: Conn
   alias ExNylas.Draft
   alias ExNylas.Response
@@ -28,17 +28,17 @@ defmodule ExNylas.Drafts do
   """
   @spec create(Conn.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def create(%Conn{} = conn, draft, attachments \\ []) do
-    {body, content_type, len} = API.build_multipart(draft, attachments)
+    {body, content_type, len} = Multipart.build_multipart(draft, attachments)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -69,13 +69,13 @@ defmodule ExNylas.Drafts do
   def update(%Conn{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -106,17 +106,17 @@ defmodule ExNylas.Drafts do
   """
   @spec update(Conn.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
   def update(%Conn{} = conn, id, changeset, attachments) do
-    {body, content_type, len} = API.build_multipart(changeset, attachments)
+    {body, content_type, len} = Multipart.build_multipart(changeset, attachments)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -147,12 +147,12 @@ defmodule ExNylas.Drafts do
   def send(%Conn{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
