@@ -5,10 +5,16 @@ defmodule ExNylas.Drafts do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/drafts)
   """
 
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Draft
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Draft,
+    Multipart,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
   import Kernel, except: [send: 2]
@@ -26,19 +32,19 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.create(conn, draft, ["path_to_attachment"])
   """
-  @spec create(Conn.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def create(%Conn{} = conn, draft, attachments \\ []) do
-    {body, content_type, len} = API.build_multipart(draft, attachments)
+  @spec create(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def create(%Connection{} = conn, draft, attachments \\ []) do
+    {body, content_type, len} = Multipart.build_multipart(draft, attachments)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -48,8 +54,8 @@ defmodule ExNylas.Drafts do
 
       iex> draft = ExNylas.Drafts.create!(conn, draft, ["path_to_attachment"])
   """
-  @spec create!(Conn.t(), map(), list()) :: Response.t()
-  def create!(%Conn{} = conn, draft, attachments \\ []) do
+  @spec create!(Connection.t(), map(), list()) :: Response.t()
+  def create!(%Connection{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -65,17 +71,17 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset)
   """
-  @spec update(Conn.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def update(%Conn{} = conn, id, changeset) do
+  @spec update(Connection.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def update(%Connection{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -87,8 +93,8 @@ defmodule ExNylas.Drafts do
 
       iex> draft = ExNylas.Drafts.update!(conn, id, changeset)
   """
-  @spec update!(Conn.t(), String.t(), map()) :: Response.t()
-  def update!(%Conn{} = conn, id, changeset) do
+  @spec update!(Connection.t(), String.t(), map()) :: Response.t()
+  def update!(%Connection{} = conn, id, changeset) do
     case update(conn, id, changeset) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -104,19 +110,19 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset, ["path_to_attachment"])
   """
-  @spec update(Conn.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def update(%Conn{} = conn, id, changeset, attachments) do
-    {body, content_type, len} = API.build_multipart(changeset, attachments)
+  @spec update(Connection.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def update(%Connection{} = conn, id, changeset, attachments) do
+    {body, content_type, len} = Multipart.build_multipart(changeset, attachments)
 
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
       body: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.patch(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -128,8 +134,8 @@ defmodule ExNylas.Drafts do
 
       iex> draft = ExNylas.Drafts.update!(conn, id, changeset, ["path_to_attachment"])
   """
-  @spec update!(Conn.t(), String.t(), map(), list()) :: Response.t()
-  def update!(%Conn{} = conn, id, changeset, attachments) do
+  @spec update!(Connection.t(), String.t(), map(), list()) :: Response.t()
+  def update!(%Connection{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -143,16 +149,16 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, sent_draft} = ExNylas.Drafts.send(conn, draft_id)
   """
-  @spec send(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def send(%Conn{} = conn, draft_id) do
+  @spec send(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def send(%Connection{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Draft)
+    |> ResponseHandler.handle_response(Draft)
   end
 
   @doc """
@@ -162,8 +168,8 @@ defmodule ExNylas.Drafts do
 
       iex> sent_draft = ExNylas.Drafts.send!(conn, draft_id)
   """
-  @spec send!(Conn.t(), String.t()) :: Response.t()
-  def send!(%Conn{} = conn, draft_id) do
+  @spec send!(Connection.t(), String.t()) :: Response.t()
+  def send!(%Connection{} = conn, draft_id) do
     case send(conn, draft_id) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason

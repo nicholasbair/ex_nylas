@@ -5,10 +5,15 @@ defmodule ExNylas.CalendarFreeBusy do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.FreeBusy, as: FB
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    FreeBusy,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   use ExNylas,
     struct: __MODULE__,
@@ -22,17 +27,17 @@ defmodule ExNylas.CalendarFreeBusy do
 
       iex> {:ok, result} = ExNylas.Calendars.FreeBusy.list(conn, body)
   """
-  @spec list(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def list(%Conn{} = conn, body) do
+  @spec list(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(FB)
+    |> ResponseHandler.handle_response(FreeBusy)
   end
 
   @doc """
@@ -42,8 +47,8 @@ defmodule ExNylas.CalendarFreeBusy do
 
       iex> result = ExNylas.Calendars.FreeBusy.list!(conn, body)
   """
-  @spec list!(Conn.t(), map()) :: Response.t()
-  def list!(%Conn{} = conn, body) do
+  @spec list!(Connection.t(), map()) :: Response.t()
+  def list!(%Connection{} = conn, body) do
     case list(conn, body) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason

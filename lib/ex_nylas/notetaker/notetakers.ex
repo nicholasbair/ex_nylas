@@ -5,12 +5,15 @@ defmodule ExNylas.Notetakers do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/notetaker)
   """
 
-  alias ExNylas.Connection, as: Conn
   alias ExNylas.{
     API,
+    Auth,
+    Connection,
     Notetaker,
     Notetaker.Media,
-    Response
+    Response,
+    ResponseHandler,
+    Telemetry
   }
 
   use ExNylas,
@@ -26,16 +29,16 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.cancel(conn, id)
   """
-  @spec cancel(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def cancel(%Conn{} = conn, id) do
+  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/cancel",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.delete(conn.options)
-    |> API.handle_response(Notetaker)
+    |> ResponseHandler.handle_response(Notetaker)
   end
 
   @doc """
@@ -45,8 +48,8 @@ defmodule ExNylas.Notetakers do
 
       iex> response = ExNylas.Notetakers.cancel!(conn, id)
   """
-  @spec cancel!(Conn.t(), String.t()) :: Response.t()
-  def cancel!(%Conn{} = conn, id) do
+  @spec cancel!(Connection.t(), String.t()) :: Response.t()
+  def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
       {:ok, response} -> response
       {:error, reason} -> raise ExNylasError, reason
@@ -60,16 +63,16 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.leave(conn, id)
   """
-  @spec leave(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def leave(%Conn{} = conn, id) do
+  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/leave",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Notetaker)
+    |> ResponseHandler.handle_response(Notetaker)
   end
 
   @doc """
@@ -79,8 +82,8 @@ defmodule ExNylas.Notetakers do
 
       iex> response = ExNylas.Notetakers.leave!(conn, id)
   """
-  @spec leave!(Conn.t(), String.t()) :: Response.t()
-  def leave!(%Conn{} = conn, id) do
+  @spec leave!(Connection.t(), String.t()) :: Response.t()
+  def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
       {:ok, response} -> response
       {:error, reason} -> raise ExNylasError, reason
@@ -94,16 +97,16 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.media(conn, id)
   """
-  @spec media(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def media(%Conn{} = conn, id) do
+  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/media",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.get(conn.options)
-    |> API.handle_response(Media)
+    |> ResponseHandler.handle_response(Media)
   end
 
   @doc """
@@ -113,8 +116,8 @@ defmodule ExNylas.Notetakers do
 
       iex> response = ExNylas.Notetakers.media!(conn, id)
   """
-  @spec media!(Conn.t(), String.t()) :: Response.t()
-  def media!(%Conn{} = conn, id) do
+  @spec media!(Connection.t(), String.t()) :: Response.t()
+  def media!(%Connection{} = conn, id) do
     case media(conn, id) do
       {:ok, response} -> response
       {:error, reason} -> raise ExNylasError, reason

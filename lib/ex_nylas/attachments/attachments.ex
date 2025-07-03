@@ -5,9 +5,14 @@ defmodule ExNylas.Attachments do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/attachments)
   """
 
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   use ExNylas,
     object: "attachments",
@@ -22,18 +27,18 @@ defmodule ExNylas.Attachments do
 
       iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id: message_id)
   """
-  @spec download(Conn.t(), String.t(), Keyword.t() | list()) :: {:ok, String.t()} | {:error, Response.t()}
-  def download(%Conn{} = conn, id, params \\ []) do
+  @spec download(Connection.t(), String.t(), Keyword.t() | list()) :: {:ok, String.t()} | {:error, Response.t()}
+  def download(%Connection{} = connection, id, params \\ []) do
     Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/attachments/#{id}/download",
-      auth: API.auth_bearer(conn),
+      url: "#{connection.api_server}/v3/grants/#{connection.grant_id}/attachments/#{id}/download",
+      auth: Auth.auth_bearer(connection),
       headers: API.base_headers([accept: "application/octet-stream"]),
       params: params,
       decode_body: false
     )
-    |> API.maybe_attach_telemetry(conn)
-    |> Req.get(conn.options)
-    |> API.handle_response()
+    |> Telemetry.maybe_attach_telemetry(connection)
+    |> Req.get(connection.options)
+    |> ResponseHandler.handle_response()
   end
 
   @doc """
@@ -43,9 +48,9 @@ defmodule ExNylas.Attachments do
 
       iex> result = ExNylas.Attachments.download!(conn, id, message_id: message_id)
   """
-  @spec download!(Conn.t(), String.t(), Keyword.t() | list()) :: String.t()
-  def download!(%Conn{} = conn, id, params \\ []) do
-    case download(conn, id, params) do
+  @spec download!(Connection.t(), String.t(), Keyword.t() | list()) :: String.t()
+  def download!(%Connection{} = connection, id, params \\ []) do
+    case download(connection, id, params) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
     end

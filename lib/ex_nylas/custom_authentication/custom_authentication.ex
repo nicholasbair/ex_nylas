@@ -5,10 +5,15 @@ defmodule ExNylas.CustomAuthentication do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/authentication-apis)
   """
 
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Grant
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Grant,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   use ExNylas,
     struct: __MODULE__,
@@ -22,17 +27,17 @@ defmodule ExNylas.CustomAuthentication do
 
       iex> {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, body)
   """
-  @spec connect(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def connect(%Conn{} = conn, body) do
+  @spec connect(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def connect(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connect/custom",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Grant)
+    |> ResponseHandler.handle_response(Grant)
   end
 
   @doc """
@@ -42,8 +47,8 @@ defmodule ExNylas.CustomAuthentication do
 
       iex> grant = ExNylas.CustomAuthentication.connect!(conn, body)
   """
-  @spec connect!(Conn.t(), map()) :: Response.t()
-  def connect!(%Conn{} = conn, body) do
+  @spec connect!(Connection.t(), map()) :: Response.t()
+  def connect!(%Connection{} = conn, body) do
     case connect(conn, body) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason

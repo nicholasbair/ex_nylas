@@ -5,10 +5,15 @@ defmodule ExNylas.Webhooks do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/admin/#tag/webhook-notifications)
   """
 
-  alias ExNylas.API
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Response
-  alias ExNylas.Webhook
+  alias ExNylas.{
+    API,
+    Auth,
+    Connection,
+    Response,
+    ResponseHandler,
+    Telemetry,
+    Webhook
+  }
 
   use ExNylas,
     object: "webhooks",
@@ -24,18 +29,18 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, result} = ExNylas.Webhooks.update(conn, id, body, params)
   """
-  @spec update(Conn.t(), String.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def update(%Conn{} = conn, id, changeset, params \\ []) do
+  @spec update(Connection.t(), String.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def update(%Connection{} = conn, id, changeset, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/#{id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: changeset,
       params: params
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.put(conn.options)
-    |> API.handle_response(Webhook)
+    |> ResponseHandler.handle_response(Webhook)
   end
 
   @doc """
@@ -45,8 +50,8 @@ defmodule ExNylas.Webhooks do
 
       iex> result = ExNylas.Webhooks.update!(conn, id, body, params)
   """
-  @spec update!(Conn.t(), String.t(), map(), Keyword.t() | map()) :: Response.t()
-  def update!(%Conn{} = conn, id, changeset, params \\ []) do
+  @spec update!(Connection.t(), String.t(), map(), Keyword.t() | map()) :: Response.t()
+  def update!(%Connection{} = conn, id, changeset, params \\ []) do
     case update(conn, id, changeset, params) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -60,16 +65,16 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, webhook} = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
-  @spec rotate_secret(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def rotate_secret(%Conn{} = conn, webhook_id) do
+  @spec rotate_secret(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def rotate_secret(%Connection{} = conn, webhook_id) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers()
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(Webhook)
+    |> ResponseHandler.handle_response(Webhook)
   end
 
   @doc """
@@ -79,8 +84,8 @@ defmodule ExNylas.Webhooks do
 
       iex> webhook = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
-  @spec rotate_secret!(Conn.t(), String.t()) :: Response.t()
-  def rotate_secret!(%Conn{} = conn, webhook_id) do
+  @spec rotate_secret!(Connection.t(), String.t()) :: Response.t()
+  def rotate_secret!(%Connection{} = conn, webhook_id) do
     case rotate_secret(conn, webhook_id) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -94,17 +99,17 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, payload} = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
-  @spec mock_payload(Conn.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def mock_payload(%Conn{} = conn, trigger) do
+  @spec mock_payload(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def mock_payload(%Connection{} = conn, trigger) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{trigger_type: trigger}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """
@@ -114,8 +119,8 @@ defmodule ExNylas.Webhooks do
 
       iex> payload = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
-  @spec mock_payload!(Conn.t(), String.t()) :: Response.t()
-  def mock_payload!(%Conn{} = conn, trigger) do
+  @spec mock_payload!(Connection.t(), String.t()) :: Response.t()
+  def mock_payload!(%Connection{} = conn, trigger) do
     case mock_payload(conn, trigger) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason
@@ -129,17 +134,17 @@ defmodule ExNylas.Webhooks do
 
       iex> {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
-  @spec send_test_event(Conn.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def send_test_event(%Conn{} = conn, trigger, webhook_url) do
+  @spec send_test_event(Connection.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def send_test_event(%Connection{} = conn, trigger, webhook_url) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(),
       json: %{trigger_type: trigger, webhook_url: webhook_url}
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response()
+    |> ResponseHandler.handle_response()
   end
 
   @doc """
@@ -149,8 +154,8 @@ defmodule ExNylas.Webhooks do
 
       iex> res = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
-  @spec send_test_event!(Conn.t(), String.t(), String.t()) :: Response.t()
-  def send_test_event!(%Conn{} = conn, trigger, webhook_url) do
+  @spec send_test_event!(Connection.t(), String.t(), String.t()) :: Response.t()
+  def send_test_event!(%Connection{} = conn, trigger, webhook_url) do
     case send_test_event(conn, trigger, webhook_url) do
       {:ok, body} -> body
       {:error, reason} -> raise ExNylasError, reason

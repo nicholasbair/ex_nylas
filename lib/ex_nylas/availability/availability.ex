@@ -5,10 +5,15 @@ defmodule ExNylas.CalendarAvailability do
   [Nylas docs](https://developer.nylas.com/docs/api/v3/ecc/#tag/calendar)
   """
 
-  alias ExNylas.API
-  alias ExNylas.Availability, as: AV
-  alias ExNylas.Connection, as: Conn
-  alias ExNylas.Response
+  alias ExNylas.{
+    API,
+    Auth,
+    Availability,
+    Connection,
+    Response,
+    ResponseHandler,
+    Telemetry
+  }
 
   use ExNylas,
     struct: __MODULE__,
@@ -22,17 +27,17 @@ defmodule ExNylas.CalendarAvailability do
 
       iex> {:ok, result} = ExNylas.CalendarAvailability.list(conn, body)
   """
-  @spec list(Conn.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
-  def list(%Conn{} = conn, body) do
+  @spec list(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/calendars/availability",
-      auth: API.auth_bearer(conn),
+      auth: Auth.auth_bearer(conn),
       headers: API.base_headers(["content-type": "application/json"]),
       json: body
     )
-    |> API.maybe_attach_telemetry(conn)
+    |> Telemetry.maybe_attach_telemetry(conn)
     |> Req.post(conn.options)
-    |> API.handle_response(AV)
+    |> ResponseHandler.handle_response(Availability)
   end
 
   @doc """
@@ -42,8 +47,8 @@ defmodule ExNylas.CalendarAvailability do
 
       iex> result = ExNylas.CalendarAvailability.list!(conn, body)
   """
-  @spec list!(Conn.t(), map()) :: Response.t()
-  def list!(%Conn{} = conn, body) do
+  @spec list!(Connection.t(), map()) :: Response.t()
+  def list!(%Connection{} = conn, body) do
     case list(conn, body) do
       {:ok, res} -> res
       {:error, reason} -> raise ExNylasError, reason
