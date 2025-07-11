@@ -45,6 +45,7 @@ defmodule ExNylas.WebhookNotificationData do
         "booking.cancelled": Booking,
         "booking.pending": Booking,
         "booking.rescheduled": Booking,
+        "booking.reminder": Booking,
 
         "calendar.created": Calendar,
         "calendar.updated": Calendar,
