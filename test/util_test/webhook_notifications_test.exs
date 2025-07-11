@@ -218,7 +218,6 @@ defmodule ExNylasTest.WebhookNotifications do
       assert res.data.object.booking_id == "booking_123"
       assert res.data.object.booking_ref == "ref_123"
       assert res.data.object.booking_type == "confirmed"
-      assert res.data.object.object == "booking"
 
       # Check booking_info
       booking_info = res.data.object.booking_info
@@ -424,7 +423,6 @@ defmodule ExNylasTest.WebhookNotifications do
           "booking_id" => "booking_123",
           "booking_ref" => "ref_123",
           "booking_type" => "confirmed",
-          "object" => "booking",
           "booking_info" => %{
             "event_id" => "event_123",
             "start_time" => 1234567890,
