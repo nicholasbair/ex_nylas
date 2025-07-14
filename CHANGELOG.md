@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for sending messages using raw mime (`send_raw/2` and `send_raw!/2` functions in `ExNylas.Messages`)
 
+### Fixed
+- Added several missing fields in scheduler `booking.*` webhook schema
+- Added missing scheduler booking webhook type for `booking.reminder`
+
 ### Internal
 - Split large utility modules
 - Standardized alias usage across interface modules
