@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Added several missing fields in scheduler `booking.*` webhook schema
 - Added missing scheduler booking webhook type for `booking.reminder`
+- Updated contact phone number type from enum of atom to string as Google allows any string value
 
 ### Internal
 - Split large utility modules
