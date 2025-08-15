@@ -131,39 +131,9 @@ defmodule ExNylas.ContactTest do
 
       [phone1, phone2] = contact.phone_numbers
       assert phone1.number == "+1-555-123-4567"
-      assert phone1.type == :work
+      assert phone1.type == "work"
       assert phone2.number == "+1-555-987-6543"
-      assert phone2.type == :mobile
-    end
-
-    test "validates phone number type enum values" do
-      valid_types = ["work", "home", "other", "mobile"]
-
-      for type <- valid_types do
-        params = %{
-          "phone_numbers" => [
-            %{"number" => "+1-555-123-4567", "type" => type}
-          ]
-        }
-        changeset = Contact.changeset(%Contact{}, params)
-        assert changeset.valid?, "Phone number type #{type} should be valid"
-      end
-    end
-
-    test "rejects invalid phone number type values" do
-      invalid_types = ["fax", "pager", "invalid"]
-
-      for type <- invalid_types do
-        params = %{
-          "phone_numbers" => [
-            %{"number" => "+1-555-123-4567", "type" => type}
-          ]
-        }
-        changeset = Contact.changeset(%Contact{}, params)
-        refute changeset.valid?, "Phone number type #{type} should be invalid"
-        contact = Ecto.Changeset.apply_changes(changeset)
-        assert contact.phone_numbers |> List.first() |> Map.get(:type) == nil
-      end
+      assert phone2.type == "mobile"
     end
   end
 

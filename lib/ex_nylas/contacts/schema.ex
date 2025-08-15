@@ -42,7 +42,7 @@ defmodule ExNylas.Contact do
 
     embeds_many :phone_numbers, PhoneNumber, primary_key: false do
       field(:number, :string)
-      field(:type, Ecto.Enum, values: ~w(work home other mobile)a)
+      field(:type, :string)
     end
 
     embeds_many :physical_addresses, PhysicalAddress, primary_key: false do
