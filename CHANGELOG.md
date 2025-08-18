@@ -8,13 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.10.0] - 2025-08-18
 
 ### Added
-- Support for sending messages using raw mime (`send_raw/2` and `send_raw!/2` functions in `ExNylas.Messages`)
+- Support for sending messages using raw MIME (`send_raw/2` and `send_raw!/2` functions in `ExNylas.Messages`)
+
+### Changed
+- **BREAKING** Updated contact phone number type from enum of atoms to string as Google allows any string value
+- **BREAKING** Updated contact email address type from enum of atoms to string as Google allows any string value (only build module needed to be updated)
 
 ### Fixed
 - Added several missing fields in scheduler `booking.*` webhook schema
 - Added missing scheduler booking webhook type for `booking.reminder`
-- **BREAKING** Updated contact phone number type from enum of atoms to string as Google allows any string value
-- **BREAKING** Updated contact email address type from enum of atoms to string as Google allows any string value (only build module needed to be updated)
 
 ### Internal
 - Split large utility modules
