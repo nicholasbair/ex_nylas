@@ -9,6 +9,7 @@ defmodule ExNylas.Notetaker.CustomSettings do
   import Ecto.Changeset
 
   @primary_key false
+  @derive {Jason.Encoder, only: [:custom_instructions]}
 
   typed_embedded_schema do
     field(:custom_instructions, :string)

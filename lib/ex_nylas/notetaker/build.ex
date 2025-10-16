@@ -19,7 +19,7 @@ defmodule ExNylas.Notetaker.Build do
     field(:name, :string)
 
     embeds_one :meeting_settings, MeetingSettings, primary_key: false do
-      @derive {Jason.Encoder, only: [:video_recording, :audio_recording, :transcription, :action_items, :summary, :action_item_settings, :summary_settings]}
+      @derive {Jason.Encoder, only: [:video_recording, :audio_recording, :transcription, :action_items, :summary, :action_items_settings, :summary_settings]}
 
       field(:video_recording, :boolean)
       field(:audio_recording, :boolean)
@@ -27,7 +27,7 @@ defmodule ExNylas.Notetaker.Build do
       field(:action_items, :boolean)
       field(:summary, :boolean)
 
-      embeds_one :action_item_settings, CustomSettings
+      embeds_one :action_items_settings, CustomSettings
       embeds_one :summary_settings, CustomSettings
     end
 
@@ -57,7 +57,7 @@ defmodule ExNylas.Notetaker.Build do
   defp cast_meeting_settings(changeset, params) do
     changeset
     |> cast(params, [:video_recording, :audio_recording, :transcription, :action_items, :summary])
-    |> cast_embed(:action_item_settings, with: &Util.embedded_changeset/2)
+    |> cast_embed(:action_items_settings, with: &Util.embedded_changeset/2)
     |> cast_embed(:summary_settings, with: &Util.embedded_changeset/2)
   end
 end
