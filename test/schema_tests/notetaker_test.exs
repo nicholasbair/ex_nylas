@@ -16,7 +16,15 @@ defmodule ExNylas.NotetakerTest do
         "meeting_settings" => %{
           "video_recording" => true,
           "audio_recording" => false,
-          "transcription" => true
+          "transcription" => true,
+          "action_items" => true,
+          "action_item_settings" => %{
+            "custom_instructions" => "Foo bar"
+          },
+          "summary" => true,
+          "summary_settings" => %{
+            "custom_instructions" => "Foo bar"
+          },
         },
         "rules" => %{
           "event_selection" => "internal",
