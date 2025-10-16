@@ -18,7 +18,7 @@ defmodule ExNylas.NotetakerTest do
           "audio_recording" => false,
           "transcription" => true,
           "action_items" => true,
-          "action_item_settings" => %{
+          "action_items_settings" => %{
             "custom_instructions" => "Foo bar"
           },
           "summary" => true,
