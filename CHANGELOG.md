@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Added new fields to notetaker schema: `action_items`, `action_items_settings`, `summary`, and `summary_settings`
 
+### Changed
+- Organized generated docs (`ex_docs`) into groups for easier navigation
+
 ## [0.10.0] - 2025-08-18
 
 ### Added

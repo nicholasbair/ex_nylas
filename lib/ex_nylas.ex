@@ -1,7 +1,6 @@
 defmodule ExNylas do
-  @moduledoc """
-  ExNylas - Unofficial Elixir SDK for Nylas API.
-  """
+  @external_resource "README.md"
+  @moduledoc File.read!("README.md")
 
   import Ecto.Changeset
 
