@@ -8,6 +8,7 @@ defmodule ExNylas.Notetaker do
   use TypedEctoSchema
   import Ecto.Changeset
   alias ExNylas.Schema.Util
+  alias ExNylas.Notetaker.CustomSettings
 
   @primary_key false
 
@@ -27,6 +28,11 @@ defmodule ExNylas.Notetaker do
       field(:video_recording, :boolean)
       field(:audio_recording, :boolean)
       field(:transcription, :boolean)
+      field(:action_items, :boolean)
+      field(:summary, :boolean)
+
+      embeds_one :action_items_settings, CustomSettings
+      embeds_one :summary_settings, CustomSettings
     end
 
     embeds_one :rules, Rules, primary_key: false do
@@ -43,8 +49,15 @@ defmodule ExNylas.Notetaker do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:id, :created_at, :grant_id, :name, :join_time, :meeting_link, :meeting_provider, :state])
-    |> cast_embed(:meeting_settings, with: &Util.embedded_changeset/2)
+    |> cast_embed(:meeting_settings, with: &cast_meeting_settings/2)
     |> cast_embed(:rules, with: &cast_rules/2)
+  end
+
+  defp cast_meeting_settings(changeset, params) do
+    changeset
+    |> cast(params, [:video_recording, :audio_recording, :transcription, :action_items, :summary])
+    |> cast_embed(:action_items_settings, with: &Util.embedded_changeset/2)
+    |> cast_embed(:summary_settings, with: &Util.embedded_changeset/2)
   end
 
   defp cast_rules(changeset, params) do

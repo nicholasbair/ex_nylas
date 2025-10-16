@@ -16,7 +16,15 @@ defmodule ExNylas.NotetakerTest do
         "meeting_settings" => %{
           "video_recording" => true,
           "audio_recording" => false,
-          "transcription" => true
+          "transcription" => true,
+          "action_items" => true,
+          "action_items_settings" => %{
+            "custom_instructions" => "Foo bar"
+          },
+          "summary" => true,
+          "summary_settings" => %{
+            "custom_instructions" => "Foo bar"
+          },
         },
         "rules" => %{
           "event_selection" => "internal",
@@ -40,6 +48,10 @@ defmodule ExNylas.NotetakerTest do
       assert notetaker.meeting_settings.video_recording == true
       assert notetaker.meeting_settings.audio_recording == false
       assert notetaker.meeting_settings.transcription == true
+      assert notetaker.meeting_settings.action_items == true
+      assert notetaker.meeting_settings.action_items_settings.custom_instructions == "Foo bar"
+      assert notetaker.meeting_settings.summary == true
+      assert notetaker.meeting_settings.summary_settings.custom_instructions == "Foo bar"
       assert notetaker.rules.event_selection == :internal
       assert notetaker.rules.participant_filter.participants_gte == 2
       assert notetaker.rules.participant_filter.participants_lte == 10
