@@ -21,7 +21,7 @@ The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of th
 ```elixir
 def deps do
   [
-    {:ex_nylas, "~> 0.10.0"}
+    {:ex_nylas, "~> 0.10.1"}
   ]
 end
 ```
