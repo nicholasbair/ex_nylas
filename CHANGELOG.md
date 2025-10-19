@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+- Updated dependencies:
+  - Bumped `req` from 0.5.10 to 0.5.15
+  - Bumped `ex_doc` from 0.34.2 to 0.38.4
+  - Bumped `typed_ecto_schema` from 0.4.1 to 0.4.3
+  - Bumped `credo` from 1.7.7 to 1.7.13
+  - Bumped `excoveralls` from 0.18.1 to 0.18.5
+
 ## [0.10.1] - 2025-10-17
 
 ### Added
