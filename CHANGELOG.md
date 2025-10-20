@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated dependencies:
+  - Bumped `polymorphic_embed` from 5.0.0 to 5.0.3
+  - Bumped `dialyxir` from 1.4.3 to 1.4.6
   - Bumped `req` from 0.5.10 to 0.5.15
   - Bumped `ex_doc` from 0.34.2 to 0.38.4
   - Bumped `typed_ecto_schema` from 0.4.1 to 0.4.3
