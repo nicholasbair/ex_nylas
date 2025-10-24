@@ -9,8 +9,6 @@ defmodule ExNylas.Event do
   import Ecto.Changeset
   import PolymorphicEmbed
 
-  alias ExNylas.Notetaker
-  alias ExNylas.Schema.Util
   alias ExNylas.Event.{
     Conferencing,
     Conferencing.Details,
@@ -21,6 +19,8 @@ defmodule ExNylas.Event do
     Reminder,
     Timespan
   }
+  alias ExNylas.Notetaker
+  alias ExNylas.Schema.Util
 
   # TypedEctoSchema and PolymorphicEmbed don't play nice together, so explicitly define the type
   @type t :: %__MODULE__{

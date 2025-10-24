@@ -7,8 +7,8 @@ defmodule ExNylas.Notetaker do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Schema.Util
   alias ExNylas.Notetaker.CustomSettings
+  alias ExNylas.Schema.Util
 
   @primary_key false
 

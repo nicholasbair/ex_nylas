@@ -7,8 +7,8 @@ defmodule ExNylas.Notetaker.Build do
 
   use TypedEctoSchema
   import Ecto.Changeset
-  alias ExNylas.Schema.Util
   alias ExNylas.Notetaker.CustomSettings
+  alias ExNylas.Schema.Util
 
   @derive {Jason.Encoder, only: [:meeting_link, :join_time, :name, :meeting_settings, :rules]}
   @primary_key false
@@ -19,7 +19,13 @@ defmodule ExNylas.Notetaker.Build do
     field(:name, :string)
 
     embeds_one :meeting_settings, MeetingSettings, primary_key: false do
-      @derive {Jason.Encoder, only: [:video_recording, :audio_recording, :transcription, :action_items, :summary, :action_items_settings, :summary_settings]}
+      @derive {
+        Jason.Encoder,
+        only: [
+          :video_recording, :audio_recording, :transcription,
+          :action_items, :summary, :action_items_settings, :summary_settings
+        ]
+      }
 
       field(:video_recording, :boolean)
       field(:audio_recording, :boolean)
