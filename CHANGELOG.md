@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Bumped `typed_ecto_schema` from 0.4.1 to 0.4.3
   - Bumped `credo` from 1.7.7 to 1.7.13
   - Bumped `excoveralls` from 0.18.1 to 0.18.5
+- Updated CI to include Elixir 1.18 and 1.19
 
 ## [0.10.1] - 2025-10-17
 
@@ -62,4 +63,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The `main` branch of the repo now leverages Nylas API v3. The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
 ### Contributing
-When contributing to this project, please update this changelog with your changes following the format above. Each change should be categorized appropriately under Added, Changed, Deprecated, Removed, Fixed, or Security. 
+When contributing to this project, please update this changelog with your changes following the format above. Each change should be categorized appropriately under Added, Changed, Deprecated, Removed, Fixed, or Security.
