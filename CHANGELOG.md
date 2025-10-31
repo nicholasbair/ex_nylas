@@ -19,6 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Bumped `typed_ecto_schema` from 0.4.1 to 0.4.3
 - Updated CI to include Elixir 1.18 and 1.19
 
+### Security
+- Added security policy document (`SECURITY.md`) with supported version scope and coordinated disclosure timeline.
+
 ## [0.10.1] - 2025-10-17
 
 ### Added
