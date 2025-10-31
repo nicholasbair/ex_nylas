@@ -2,12 +2,12 @@
 
 ## Supported Versions
 
-At this time, we support the latest minor versions of `ex_nylas`. Security fixes will only be applied to the most recent releases. Older versions will not receive backported security updates.
+At this time, we support the latest patch release of each minor version. Security fixes will be applied to the most recent patch in each actively-supported minor release, but will not be backported to older minor versions.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| >= 0.1.x | :white_check_mark: |
-| < 0.1   | :x:                |
+| 0.10.x (latest patch) | :white_check_mark: |
+| < 0.10.0              | :x:                |
 
 ## Reporting a Vulnerability
 
@@ -20,5 +20,6 @@ If you discover a security vulnerability in `ex_nylas`, please report it to us *
   - We will provide status updates as we investigate.
   - Once confirmed, we will work on a fix and publish an updated release on [Hex.pm](https://hex.pm/packages/ex_nylas).
   - We will credit reporters in release notes if desired.
+  - **Disclosure timeline**: We commit to disclosing the vulnerability details within 90 days of confirmation, or upon the availability of a fix, whichever comes first.
 
 Thank you for helping keep the community safe.

@@ -1,5 +1,3 @@
-# ExNylas
-
 [![Hex.pm version](https://img.shields.io/hexpm/v/ex_nylas)](https://hex.pm/packages/ex_nylas)
 [![Latest HexDocs](https://img.shields.io/badge/docs-latest-green.svg?style=flat-square)](https://hexdocs.pm/ex_nylas/)
 [![Elixir CI Status](https://github.com/nicholasbair/ex_nylas/workflows/Elixir%20CI/badge.svg)](https://github.com/nicholasbair/ex_nylas/actions?query=workflow%3A%22Elixir+CI%22)
