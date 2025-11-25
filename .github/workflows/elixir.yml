@@ -23,44 +23,63 @@ jobs:
           - { elixir: '1.14', otp: '26.2.1' }
           - { elixir: '1.14', otp: '27.0.0' }
           - { elixir: '1.14', otp: '28.1.0' }
-
           - { elixir: '1.15', otp: '27.0.0' }
           - { elixir: '1.15', otp: '28.1.0' }
-
           - { elixir: '1.16', otp: '27.0.0' }
           - { elixir: '1.16', otp: '28.1.0' }
-
           - { elixir: '1.17', otp: '24.3.4.13' }
           - { elixir: '1.17', otp: '28.1.0' }
-
           - { elixir: '1.18', otp: '24.3.4.13' }
-
           - { elixir: '1.19', otp: '24.3.4.13' }
           - { elixir: '1.19', otp: '25.3.2.8' }
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Elixir
+
+      - name: Set up Elixir/OTP
         uses: erlef/setup-beam@v1
         with:
           elixir-version: ${{ matrix.elixir }}
           otp-version: ${{ matrix.otp }}
-      - name: Restore dependencies cache
+
+      - name: Cache Hex and Mix
         uses: actions/cache@v4
         with:
           path: |
+            ~/.mix
+            ~/.hex
             deps
-            _build
-          key: ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
+          key: hexmix-${{ runner.os }}-elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}-${{ hashFiles('**/mix.lock') }}
+
+      - name: Cache PLTs
+        id: plt-cache
+        uses: actions/cache@v4
+        with:
+          path: priv/plts
+          key: plts-${{ runner.os }}-elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}-lock-${{ hashFiles('**/mix.lock') }}
           restore-keys: |
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-${{ matrix.otp }}-
-            ${{ runner.os }}-mix-${{ matrix.elixir }}-
-            ${{ runner.os }}-mix-
-      - name: Install dependencies
+            plts-${{ runner.os }}-elixir-${{ matrix.elixir }}-otp-${{ matrix.otp }}-
+
+      - name: Install deps
+        env: { MIX_ENV: test }
         run: mix deps.get
-      - name: Run tests
+
+      - name: Compile
+        env: { MIX_ENV: test }
+        run: |
+          mix deps.compile --force
+          mix compile --warnings-as-errors
+
+      - name: Build PLTs if cache missed
+        if: steps.plt-cache.outputs.cache-hit != 'true'
+        run: mix dialyzer --plt
+
+      - name: Test
+        env: { MIX_ENV: test }
         run: mix test --warnings-as-errors
-      - name: Run Credo
+
+      - name: Credo
         run: mix credo --strict
-      - name: Run Dialyzer
+
+      - name: Dialyzer
         run: mix dialyzer
