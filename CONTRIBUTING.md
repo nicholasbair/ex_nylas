@@ -1,0 +1,432 @@
+# Contributing to ExNylas
+
+This guide documents the architecture of the ExNylas SDK to help contributors understand how the codebase works and how to add new features.
+
+## Table of Contents
+
+- [Project Structure](#project-structure)
+- [Architecture Overview](#architecture-overview)
+- [Metaprogramming & Code Generation](#metaprogramming--code-generation)
+- [Resource Module Pattern](#resource-module-pattern)
+- [Adding a New Resource](#adding-a-new-resource)
+- [Core Infrastructure](#core-infrastructure)
+- [Testing](#testing)
+
+## Project Structure
+
+```
+lib/ex_nylas/
+├── core/           # Core infrastructure (API, Auth, Connection, Response handling)
+├── common/         # Shared domain models (EmailParticipant, EventConferencing, etc.)
+├── type/           # Custom Ecto types (MapOrList, Atom)
+├── util/           # Utilities (Schema helpers, Webhook notifications)
+└── [resources]/    # Domain modules organized by resource (messages/, events/, etc.)
+```
+
+**Key Dependencies:**
+- `Ecto` / `TypedEctoSchema` - Schema definition and validation
+- `PolymorphicEmbed` - Runtime polymorphism for union types
+- `Req` - HTTP client
+- `Jason` - JSON encoding/decoding
+
+## Architecture Overview
+
+The SDK follows a layered architecture:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  API Interface Layer (Messages, Events, Contacts, etc.)     │
+│  Generated via use ExNylas macro                            │
+├─────────────────────────────────────────────────────────────┤
+│  Data Schema Layer          │  Build Schema Layer           │
+│  (API responses)            │  (Request payloads)           │
+├─────────────────────────────────────────────────────────────┤
+│  Core Infrastructure                                        │
+│  (Connection, Auth, ResponseHandler, Transform, Telemetry)  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Data Flow
+
+```
+Outbound: Map → JSON → API
+Inbound:  API → JSON → Transform → Data Schema changeset → Elixir Struct
+```
+
+Note: For outbound requests, pass a regular map directly. The SDK encodes it as JSON and sends it to the API. Build schemas exist for optional pre-request validation but are not required.
+
+## Metaprogramming & Code Generation
+
+The SDK uses Elixir metaprogramming extensively to reduce boilerplate. The centerpiece is the `__using__` macro in `lib/ex_nylas.ex`.
+
+### The `use ExNylas` Macro
+
+Resource modules declare their API capabilities via `use ExNylas`:
+
+```elixir
+defmodule ExNylas.Messages do
+  use ExNylas,
+    object: "messages",           # API endpoint path segment
+    struct: ExNylas.Message,      # Target struct for response transformation
+    readable_name: "message",     # Used in documentation
+    include: [:list, :first, :find, :update, :build, :all, :delete],
+    use_admin_url: false,         # false = /v3/grants/{grant_id}/messages
+    use_cursor_paging: true       # true = cursor-based, false = offset-based
+end
+```
+
+### Generated Functions
+
+The macro generates functions based on the `include` option:
+
+| Function | HTTP Method | Description |
+|----------|-------------|-------------|
+| `list/2` | GET | Fetch paginated list |
+| `first/2` | GET | Get first result |
+| `find/3` | GET | Fetch by ID |
+| `create/3` | POST | Create new resource |
+| `update/4` | PATCH | Update existing resource |
+| `delete/3` | DELETE | Delete resource |
+| `build/1` | N/A | Optional: validate payload before send |
+| `all/2` | GET | Fetch all with automatic paging |
+
+Each function also gets a bang variant (e.g., `list!/2`) that raises on error instead of returning `{:error, ...}`.
+
+### How Code Generation Works
+
+The macro in `lib/ex_nylas.ex` works as follows:
+
+```elixir
+defmacro __using__(opts) do
+  quote do
+    unquote(generate_funcs(opts))
+  end
+end
+
+defp generate_funcs(opts) do
+  @funcs
+  |> Enum.filter(&(&1.name in opts[:include]))
+  |> Enum.map(&generate_api(&1, opts))
+end
+```
+
+Each function template generates both sync and bang versions:
+
+```elixir
+# Sync version - returns {:ok, result} | {:error, reason}
+def list(%Connection{} = conn, params \\ []) do
+  Req.new(...)
+  |> Req.request(conn.options)
+  |> ResponseHandler.handle_response(Message)
+end
+
+# Bang version - returns result or raises
+def list!(%Connection{} = conn, params \\ []) do
+  case list(conn, params) do
+    {:ok, body} -> body
+    {:error, reason} -> raise ExNylasError, reason
+  end
+end
+```
+
+### URL Generation Logic
+
+```elixir
+# Admin resources: /v3/{object}
+def generate_url(conn, true = _use_admin_url, object) do
+  "#{conn.api_server}/v3/#{object}"
+end
+
+# Grant-scoped resources: /v3/grants/{grant_id}/{object}
+def generate_url(conn, false = _use_admin_url, object) do
+  "#{conn.api_server}/v3/grants/#{conn.grant_id}/#{object}"
+end
+```
+
+## Resource Module Pattern
+
+Every resource follows a consistent pattern with paired modules:
+
+### 1. Data Schema (Response Deserialization)
+
+Located at `lib/ex_nylas/{resource}/{resource}.ex`:
+
+```elixir
+defmodule ExNylas.Message do
+  use TypedEctoSchema
+  import Ecto.Changeset
+
+  @primary_key false
+
+  typed_embedded_schema do
+    field(:id, :string)
+    field(:grant_id, :string)
+    field(:body, :string)
+    field(:date, :integer)
+    embeds_many(:attachments, Attachment)
+    # ... all fields from API response
+  end
+
+  @doc false
+  def changeset(struct, params) do
+    struct
+    |> cast(params, [:id, :grant_id, :body, :date])
+    |> cast_embed(:attachments)
+  end
+end
+```
+
+**Purpose:** Handles all possible fields returned by the API. Should be flexible to handle API changes gracefully.
+
+### 2. Build Schema (Optional Request Validation)
+
+Located at `lib/ex_nylas/{resource}/build.ex`. **Note:** Build schemas are optional and not required for making API requests. Passing a regular map is the standard approach:
+
+```elixir
+# Recommended: pass a map directly
+ExNylas.Messages.create(conn, %{subject: "Hello", body: "World", to: [%{email: "test@example.com"}]})
+```
+
+Build schemas exist for optional pre-validation:
+
+```elixir
+defmodule ExNylas.Message.Build do
+  use TypedEctoSchema
+  import Ecto.Changeset
+
+  @derive {Jason.Encoder, only: [:body, :subject, :to, :cc, :bcc]}
+
+  @primary_key false
+
+  typed_embedded_schema do
+    field(:body, :string)
+    field(:subject, :string)
+    embeds_many(:to, ExNylas.Common.EmailParticipant.Build)
+    # ... only fields sendable to API
+  end
+
+  @doc false
+  def changeset(struct, params) do
+    struct
+    |> cast(params, [:body, :subject])
+    |> cast_embed(:to)
+    |> validate_required([:body])
+  end
+end
+```
+
+**Purpose:** Strict validation for outbound requests. The `@derive {Jason.Encoder, only: [...]}` controls exactly which fields are serialized.
+
+### 3. API Module (Interface)
+
+Located at `lib/ex_nylas/{resource}.ex`:
+
+```elixir
+defmodule ExNylas.Messages do
+  @moduledoc "Interface for Nylas messages."
+
+  use ExNylas,
+    object: "messages",
+    struct: ExNylas.Message,
+    readable_name: "message",
+    include: [:list, :first, :find, :update, :build, :all, :delete]
+
+  # Custom methods beyond generated ones
+  def send(%Connection{} = conn, message, attachments \\ []) do
+    # Custom implementation
+  end
+end
+```
+
+### Data vs Build Schemas
+
+**Data schemas are required** - they transform API responses into typed Elixir structs.
+
+**Build schemas are optional** - for outbound requests, simply pass a map. Build schemas provide optional pre-validation via the `build/1` function if you want to validate a payload before sending it to the API.
+
+## Adding a New Resource
+
+### Step 1: Create the Data Schema
+
+```elixir
+# lib/ex_nylas/widgets/widget.ex
+defmodule ExNylas.Widget do
+  use TypedEctoSchema
+  import Ecto.Changeset
+
+  @primary_key false
+
+  typed_embedded_schema do
+    field(:id, :string)
+    field(:name, :string)
+    field(:created_at, :integer)
+  end
+
+  @doc false
+  def changeset(struct, params) do
+    struct
+    |> cast(params, [:id, :name, :created_at])
+  end
+end
+```
+
+### Step 2: Create the API Module
+
+```elixir
+# lib/ex_nylas/widgets.ex
+defmodule ExNylas.Widgets do
+  @moduledoc "Interface for Nylas widgets."
+
+  use ExNylas,
+    object: "widgets",
+    struct: ExNylas.Widget,
+    readable_name: "widget",
+    include: [:list, :first, :find, :create, :update, :delete, :all]
+end
+```
+
+### Step 3: Add Custom Methods (if needed)
+
+```elixir
+defmodule ExNylas.Widgets do
+  use ExNylas, ...
+
+  alias ExNylas.API
+  alias ExNylas.Connection
+  alias ExNylas.Response
+
+  @doc "Activate a widget."
+  @spec activate(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  def activate(%Connection{} = conn, id) do
+    Req.new(
+      method: :post,
+      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/widgets/#{id}/activate",
+      auth: ExNylas.generate_auth(conn),
+      headers: API.base_headers()
+    )
+    |> Req.request(conn.options)
+    |> ExNylas.ResponseHandler.handle_response(ExNylas.Widget)
+  end
+end
+```
+
+## Core Infrastructure
+
+### Connection (`lib/ex_nylas/core/connection.ex`)
+
+Holds authentication and configuration:
+
+```elixir
+%Connection{
+  api_key: "nylas_api_key",
+  api_server: "https://api.us.nylas.com",
+  grant_id: "grant_id_or_me",
+  access_token: "oauth_token",  # For "me" grant_id
+  options: []                   # Passed to Req
+}
+```
+
+### Response (`lib/ex_nylas/core/response.ex`)
+
+Wraps all API responses:
+
+```elixir
+%Response{
+  data: %Message{} | [%Message{}],
+  request_id: "abc123",
+  next_cursor: "cursor_token",
+  status: 200
+}
+```
+
+### ResponseHandler (`lib/ex_nylas/core/response_handler.ex`)
+
+Transforms raw HTTP responses into typed structs:
+
+```elixir
+def handle_response({:ok, %{status: status, body: body}}, model) when status in 200..299 do
+  {:ok, Transform.transform(body, status, headers, model)}
+end
+```
+
+### Transform (`lib/ex_nylas/core/transform.ex`)
+
+Applies Ecto changesets to convert JSON to structs:
+
+```elixir
+def preprocess_data(model, data) do
+  model.__struct__()
+  |> model.changeset(data)
+  |> apply_changes()
+end
+```
+
+### Paging (`lib/ex_nylas/core/paging/`)
+
+Handles automatic pagination for `all/2` functions:
+
+- `Cursor` - Cursor-based pagination (most resources)
+- `Offset` - Offset-based pagination (admin resources)
+
+Options for `all/2`:
+```elixir
+Messages.all(conn,
+  query: [limit: 100],
+  delay: 1_000,           # ms between requests
+  send_to: &process/1     # Stream results instead of accumulating
+)
+```
+
+## Polymorphic Types
+
+For fields that can be multiple types, use `PolymorphicEmbed`:
+
+```elixir
+defmodule ExNylas.WebhookNotificationData do
+  use PolymorphicEmbed
+
+  polymorphic_embeds_one :object,
+    types: [
+      "message.created": ExNylas.Message,
+      "event.created": ExNylas.Event,
+      # ...
+    ],
+    type_field_name: :trigger
+end
+```
+
+## Custom Ecto Types
+
+For special data representations, create custom types in `lib/ex_nylas/type/`:
+
+```elixir
+defmodule ExNylas.Type.MapOrList do
+  use Ecto.Type
+
+  def type, do: :any
+  def cast(data) when is_map(data) or is_list(data), do: {:ok, data}
+  def load(data) when is_map(data) or is_list(data), do: {:ok, data}
+  def dump(data) when is_map(data) or is_list(data), do: {:ok, data}
+end
+```
+
+## Testing
+
+Run tests with:
+
+```bash
+mix test
+```
+
+When adding new resources:
+1. Test the changeset validates correctly
+2. Test the build schema rejects invalid input
+3. Test custom methods with mocked HTTP responses
+
+## Code Style
+
+- Use `TypedEctoSchema` for all schemas
+- Always add `@primary_key false` to embedded schemas
+- Use `@moduledoc` and `@doc` for public functions
+- Run `mix format` before committing
+- Run `mix credo` for static analysis
