@@ -32,19 +32,23 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.create(conn, draft, ["path_to_attachment"])
   """
-  @spec create(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec create(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t() | ExNylas.FileError.t()}
   def create(%Connection{} = conn, draft, attachments \\ []) do
-    {body, content_type, len} = Multipart.build_multipart(draft, attachments)
+    case Multipart.build_multipart(draft, attachments) do
+      {:ok, {body, content_type, len}} ->
+        Req.new(
+          url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
+          auth: Auth.auth_bearer(conn),
+          headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+          body: body
+        )
+        |> Telemetry.maybe_attach_telemetry(conn)
+        |> Req.post(conn.options)
+        |> ResponseHandler.handle_response(Draft)
 
-    Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
-      auth: Auth.auth_bearer(conn),
-      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
-      body: body
-    )
-    |> Telemetry.maybe_attach_telemetry(conn)
-    |> Req.post(conn.options)
-    |> ResponseHandler.handle_response(Draft)
+      {:error, _} = error ->
+        error
+    end
   end
 
   @doc """
@@ -57,8 +61,14 @@ defmodule ExNylas.Drafts do
   @spec create!(Connection.t(), map(), list()) :: Response.t()
   def create!(%Connection{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
-      {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.FileError{} = error} ->
+        raise error
+
+      {:error, reason} ->
+        raise ExNylasError, reason
     end
   end
 
@@ -110,19 +120,23 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset, ["path_to_attachment"])
   """
-  @spec update(Connection.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec update(Connection.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t() | ExNylas.FileError.t()}
   def update(%Connection{} = conn, id, changeset, attachments) do
-    {body, content_type, len} = Multipart.build_multipart(changeset, attachments)
+    case Multipart.build_multipart(changeset, attachments) do
+      {:ok, {body, content_type, len}} ->
+        Req.new(
+          url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
+          auth: Auth.auth_bearer(conn),
+          headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+          body: body
+        )
+        |> Telemetry.maybe_attach_telemetry(conn)
+        |> Req.patch(conn.options)
+        |> ResponseHandler.handle_response(Draft)
 
-    Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      auth: Auth.auth_bearer(conn),
-      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
-      body: body
-    )
-    |> Telemetry.maybe_attach_telemetry(conn)
-    |> Req.patch(conn.options)
-    |> ResponseHandler.handle_response(Draft)
+      {:error, _} = error ->
+        error
+    end
   end
 
   @doc """
@@ -137,8 +151,14 @@ defmodule ExNylas.Drafts do
   @spec update!(Connection.t(), String.t(), map(), list()) :: Response.t()
   def update!(%Connection{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
-      {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.FileError{} = error} ->
+        raise error
+
+      {:error, reason} ->
+        raise ExNylasError, reason
     end
   end
 

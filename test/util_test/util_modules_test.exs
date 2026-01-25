@@ -37,40 +37,54 @@ defmodule ExNylasTest.UtilModules do
   end
 
   describe "Multipart.build_multipart/2 with attachments" do
-    test "returns a stream for the body" do
-      {stream, _, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
+    test "returns ok tuple with stream for the body" do
+      assert {:ok, {stream, _, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert is_function(stream)
     end
 
-    test "returns the content type with boundary" do
-      {_, content_type, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content type with boundary" do
+      assert {:ok, {_, content_type, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert String.contains?(content_type, "multipart/form-data") and String.contains?(content_type, "boundary")
     end
 
-    test "returns the content length" do
-      {_, _, content_length} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content length" do
+      assert {:ok, {_, _, content_length}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert content_length > 0
     end
 
     test "handles attachments with CID" do
-      {stream, _, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [{"cid:123", "./test/fixtures/test_attachment.txt"}])
+      assert {:ok, {stream, _, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [{"cid:123", "./test/fixtures/test_attachment.txt"}])
       assert is_function(stream)
+    end
+
+    test "returns error tuple with ExNylas.FileError when file does not exist" do
+      assert {:error, %ExNylas.FileError{} = error} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./nonexistent.txt"])
+      assert error.path == "./nonexistent.txt"
+      assert error.reason == :enoent
+      assert error.message =~ ~r/Failed to read file at .*nonexistent\.txt: file does not exist/
+    end
+
+    test "returns error tuple with ExNylas.FileError with CID when file does not exist" do
+      assert {:error, %ExNylas.FileError{} = error} = ExNylas.Multipart.build_multipart(%{test: "test"}, [{"cid:123", "./nonexistent.txt"}])
+      assert error.path == "./nonexistent.txt"
+      assert error.reason == :enoent
+      assert error.message =~ ~r/Failed to read file at .*nonexistent\.txt: file does not exist/
     end
   end
 
   describe "Multipart.build_multipart/2 without attachments" do
-    test "returns a stream for the body" do
-      {stream, _, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with stream for the body" do
+      assert {:ok, {stream, _, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
       assert is_function(stream)
     end
 
-    test "returns the content type with boundary" do
-      {_, content_type, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content type with boundary" do
+      assert {:ok, {_, content_type, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
       assert String.contains?(content_type, "multipart/form-data") and String.contains?(content_type, "boundary")
     end
 
-    test "returns the content length" do
-      {_, _, content_length} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content length" do
+      assert {:ok, {_, _, content_length}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
       assert content_length > 0
     end
   end
