@@ -1,0 +1,11 @@
+# Coveralls configuration
+service_name: github
+
+coverage_options:
+  treat_no_relevant_lines_as_covered: true
+  minimum_coverage: 0
+
+skip_files:
+  - test
+  - deps
+  - _build
