@@ -51,7 +51,7 @@ The SDK follows a layered architecture:
 
 ```
 Outbound: Map → JSON → API
-Inbound:  API → JSON → Transform → Data Schema changeset → Elixir Struct
+Inbound: API → JSON → Transform → Data Schema changeset → Elixir Struct
 ```
 
 Note: For outbound requests, pass a regular map directly. The SDK encodes it as JSON and sends it to the API. Build schemas exist for optional pre-request validation but are not required.
@@ -88,8 +88,8 @@ The macro generates functions based on the `include` option:
 | `create/3` | POST | Create new resource |
 | `update/4` | PATCH | Update existing resource |
 | `delete/3` | DELETE | Delete resource |
-| `build/1` | N/A | Optional: validate payload before send |
-| `all/2` | GET | Fetch all with automatic paging |
+| `build/1` | N/A | Optional: validate payload before sending |
+| `all/2` | GET | Fetch all results with automatic pagination |
 
 Each function also gets a bang variant (e.g., `list!/2`) that raises on error instead of returning `{:error, ...}`.
 
@@ -177,11 +177,11 @@ defmodule ExNylas.Message do
 end
 ```
 
-**Purpose:** Handles all possible fields returned by the API. Should be flexible to handle API changes gracefully.
+**Purpose:** It defines a consistent struct for all possible fields returned by the API.
 
 ### 2. Build Schema (Optional Request Validation)
 
-Located at `lib/ex_nylas/{resource}/build.ex`. **Note:** Build schemas are optional and not required for making API requests. Passing a regular map is the standard approach:
+Located at `lib/ex_nylas/{resource}/build.ex`. **Note:** Build schemas are optional for making API requests. Passing a regular map is the standard approach:
 
 ```elixir
 # Recommended: pass a map directly
@@ -216,7 +216,7 @@ defmodule ExNylas.Message.Build do
 end
 ```
 
-**Purpose:** Strict validation for outbound requests. The `@derive {Jason.Encoder, only: [...]}` controls exactly which fields are serialized.
+**Purpose:** It provides strict validation for outbound requests. The `@derive {Jason.Encoder, only: [...]}` controls exactly which fields are serialized.
 
 ### 3. API Module (Interface)
 
