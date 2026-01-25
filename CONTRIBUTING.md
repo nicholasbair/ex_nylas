@@ -128,7 +128,7 @@ mix test test/ex_nylas/messages_test.exs:42
    mix credo
    ```
 
-6. Commit your changes with clear, descriptive commit messages
+6. Commit your changes following the commit message conventions (see below)
 
 7. Push to your fork and submit a pull request to the `main` branch
 
@@ -139,6 +139,47 @@ mix test test/ex_nylas/messages_test.exs:42
 - Include examples of how to use new features
 - Ensure CI checks pass
 - Be responsive to feedback and questions
+
+### Commit Message Conventions
+
+This project follows [Conventional Commits](https://www.conventionalcommits.org/) format. Each commit message should be structured as follows:
+
+```
+<type>: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+**Types:**
+- `feat:` - New feature for the user
+- `fix:` - Bug fix for the user
+- `docs:` - Documentation-only changes
+- `style:` - Code style changes (formatting, missing semi-colons, etc.)
+- `refactor:` - Code change that neither fixes a bug nor adds a feature
+- `perf:` - Performance improvement
+- `test:` - Adding or updating tests
+- `chore:` - Maintenance tasks, dependency updates, etc.
+- `ci:` - Changes to CI configuration files and scripts
+
+**Examples:**
+```
+feat: add support for calendar availability
+
+docs: update README with new authentication examples
+
+fix: correct event timezone handling
+
+chore: bump req from 0.5.16 to 0.5.17
+```
+
+**Guidelines:**
+- Use lowercase for the type and description
+- Keep the description concise (50 characters or less)
+- Use imperative mood ("add feature" not "added feature")
+- Don't end the description with a period
+- Reference issue numbers in the footer when applicable
 
 ## Architecture
 

@@ -11,15 +11,13 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
 ## Table of Contents
 
 - [Notes](#notes)
-  - [Nylas API v2 vs v3](#nylas-api-v2-vs-v3)
   - [TODO / Known Issues](#todo--known-issues)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Contributing](#contributing)
+- [Documentation](#documentation)
 
 ## Notes
-
-### Nylas API v2 vs v3
-The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
 ### TODO / Known Issues
 1. Build schemas (optional) are not well tested
@@ -122,3 +120,16 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 {:ok, second_page} = ExNylas.Messages.list(conn, limit: 50, page_token: first_page.next_cursor)
 ```
 
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Setting up your development environment
+- Code style and testing requirements
+- Submitting pull requests
+- Adding new resources
+
+## Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture guide for contributors
+- [CHANGELOG.md](CHANGELOG.md) - Version history and release notes
+- [HexDocs](https://hexdocs.pm/ex_nylas/) - Complete API reference
