@@ -71,6 +71,25 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 message = ExNylas.Messages.first!(conn)
 ```
 
+   **Exception Types**: Bang functions (`!`) raise specific exception types for better error handling:
+   - `ExNylas.APIError` - Non-2xx API responses (includes `response`, `status`, `status_code`, `request_id`)
+   - `ExNylas.TransportError` - Network failures like timeouts or connection errors (includes `reason`)
+   - `ExNylas.ValidationError` - Pre-request validation errors (includes `field`, `details`)
+   - `ExNylas.FileError` - File operation errors (includes `path`, `reason`)
+
+   ```elixir
+   try do
+     ExNylas.Grants.me!(conn)
+   rescue
+     e in ExNylas.APIError ->
+       IO.puts("API error: #{e.status_code} - #{e.message}")
+     e in ExNylas.TransportError ->
+       IO.puts("Network error: #{e.reason}")
+     e in ExNylas.ValidationError ->
+       IO.puts("Validation error: #{e.message}")
+   end
+   ```
+
 3. Where supported, queries and filters can be passed as a map or keyword list:
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}

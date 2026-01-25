@@ -28,7 +28,7 @@ defmodule ExNylas.Events do
 
       iex> {:ok, result} = ExNylas.Events.import_events(conn, params)
   """
-  @spec import_events(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec import_events(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def import_events(%Connection{} = conn, params \\ []) do
     Req.new(
       method: :get,
@@ -53,7 +53,7 @@ defmodule ExNylas.Events do
   def import_events!(%Connection{} = conn, params \\ []) do
     case import_events(conn, params) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 
@@ -64,7 +64,7 @@ defmodule ExNylas.Events do
 
       iex> {:ok, success} = ExNylas.Events.rsvp(conn, event_id, status, calendar_id)
   """
-  @spec rsvp(Connection.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec rsvp(Connection.t(), String.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def rsvp(%Connection{} = conn, event_id, status, calendar_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",
@@ -89,7 +89,7 @@ defmodule ExNylas.Events do
   def rsvp!(%Connection{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 end

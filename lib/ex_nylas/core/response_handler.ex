@@ -1,18 +1,34 @@
 defmodule ExNylas.ResponseHandler do
   @moduledoc false
 
+  alias ExNylas.{
+    APIError,
+    DecodeError,
+    Response,
+    TransportError
+  }
   alias ExNylas.Transform, as: TF
 
   @success_codes Enum.to_list(200..299)
 
-  @spec handle_response({atom(), Req.Response.t() | map()}, any(), boolean()) :: {:ok, any()} | {:error, any()}
+  @spec handle_response({atom(), Req.Response.t() | map()}, any(), boolean()) ::
+    {:ok, any()} | {:error, APIError.t() | TransportError.t() | DecodeError.t() | any()}
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     case format_response(res) do
       {:ok, body, status, headers} ->
         {:ok, TF.transform(body, status, headers, transform_to, use_common_response, transform?(res))}
 
       {:error, body, status, headers} ->
-        {:error, TF.transform(body, status, headers, transform_to, use_common_response, transform?(res))}
+        response = TF.transform(body, status, headers, transform_to, use_common_response, transform?(res))
+
+        case response do
+          %Response{} -> {:error, APIError.exception(response)}
+          %{__struct__: _} = struct -> {:error, struct}  # Already an error struct (e.g., HostedAuthentication.Error)
+          other -> {:error, DecodeError.exception({:invalid_response_format, other})}
+        end
+
+      {:error, reason} when is_atom(reason) ->
+        {:error, TransportError.exception(reason)}
 
       {:error, reason} ->
         {:error, reason}

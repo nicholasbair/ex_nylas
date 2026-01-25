@@ -27,7 +27,7 @@ defmodule ExNylas.CalendarFreeBusy do
 
       iex> {:ok, result} = ExNylas.Calendars.FreeBusy.list(conn, body)
   """
-  @spec list(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec list(Connection.t(), map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
@@ -51,7 +51,7 @@ defmodule ExNylas.CalendarFreeBusy do
   def list!(%Connection{} = conn, body) do
     case list(conn, body) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 end

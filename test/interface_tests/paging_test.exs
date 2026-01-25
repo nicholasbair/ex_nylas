@@ -1,6 +1,6 @@
 defmodule ExNylasTest.Paging do
   use ExUnit.Case, async: true
-  alias ExNylas.{Paging, Response, Messages}
+  alias ExNylas.{Paging, Messages}
   import Plug.Conn
   import ExNylasTest.Helper
 
@@ -26,7 +26,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, true)
+    assert {:error, %ExNylas.APIError{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, true)
   end
 
   test "all/4 returns paginated results with offset paging", %{bypass: bypass} do
@@ -46,7 +46,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, false)
+    assert {:error, %ExNylas.APIError{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, false)
   end
 
   test "all!/4 returns paginated results with cursor paging", %{bypass: bypass} do
@@ -66,7 +66,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Paging.all!(default_connection(bypass), &Messages.list/2, true)
     end
   end
@@ -88,7 +88,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Paging.all!(default_connection(bypass), &Messages.list/2, false)
     end
   end

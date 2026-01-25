@@ -30,7 +30,7 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
-  @spec me(Connection.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec me(Connection.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def me(%Connection{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",
@@ -53,7 +53,7 @@ defmodule ExNylas.Grants do
   def me!(%Connection{} = conn) do
     case me(conn) do
       {:ok, response} -> response
-      {:error, response} -> raise ExNylasError, response
+      {:error, exception} -> raise exception
     end
   end
 
@@ -67,7 +67,7 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.refresh(conn, "refresh-token")
   """
-  @spec refresh(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec refresh(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def refresh(%Connection{} = conn, refresh_token) do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do
@@ -109,7 +109,7 @@ defmodule ExNylas.Grants do
   def refresh!(%Connection{} = conn, refresh_token) do
     case refresh(conn, refresh_token) do
       {:ok, response} -> response
-      {:error, response} -> raise ExNylasError, response
+      {:error, exception} -> raise exception
     end
   end
 

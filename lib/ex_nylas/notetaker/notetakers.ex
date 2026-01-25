@@ -29,7 +29,7 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.cancel(conn, id)
   """
-  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/cancel",
@@ -52,7 +52,7 @@ defmodule ExNylas.Notetakers do
   def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 
@@ -63,7 +63,7 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.leave(conn, id)
   """
-  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/leave",
@@ -86,7 +86,7 @@ defmodule ExNylas.Notetakers do
   def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 
@@ -97,7 +97,7 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.media(conn, id)
   """
-  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/media",
@@ -120,7 +120,7 @@ defmodule ExNylas.Notetakers do
   def media!(%Connection{} = conn, id) do
     case media(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 end

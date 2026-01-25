@@ -44,7 +44,7 @@ defmodule ExNylasTest.Grants do
       options: []
     }
 
-    assert {:error, %Response{status: :not_found, data: nil}} = Grants.me(conn)
+    assert {:error, %ExNylas.APIError{status: :not_found}} = Grants.me(conn)
   end
 
   test "me!/1 returns grant on success", %{bypass: bypass} do
@@ -78,7 +78,7 @@ defmodule ExNylasTest.Grants do
       options: []
     }
 
-    assert_raise ExNylasError, ~r/Error: %ExNylas\.Response{.*status: :not_found.*}/, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Grants.me!(conn)
     end
   end
@@ -121,7 +121,7 @@ defmodule ExNylasTest.Grants do
     error_response = ~s<{"error": "invalid_grant", "error_description": "Refresh token invalid"}>
     conn = setup_refresh_test(bypass, 400, error_response)
 
-    assert {:error, %Response{status: :bad_request}} = Grants.refresh(conn, "invalid-refresh-token")
+    assert {:error, %ExNylas.APIError{status: :bad_request}} = Grants.refresh(conn, "invalid-refresh-token")
   end
 
   test "refresh!/2 returns new token on success", %{bypass: bypass} do
@@ -146,7 +146,7 @@ defmodule ExNylasTest.Grants do
     error_response = ~s<{"error": "invalid_grant", "error_description": "Refresh token invalid"}>
     conn = setup_refresh_test(bypass, 400, error_response)
 
-    assert_raise ExNylasError, ~r/Error: %ExNylas\.Response{.*status: :bad_request.*}/, fn ->
+    assert_raise ExNylas.APIError, ~r/API request failed with status bad_request.*/, fn ->
       Grants.refresh!(conn, "invalid-refresh-token")
     end
   end

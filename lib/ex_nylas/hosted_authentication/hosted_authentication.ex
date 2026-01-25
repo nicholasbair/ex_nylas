@@ -35,17 +35,17 @@ defmodule ExNylas.HostedAuthentication do
       iex> options = %{login_hint: "hello@nylas.com", redirect_uri: "https://mycoolapp.com/auth", state: "random_string", scope: ["provider_scope_1", "provider_scope_2"]}
       iex> {:ok, uri} = ExNylas.HostedAuthentication.get_auth_url(conn, options)
   """
-  @spec get_auth_url(Connection.t(), map() | Keyword.t()) :: {:ok, String.t()} | {:error, String.t()}
+  @spec get_auth_url(Connection.t(), map() | Keyword.t()) :: {:ok, String.t()} | {:error, ExNylas.ValidationError.t()}
   def get_auth_url(%Connection{} = conn, options) do
     cond do
       is_nil(conn.client_id) ->
-        {:error, "client_id on the connection struct is required for this call"}
+        {:error, ExNylas.ValidationError.exception({:client_id, "client_id on the connection struct is required for this call"})}
 
       indifferent_get(options, :redirect_uri) |> is_nil() ->
-        {:error, "redirect_uri was not found in the options map"}
+        {:error, ExNylas.ValidationError.exception({:redirect_uri, "redirect_uri was not found in the options map"})}
 
       indifferent_get(options, :response_type) |> is_nil() ->
-        {:error, "response_type was not found in the options map"}
+        {:error, ExNylas.ValidationError.exception({:response_type, "response_type was not found in the options map"})}
 
       true ->
         {:ok,
@@ -71,7 +71,7 @@ defmodule ExNylas.HostedAuthentication do
   def get_auth_url!(%Connection{} = conn, options) do
     case get_auth_url(conn, options) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 
@@ -83,7 +83,7 @@ defmodule ExNylas.HostedAuthentication do
       iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
   @spec exchange_code_for_token(Connection.t(), String.t(), String.t(), String.t()) ::
-          {:ok, HA.t()} | {:error, HAError.t()}
+          {:ok, HA.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | HAError.t()}
   def exchange_code_for_token(
         %Connection{} = conn,
         code,
@@ -121,8 +121,15 @@ defmodule ExNylas.HostedAuthentication do
         grant_type \\ "authorization_code"
       ) do
     case exchange_code_for_token(conn, code, redirect_uri, grant_type) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, res} ->
+        res
+
+      {:error, %HAError{} = error} ->
+        # Convert HAError struct to ValidationError for proper exception handling
+        raise ExNylas.ValidationError, error.error || "Authentication code exchange failed"
+
+      {:error, exception} ->
+        raise exception
     end
   end
 

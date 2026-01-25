@@ -8,9 +8,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Added `ExNylas.FileError` exception for file operation errors
+- Added `ExNylas.APIError` exception for API response errors (non-2xx HTTP responses)
+  - Fields: `message`, `response` (full Response.t()), `status` (atom), `request_id`
+  - Example message: `"API request failed with status not_found: Resource not found [request_id: abc123]"`
+- Added `ExNylas.TransportError` exception for network-level failures
+  - Fields: `message`, `reason` (atom like `:timeout`, `:econnrefused`)
+  - Example message: `"Transport failed: request timed out"`
+- Added `ExNylas.ValidationError` exception for pre-request validation errors
+  - Fields: `message`, `field` (optional), `details` (optional)
+  - Example message: `"Validation failed for api_key: missing value for api_key"`
+- Added `ExNylas.DecodeError` exception for response decoding failures
+  - Fields: `message`, `reason`, `response`
+  - Raised when the SDK cannot parse or decode a response (e.g., invalid JSON, unexpected format)
 
 ### Changed
+- **BREAKING** Error handling completely refactored for better semantics and type safety:
+
+  **Non-bang functions now return exception structs in error tuples:**
+  ```elixir
+  # Before (v0.10.x)
+  {:ok, result} | {:error, %ExNylas.Response{}}
+
+  # After (v0.11.x)
+  {:ok, result} | {:error, %ExNylas.APIError{} | %ExNylas.TransportError{} | ...}
+  ```
+
+  **Update your pattern matching:**
+  ```elixir
+  # Before
+  case ExNylas.Grants.me(conn) do
+    {:ok, grant} -> handle_success(grant)
+    {:error, %ExNylas.Response{status: :not_found}} -> handle_not_found()
+  end
+
+  # After
+  case ExNylas.Grants.me(conn) do
+    {:ok, grant} -> handle_success(grant)
+    {:error, %ExNylas.APIError{status: :not_found}} -> handle_not_found()
+    {:error, %ExNylas.TransportError{reason: :timeout}} -> handle_timeout()
+  end
+  ```
+
+  **Bang functions raise specific exception types:**
+  ```elixir
+  # Before
+  try do
+    ExNylas.Grants.me!(conn)
+  rescue
+    ExNylasError -> handle_error()
+  end
+
+  # After
+  try do
+    ExNylas.Grants.me!(conn)
+  rescue
+    e in ExNylas.APIError -> handle_api_error(e)
+    e in ExNylas.TransportError -> handle_network_error(e)
+    e in ExNylas.ValidationError -> handle_validation_error(e)
+  end
+  ```
+
+### Removed
+- **BREAKING** Removed `ExNylasError` - replaced with specific exception types listed above
+  - This was a generic catch-all that provided poor error handling semantics
+  - Update all `rescue ExNylasError` clauses to rescue specific exception types
 - **BREAKING** File read errors when attaching files to drafts or messages are now handled gracefully:
   - Non-bang functions (`Drafts.create/3`, `Drafts.update/4`, `Messages.send/3`) now return `{:error, %ExNylas.FileError{}}` instead of crashing with a `MatchError`
   - Bang functions (`Drafts.create!/3`, `Drafts.update!/4`, `Messages.send!/3`) now raise `ExNylas.FileError` instead of crashing with a `MatchError`

@@ -50,12 +50,21 @@ defmodule ExNylas.Transform do
 
   @spec transform_stream({:data, binary()}, {map(), map()}, (-> any())) :: {:cont, {map(), map()}}
   def transform_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
-    ~r/\{.*?\}/
-    |> Regex.scan(data)
-    |> List.first("{}")
-    |> Jason.decode!()
-    |> Map.get("suggestion")
-    |> fun.()
+    json_string =
+      ~r/\{.*?\}/
+      |> Regex.scan(data)
+      |> List.first("{}")
+
+    case Jason.decode(json_string) do
+      {:ok, decoded} ->
+        decoded
+        |> Map.get("suggestion")
+        |> fun.()
+
+      {:error, _} ->
+        # If decode fails, skip this data chunk
+        :ok
+    end
 
     {:cont, {req, resp}}
   end
@@ -76,9 +85,13 @@ defmodule ExNylas.Transform do
 
   # SmartCompose stream response can be an event stream if succussful or a JSON object in case of an error.
   defp preprocess_body(model, body, status, headers) when is_bitstring(body) do
-    body
-    |> Jason.decode!()
-    |> then(&preprocess_body(model, &1, status, headers))
+    case Jason.decode(body) do
+      {:ok, decoded} ->
+        preprocess_body(model, decoded, status, headers)
+
+      {:error, reason} ->
+        {:decode_error, reason, body}
+    end
   end
 
   defp preprocess_body(_model, body, _status, _headers), do: body

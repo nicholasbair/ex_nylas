@@ -32,7 +32,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.create(conn, draft, ["path_to_attachment"])
   """
-  @spec create(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t() | ExNylas.FileError.t()}
+  @spec create(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.FileError.t()}
   def create(%Connection{} = conn, draft, attachments \\ []) do
     case Multipart.build_multipart(draft, attachments) do
       {:ok, {body, content_type, len}} ->
@@ -61,14 +61,8 @@ defmodule ExNylas.Drafts do
   @spec create!(Connection.t(), map(), list()) :: Response.t()
   def create!(%Connection{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.FileError{} = error} ->
-        raise error
-
-      {:error, reason} ->
-        raise ExNylasError, reason
+      {:ok, body} -> body
+      {:error, exception} -> raise exception
     end
   end
 
@@ -81,7 +75,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset)
   """
-  @spec update(Connection.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec update(Connection.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def update(%Connection{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
@@ -107,7 +101,7 @@ defmodule ExNylas.Drafts do
   def update!(%Connection{} = conn, id, changeset) do
     case update(conn, id, changeset) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 
@@ -120,7 +114,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset, ["path_to_attachment"])
   """
-  @spec update(Connection.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t() | ExNylas.FileError.t()}
+  @spec update(Connection.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.FileError.t()}
   def update(%Connection{} = conn, id, changeset, attachments) do
     case Multipart.build_multipart(changeset, attachments) do
       {:ok, {body, content_type, len}} ->
@@ -151,14 +145,8 @@ defmodule ExNylas.Drafts do
   @spec update!(Connection.t(), String.t(), map(), list()) :: Response.t()
   def update!(%Connection{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.FileError{} = error} ->
-        raise error
-
-      {:error, reason} ->
-        raise ExNylasError, reason
+      {:ok, body} -> body
+      {:error, exception} -> raise exception
     end
   end
 
@@ -169,7 +157,7 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, sent_draft} = ExNylas.Drafts.send(conn, draft_id)
   """
-  @spec send(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec send(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
   def send(%Connection{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
@@ -192,7 +180,7 @@ defmodule ExNylas.Drafts do
   def send!(%Connection{} = conn, draft_id) do
     case send(conn, draft_id) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, exception} -> raise exception
     end
   end
 end
