@@ -78,6 +78,13 @@ jobs:
         env: { MIX_ENV: test }
         run: mix test --warnings-as-errors
 
+      - name: Upload coverage to Coveralls
+        if: matrix.elixir == '1.19' && matrix.otp == '28.1.0'
+        env:
+          MIX_ENV: test
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mix coveralls.github
+
       - name: Credo
         run: mix credo --strict
 
