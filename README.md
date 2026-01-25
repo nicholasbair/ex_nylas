@@ -11,7 +11,6 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
 ## Table of Contents
 
 - [Notes](#notes)
-  - [Nylas API v2 vs v3](#nylas-api-v2-vs-v3)
   - [TODO / Known Issues](#todo--known-issues)
 - [Installation](#installation)
 - [Usage](#usage)
@@ -19,9 +18,6 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
 - [Documentation](#documentation)
 
 ## Notes
-
-### Nylas API v2 vs v3
-The `main` branch of the repo now leverages Nylas API v3.  The `v2` branch of this repo will track Nylas API v2, though development work on this SDK will largely focus on Nylas API v3 and the v2 API is deprecated.
 
 ### TODO / Known Issues
 1. Build schemas (optional) are not well tested
@@ -137,4 +133,3 @@ Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for gui
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture guide for contributors
 - [CHANGELOG.md](CHANGELOG.md) - Version history and release notes
 - [HexDocs](https://hexdocs.pm/ex_nylas/) - Complete API reference
-
