@@ -43,12 +43,12 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "returns ok tuple with content type with boundary" do
-      assert {:ok, {_, content_type, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+      assert {:ok, {_, content_type, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert String.contains?(content_type, "multipart/form-data") and String.contains?(content_type, "boundary")
     end
 
     test "returns ok tuple with content length" do
-      assert {:ok, {_, _, content_length}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+      assert {:ok, {_, _, content_length}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert content_length > 0
     end
 
