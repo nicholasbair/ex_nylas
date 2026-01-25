@@ -15,6 +15,8 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
   - [TODO / Known Issues](#todo--known-issues)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Contributing](#contributing)
+- [Documentation](#documentation)
 
 ## Notes
 
@@ -121,4 +123,18 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 {:ok, first_page} = ExNylas.Messages.list(conn, limit: 50)
 {:ok, second_page} = ExNylas.Messages.list(conn, limit: 50, page_token: first_page.next_cursor)
 ```
+
+## Contributing
+
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+- Setting up your development environment
+- Code style and testing requirements
+- Submitting pull requests
+- Adding new resources
+
+## Documentation
+
+- [ARCHITECTURE.md](ARCHITECTURE.md) - Detailed architecture guide for contributors
+- [CHANGELOG.md](CHANGELOG.md) - Version history and release notes
+- [HexDocs](https://hexdocs.pm/ex_nylas/) - Complete API reference
 
