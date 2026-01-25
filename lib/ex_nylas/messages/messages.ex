@@ -32,19 +32,23 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send(conn, message, ["path_to_attachment"])
   """
-  @spec send(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec send(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t() | ExNylas.FileError.t()}
   def send(%Connection{} = conn, message, attachments \\ []) do
-    {body, content_type, len} = Multipart.build_multipart(message, attachments)
+    case Multipart.build_multipart(message, attachments) do
+      {:ok, {body, content_type, len}} ->
+        Req.new(
+          url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
+          auth: Auth.auth_bearer(conn),
+          headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+          body: body
+        )
+        |> Telemetry.maybe_attach_telemetry(conn)
+        |> Req.post(conn.options)
+        |> ResponseHandler.handle_response(Message)
 
-    Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
-      auth: Auth.auth_bearer(conn),
-      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
-      body: body
-    )
-    |> Telemetry.maybe_attach_telemetry(conn)
-    |> Req.post(conn.options)
-    |> ResponseHandler.handle_response(Message)
+      {:error, _} = error ->
+        error
+    end
   end
 
   @doc """
@@ -57,8 +61,14 @@ defmodule ExNylas.Messages do
   @spec send!(Connection.t(), map(), list()) :: Response.t()
   def send!(%Connection{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do
-      {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.FileError{} = error} ->
+        raise error
+
+      {:error, reason} ->
+        raise ExNylasError, reason
     end
   end
 
