@@ -289,4 +289,28 @@ defmodule ExNylasTest.Messages do
     assert {:ok, %Response{data: %Message{id: "raw-message-id"}}} =
       Messages.send_raw(default_connection(bypass), mime_content)
   end
+
+  test "send/3 returns FileError when attachment file does not exist", %{bypass: bypass} do
+    message = %{
+      subject: "Hello",
+      body: "Hello world",
+      to: [%{email: "recipient@example.com"}]
+    }
+
+    assert {:error, %ExNylas.FileError{} = error} = Messages.send(default_connection(bypass), message, ["./nonexistent.txt"])
+    assert error.path == "./nonexistent.txt"
+    assert error.reason == :enoent
+  end
+
+  test "send!/3 raises FileError when attachment file does not exist", %{bypass: bypass} do
+    message = %{
+      subject: "Hello",
+      body: "Hello world",
+      to: [%{email: "recipient@example.com"}]
+    }
+
+    assert_raise ExNylas.FileError, ~r/Failed to read file at .*nonexistent\.txt: file does not exist/, fn ->
+      Messages.send!(default_connection(bypass), message, ["./nonexistent.txt"])
+    end
+  end
 end

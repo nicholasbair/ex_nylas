@@ -7,7 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- Added `ExNylas.FileError` exception for file operation errors
+
 ### Changed
+- **BREAKING** File read errors when attaching files to drafts or messages are now handled gracefully:
+  - Non-bang functions (`Drafts.create/3`, `Drafts.update/4`, `Messages.send/3`) now return `{:error, %ExNylas.FileError{}}` instead of crashing with a `MatchError`
+  - Bang functions (`Drafts.create!/3`, `Drafts.update!/4`, `Messages.send!/3`) now raise `ExNylas.FileError` instead of crashing with a `MatchError`
+  - `ExNylas.Multipart.build_multipart/2` now returns `{:ok, result}` or `{:error, %ExNylas.FileError{}}` instead of `result`
+  - This allows callers to handle file errors (missing files, permission denied, etc.) gracefully with clear, descriptive error messages
 - Updated dependencies:
   - Bumped `credo` from 1.7.7 to 1.7.15
   - Bumped `dialyxir` from 1.4.3 to 1.4.7
