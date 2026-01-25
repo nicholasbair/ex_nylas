@@ -155,7 +155,7 @@ This project follows [Conventional Commits](https://www.conventionalcommits.org/
 **Types:**
 - `feat:` - New feature for the user
 - `fix:` - Bug fix for the user
-- `docs:` - Documentation only changes
+- `docs:` - Documentation-only changes
 - `style:` - Code style changes (formatting, missing semi-colons, etc.)
 - `refactor:` - Code change that neither fixes a bug nor adds a feature
 - `perf:` - Performance improvement
