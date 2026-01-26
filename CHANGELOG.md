@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `ExNylas.DecodeError` exception for response decoding failures
   - Fields: `message`, `reason`, `response`
   - Raised when the SDK cannot parse or decode a response (e.g., invalid JSON, unexpected format)
+- Enhanced `ExNylas.HostedAuthentication.Error` to implement Exception behavior
+  - Now properly raisable by bang functions while preserving OAuth-specific fields
+  - Fields: `error`, `error_code`, `error_uri`, `request_id`
+  - Designed for compatibility with OAuth libraries per Nylas API design
 
 ### Changed
 - **BREAKING** Error handling completely refactored for better semantics and type safety:

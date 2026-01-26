@@ -104,6 +104,7 @@ response = ExNylas.Messages.list!(conn)
 - `ExNylas.ValidationError` - Pre-request validation (fields: `field`, `details`)
 - `ExNylas.DecodeError` - Response decoding failures (fields: `reason`, `response`)
 - `ExNylas.FileError` - File operations (fields: `path`, `reason`)
+- `ExNylas.HostedAuthentication.Error` - OAuth errors from hosted auth (fields: `error`, `error_code`, `error_uri`, `request_id`)
 
 **Prefer non-bang functions with pattern matching** for idiomatic error handling:
 
@@ -141,7 +142,6 @@ def list!(%Connection{} = conn, params \\ []) do
     {:ok, response} -> response
     {:error, %Response{} = response} -> raise ExNylas.APIError, response
     {:error, reason} when is_atom(reason) -> raise ExNylas.TransportError, reason
-    {:error, reason} -> raise ExNylasError, reason  # Fallback for unknown types
   end
 end
 ```

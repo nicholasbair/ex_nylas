@@ -77,6 +77,7 @@ message = ExNylas.Messages.first!(conn)
    - `ExNylas.ValidationError` - Pre-request validation errors (includes `field`, `details`)
    - `ExNylas.DecodeError` - Response decoding failures (includes `reason`, `response`)
    - `ExNylas.FileError` - File operation errors (includes `path`, `reason`)
+   - `ExNylas.HostedAuthentication.Error` - OAuth errors from hosted auth (includes `error`, `error_code`, `error_uri`, `request_id`)
 
    Handle errors idiomatically with pattern matching:
 

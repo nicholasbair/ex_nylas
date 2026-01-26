@@ -130,8 +130,7 @@ defmodule ExNylas.HostedAuthentication do
         res
 
       {:error, %HAError{} = error} ->
-        # Convert HAError struct to ValidationError for proper exception handling
-        raise ExNylas.ValidationError, error.error || "Authentication code exchange failed"
+        raise HAError, error
 
       {:error, exception} ->
         raise exception
@@ -163,13 +162,18 @@ defmodule ExNylas.HostedAuthentication do
 
   defp parse_options({key, val}), do: "&#{key}=#{URI.encode_www_form(to_string(val))}"
 
-  # The response from the API differs based on the whether the request was successful or not
-  # Pass the correct schema name to transform based on the response status
+  # The response from the API differs based on whether the request was successful or not
   defp conditional_transform({:ok, %{status: 200}} = res) do
     ResponseHandler.handle_response(res, HA, false)
   end
 
+  defp conditional_transform({:ok, %{body: body}}) when is_map(body) do
+    # Error response - parse directly as HAError exception without Transform pipeline
+    {:error, HAError.exception(body)}
+  end
+
   defp conditional_transform(res) do
-    ResponseHandler.handle_response(res, HAError, false)
+    # Other errors (network, etc.) go through normal error handling
+    ResponseHandler.handle_response(res, nil, false)
   end
 end

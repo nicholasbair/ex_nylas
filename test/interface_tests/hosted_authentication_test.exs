@@ -228,7 +228,7 @@ defmodule ExNylas.HostedAuthenticationTest do
     code = "auth-code"
     redirect_uri = "https://mycoolapp.com/auth"
 
-    assert_raise ExNylas.ValidationError, fn ->
+    assert_raise ExNylas.HostedAuthentication.Error, fn ->
       HostedAuthentication.exchange_code_for_token!(conn, code, redirect_uri)
     end
   end
