@@ -58,21 +58,12 @@ defmodule ExNylas.Transform do
 
   @spec transform_stream({:data, binary()}, {map(), map()}, (-> any())) :: {:cont, {map(), map()}}
   def transform_stream({:data, data}, {req, %{status: status} = resp}, fun) when status in 200..299 do
-    json_string =
-      ~r/\{.*?\}/
-      |> Regex.scan(data)
-      |> List.first("{}")
-
-    case Jason.decode(json_string) do
-      {:ok, decoded} ->
-        decoded
-        |> Map.get("suggestion")
-        |> fun.()
-
-      {:error, _} ->
-        # If decode fails, skip this data chunk
-        :ok
-    end
+    ~r/\{.*?\}/
+    |> Regex.scan(data)
+    |> List.first("{}")
+    |> Jason.decode!()
+    |> Map.get("suggestion")
+    |> fun.()
 
     {:cont, {req, resp}}
   end
