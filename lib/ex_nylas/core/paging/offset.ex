@@ -16,11 +16,11 @@ defmodule ExNylas.Paging.Offset do
           Connection.t(),
           (Connection.t(), Keyword.t() | map() ->
              {:ok, Response.t()}
-             | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}),
+             | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
           Keyword.t() | map()
         ) ::
           {:ok, [struct()]}
-          | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+          | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
   def all(conn, list_function, opts \\ []) do
     page_with_offset(conn, list_function, Options.from_opts(opts))
   end

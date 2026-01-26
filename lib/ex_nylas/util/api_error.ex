@@ -11,16 +11,6 @@ defmodule ExNylas.APIError do
     * `response` - Full `ExNylas.Response.t()` struct with error details
     * `status` - Status atom (`:not_found`, `:bad_request`, etc.)
     * `request_id` - Nylas request ID for debugging (may be nil)
-
-  ## Example
-
-      try do
-        ExNylas.Grants.me!(conn)
-      rescue
-        e in ExNylas.APIError ->
-          IO.inspect(e.status)       # :not_found
-          IO.inspect(e.request_id)   # "abc123..."
-      end
   """
 
   alias ExNylas.Response

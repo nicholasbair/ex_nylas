@@ -57,7 +57,7 @@ defmodule ExNylas do
           iex> opts = [send_to: &IO.inspect/1, delay: 3_000, query: [key: "value"]]
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.all(conn, opts)
       """
-      @spec unquote(config.name)(Connection.t(), Keyword.t() | map()) :: {:ok, [struct()]} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+      @spec unquote(config.name)(Connection.t(), Keyword.t() | map()) :: {:ok, [struct()]} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
       def unquote(config.name)(%Connection{} = conn, opts \\ []) do
         ExNylas.Paging.all(conn, &__MODULE__.list/2, unquote(use_cursor_paging), opts)
       end
@@ -135,7 +135,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.first(conn, params)
       """
-      @spec unquote(config.name)(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+      @spec unquote(config.name)(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
       def unquote(config.name)(%Connection{} = conn, params \\ []) do
         res =
           Req.new(
@@ -181,7 +181,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, id, params)
       """
-      @spec unquote(config.name)(Connection.t(), String.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+      @spec unquote(config.name)(Connection.t(), String.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
       def unquote(config.name)(%Connection{} = conn, id, params \\ []) do
         Req.new(
           method: unquote(method),
@@ -221,7 +221,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, params)
       """
-      @spec unquote(config.name)(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+      @spec unquote(config.name)(Connection.t(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
       def unquote(config.name)(%Connection{} = conn, params \\ []) do
         Req.new(
           method: :get,
@@ -261,7 +261,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, id, body, params)
       """
-      @spec unquote(config.name)(Connection.t(), String.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+      @spec unquote(config.name)(Connection.t(), String.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
       def unquote(config.name)(%Connection{} = conn, id, changeset, params \\ []) do
         Req.new(
           method: :patch,
@@ -302,7 +302,7 @@ defmodule ExNylas do
 
           iex> {:ok, result} = #{ExNylas.format_module_name(__MODULE__)}.#{unquote(config.name)}(conn, body, params)
       """
-      @spec unquote(config.name)(Connection.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+      @spec unquote(config.name)(Connection.t(), map(), Keyword.t() | map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
       def unquote(config.name)(%Connection{} = conn, body, params \\ []) do
         Req.new(
           method: :post,

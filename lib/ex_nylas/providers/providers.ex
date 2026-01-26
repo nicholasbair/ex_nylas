@@ -22,7 +22,12 @@ defmodule ExNylas.Providers do
 
       iex> {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
-  @spec detect(Connection.t(), Keyword.t() | list()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec detect(Connection.t(), Keyword.t() | list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def detect(%Connection{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",

@@ -10,16 +10,6 @@ defmodule ExNylas.TransportError do
 
     * `message` - Human-readable error message
     * `reason` - Reason atom (`:timeout`, `:econnrefused`, `:nxdomain`, etc.)
-
-  ## Example
-
-      try do
-        ExNylas.Grants.me!(conn)
-      rescue
-        e in ExNylas.TransportError ->
-          IO.inspect(e.reason)  # :timeout
-          # Handle network failure
-      end
   """
 
   @type t :: %__MODULE__{

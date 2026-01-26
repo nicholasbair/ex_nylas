@@ -27,7 +27,12 @@ defmodule ExNylas.CalendarAvailability do
 
       iex> {:ok, result} = ExNylas.CalendarAvailability.list(conn, body)
   """
-  @spec list(Connection.t(), map()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec list(Connection.t(), map()) ::
+          {:ok, Response.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/calendars/availability",

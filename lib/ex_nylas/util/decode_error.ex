@@ -10,16 +10,6 @@ defmodule ExNylas.DecodeError do
     * `message` - Human-readable error message
     * `reason` - The underlying error reason
     * `response` - The raw response that failed to decode (optional)
-
-  ## Example
-
-      try do
-        ExNylas.Grants.me!(conn)
-      rescue
-        error in ExNylas.DecodeError ->
-          IO.puts("Failed to decode response: \#{error.message}")
-          IO.inspect(error.reason)
-      end
   """
 
   @type t :: %__MODULE__{

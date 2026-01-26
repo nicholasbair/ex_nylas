@@ -99,26 +99,34 @@ response = ExNylas.Messages.list!(conn)
 ```
 
 **Exception Types:**
-- `ExNylas.APIError` - Non-2xx API responses (fields: `response`, `status`, `status_code`, `request_id`)
+- `ExNylas.APIError` - Non-2xx API responses (fields: `response`, `status`, `request_id`)
 - `ExNylas.TransportError` - Network failures (fields: `reason`)
 - `ExNylas.ValidationError` - Pre-request validation (fields: `field`, `details`)
+- `ExNylas.DecodeError` - Response decoding failures (fields: `reason`, `response`)
 - `ExNylas.FileError` - File operations (fields: `path`, `reason`)
 
-Use this variant when you want to fail fast or when errors are exceptional:
+**Prefer non-bang functions with pattern matching** for idiomatic error handling:
 
 ```elixir
 defmodule MyApp.EmailSync do
   def sync_inbox(conn) do
-    # Let it crash on auth failures
-    messages = ExNylas.Messages.list!(conn, limit: 50)
-    process_messages(messages.data)
-  rescue
-    e in ExNylas.APIError ->
-      Logger.error("API error: #{e.status_code} - #{e.message}")
-      reraise e, __STACKTRACE__
-    e in ExNylas.TransportError ->
-      Logger.error("Network error: #{e.reason}")
-      reraise e, __STACKTRACE__
+    case ExNylas.Messages.list(conn, limit: 50) do
+      {:ok, messages} ->
+        process_messages(messages.data)
+        {:ok, :synced}
+
+      {:error, %ExNylas.APIError{status: :unauthorized}} ->
+        Logger.error("Authentication failed")
+        {:error, :auth_failed}
+
+      {:error, %ExNylas.TransportError{reason: :timeout}} ->
+        Logger.error("Network timeout, retrying...")
+        retry_sync(conn)
+
+      {:error, error} ->
+        Logger.error("Sync failed: #{inspect(error)}")
+        {:error, :sync_failed}
+    end
   end
 end
 ```

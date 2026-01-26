@@ -23,7 +23,12 @@ defmodule ExNylas.SmartCompose do
 
       iex> {:ok, res} = ExNylas.SmartCompose.create(conn, prompt)
   """
-  @spec create(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec create(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def create(%Connection{} = conn, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
@@ -58,7 +63,12 @@ defmodule ExNylas.SmartCompose do
 
       iex> {:ok, res} = ExNylas.SmartCompose.create_reply(conn, message_id, prompt)
   """
-  @spec create_reply(Connection.t(), String.t(), String.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec create_reply(Connection.t(), String.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def create_reply(%Connection{} = conn, message_id, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
@@ -97,7 +107,12 @@ defmodule ExNylas.SmartCompose do
       iex> Dear [Recipient], ...
       iex> {:ok, ""}
   """
-  @spec create_stream(Connection.t(), String.t(), function()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec create_stream(Connection.t(), String.t(), function()) ::
+          {:ok, Response.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def create_stream(%Connection{} = conn, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
@@ -125,7 +140,7 @@ defmodule ExNylas.SmartCompose do
       iex> {:ok, ""}
   """
     @spec create_reply_stream(Connection.t(), String.t(), String.t(), function()) ::
-    {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+    {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
   def create_reply_stream(%Connection{} = conn, message_id, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",

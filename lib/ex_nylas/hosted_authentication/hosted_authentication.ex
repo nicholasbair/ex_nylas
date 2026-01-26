@@ -83,7 +83,12 @@ defmodule ExNylas.HostedAuthentication do
       iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
   @spec exchange_code_for_token(Connection.t(), String.t(), String.t(), String.t()) ::
-          {:ok, HA.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | HAError.t()}
+          {:ok, HA.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()
+               | HAError.t()}
   def exchange_code_for_token(
         %Connection{} = conn,
         code,

@@ -26,7 +26,12 @@ defmodule ExNylas.Attachments do
 
       iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id: message_id)
   """
-  @spec download(Connection.t(), String.t(), Keyword.t() | list()) :: {:ok, String.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec download(Connection.t(), String.t(), Keyword.t() | list()) ::
+          {:ok, String.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def download(%Connection{} = connection, id, params \\ []) do
     Req.new(
       url: "#{connection.api_server}/v3/grants/#{connection.grant_id}/attachments/#{id}/download",

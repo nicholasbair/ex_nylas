@@ -49,29 +49,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   end
   ```
 
-  **Bang functions raise specific exception types:**
+  **Prefer idiomatic error handling with pattern matching:**
   ```elixir
-  # Before
-  try do
-    ExNylas.Grants.me!(conn)
-  rescue
-    ExNylasError -> handle_error()
+  # Before (v0.10.x) - pattern matching on Response
+  case ExNylas.Grants.me(conn) do
+    {:ok, grant} -> handle_success(grant)
+    {:error, %ExNylas.Response{status: :not_found}} -> handle_not_found()
   end
 
-  # After
-  try do
-    ExNylas.Grants.me!(conn)
-  rescue
-    e in ExNylas.APIError -> handle_api_error(e)
-    e in ExNylas.TransportError -> handle_network_error(e)
-    e in ExNylas.ValidationError -> handle_validation_error(e)
+  # After (v0.11.x) - pattern matching on specific exception types
+  case ExNylas.Grants.me(conn) do
+    {:ok, grant} -> handle_success(grant)
+    {:error, %ExNylas.APIError{status: :not_found}} -> handle_not_found()
+    {:error, %ExNylas.TransportError{reason: :timeout}} -> retry_with_backoff()
+    {:error, %ExNylas.ValidationError{field: field}} -> prompt_for_field(field)
   end
   ```
 
 ### Removed
 - **BREAKING** Removed `ExNylasError` - replaced with specific exception types listed above
   - This was a generic catch-all that provided poor error handling semantics
-  - Update all `rescue ExNylasError` clauses to rescue specific exception types
+  - Update error handling to pattern match on specific exception types in error tuples
 - **BREAKING** File read errors when attaching files to drafts or messages are now handled gracefully:
   - Non-bang functions (`Drafts.create/3`, `Drafts.update/4`, `Messages.send/3`) now return `{:error, %ExNylas.FileError{}}` instead of crashing with a `MatchError`
   - Bang functions (`Drafts.create!/3`, `Drafts.update!/4`, `Messages.send!/3`) now raise `ExNylas.FileError` instead of crashing with a `MatchError`

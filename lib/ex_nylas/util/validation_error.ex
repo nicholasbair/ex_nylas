@@ -10,16 +10,6 @@ defmodule ExNylas.ValidationError do
     * `message` - Human-readable error message
     * `field` - Field name that failed validation (optional)
     * `details` - Additional context (optional)
-
-  ## Example
-
-      try do
-        ExNylas.Core.Auth.auth_bearer(%Connection{api_key: nil})
-      rescue
-        e in ExNylas.ValidationError ->
-          IO.inspect(e.field)   # :access_token
-          IO.inspect(e.message) # "Validation failed for access_token: ..."
-      end
   """
 
   @type t :: %__MODULE__{

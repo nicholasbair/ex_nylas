@@ -32,7 +32,12 @@ defmodule ExNylas.Scheduling.Availability do
 
       iex> {:ok, availability} = ExNylas.Scheduling.Availability.get(conn, 1614556800, 1614643200, config_id: "1234-5678")
   """
-  @spec get(Connection.t(), integer(), integer(), Keyword.t()) :: {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t()}
+  @spec get(Connection.t(), integer(), integer(), Keyword.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               ExNylas.APIError.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def get(%Connection{} = conn, start_time, end_time, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/scheduling/availability",

@@ -71,22 +71,31 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 message = ExNylas.Messages.first!(conn)
 ```
 
-   **Exception Types**: Bang functions (`!`) raise specific exception types for better error handling:
-   - `ExNylas.APIError` - Non-2xx API responses (includes `response`, `status`, `status_code`, `request_id`)
+   **Exception Types**: Non-bang functions return these exception types in error tuples:
+   - `ExNylas.APIError` - Non-2xx API responses (includes `response`, `status`, `request_id`)
    - `ExNylas.TransportError` - Network failures like timeouts or connection errors (includes `reason`)
    - `ExNylas.ValidationError` - Pre-request validation errors (includes `field`, `details`)
+   - `ExNylas.DecodeError` - Response decoding failures (includes `reason`, `response`)
    - `ExNylas.FileError` - File operation errors (includes `path`, `reason`)
 
+   Handle errors idiomatically with pattern matching:
+
    ```elixir
-   try do
-     ExNylas.Grants.me!(conn)
-   rescue
-     e in ExNylas.APIError ->
-       IO.puts("API error: #{e.status_code} - #{e.message}")
-     e in ExNylas.TransportError ->
-       IO.puts("Network error: #{e.reason}")
-     e in ExNylas.ValidationError ->
-       IO.puts("Validation error: #{e.message}")
+   case ExNylas.Grants.me(conn) do
+     {:ok, grant} ->
+       process_grant(grant)
+
+     {:error, %ExNylas.APIError{status: :not_found}} ->
+       handle_not_found()
+
+     {:error, %ExNylas.TransportError{reason: :timeout}} ->
+       retry_with_backoff()
+
+     {:error, %ExNylas.ValidationError{field: field}} ->
+       prompt_user_for_field(field)
+
+     {:error, error} ->
+       Logger.error("Unexpected error: #{inspect(error)}")
    end
    ```
 
