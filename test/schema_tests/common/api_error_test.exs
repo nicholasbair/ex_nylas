@@ -1,6 +1,6 @@
-defmodule ExNylas.ErrorTest do
+defmodule ExNylas.APIErrorTest do
   use ExUnit.Case, async: true
-  alias ExNylas.Error
+  alias ExNylas.APIError
 
   describe "Error schema" do
     test "creates a valid error with all fields" do
@@ -9,7 +9,7 @@ defmodule ExNylas.ErrorTest do
         "provider_error" => %{"code" => "INVALID_TOKEN", "details" => "Token expired"},
         "type" => "invalid_request_error"
       }
-      changeset = Error.changeset(%Error{}, params)
+      changeset = APIError.changeset(%APIError{}, params)
       assert changeset.valid?
       error = Ecto.Changeset.apply_changes(changeset)
       assert error.message == "Invalid request"
@@ -23,7 +23,7 @@ defmodule ExNylas.ErrorTest do
         "provider_error" => nil,
         "type" => nil
       }
-      changeset = Error.changeset(%Error{}, params)
+      changeset = APIError.changeset(%APIError{}, params)
       assert changeset.valid?
       error = Ecto.Changeset.apply_changes(changeset)
       assert error.message == nil
@@ -33,7 +33,7 @@ defmodule ExNylas.ErrorTest do
 
     test "handles empty map for provider_error" do
       params = %{"provider_error" => %{}}
-      changeset = Error.changeset(%Error{}, params)
+      changeset = APIError.changeset(%APIError{}, params)
       assert changeset.valid?
       error = Ecto.Changeset.apply_changes(changeset)
       assert error.provider_error == %{}
@@ -41,7 +41,7 @@ defmodule ExNylas.ErrorTest do
 
     test "creates minimal error with only message" do
       params = %{"message" => "Something went wrong"}
-      changeset = Error.changeset(%Error{}, params)
+      changeset = APIError.changeset(%APIError{}, params)
       assert changeset.valid?
       error = Ecto.Changeset.apply_changes(changeset)
       assert error.message == "Something went wrong"
@@ -49,7 +49,7 @@ defmodule ExNylas.ErrorTest do
 
     test "creates minimal error with empty params" do
       params = %{}
-      changeset = Error.changeset(%Error{}, params)
+      changeset = APIError.changeset(%APIError{}, params)
       assert changeset.valid?
       error = Ecto.Changeset.apply_changes(changeset)
       assert error.message == nil

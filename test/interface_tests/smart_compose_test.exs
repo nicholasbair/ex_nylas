@@ -26,7 +26,7 @@ defmodule ExNylas.SmartComposeTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = SmartCompose.create(default_connection(bypass), "hello")
+    assert {:error, %ExNylas.Response{status: :bad_request}} = SmartCompose.create(default_connection(bypass), "hello")
   end
 
   test "create!/2 returns success on success", %{bypass: bypass} do
@@ -74,7 +74,7 @@ defmodule ExNylas.SmartComposeTest do
     message_id = "message-id"
     prompt = "Hello"
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = SmartCompose.create_reply(default_connection(bypass), message_id, prompt)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = SmartCompose.create_reply(default_connection(bypass), message_id, prompt)
   end
 
   test "create_reply!/3 returns success on success", %{bypass: bypass} do
@@ -125,7 +125,7 @@ defmodule ExNylas.SmartComposeTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = SmartCompose.create_stream(default_connection(bypass), "Write an email", fn _ -> :ok end)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = SmartCompose.create_stream(default_connection(bypass), "Write an email", fn _ -> :ok end)
   end
 
   test "create_reply_stream/4 streams successfully", %{bypass: bypass} do
@@ -148,6 +148,6 @@ defmodule ExNylas.SmartComposeTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = SmartCompose.create_reply_stream(default_connection(bypass), "message-id", "Write an email", fn _ -> :ok end)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = SmartCompose.create_reply_stream(default_connection(bypass), "message-id", "Write an email", fn _ -> :ok end)
   end
 end

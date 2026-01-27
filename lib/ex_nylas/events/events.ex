@@ -31,7 +31,7 @@ defmodule ExNylas.Events do
   @spec import_events(Connection.t(), Keyword.t() | map()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def import_events(%Connection{} = conn, params \\ []) do
@@ -57,8 +57,17 @@ defmodule ExNylas.Events do
   @spec import_events!(Connection.t(), Keyword.t() | map()) :: Response.t()
   def import_events!(%Connection{} = conn, params \\ []) do
     case import_events(conn, params) do
-      {:ok, body} -> body
-      {:error, exception} -> raise exception
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -72,7 +81,7 @@ defmodule ExNylas.Events do
   @spec rsvp(Connection.t(), String.t(), String.t(), String.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def rsvp(%Connection{} = conn, event_id, status, calendar_id) do
@@ -98,8 +107,17 @@ defmodule ExNylas.Events do
   @spec rsvp!(Connection.t(), String.t(), String.t(), String.t()) :: Response.t()
   def rsvp!(%Connection{} = conn, event_id, status, calendar_id) do
     case rsvp(conn, event_id, status, calendar_id) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

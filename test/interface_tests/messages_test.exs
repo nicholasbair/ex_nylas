@@ -38,7 +38,7 @@ defmodule ExNylasTest.Messages do
       to: [%{email: "recipient@example.com"}]
     }
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Messages.send(default_connection(bypass), message, [])
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Messages.send(default_connection(bypass), message, [])
   end
 
   test "send!/3 returns success on success", %{bypass: bypass} do
@@ -92,7 +92,7 @@ defmodule ExNylasTest.Messages do
       |> send_resp(400, ~s<{"message": "Bad Request"}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Messages.clean(default_connection(bypass), %{})
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Messages.clean(default_connection(bypass), %{})
   end
 
   test "clean!/2 returns success on success", %{bypass: bypass} do
@@ -151,7 +151,7 @@ defmodule ExNylasTest.Messages do
 
     mime_content = "Invalid MIME content"
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} =
+    assert {:error, %ExNylas.Response{status: :bad_request}} =
       Messages.send_raw(default_connection(bypass), mime_content)
   end
 

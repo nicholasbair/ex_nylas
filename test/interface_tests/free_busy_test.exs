@@ -30,7 +30,7 @@ defmodule ExNylasTest.CalendarFreeBusy do
 
     body = %{"start_time" => 1615289235, "end_time" => 1615329235}
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = CalendarFreeBusy.list(default_connection(bypass), body)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = CalendarFreeBusy.list(default_connection(bypass), body)
   end
 
   test "list!/2 returns free/busy information on success", %{bypass: bypass} do

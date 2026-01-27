@@ -29,7 +29,7 @@ defmodule ExNylas.ConnectorCredentials do
   @spec list(Connection.t(), String.t() | atom(), Keyword.t() | list()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def list(%Connection{} = conn, provider, params \\ []) do
@@ -53,8 +53,17 @@ defmodule ExNylas.ConnectorCredentials do
   @spec list!(Connection.t(), String.t() | atom(), Keyword.t() | list()) :: Response.t()
   def list!(%Connection{} = conn, provider, params \\ []) do
     case list(conn, provider, params) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -67,7 +76,7 @@ defmodule ExNylas.ConnectorCredentials do
   @spec create(Connection.t(), String.t() | atom(), map()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def create(%Connection{} = conn, provider, body) do
@@ -91,8 +100,17 @@ defmodule ExNylas.ConnectorCredentials do
   @spec create!(Connection.t(), String.t() | atom(), map()) :: Response.t()
   def create!(%Connection{} = conn, provider, body) do
     case create(conn, provider, body) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
 
 
     end
@@ -107,7 +125,7 @@ defmodule ExNylas.ConnectorCredentials do
   @spec find(Connection.t(), String.t() | atom(), String.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def find(%Connection{} = conn, provider, id) do
@@ -130,8 +148,17 @@ defmodule ExNylas.ConnectorCredentials do
   @spec find!(Connection.t(), String.t() | atom(), String.t()) :: Response.t()
   def find!(%Connection{} = conn, provider, id) do
     case find(conn, provider, id) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
 
 
     end
@@ -146,7 +173,7 @@ defmodule ExNylas.ConnectorCredentials do
   @spec delete(Connection.t(), String.t() | atom(), String.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def delete(%Connection{} = conn, provider, id) do
@@ -169,8 +196,17 @@ defmodule ExNylas.ConnectorCredentials do
   @spec delete!(Connection.t(), String.t() | atom(), String.t()) :: Response.t()
   def delete!(%Connection{} = conn, provider, id) do
     case delete(conn, provider, id) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
 
 
     end
@@ -186,7 +222,7 @@ defmodule ExNylas.ConnectorCredentials do
   @spec update(Connection.t(), String.t() | atom(), String.t(), map()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def update(%Connection{} = conn, provider, id, changeset) do
@@ -211,8 +247,17 @@ defmodule ExNylas.ConnectorCredentials do
   @spec update!(Connection.t(), String.t() | atom(), String.t(), map()) :: Response.t()
   def update!(%Connection{} = conn, provider, id, changeset) do
     case update(conn, provider, id, changeset) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
 
 
     end

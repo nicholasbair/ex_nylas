@@ -30,7 +30,7 @@ defmodule ExNylasTest.Providers do
 
     params = [email: "user@example.com"]
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Providers.detect(default_connection(bypass), params)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Providers.detect(default_connection(bypass), params)
   end
 
   test "detect!/2 returns provider details on success", %{bypass: bypass} do

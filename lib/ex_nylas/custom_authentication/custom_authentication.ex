@@ -30,7 +30,7 @@ defmodule ExNylas.CustomAuthentication do
   @spec connect(Connection.t(), map()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def connect(%Connection{} = conn, body) do
@@ -55,8 +55,17 @@ defmodule ExNylas.CustomAuthentication do
   @spec connect!(Connection.t(), map()) :: Response.t()
   def connect!(%Connection{} = conn, body) do
     case connect(conn, body) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

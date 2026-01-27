@@ -33,7 +33,7 @@ defmodule ExNylas.Grants do
   @spec me(Connection.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def me(%Connection{} = conn) do
@@ -57,8 +57,17 @@ defmodule ExNylas.Grants do
   @spec me!(Connection.t()) :: Response.t()
   def me!(%Connection{} = conn) do
     case me(conn) do
-      {:ok, response} -> response
-      {:error, exception} -> raise exception
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -75,7 +84,7 @@ defmodule ExNylas.Grants do
   @spec refresh(Connection.t(), String.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def refresh(%Connection{} = conn, refresh_token) do
@@ -84,7 +93,7 @@ defmodule ExNylas.Grants do
       {:error, %Response{
         status: :bad_request,
         data: nil,
-        error: %ExNylas.Error{message: "refresh_token cannot be nil or empty"}
+        error: %ExNylas.APIError{message: "refresh_token cannot be nil or empty"}
       }}
     else
       body = %{
@@ -118,8 +127,17 @@ defmodule ExNylas.Grants do
   @spec refresh!(Connection.t(), String.t()) :: Response.t()
   def refresh!(%Connection{} = conn, refresh_token) do
     case refresh(conn, refresh_token) do
-      {:ok, response} -> response
-      {:error, exception} -> raise exception
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 

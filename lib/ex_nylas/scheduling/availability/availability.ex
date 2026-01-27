@@ -35,7 +35,7 @@ defmodule ExNylas.Scheduling.Availability do
   @spec get(Connection.t(), integer(), integer(), Keyword.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def get(%Connection{} = conn, start_time, end_time, params \\ []) do
@@ -69,8 +69,17 @@ defmodule ExNylas.Scheduling.Availability do
   @spec get!(Connection.t(), integer(), integer(), Keyword.t()) :: Response.t()
   def get!(%Connection{} = conn, start_time, end_time, params \\ []) do
     case get(conn, start_time, end_time, params) do
-      {:ok, body} -> body
-      {:error, exception} -> raise exception
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 

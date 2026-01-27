@@ -8,6 +8,7 @@ defmodule ExNylas.HostedAuthentication do
   alias ExNylas.{
     API,
     Connection,
+    Response,
     ResponseHandler,
     Telemetry
   }
@@ -85,7 +86,7 @@ defmodule ExNylas.HostedAuthentication do
   @spec exchange_code_for_token(Connection.t(), String.t(), String.t(), String.t()) ::
           {:ok, HA.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()
                | HAError.t()}

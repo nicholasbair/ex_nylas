@@ -193,7 +193,7 @@ defmodule ExNylas.MixProject do
           ],
           "Core - Response": [
             ExNylas.Response,
-            ExNylas.Error
+            ExNylas.APIError
           ],
           "Email - Attachments": [
             ExNylas.Attachments,

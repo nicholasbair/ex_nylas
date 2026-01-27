@@ -34,7 +34,7 @@ defmodule ExNylasTest.Events do
     status = "accepted"
     calendar_id = "calendar-id"
 
-    assert {:error, %ExNylas.APIError{status: :not_found}} = Events.rsvp(default_connection(bypass), event_id, status, calendar_id)
+    assert {:error, %ExNylas.Response{status: :not_found}} = Events.rsvp(default_connection(bypass), event_id, status, calendar_id)
   end
 
   test "rsvp!/4 returns success on success", %{bypass: bypass} do
@@ -84,7 +84,7 @@ defmodule ExNylasTest.Events do
       |> send_resp(404, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :not_found}} = Events.import_events(default_connection(bypass))
+    assert {:error, %ExNylas.Response{status: :not_found}} = Events.import_events(default_connection(bypass))
   end
 
   test "import_events!/2 returns success on success", %{bypass: bypass} do

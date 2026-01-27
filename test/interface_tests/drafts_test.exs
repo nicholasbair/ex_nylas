@@ -38,7 +38,7 @@ defmodule ExNylas.DraftsTest do
       to: [%{email: "recipient@example.com"}]
     }
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Drafts.create(default_connection(bypass), draft)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.create(default_connection(bypass), draft)
   end
 
   test "create!/3 returns success on success", %{bypass: bypass} do
@@ -101,7 +101,7 @@ defmodule ExNylas.DraftsTest do
       body: "Updated body"
     }
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset)
   end
 
   test "update!/3 returns success on success", %{bypass: bypass} do
@@ -167,7 +167,7 @@ defmodule ExNylas.DraftsTest do
 
     attachments = ["./test/fixtures/test_attachment.txt"]
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset, attachments)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset, attachments)
   end
 
   test "update!/4 returns success on success", %{bypass: bypass} do
@@ -223,7 +223,7 @@ defmodule ExNylas.DraftsTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Drafts.send(default_connection(bypass), "draft-id")
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.send(default_connection(bypass), "draft-id")
   end
 
   test "send!/2 returns success on success", %{bypass: bypass} do

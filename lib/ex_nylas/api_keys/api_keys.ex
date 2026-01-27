@@ -45,8 +45,17 @@ defmodule ExNylas.APIKeys do
     Response.t()
   def create!(%Connection{} = conn, application_id, body, signature, kid, nonce, timestamp) do
     case create(conn, application_id, body, signature, kid, nonce, timestamp) do
-      {:ok, response} -> response
-      {:error, exception} -> raise exception
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -80,8 +89,17 @@ defmodule ExNylas.APIKeys do
     Response.t()
   def list!(%Connection{} = conn, application_id, signature, kid, nonce, timestamp) do
     case list(conn, application_id, signature, kid, nonce, timestamp) do
-      {:ok, response} -> response
-      {:error, exception} -> raise exception
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -115,8 +133,17 @@ defmodule ExNylas.APIKeys do
     Response.t()
   def find!(%Connection{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     case find(conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
-      {:ok, response} -> response
-      {:error, exception} -> raise exception
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
 
     end
   end
@@ -151,8 +178,17 @@ defmodule ExNylas.APIKeys do
     Response.t()
   def delete!(%Connection{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     case delete(conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
-      {:ok, response} -> response
-      {:error, exception} -> raise exception
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
 
     end
   end

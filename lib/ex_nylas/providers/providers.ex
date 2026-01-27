@@ -25,7 +25,7 @@ defmodule ExNylas.Providers do
   @spec detect(Connection.t(), Keyword.t() | list()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def detect(%Connection{} = conn, params \\ []) do
@@ -50,8 +50,17 @@ defmodule ExNylas.Providers do
   @spec detect!(Connection.t(), Keyword.t() | list()) :: Response.t()
   def detect!(%Connection{} = conn, params \\ []) do
     case detect(conn, params) do
-      {:ok, body} -> body
-      {:error, exception} -> raise exception
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

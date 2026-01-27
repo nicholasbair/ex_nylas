@@ -12,12 +12,12 @@ defmodule ExNylas.Paging do
           Connection.t(),
           (Connection.t(), Keyword.t() | map() ->
              {:ok, Response.t()}
-             | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
+             | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
           boolean(),
           Keyword.t() | map()
         ) ::
           {:ok, [struct()]}
-          | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
+          | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
   def all(conn, list_function, use_cursor_paging, opts \\ [])
   def all(conn, list_function, true = _use_cursor_paging, opts) do
     Cursor.all(conn, list_function, opts)
@@ -31,22 +31,40 @@ defmodule ExNylas.Paging do
           Connection.t(),
           (Connection.t(), Keyword.t() | map() ->
              {:ok, Response.t()}
-             | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
+             | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
           boolean(),
           Keyword.t() | map()
         ) :: [struct()]
   def all!(conn, list_function, use_cursor_paging, opts \\ [])
   def all!(conn, list_function, true = _use_cursor_paging, opts) do
     case Cursor.all(conn, list_function, opts) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
   def all!(conn, list_function, false = _use_cursor_paging, opts) do
     case Offset.all(conn, list_function, opts) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

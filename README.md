@@ -71,13 +71,21 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 message = ExNylas.Messages.first!(conn)
 ```
 
-   **Exception Types**: Non-bang functions return these exception types in error tuples:
-   - `ExNylas.APIError` - Non-2xx API responses (includes `response`, `status`, `request_id`)
+   **Error Types**: Non-bang functions return these error types in error tuples:
+   - `ExNylas.Response` - Non-2xx API responses (includes `status`, `error` with API error details, `request_id`)
    - `ExNylas.TransportError` - Network failures like timeouts or connection errors (includes `reason`)
    - `ExNylas.ValidationError` - Pre-request validation errors (includes `field`, `details`)
    - `ExNylas.DecodeError` - Response decoding failures (includes `reason`, `response`)
    - `ExNylas.FileError` - File operation errors (includes `path`, `reason`)
    - `ExNylas.HostedAuthentication.Error` - OAuth errors from hosted auth (includes `error`, `error_code`, `error_uri`, `request_id`)
+
+   **Exception Types**: Bang functions raise these exceptions on failure:
+   - `ExNylas.APIError` - Raised for non-2xx API responses (includes `message`, `type`, `provider_error` from Nylas API)
+   - `ExNylas.TransportError` - Raised for network failures
+   - `ExNylas.ValidationError` - Raised for validation errors
+   - `ExNylas.DecodeError` - Raised for response decoding failures
+   - `ExNylas.FileError` - Raised for file operation errors
+   - `ExNylas.HostedAuthentication.Error` - Raised for OAuth errors
 
    Handle errors idiomatically with pattern matching:
 
@@ -86,8 +94,11 @@ message = ExNylas.Messages.first!(conn)
      {:ok, grant} ->
        process_grant(grant)
 
-     {:error, %ExNylas.APIError{status: :not_found}} ->
+     {:error, %ExNylas.Response{status: :not_found}} ->
        handle_not_found()
+
+     {:error, %ExNylas.Response{error: %ExNylas.APIError{type: "invalid_request"}}} ->
+       handle_invalid_request()
 
      {:error, %ExNylas.TransportError{reason: :timeout}} ->
        retry_with_backoff()

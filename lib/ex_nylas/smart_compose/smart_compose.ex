@@ -26,7 +26,7 @@ defmodule ExNylas.SmartCompose do
   @spec create(Connection.t(), String.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def create(%Connection{} = conn, prompt) do
@@ -51,8 +51,17 @@ defmodule ExNylas.SmartCompose do
   @spec create!(Connection.t(), String.t()) :: Response.t()
   def create!(%Connection{} = conn, prompt) do
     case create(conn, prompt) do
-      {:ok, res} -> res
-      {:error, exception} -> raise exception
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -66,7 +75,7 @@ defmodule ExNylas.SmartCompose do
   @spec create_reply(Connection.t(), String.t(), String.t()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def create_reply(%Connection{} = conn, message_id, prompt) do
@@ -91,8 +100,17 @@ defmodule ExNylas.SmartCompose do
   @spec create_reply!(Connection.t(), String.t(), String.t()) :: Response.t()
   def create_reply!(%Connection{} = conn, message_id, prompt) do
     case create_reply(conn, message_id, prompt) do
-      {:ok, body} -> body
-      {:error, exception} -> raise exception
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -110,7 +128,7 @@ defmodule ExNylas.SmartCompose do
   @spec create_stream(Connection.t(), String.t(), function()) ::
           {:ok, Response.t()}
           | {:error,
-               ExNylas.APIError.t()
+               Response.t()
                | ExNylas.TransportError.t()
                | ExNylas.DecodeError.t()}
   def create_stream(%Connection{} = conn, prompt, stream_to) do
@@ -140,7 +158,7 @@ defmodule ExNylas.SmartCompose do
       iex> {:ok, ""}
   """
     @spec create_reply_stream(Connection.t(), String.t(), String.t(), function()) ::
-    {:ok, Response.t()} | {:error, ExNylas.APIError.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
+    {:ok, Response.t()} | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
   def create_reply_stream(%Connection{} = conn, message_id, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",

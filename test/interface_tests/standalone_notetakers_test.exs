@@ -27,7 +27,7 @@ defmodule ExNylas.StandaloneNotetakersTest do
       |> send_resp(404, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :not_found}} =
+    assert {:error, %ExNylas.Response{status: :not_found}} =
       StandaloneNotetakers.cancel(default_connection(bypass), "notetaker-id")
   end
 
@@ -72,7 +72,7 @@ defmodule ExNylas.StandaloneNotetakersTest do
       |> send_resp(404, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :not_found}} =
+    assert {:error, %ExNylas.Response{status: :not_found}} =
       StandaloneNotetakers.leave(default_connection(bypass), "notetaker-id")
   end
 
@@ -125,7 +125,7 @@ defmodule ExNylas.StandaloneNotetakersTest do
       |> send_resp(404, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :not_found}} =
+    assert {:error, %ExNylas.Response{status: :not_found}} =
       StandaloneNotetakers.media(default_connection(bypass), "notetaker-id")
   end
 

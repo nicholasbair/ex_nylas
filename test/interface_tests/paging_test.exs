@@ -26,7 +26,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, true)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, true)
   end
 
   test "all/4 returns paginated results with offset paging", %{bypass: bypass} do
@@ -46,7 +46,7 @@ defmodule ExNylasTest.Paging do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %ExNylas.APIError{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, false)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Paging.all(default_connection(bypass), &Messages.list/2, false)
   end
 
   test "all!/4 returns paginated results with cursor paging", %{bypass: bypass} do
