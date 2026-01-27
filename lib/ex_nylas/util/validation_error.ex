@@ -39,4 +39,49 @@ defmodule ExNylas.ValidationError do
       details: nil
     }
   end
+
+  @impl true
+  def exception(keywords) when is_list(keywords) do
+    keywords
+    |> Enum.into(%{})
+    |> exception()
+  end
+
+  @impl true
+  def exception(%__MODULE__{} = error) do
+    if error.message do
+      error
+    else
+      msg = if error.field do
+        "Validation failed for #{error.field}#{if error.details, do: ": #{error.details}", else: ""}"
+      else
+        error.details || "Validation failed"
+      end
+      %{error | message: msg}
+    end
+  end
+
+  @impl true
+  def exception(value) when is_map(value) do
+    field = Map.get(value, :field) || Map.get(value, "field")
+    details = Map.get(value, :details) || Map.get(value, "details")
+    message = Map.get(value, :message) || Map.get(value, "message")
+
+    msg = message || if field do
+      "Validation failed for #{field}#{if details, do: ": #{details}", else: ""}"
+    else
+      details || "Validation failed"
+    end
+
+    %ExNylas.ValidationError{
+      message: msg,
+      field: field,
+      details: details
+    }
+  end
+
+  @impl true
+  def message(%__MODULE__{message: message}) do
+    message || "Validation failed"
+  end
 end

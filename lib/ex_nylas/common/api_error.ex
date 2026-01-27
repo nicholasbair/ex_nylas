@@ -57,7 +57,13 @@ defmodule ExNylas.APIError do
     %__MODULE__{message: message}
   end
 
-  def exception(attrs) when is_map(attrs) do
+  def exception(keywords) when is_list(keywords) do
+    keywords
+    |> Enum.into(%{})
+    |> exception()
+  end
+
+  def exception(attrs) when is_map(attrs) and not is_struct(attrs) do
     %__MODULE__{
       message: Map.get(attrs, :message) || Map.get(attrs, "message") || "API request failed",
       type: Map.get(attrs, :type) || Map.get(attrs, "type"),

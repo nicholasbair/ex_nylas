@@ -29,6 +29,42 @@ defmodule ExNylas.TransportError do
     }
   end
 
+  @impl true
+  def exception(message) when is_binary(message) do
+    %ExNylas.TransportError{
+      message: message,
+      reason: :unknown
+    }
+  end
+
+  @impl true
+  def exception(keywords) when is_list(keywords) do
+    keywords
+    |> Enum.into(%{})
+    |> exception()
+  end
+
+  @impl true
+  def exception(%__MODULE__{} = error) do
+    %{error | message: error.message || "Transport failed: #{format_reason(error.reason)}"}
+  end
+
+  @impl true
+  def exception(value) when is_map(value) do
+    reason = Map.get(value, :reason) || Map.get(value, "reason") || :unknown
+    msg = Map.get(value, :message) || Map.get(value, "message") || "Transport failed: #{format_reason(reason)}"
+
+    %ExNylas.TransportError{
+      message: msg,
+      reason: reason
+    }
+  end
+
+  @impl true
+  def message(%__MODULE__{message: message}) do
+    message || "Transport failed"
+  end
+
   defp format_reason(:timeout), do: "request timed out"
   defp format_reason(:econnrefused), do: "connection refused"
   defp format_reason(:nxdomain), do: "domain name not found"

@@ -58,6 +58,11 @@ defmodule ExNylas.HostedAuthentication.Error do
     }
   end
 
+  @impl true
+  def message(%__MODULE__{message: message}) do
+    message || "OAuth error: Authentication code exchange failed"
+  end
+
   defp build_message(nil), do: "OAuth error: Authentication code exchange failed"
   defp build_message(error), do: "OAuth error: #{error}"
 end
