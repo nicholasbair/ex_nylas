@@ -27,7 +27,12 @@ defmodule ExNylas.CustomAuthentication do
 
       iex> {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, body)
   """
-  @spec connect(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec connect(Connection.t(), map()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def connect(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connect/custom",
@@ -50,8 +55,17 @@ defmodule ExNylas.CustomAuthentication do
   @spec connect!(Connection.t(), map()) :: Response.t()
   def connect!(%Connection{} = conn, body) do
     case connect(conn, body) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

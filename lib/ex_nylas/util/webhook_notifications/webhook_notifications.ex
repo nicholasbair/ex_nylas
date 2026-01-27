@@ -32,8 +32,12 @@ defmodule ExNylas.WebhookNotifications do
   @spec to_struct!(map()) :: Notification.t()
   def to_struct!(raw_notification) do
     case to_struct(raw_notification) do
-      {:ok, notification} -> notification
-      {:error, _changeset} -> raise ExNylasError, "Failed to transform the webhook notification."
+      {:ok, notification} ->
+        notification
+
+      {:error, changeset} ->
+        raise ExNylas.ValidationError,
+              {:webhook_notification, "Failed to transform the webhook notification: #{inspect(changeset)}"}
     end
   end
 
@@ -82,7 +86,7 @@ defmodule ExNylas.WebhookNotifications do
         match?
 
       {:error, msg} ->
-        raise ExNylasError, msg
+        raise ExNylas.ValidationError, {:webhook_signature, msg}
     end
   end
 end

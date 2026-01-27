@@ -22,7 +22,12 @@ defmodule ExNylas.Providers do
 
       iex> {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
-  @spec detect(Connection.t(), Keyword.t() | list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec detect(Connection.t(), Keyword.t() | list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def detect(%Connection{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",
@@ -45,8 +50,17 @@ defmodule ExNylas.Providers do
   @spec detect!(Connection.t(), Keyword.t() | list()) :: Response.t()
   def detect!(%Connection{} = conn, params \\ []) do
     case detect(conn, params) do
-      {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, body} ->
+        body
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

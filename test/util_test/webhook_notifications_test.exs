@@ -3,19 +3,19 @@ defmodule ExNylasTest.WebhookNotifications do
 
   describe "signature validation" do
     test "validate_signature! raises an error if webhook secret is not included" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.validate_signature!(nil, "", "")
       end
     end
 
     test "validate_signature! raises an error if body is not a string" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.validate_signature!("1234", %{}, "")
       end
     end
 
     test "validate_signature! raises an error if signature is not a string" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.validate_signature!("1234", "", nil)
       end
     end
@@ -66,7 +66,7 @@ defmodule ExNylasTest.WebhookNotifications do
     end
 
     test "to_struct! raises an error if the notification type is not recognized" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.to_struct!(bad_webhook_type())
       end
     end

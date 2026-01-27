@@ -284,7 +284,7 @@ defmodule UtilTest.PagingTest do
         |> Plug.Conn.resp(500, ~s<{"error": "server error"}>)
         |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.APIError, fn ->
         ExNylas.Paging.all!(
           %ExNylas.Connection{
             grant_id: "1234",

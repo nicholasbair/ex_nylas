@@ -29,7 +29,12 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.cancel(conn, id)
   """
-  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec cancel(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/cancel",
@@ -51,8 +56,17 @@ defmodule ExNylas.Notetakers do
   @spec cancel!(Connection.t(), String.t()) :: Response.t()
   def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
-      {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -63,7 +77,12 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.leave(conn, id)
   """
-  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec leave(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/leave",
@@ -85,8 +104,17 @@ defmodule ExNylas.Notetakers do
   @spec leave!(Connection.t(), String.t()) :: Response.t()
   def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
-      {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -97,7 +125,12 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.media(conn, id)
   """
-  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec media(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/media",
@@ -119,8 +152,17 @@ defmodule ExNylas.Notetakers do
   @spec media!(Connection.t(), String.t()) :: Response.t()
   def media!(%Connection{} = conn, id) do
     case media(conn, id) do
-      {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

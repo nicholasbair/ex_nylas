@@ -30,7 +30,12 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
-  @spec me(Connection.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec me(Connection.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def me(%Connection{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",
@@ -52,8 +57,17 @@ defmodule ExNylas.Grants do
   @spec me!(Connection.t()) :: Response.t()
   def me!(%Connection{} = conn) do
     case me(conn) do
-      {:ok, response} -> response
-      {:error, response} -> raise ExNylasError, response
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
@@ -67,14 +81,19 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.refresh(conn, "refresh-token")
   """
-  @spec refresh(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec refresh(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def refresh(%Connection{} = conn, refresh_token) do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do
       {:error, %Response{
         status: :bad_request,
         data: nil,
-        error: %ExNylas.Error{message: "refresh_token cannot be nil or empty"}
+        error: %ExNylas.APIError{message: "refresh_token cannot be nil or empty"}
       }}
     else
       body = %{
@@ -108,8 +127,17 @@ defmodule ExNylas.Grants do
   @spec refresh!(Connection.t(), String.t()) :: Response.t()
   def refresh!(%Connection{} = conn, refresh_token) do
     case refresh(conn, refresh_token) do
-      {:ok, response} -> response
-      {:error, response} -> raise ExNylasError, response
+      {:ok, response} ->
+        response
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 

@@ -27,7 +27,12 @@ defmodule ExNylas.CalendarAvailability do
 
       iex> {:ok, result} = ExNylas.CalendarAvailability.list(conn, body)
   """
-  @spec list(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec list(Connection.t(), map()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | ExNylas.TransportError.t()
+               | ExNylas.DecodeError.t()}
   def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/calendars/availability",
@@ -50,8 +55,17 @@ defmodule ExNylas.CalendarAvailability do
   @spec list!(Connection.t(), map()) :: Response.t()
   def list!(%Connection{} = conn, body) do
     case list(conn, body) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end
