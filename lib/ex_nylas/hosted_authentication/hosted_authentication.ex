@@ -131,7 +131,7 @@ defmodule ExNylas.HostedAuthentication do
         res
 
       {:error, %HAError{} = error} ->
-        raise HAError, error
+        raise error
 
       {:error, exception} ->
         raise exception

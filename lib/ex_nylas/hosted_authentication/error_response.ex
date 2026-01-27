@@ -31,6 +31,21 @@ defmodule ExNylas.HostedAuthentication.Error do
   end
 
   @impl true
+  def exception(message) when is_binary(message) do
+    %__MODULE__{
+      message: build_message(message),
+      error: message
+    }
+  end
+
+  @impl true
+  def exception(keywords) when is_list(keywords) do
+    keywords
+    |> Enum.into(%{})
+    |> exception()
+  end
+
+  @impl true
   def exception(value) when is_map(value) do
     error_field = Map.get(value, :error) || Map.get(value, "error")
 
