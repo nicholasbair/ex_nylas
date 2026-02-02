@@ -48,36 +48,48 @@ defmodule ExNylas.ValidationError do
   end
 
   @impl true
-  def exception(%__MODULE__{} = error) do
-    if error.message do
-      error
-    else
-      msg = if error.field do
-        "Validation failed for #{error.field}#{if error.details, do: ": #{error.details}", else: ""}"
-      else
-        error.details || "Validation failed"
-      end
-      %{error | message: msg}
-    end
+  def exception(%__MODULE__{message: message} = error) when not is_nil(message) do
+    error
+  end
+
+  @impl true
+  def exception(%__MODULE__{message: nil, field: field, details: details} = error)
+      when not is_nil(field) and not is_nil(details) do
+    %{error | message: "Validation failed for #{field}: #{details}"}
+  end
+
+  @impl true
+  def exception(%__MODULE__{message: nil, field: field, details: nil} = error)
+      when not is_nil(field) do
+    %{error | message: "Validation failed for #{field}"}
+  end
+
+  @impl true
+  def exception(%__MODULE__{message: nil, field: nil, details: details} = error)
+      when not is_nil(details) do
+    %{error | message: details}
+  end
+
+  @impl true
+  def exception(%__MODULE__{message: nil, field: nil, details: nil} = error) do
+    %{error | message: "Validation failed"}
   end
 
   @impl true
   def exception(value) when is_map(value) do
-    field = Map.get(value, :field) || Map.get(value, "field")
-    details = Map.get(value, :details) || Map.get(value, "details")
-    message = Map.get(value, :message) || Map.get(value, "message")
+    field = get_field(value, :field)
+    details = get_field(value, :details)
+    message = get_field(value, :message)
 
-    msg = message || if field do
-      "Validation failed for #{field}#{if details, do: ": #{details}", else: ""}"
-    else
-      details || "Validation failed"
-    end
-
-    %ExNylas.ValidationError{
-      message: msg,
+    exception(%__MODULE__{
+      message: message,
       field: field,
       details: details
-    }
+    })
+  end
+
+  defp get_field(map, key) when is_atom(key) do
+    Map.get(map, key) || Map.get(map, Atom.to_string(key))
   end
 
   @impl true

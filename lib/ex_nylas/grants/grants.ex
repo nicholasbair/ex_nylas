@@ -81,16 +81,13 @@ defmodule ExNylas.Grants do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | TransportError.t()
                | DecodeError.t()}
+               | TransportError.t()
+               | ValidationError.t()
   def refresh(%Connection{} = conn, refresh_token) do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do
-      {:error, %Response{
-        status: :bad_request,
-        data: nil,
-        error: %ValidationError{message: "refresh_token cannot be nil or empty"}
-      }}
+      {:error, %ValidationError{message: "refresh_token cannot be nil or empty"}}
     else
       body = %{
         client_id: conn.client_id,

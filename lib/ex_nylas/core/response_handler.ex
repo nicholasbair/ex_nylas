@@ -13,31 +13,44 @@ defmodule ExNylas.ResponseHandler do
   @spec handle_response({atom(), Req.Response.t() | map()}, any(), boolean()) ::
     {:ok, any()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | any()}
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
-    case format_response(res) do
-      {:ok, body, status, headers} ->
-        case TF.transform(body, status, headers, transform_to, use_common_response, transform?(res)) do
-          %DecodeError{} = error -> {:error, error}
-          result -> {:ok, result}
-        end
+    res
+    |> format_response()
+    |> handle_formatted_response(res, transform_to, use_common_response)
+  end
 
-      {:error, body, status, headers} ->
-        response = TF.transform(body, status, headers, transform_to, use_common_response, transform?(res))
+  defp handle_formatted_response({:ok, body, status, headers}, res, transform_to, use_common_response) do
+    body
+    |> TF.transform(status, headers, transform_to, use_common_response, transform?(res))
+    |> handle_success_transform()
+  end
 
-        case response do
-          %Response{} = resp -> {:error, resp}  # Response with error field populated
-          %DecodeError{} = error -> {:error, error}
-          %{__struct__: _} = struct -> {:error, struct}  # Other error structs (e.g., HostedAuthentication.Error)
-          non_json_response -> {:error, DecodeError.exception({:invalid_response_format, non_json_response})}
-        end
+  defp handle_formatted_response({:error, body, status, headers}, res, transform_to, use_common_response) do
+    body
+    |> TF.transform(status, headers, transform_to, use_common_response, transform?(res))
+    |> handle_error_transform()
+  end
 
-      {:error, reason} when is_atom(reason) ->
-        {:error, TransportError.exception(reason)}
+  defp handle_formatted_response({:error, reason}, _res, _transform_to, _use_common_response)
+       when is_atom(reason) do
+    {:error, TransportError.exception(reason)}
+  end
 
-      {:error, reason} ->
-        {:error, reason}
+  defp handle_formatted_response({:error, reason}, _res, _transform_to, _use_common_response) do
+    {:error, reason}
+  end
 
-      val -> val
-    end
+  defp handle_formatted_response(val, _res, _transform_to, _use_common_response) do
+    val
+  end
+
+  defp handle_success_transform(%DecodeError{} = error), do: {:error, error}
+  defp handle_success_transform(result), do: {:ok, result}
+
+  defp handle_error_transform(%Response{} = resp), do: {:error, resp}
+  defp handle_error_transform(%DecodeError{} = error), do: {:error, error}
+  defp handle_error_transform(%{__struct__: _} = struct), do: {:error, struct}
+  defp handle_error_transform(non_json_response) do
+    {:error, DecodeError.exception({:invalid_response_format, non_json_response})}
   end
 
   defp format_response({:ok, %{status: status, body: body, headers: headers}}) when status in @success_codes do
