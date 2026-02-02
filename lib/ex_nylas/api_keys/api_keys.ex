@@ -144,7 +144,6 @@ defmodule ExNylas.APIKeys do
 
       {:error, exception} ->
         raise exception
-
     end
   end
 
