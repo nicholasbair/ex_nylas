@@ -3,20 +3,22 @@ defmodule ExNylas.Paging.Cursor do
 
   alias ExNylas.{
     Connection,
+    DecodeError,
     Paging.Helpers,
     Paging.Options,
-    Response
+    Response,
+    TransportError
   }
 
   @spec all(
           Connection.t(),
           (Connection.t(), Keyword.t() | map() ->
              {:ok, Response.t()}
-             | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
+             | {:error, Response.t() | TransportError.t() | DecodeError.t()}),
           Keyword.t() | map()
         ) ::
           {:ok, [struct()]}
-          | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
+          | {:error, Response.t() | TransportError.t() | DecodeError.t()}
   def all(conn, list_function, opts \\ []) do
     page_with_cursor(conn, list_function, Options.from_opts(opts))
   end
@@ -25,13 +27,13 @@ defmodule ExNylas.Paging.Cursor do
           Connection.t(),
           (Connection.t(), Keyword.t() | map() ->
              {:ok, Response.t()}
-             | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
+             | {:error, Response.t() | TransportError.t() | DecodeError.t()}),
           Keyword.t() | map(),
           any() | nil,
           [any()]
         ) ::
           {:ok, [any()]}
-          | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
+          | {:error, Response.t() | TransportError.t() | DecodeError.t()}
   defp page_with_cursor(%Connection{} = conn, list_function, opts, next_cursor \\ nil, acc \\ []) do
     %{query: query, delay: delay, send_to: send_to, with_metadata: with_metadata} = opts
     query = put_in(query, [:page_token], next_cursor)

@@ -9,10 +9,12 @@ defmodule ExNylas.SmartCompose do
     API,
     Auth,
     Connection,
+    DecodeError,
     ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   alias ExNylas.Schema.SmartCompose, as: SC
@@ -28,8 +30,8 @@ defmodule ExNylas.SmartCompose do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def create(%Connection{} = conn, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
@@ -68,8 +70,8 @@ defmodule ExNylas.SmartCompose do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def create_reply(%Connection{} = conn, message_id, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
@@ -112,8 +114,8 @@ defmodule ExNylas.SmartCompose do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def create_stream(%Connection{} = conn, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
@@ -141,7 +143,7 @@ defmodule ExNylas.SmartCompose do
       iex> {:ok, ""}
   """
     @spec create_reply_stream(Connection.t(), String.t(), String.t(), function()) ::
-    {:ok, Response.t()} | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
+    {:ok, Response.t()} | {:error, Response.t() | TransportError.t() | DecodeError.t()}
   def create_reply_stream(%Connection{} = conn, message_id, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",

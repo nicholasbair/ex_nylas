@@ -9,11 +9,13 @@ defmodule ExNylas.StandaloneNotetakers do
     API,
     Auth,
     Connection,
+    DecodeError,
     Notetaker,
     Notetaker.Media,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -34,8 +36,8 @@ defmodule ExNylas.StandaloneNotetakers do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/cancel",
@@ -82,8 +84,8 @@ defmodule ExNylas.StandaloneNotetakers do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/leave",
@@ -130,8 +132,8 @@ defmodule ExNylas.StandaloneNotetakers do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/media",

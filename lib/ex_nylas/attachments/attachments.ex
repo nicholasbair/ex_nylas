@@ -9,10 +9,12 @@ defmodule ExNylas.Attachments do
     API,
     Auth,
     Connection,
+    DecodeError,
     ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -32,8 +34,8 @@ defmodule ExNylas.Attachments do
           {:ok, String.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def download(%Connection{} = connection, id, params \\ []) do
     Req.new(
       url: "#{connection.api_server}/v3/grants/#{connection.grant_id}/attachments/#{id}/download",

@@ -9,10 +9,12 @@ defmodule ExNylas.Providers do
     API,
     Auth,
     Connection,
+    DecodeError,
     Provider,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   @doc """
@@ -26,8 +28,8 @@ defmodule ExNylas.Providers do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def detect(%Connection{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",

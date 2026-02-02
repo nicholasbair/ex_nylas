@@ -10,9 +10,11 @@ defmodule ExNylas.ConnectorCredentials do
     Auth,
     Connection,
     ConnectorCredential,
+    DecodeError,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -30,8 +32,8 @@ defmodule ExNylas.ConnectorCredentials do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def list(%Connection{} = conn, provider, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -77,8 +79,8 @@ defmodule ExNylas.ConnectorCredentials do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def create(%Connection{} = conn, provider, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -126,8 +128,8 @@ defmodule ExNylas.ConnectorCredentials do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def find(%Connection{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -174,8 +176,8 @@ defmodule ExNylas.ConnectorCredentials do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def delete(%Connection{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -223,8 +225,8 @@ defmodule ExNylas.ConnectorCredentials do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def update(%Connection{} = conn, provider, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",

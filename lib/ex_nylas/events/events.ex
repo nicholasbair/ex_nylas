@@ -9,11 +9,13 @@ defmodule ExNylas.Events do
     API,
     Auth,
     Connection,
+    DecodeError,
     ErrorHandler,
     Event,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -33,8 +35,8 @@ defmodule ExNylas.Events do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def import_events(%Connection{} = conn, params \\ []) do
     Req.new(
       method: :get,
@@ -74,8 +76,8 @@ defmodule ExNylas.Events do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def rsvp(%Connection{} = conn, event_id, status, calendar_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/events/#{event_id}/send-rsvp",

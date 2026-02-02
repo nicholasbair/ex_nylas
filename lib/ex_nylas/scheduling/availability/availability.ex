@@ -9,9 +9,11 @@ defmodule ExNylas.Scheduling.Availability do
     API,
     Availability,
     Connection,
+    DecodeError,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -36,8 +38,8 @@ defmodule ExNylas.Scheduling.Availability do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def get(%Connection{} = conn, start_time, end_time, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/scheduling/availability",

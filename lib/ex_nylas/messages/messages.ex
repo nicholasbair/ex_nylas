@@ -9,12 +9,14 @@ defmodule ExNylas.Messages do
     API,
     Auth,
     Connection,
+    DecodeError,
     ErrorHandler,
     Message,
     Multipart,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -37,8 +39,8 @@ defmodule ExNylas.Messages do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()
+               | TransportError.t()
+               | DecodeError.t()
                | ExNylas.FileError.t()}
   def send(%Connection{} = conn, message, attachments \\ []) do
     case Multipart.build_multipart(message, attachments) do
@@ -84,8 +86,8 @@ defmodule ExNylas.Messages do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def send_raw(%Connection{} = conn, mime) do
     {body, content_type, len} = Multipart.build_raw_multipart(mime)
 
@@ -126,8 +128,8 @@ defmodule ExNylas.Messages do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def clean(%Connection{} = conn, payload) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",

@@ -3,9 +3,11 @@ defmodule ExNylas.Paging.Offset do
 
   alias ExNylas.{
     Connection,
+    DecodeError,
     Paging.Helpers,
     Paging.Options,
-    Response
+    Response,
+    TransportError
   }
 
   import ExNylas.Util
@@ -16,11 +18,11 @@ defmodule ExNylas.Paging.Offset do
           Connection.t(),
           (Connection.t(), Keyword.t() | map() ->
              {:ok, Response.t()}
-             | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}),
+             | {:error, Response.t() | TransportError.t() | DecodeError.t()}),
           Keyword.t() | map()
         ) ::
           {:ok, [struct()]}
-          | {:error, Response.t() | ExNylas.TransportError.t() | ExNylas.DecodeError.t()}
+          | {:error, Response.t() | TransportError.t() | DecodeError.t()}
   def all(conn, list_function, opts \\ []) do
     page_with_offset(conn, list_function, Options.from_opts(opts))
   end

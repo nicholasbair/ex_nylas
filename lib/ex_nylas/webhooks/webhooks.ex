@@ -9,10 +9,12 @@ defmodule ExNylas.Webhooks do
     API,
     Auth,
     Connection,
+    DecodeError,
     ErrorHandler,
     Response,
     ResponseHandler,
     Telemetry,
+    TransportError,
     Webhook
   }
 
@@ -34,8 +36,8 @@ defmodule ExNylas.Webhooks do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def update(%Connection{} = conn, id, changeset, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/#{id}",
@@ -75,8 +77,8 @@ defmodule ExNylas.Webhooks do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def rotate_secret(%Connection{} = conn, webhook_id) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
@@ -114,8 +116,8 @@ defmodule ExNylas.Webhooks do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def mock_payload(%Connection{} = conn, trigger) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
@@ -154,8 +156,8 @@ defmodule ExNylas.Webhooks do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def send_test_event(%Connection{} = conn, trigger, webhook_url) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",

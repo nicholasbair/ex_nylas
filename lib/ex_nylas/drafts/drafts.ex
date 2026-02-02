@@ -9,12 +9,14 @@ defmodule ExNylas.Drafts do
     API,
     Auth,
     Connection,
+    DecodeError,
     Draft,
     ErrorHandler,
     Multipart,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -37,8 +39,8 @@ defmodule ExNylas.Drafts do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()
+               | TransportError.t()
+               | DecodeError.t()
                | ExNylas.FileError.t()}
   def create(%Connection{} = conn, draft, attachments \\ []) do
     case Multipart.build_multipart(draft, attachments) do
@@ -86,8 +88,8 @@ defmodule ExNylas.Drafts do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def update(%Connection{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
@@ -130,8 +132,8 @@ defmodule ExNylas.Drafts do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()
+               | TransportError.t()
+               | DecodeError.t()
                | ExNylas.FileError.t()}
   def update(%Connection{} = conn, id, changeset, attachments) do
     case Multipart.build_multipart(changeset, attachments) do
@@ -179,8 +181,8 @@ defmodule ExNylas.Drafts do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | ExNylas.TransportError.t()
-               | ExNylas.DecodeError.t()}
+               | TransportError.t()
+               | DecodeError.t()}
   def send(%Connection{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
