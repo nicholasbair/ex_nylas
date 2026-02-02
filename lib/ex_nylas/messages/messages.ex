@@ -9,6 +9,7 @@ defmodule ExNylas.Messages do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     Message,
     Multipart,
     Response,
@@ -67,17 +68,8 @@ defmodule ExNylas.Messages do
   @spec send!(Connection.t(), map(), list()) :: Response.t()
   def send!(%Connection{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -118,17 +110,8 @@ defmodule ExNylas.Messages do
   @spec send_raw!(Connection.t(), String.t()) :: Response.t()
   def send_raw!(%Connection{} = conn, mime) do
     case send_raw(conn, mime) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -167,17 +150,8 @@ defmodule ExNylas.Messages do
   @spec clean!(Connection.t(), map()) :: Response.t()
   def clean!(%Connection{} = conn, payload) do
     case clean(conn, payload) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

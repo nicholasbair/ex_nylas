@@ -9,6 +9,7 @@ defmodule ExNylas.SmartCompose do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     Response,
     ResponseHandler,
     Telemetry
@@ -51,17 +52,8 @@ defmodule ExNylas.SmartCompose do
   @spec create!(Connection.t(), String.t()) :: Response.t()
   def create!(%Connection{} = conn, prompt) do
     case create(conn, prompt) do
-      {:ok, res} ->
-        res
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, res} -> res
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -100,17 +92,8 @@ defmodule ExNylas.SmartCompose do
   @spec create_reply!(Connection.t(), String.t(), String.t()) :: Response.t()
   def create_reply!(%Connection{} = conn, message_id, prompt) do
     case create_reply(conn, message_id, prompt) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 

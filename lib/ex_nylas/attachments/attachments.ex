@@ -9,6 +9,7 @@ defmodule ExNylas.Attachments do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     Response,
     ResponseHandler,
     Telemetry
@@ -56,17 +57,8 @@ defmodule ExNylas.Attachments do
   @spec download!(Connection.t(), String.t(), Keyword.t() | list()) :: String.t()
   def download!(%Connection{} = connection, id, params \\ []) do
     case download(connection, id, params) do
-      {:ok, res} ->
-        res
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, res} -> res
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

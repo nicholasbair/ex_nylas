@@ -9,6 +9,7 @@ defmodule ExNylas.CalendarFreeBusy do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     FreeBusy,
     Response,
     ResponseHandler,
@@ -55,17 +56,8 @@ defmodule ExNylas.CalendarFreeBusy do
   @spec list!(Connection.t(), map()) :: Response.t()
   def list!(%Connection{} = conn, body) do
     case list(conn, body) do
-      {:ok, res} ->
-        res
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, res} -> res
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

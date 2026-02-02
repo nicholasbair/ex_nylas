@@ -8,6 +8,7 @@ defmodule ExNylas do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     Response,
     ResponseHandler,
     Telemetry,
@@ -77,18 +78,8 @@ defmodule ExNylas do
       @spec unquote(String.to_atom("#{config.name}!"))(Connection.t(), Keyword.t() | map()) :: [struct()]
       def unquote(String.to_atom("#{config.name}!"))(%Connection{} = conn, opts \\ []) do
         case unquote(config.name)(conn, opts) do
-          {:ok, body} ->
-            body
-
-          {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-            raise error
-
-          {:error, %ExNylas.Response{} = resp} ->
-            # Response without populated error field - create APIError from status
-            raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-          {:error, exception} ->
-            raise exception
+          {:ok, body} -> body
+          {:error, error} -> ErrorHandler.raise_error(error)
         end
       end
     end
@@ -175,17 +166,8 @@ defmodule ExNylas do
       @spec unquote(String.to_atom("#{config.name}!"))(Connection.t(), Keyword.t() | map()) :: Response.t()
       def unquote(String.to_atom("#{config.name}!"))(%Connection{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
-          {:ok, body} ->
-            body
-
-          {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-            raise error
-
-          {:error, %ExNylas.Response{} = resp} ->
-            raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-          {:error, exception} ->
-            raise exception
+          {:ok, body} -> body
+          {:error, error} -> ErrorHandler.raise_error(error)
         end
       end
     end
@@ -224,17 +206,8 @@ defmodule ExNylas do
       @spec unquote(String.to_atom("#{config.name}!"))(Connection.t(), String.t(), Keyword.t() | map()) :: Response.t()
       def unquote(String.to_atom("#{config.name}!"))(%Connection{} = conn, id, params \\ []) do
         case unquote(config.name)(conn, id, params) do
-          {:ok, body} ->
-            body
-
-          {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-            raise error
-
-          {:error, %ExNylas.Response{} = resp} ->
-            raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-          {:error, exception} ->
-            raise exception
+          {:ok, body} -> body
+          {:error, error} -> ErrorHandler.raise_error(error)
         end
       end
     end
@@ -273,17 +246,8 @@ defmodule ExNylas do
       @spec unquote(String.to_atom("#{config.name}!"))(Connection.t(), Keyword.t() | map()) :: Response.t()
       def unquote(String.to_atom("#{config.name}!"))(%Connection{} = conn, params \\ []) do
         case unquote(config.name)(conn, params) do
-          {:ok, body} ->
-            body
-
-          {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-            raise error
-
-          {:error, %ExNylas.Response{} = resp} ->
-            raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-          {:error, exception} ->
-            raise exception
+          {:ok, body} -> body
+          {:error, error} -> ErrorHandler.raise_error(error)
         end
       end
     end
@@ -323,17 +287,8 @@ defmodule ExNylas do
       @spec unquote(String.to_atom("#{config.name}!"))(Connection.t(), String.t(), map(), Keyword.t() | map()) :: Response.t()
       def unquote(String.to_atom("#{config.name}!"))(%Connection{} = conn, id, changeset, params \\ []) do
         case unquote(config.name)(conn, id, changeset, params) do
-          {:ok, body} ->
-            body
-
-          {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-            raise error
-
-          {:error, %ExNylas.Response{} = resp} ->
-            raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-          {:error, exception} ->
-            raise exception
+          {:ok, body} -> body
+          {:error, error} -> ErrorHandler.raise_error(error)
         end
       end
     end
@@ -373,17 +328,8 @@ defmodule ExNylas do
       @spec unquote(String.to_atom("#{config.name}!"))(Connection.t(), map(), Keyword.t() | map()) :: Response.t()
       def unquote(String.to_atom("#{config.name}!"))(%Connection{} = conn, body, params \\ []) do
         case unquote(config.name)(conn, body, params) do
-          {:ok, body} ->
-            body
-
-          {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-            raise error
-
-          {:error, %ExNylas.Response{} = resp} ->
-            raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-          {:error, exception} ->
-            raise exception
+          {:ok, body} -> body
+          {:error, error} -> ErrorHandler.raise_error(error)
         end
       end
     end

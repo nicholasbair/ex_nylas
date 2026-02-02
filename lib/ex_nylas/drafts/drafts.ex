@@ -10,6 +10,7 @@ defmodule ExNylas.Drafts do
     Auth,
     Connection,
     Draft,
+    ErrorHandler,
     Multipart,
     Response,
     ResponseHandler,
@@ -67,17 +68,8 @@ defmodule ExNylas.Drafts do
   @spec create!(Connection.t(), map(), list()) :: Response.t()
   def create!(%Connection{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -120,17 +112,8 @@ defmodule ExNylas.Drafts do
   @spec update!(Connection.t(), String.t(), map()) :: Response.t()
   def update!(%Connection{} = conn, id, changeset) do
     case update(conn, id, changeset) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -180,17 +163,8 @@ defmodule ExNylas.Drafts do
   @spec update!(Connection.t(), String.t(), map(), list()) :: Response.t()
   def update!(%Connection{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -228,17 +202,8 @@ defmodule ExNylas.Drafts do
   @spec send!(Connection.t(), String.t()) :: Response.t()
   def send!(%Connection{} = conn, draft_id) do
     case send(conn, draft_id) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

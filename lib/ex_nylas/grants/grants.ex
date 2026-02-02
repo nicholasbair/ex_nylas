@@ -7,10 +7,10 @@ defmodule ExNylas.Grants do
 
   alias ExNylas.{
     API,
-    APIError,
     Auth,
     Connection,
     DecodeError,
+    ErrorHandler,
     Grant,
     HostedAuthentication,
     Response,
@@ -62,17 +62,8 @@ defmodule ExNylas.Grants do
   @spec me!(Connection.t()) :: Response.t()
   def me!(%Connection{} = conn) do
     case me(conn) do
-      {:ok, response} ->
-        response
-
-      {:error, %Response{error: %APIError{} = error}} ->
-        raise error
-
-      {:error, %Response{} = resp} ->
-        raise APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, response} -> response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -132,17 +123,8 @@ defmodule ExNylas.Grants do
   @spec refresh!(Connection.t(), String.t()) :: Response.t()
   def refresh!(%Connection{} = conn, refresh_token) do
     case refresh(conn, refresh_token) do
-      {:ok, response} ->
-        response
-
-      {:error, %Response{error: %APIError{} = error}} ->
-        raise error
-
-      {:error, %Response{} = resp} ->
-        raise APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, response} -> response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
