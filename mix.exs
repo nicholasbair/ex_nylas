@@ -383,7 +383,7 @@ defmodule ExNylas.MixProject do
       {:excoveralls, "~> 0.18.1", only: :test},
       {:ex_doc, "~> 0.31", only: :dev, runtime: false},
       {:miss, "~> 0.1.5"},
-      {:multipart, "~> 0.4.0"},
+      {:multipart, "~> 0.6.0"},
       {:polymorphic_embed, "~> 5.0"},
       {:req, "~> 0.5.10"},
       {:req_telemetry, "~> 0.1.1"},
