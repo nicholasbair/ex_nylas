@@ -10,6 +10,7 @@ defmodule ExNylas.Notetakers do
     Auth,
     Connection,
     DecodeError,
+    ErrorHandler,
     Notetaker,
     Notetaker.Media,
     Response,
@@ -58,17 +59,8 @@ defmodule ExNylas.Notetakers do
   @spec cancel!(Connection.t(), String.t()) :: Response.t()
   def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
-      {:ok, response} ->
-        response
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, response} -> response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -106,17 +98,8 @@ defmodule ExNylas.Notetakers do
   @spec leave!(Connection.t(), String.t()) :: Response.t()
   def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
-      {:ok, response} ->
-        response
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, response} -> response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -154,17 +137,8 @@ defmodule ExNylas.Notetakers do
   @spec media!(Connection.t(), String.t()) :: Response.t()
   def media!(%Connection{} = conn, id) do
     case media(conn, id) do
-      {:ok, response} ->
-        response
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, response} -> response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

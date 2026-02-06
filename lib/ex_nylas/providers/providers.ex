@@ -10,6 +10,7 @@ defmodule ExNylas.Providers do
     Auth,
     Connection,
     DecodeError,
+    ErrorHandler,
     Provider,
     Response,
     ResponseHandler,
@@ -52,17 +53,8 @@ defmodule ExNylas.Providers do
   @spec detect!(Connection.t(), Keyword.t() | list()) :: Response.t()
   def detect!(%Connection{} = conn, params \\ []) do
     case detect(conn, params) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
-        raise error
-
-      {:error, %ExNylas.Response{} = resp} ->
-        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
-
-      {:error, exception} ->
-        raise exception
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

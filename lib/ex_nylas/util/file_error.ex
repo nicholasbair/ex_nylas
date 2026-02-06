@@ -51,7 +51,7 @@ defmodule ExNylas.FileError do
   end
 
   @impl true
-  def exception(value) when is_map(value) do
+  def exception(value) when is_map(value) and not is_struct(value) do
     path = Map.get(value, :path) || Map.get(value, "path")
     reason = Map.get(value, :reason) || Map.get(value, "reason") || :unknown
     message = Map.get(value, :message) || Map.get(value, "message")
