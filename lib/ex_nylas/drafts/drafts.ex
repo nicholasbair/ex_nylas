@@ -85,11 +85,7 @@ defmodule ExNylas.Drafts do
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset)
   """
   @spec update(Connection.t(), String.t(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def update(%Connection{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
@@ -178,11 +174,7 @@ defmodule ExNylas.Drafts do
       iex> {:ok, sent_draft} = ExNylas.Drafts.send(conn, draft_id)
   """
   @spec send(Connection.t(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def send(%Connection{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",

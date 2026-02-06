@@ -9,13 +9,10 @@ defmodule ExNylas.APIKeys do
     API,
     APIKey,
     Connection,
-    DecodeError,
-    Error,
     ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
 
   @doc"""
@@ -26,7 +23,7 @@ defmodule ExNylas.APIKeys do
       iex> {:ok, result} = ExNylas.APIKeys.create(conn, "application_id", %{name: "My API Key", expires_in: 90  }, "signature", "kid", "nonce", "timestamp")
   """
   @spec create(Connection.t(), String.t(), map(), String.t(), String.t(), String.t(), String.t()) ::
-    {:ok, Response.t()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
+    {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def create(%Connection{} = conn, application_id, body, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys",
@@ -62,7 +59,7 @@ defmodule ExNylas.APIKeys do
       iex> {:ok, result} = ExNylas.APIKeys.list(conn, "application_id", "signature", "kid", "nonce", "timestamp")
   """
   @spec list(Connection.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
-    {:ok, Response.t()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
+    {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def list(%Connection{} = conn, application_id, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys",
@@ -97,7 +94,7 @@ defmodule ExNylas.APIKeys do
       iex> {:ok, result} = ExNylas.APIKeys.find(conn, "application_id", "api_key_id", "signature", "kid", "nonce", "timestamp")
   """
   @spec find(Connection.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
-    {:ok, Response.t()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
+    {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def find(%Connection{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys/#{api_key_id}",
@@ -132,7 +129,7 @@ defmodule ExNylas.APIKeys do
       iex> {:ok, result} = ExNylas.APIKeys.delete(conn, "application_id", "api_key_id", "signature", "kid", "nonce", "timestamp")
   """
   @spec delete(Connection.t(), String.t(), String.t(), String.t(), String.t(), String.t(), String.t()) ::
-    {:ok, Response.t()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
+    {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def delete(%Connection{} = conn, application_id, api_key_id, signature, kid, nonce, timestamp) do
     Req.new(
       url: "#{conn.api_server}/v3/admin/applications/#{application_id}/api-keys/#{api_key_id}",

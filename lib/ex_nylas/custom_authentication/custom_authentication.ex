@@ -9,13 +9,11 @@ defmodule ExNylas.CustomAuthentication do
     API,
     Auth,
     Connection,
-    DecodeError,
     ErrorHandler,
     Grant,
     Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
 
   use ExNylas,
@@ -31,11 +29,7 @@ defmodule ExNylas.CustomAuthentication do
       iex> {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, body)
   """
   @spec connect(Connection.t(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def connect(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connect/custom",

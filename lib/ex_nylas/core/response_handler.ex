@@ -12,7 +12,7 @@ defmodule ExNylas.ResponseHandler do
   @success_codes Enum.to_list(200..299)
 
   @spec handle_response({atom(), Req.Response.t() | map()}, any(), boolean()) ::
-    {:ok, any()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
+    {:ok, any()} | {:error, ExNylas.error_reason()}
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     res
     |> format_response()

@@ -10,12 +10,10 @@ defmodule ExNylas.CalendarAvailability do
     Auth,
     Availability,
     Connection,
-    DecodeError,
     ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
 
   use ExNylas,
@@ -31,11 +29,7 @@ defmodule ExNylas.CalendarAvailability do
       iex> {:ok, result} = ExNylas.CalendarAvailability.list(conn, body)
   """
   @spec list(Connection.t(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/calendars/availability",

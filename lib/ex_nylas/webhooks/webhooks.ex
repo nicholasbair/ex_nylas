@@ -9,12 +9,10 @@ defmodule ExNylas.Webhooks do
     API,
     Auth,
     Connection,
-    DecodeError,
     ErrorHandler,
     Response,
     ResponseHandler,
     Telemetry,
-    TransportError,
     Webhook
   }
 
@@ -33,11 +31,7 @@ defmodule ExNylas.Webhooks do
       iex> {:ok, result} = ExNylas.Webhooks.update(conn, id, body, params)
   """
   @spec update(Connection.t(), String.t(), map(), Keyword.t() | map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def update(%Connection{} = conn, id, changeset, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/#{id}",
@@ -74,11 +68,7 @@ defmodule ExNylas.Webhooks do
       iex> {:ok, webhook} = ExNylas.Webhooks.rotate_secret(conn, webhook_id)
   """
   @spec rotate_secret(Connection.t(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def rotate_secret(%Connection{} = conn, webhook_id) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/rotate-secret/#{webhook_id}",
@@ -113,11 +103,7 @@ defmodule ExNylas.Webhooks do
       iex> {:ok, payload} = ExNylas.Webhooks.mock_payload(conn, trigger)
   """
   @spec mock_payload(Connection.t(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def mock_payload(%Connection{} = conn, trigger) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",
@@ -153,11 +139,7 @@ defmodule ExNylas.Webhooks do
       iex> {:ok, res} = ExNylas.Webhooks.send_test_event(conn, trigger, webhook_url)
   """
   @spec send_test_event(Connection.t(), String.t(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def send_test_event(%Connection{} = conn, trigger, webhook_url) do
     Req.new(
       url: "#{conn.api_server}/v3/webhooks/mock-payload",

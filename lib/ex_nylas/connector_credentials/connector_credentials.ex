@@ -10,12 +10,10 @@ defmodule ExNylas.ConnectorCredentials do
     Auth,
     Connection,
     ConnectorCredential,
-    DecodeError,
     ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
 
   use ExNylas,
@@ -30,11 +28,7 @@ defmodule ExNylas.ConnectorCredentials do
       {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, provider)
   """
   @spec list(Connection.t(), String.t() | atom(), Keyword.t() | list()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def list(%Connection{} = conn, provider, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -68,11 +62,7 @@ defmodule ExNylas.ConnectorCredentials do
       {:ok, cred} = ExNylas.ConnectorCredentials.create(conn, provider, body)
   """
   @spec create(Connection.t(), String.t() | atom(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def create(%Connection{} = conn, provider, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -106,11 +96,7 @@ defmodule ExNylas.ConnectorCredentials do
       {:ok, cred} = ExNylas.ConnectorCredentials.find(conn, provider, id)
   """
   @spec find(Connection.t(), String.t() | atom(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def find(%Connection{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -143,11 +129,7 @@ defmodule ExNylas.ConnectorCredentials do
       {:ok, res} = ExNylas.ConnectorCredentials.delete(conn, provider, id)
   """
   @spec delete(Connection.t(), String.t() | atom(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def delete(%Connection{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -181,11 +163,7 @@ defmodule ExNylas.ConnectorCredentials do
       iex> {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, provider, id, changeset)
   """
   @spec update(Connection.t(), String.t() | atom(), String.t(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def update(%Connection{} = conn, provider, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",

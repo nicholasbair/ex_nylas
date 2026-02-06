@@ -8,11 +8,8 @@ defmodule ExNylas.HostedAuthentication do
   alias ExNylas.{
     API,
     Connection,
-    DecodeError,
-    Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
   alias ExNylas.HostedAuthentication.Error, as: HAError
   alias ExNylas.HostedAuthentication.Grant, as: HA
@@ -86,12 +83,7 @@ defmodule ExNylas.HostedAuthentication do
       iex> {:ok, access_token} = ExNylas.HostedAuthentication.exchange_code_for_token(conn, code, redirect)
   """
   @spec exchange_code_for_token(Connection.t(), String.t(), String.t(), String.t()) ::
-          {:ok, HA.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()
-               | HAError.t()}
+          {:ok, HA.t()} | {:error, ExNylas.error_reason() | HAError.t()}
   def exchange_code_for_token(
         %Connection{} = conn,
         code,

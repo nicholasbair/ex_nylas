@@ -36,11 +36,7 @@ defmodule ExNylas.Grants do
       iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
   @spec me(Connection.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def me(%Connection{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",

@@ -83,11 +83,7 @@ defmodule ExNylas.Messages do
       iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime)
   """
   @spec send_raw(Connection.t(), String.t()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def send_raw(%Connection{} = conn, mime) do
     {body, content_type, len} = Multipart.build_raw_multipart(mime)
 
@@ -125,11 +121,7 @@ defmodule ExNylas.Messages do
       iex> {:ok, message} = ExNylas.Messages.clean(conn, payload)
   """
   @spec clean(Connection.t(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def clean(%Connection{} = conn, payload) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",

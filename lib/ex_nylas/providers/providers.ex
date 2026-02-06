@@ -9,13 +9,11 @@ defmodule ExNylas.Providers do
     API,
     Auth,
     Connection,
-    DecodeError,
     ErrorHandler,
     Provider,
     Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
 
   @doc """
@@ -26,11 +24,7 @@ defmodule ExNylas.Providers do
       iex> {:ok,  detect} = ExNylas.Providers.detect(conn, %{email: email} = _params)
   """
   @spec detect(Connection.t(), Keyword.t() | list()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def detect(%Connection{} = conn, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/providers/detect",

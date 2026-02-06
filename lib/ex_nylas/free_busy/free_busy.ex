@@ -9,13 +9,11 @@ defmodule ExNylas.CalendarFreeBusy do
     API,
     Auth,
     Connection,
-    DecodeError,
     ErrorHandler,
     FreeBusy,
     Response,
     ResponseHandler,
-    Telemetry,
-    TransportError
+    Telemetry
   }
 
   use ExNylas,
@@ -31,11 +29,7 @@ defmodule ExNylas.CalendarFreeBusy do
       iex> {:ok, result} = ExNylas.Calendars.FreeBusy.list(conn, body)
   """
   @spec list(Connection.t(), map()) ::
-          {:ok, Response.t()}
-          | {:error,
-               Response.t()
-               | TransportError.t()
-               | DecodeError.t()}
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def list(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/calendars/free-busy",
