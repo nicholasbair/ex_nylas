@@ -62,7 +62,7 @@ defmodule ExNylas.HostedAuthenticationTest do
       response_type: "code"
     }
 
-    assert {:error, "client_id on the connection struct is required for this call"} =
+    assert {:error, %ExNylas.ValidationError{field: :client_id}} =
              HostedAuthentication.get_auth_url(conn, options)
   end
 
@@ -102,7 +102,7 @@ defmodule ExNylas.HostedAuthenticationTest do
       response_type: "code"
     }
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.ValidationError, fn ->
       HostedAuthentication.get_auth_url!(conn, options)
     end
   end
@@ -117,7 +117,7 @@ defmodule ExNylas.HostedAuthenticationTest do
       response_type: "code"
     }
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.ValidationError, fn ->
       HostedAuthentication.get_auth_url!(conn, options)
     end
   end
@@ -228,7 +228,7 @@ defmodule ExNylas.HostedAuthenticationTest do
     code = "auth-code"
     redirect_uri = "https://mycoolapp.com/auth"
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.HostedAuthentication.Error, fn ->
       HostedAuthentication.exchange_code_for_token!(conn, code, redirect_uri)
     end
   end

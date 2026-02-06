@@ -3,17 +3,24 @@ defmodule ExNylas.Paging do
 
   alias ExNylas.{
     Connection,
+    DecodeError,
+    Error,
     Paging.Cursor,
     Paging.Offset,
-    Response
+    Response,
+    TransportError
   }
 
   @spec all(
           Connection.t(),
-          (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+          (Connection.t(), Keyword.t() | map() ->
+             {:ok, Response.t()}
+             | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}),
           boolean(),
           Keyword.t() | map()
-        ) :: {:ok, [struct()]} | {:error, Response.t()}
+        ) ::
+          {:ok, [struct()]}
+          | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
   def all(conn, list_function, use_cursor_paging, opts \\ [])
   def all(conn, list_function, true = _use_cursor_paging, opts) do
     Cursor.all(conn, list_function, opts)
@@ -25,22 +32,42 @@ defmodule ExNylas.Paging do
 
   @spec all!(
           Connection.t(),
-          (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+          (Connection.t(), Keyword.t() | map() ->
+             {:ok, Response.t()}
+             | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}),
           boolean(),
           Keyword.t() | map()
         ) :: [struct()]
   def all!(conn, list_function, use_cursor_paging, opts \\ [])
   def all!(conn, list_function, true = _use_cursor_paging, opts) do
     case Cursor.all(conn, list_function, opts) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 
   def all!(conn, list_function, false = _use_cursor_paging, opts) do
     case Offset.all(conn, list_function, opts) do
-      {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:ok, res} ->
+        res
+
+      {:error, %ExNylas.Response{error: %ExNylas.APIError{} = error}} ->
+        raise error
+
+      {:error, %ExNylas.Response{} = resp} ->
+        raise ExNylas.APIError.exception(%{message: "API request failed with status #{resp.status}"})
+
+      {:error, exception} ->
+        raise exception
     end
   end
 end

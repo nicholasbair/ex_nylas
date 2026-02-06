@@ -72,9 +72,8 @@ defmodule ExNylasTest.ConnectorCredentials do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
-      assert_raise ExNylasError, err, fn ->
+      assert_raise ExNylas.APIError, fn ->
         ConnectorCredentials.list!(default_connection(bypass), "google")
       end
     end
@@ -153,9 +152,8 @@ defmodule ExNylasTest.ConnectorCredentials do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
-      assert_raise ExNylasError, err, fn ->
+      assert_raise ExNylas.APIError, fn ->
         ConnectorCredentials.create!(default_connection(bypass), "google", %{})
       end
     end
@@ -205,9 +203,8 @@ defmodule ExNylasTest.ConnectorCredentials do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
-      assert_raise ExNylasError, err, fn ->
+      assert_raise ExNylas.APIError, fn ->
         ConnectorCredentials.find!(default_connection(bypass), "google", "1234")
       end
     end
@@ -257,9 +254,8 @@ defmodule ExNylasTest.ConnectorCredentials do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
-      assert_raise ExNylasError, err, fn ->
+      assert_raise ExNylas.APIError, fn ->
         ConnectorCredentials.delete!(default_connection(bypass), "google", "1234")
       end
     end
@@ -313,9 +309,8 @@ defmodule ExNylasTest.ConnectorCredentials do
           |> Plug.Conn.put_resp_header("content-type", "application/json")
       end)
 
-      err = ~r/Error: %ExNylas\.Response\{.*status: :bad_request.*error: %ExNylas\.Error\{.*type: "bad_request".*\}/
 
-      assert_raise ExNylasError, err, fn ->
+      assert_raise ExNylas.APIError, fn ->
         ConnectorCredentials.update!(default_connection(bypass), "google", "1234", %{})
       end
     end

@@ -9,11 +9,14 @@ defmodule ExNylas.Messages do
     API,
     Auth,
     Connection,
+    DecodeError,
+    ErrorHandler,
     Message,
     Multipart,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -32,7 +35,13 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send(conn, message, ["path_to_attachment"])
   """
-  @spec send(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t() | ExNylas.FileError.t()}
+  @spec send(Connection.t(), map(), list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()
+               | ExNylas.FileError.t()}
   def send(%Connection{} = conn, message, attachments \\ []) do
     case Multipart.build_multipart(message, attachments) do
       {:ok, {body, content_type, len}} ->
@@ -61,14 +70,8 @@ defmodule ExNylas.Messages do
   @spec send!(Connection.t(), map(), list()) :: Response.t()
   def send!(%Connection{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do
-      {:ok, body} ->
-        body
-
-      {:error, %ExNylas.FileError{} = error} ->
-        raise error
-
-      {:error, reason} ->
-        raise ExNylasError, reason
+      {:ok, body} -> body
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -79,7 +82,12 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime)
   """
-  @spec send_raw(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec send_raw(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def send_raw(%Connection{} = conn, mime) do
     {body, content_type, len} = Multipart.build_raw_multipart(mime)
 
@@ -105,7 +113,7 @@ defmodule ExNylas.Messages do
   def send_raw!(%Connection{} = conn, mime) do
     case send_raw(conn, mime) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -116,7 +124,12 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, message} = ExNylas.Messages.clean(conn, payload)
   """
-  @spec clean(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec clean(Connection.t(), map()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def clean(%Connection{} = conn, payload) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",
@@ -140,7 +153,7 @@ defmodule ExNylas.Messages do
   def clean!(%Connection{} = conn, payload) do
     case clean(conn, payload) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

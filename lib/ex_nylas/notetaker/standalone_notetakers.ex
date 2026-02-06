@@ -9,11 +9,14 @@ defmodule ExNylas.StandaloneNotetakers do
     API,
     Auth,
     Connection,
+    DecodeError,
+    ErrorHandler,
     Notetaker,
     Notetaker.Media,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -30,7 +33,12 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> {:ok, response} = ExNylas.StandaloneNotetakers.cancel(conn, id)
   """
-  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec cancel(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/cancel",
@@ -53,7 +61,7 @@ defmodule ExNylas.StandaloneNotetakers do
   def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -64,7 +72,12 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> {:ok, response} = ExNylas.StandaloneNotetakers.leave(conn, id)
   """
-  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec leave(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/leave",
@@ -87,7 +100,7 @@ defmodule ExNylas.StandaloneNotetakers do
   def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -98,7 +111,12 @@ defmodule ExNylas.StandaloneNotetakers do
 
       iex> {:ok, response} = ExNylas.StandaloneNotetakers.media(conn, id)
   """
-  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec media(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/notetakers/#{id}/media",
@@ -121,7 +139,7 @@ defmodule ExNylas.StandaloneNotetakers do
   def media!(%Connection{} = conn, id) do
     case media(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

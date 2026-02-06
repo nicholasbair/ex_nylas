@@ -8,7 +8,7 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "raises an error if access_token is not present" do
-      assert_raise ExNylasError, "Error: \"access_token must be present when using grant_id='me'\"", fn ->
+      assert_raise ExNylas.ValidationError, "Validation failed for access_token: access_token must be present when using grant_id='me'", fn ->
         ExNylas.Auth.auth_bearer(%Conn{grant_id: "me"})
       end
     end
@@ -18,7 +18,7 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "raises an error if api_key is not present" do
-      assert_raise ExNylasError, "Error: \"missing value for api_key\"", fn ->
+      assert_raise ExNylas.ValidationError, "Validation failed for api_key: missing value for api_key", fn ->
         ExNylas.Auth.auth_bearer(%Conn{grant_id: "1234"})
       end
     end
@@ -118,7 +118,8 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "returns {:error, reason} for HTTP issues, e.g. timeout" do
-      assert ExNylas.ResponseHandler.handle_response({:error, "timeout"}) == {:error, "timeout"}
+      assert {:error, %ExNylas.Error{original: "timeout", reason: :unexpected_error}} =
+               ExNylas.ResponseHandler.handle_response({:error, "timeout"})
     end
 
     test "returns common response struct if use_common_response is true" do

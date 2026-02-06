@@ -10,9 +10,12 @@ defmodule ExNylas.ConnectorCredentials do
     Auth,
     Connection,
     ConnectorCredential,
+    DecodeError,
+    ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -26,7 +29,12 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, creds} = ExNylas.ConnectorCredentials.list(conn, provider)
   """
-  @spec list(Connection.t(), String.t() | atom(), Keyword.t() | list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec list(Connection.t(), String.t() | atom(), Keyword.t() | list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def list(%Connection{} = conn, provider, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -49,7 +57,7 @@ defmodule ExNylas.ConnectorCredentials do
   def list!(%Connection{} = conn, provider, params \\ []) do
     case list(conn, provider, params) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -59,7 +67,12 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, cred} = ExNylas.ConnectorCredentials.create(conn, provider, body)
   """
-  @spec create(Connection.t(), String.t() | atom(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec create(Connection.t(), String.t() | atom(), map()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def create(%Connection{} = conn, provider, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds",
@@ -82,7 +95,7 @@ defmodule ExNylas.ConnectorCredentials do
   def create!(%Connection{} = conn, provider, body) do
     case create(conn, provider, body) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -92,7 +105,12 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, cred} = ExNylas.ConnectorCredentials.find(conn, provider, id)
   """
-  @spec find(Connection.t(), String.t() | atom(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec find(Connection.t(), String.t() | atom(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def find(%Connection{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -114,7 +132,7 @@ defmodule ExNylas.ConnectorCredentials do
   def find!(%Connection{} = conn, provider, id) do
     case find(conn, provider, id) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -124,7 +142,12 @@ defmodule ExNylas.ConnectorCredentials do
   Example
       {:ok, res} = ExNylas.ConnectorCredentials.delete(conn, provider, id)
   """
-  @spec delete(Connection.t(), String.t() | atom(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec delete(Connection.t(), String.t() | atom(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def delete(%Connection{} = conn, provider, id) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -146,7 +169,7 @@ defmodule ExNylas.ConnectorCredentials do
   def delete!(%Connection{} = conn, provider, id) do
     case delete(conn, provider, id) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -157,7 +180,12 @@ defmodule ExNylas.ConnectorCredentials do
 
       iex> {:ok, cred} = ExNylas.ConnectorCredentials.update(conn, provider, id, changeset)
   """
-  @spec update(Connection.t(), String.t() | atom(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec update(Connection.t(), String.t() | atom(), String.t(), map()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def update(%Connection{} = conn, provider, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/connectors/#{provider}/creds/#{id}",
@@ -181,7 +209,7 @@ defmodule ExNylas.ConnectorCredentials do
   def update!(%Connection{} = conn, provider, id, changeset) do
     case update(conn, provider, id, changeset) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

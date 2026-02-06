@@ -9,9 +9,12 @@ defmodule ExNylas.Attachments do
     API,
     Auth,
     Connection,
+    DecodeError,
+    ErrorHandler,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   use ExNylas,
@@ -27,7 +30,12 @@ defmodule ExNylas.Attachments do
 
       iex> {:ok, result} = ExNylas.Attachments.download(conn, id, message_id: message_id)
   """
-  @spec download(Connection.t(), String.t(), Keyword.t() | list()) :: {:ok, String.t()} | {:error, Response.t()}
+  @spec download(Connection.t(), String.t(), Keyword.t() | list()) ::
+          {:ok, String.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()}
   def download(%Connection{} = connection, id, params \\ []) do
     Req.new(
       url: "#{connection.api_server}/v3/grants/#{connection.grant_id}/attachments/#{id}/download",
@@ -52,7 +60,7 @@ defmodule ExNylas.Attachments do
   def download!(%Connection{} = connection, id, params \\ []) do
     case download(connection, id, params) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

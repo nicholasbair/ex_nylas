@@ -4,7 +4,7 @@ defmodule ExNylas.MixProject do
   def project do
     [
       app: :ex_nylas,
-      version: "0.10.1",
+      version: "0.11.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
       description: "Unofficial Elixir SDK for the Nylas API",
@@ -193,7 +193,7 @@ defmodule ExNylas.MixProject do
           ],
           "Core - Response": [
             ExNylas.Response,
-            ExNylas.Error
+            ExNylas.APIError
           ],
           "Email - Attachments": [
             ExNylas.Attachments,
@@ -225,7 +225,12 @@ defmodule ExNylas.MixProject do
             ExNylas.Thread
           ],
           "Exceptions": [
-            ExNylasError
+            ExNylas.APIError,
+            ExNylas.DecodeError,
+            ExNylas.FileError,
+            ExNylas.TransportError,
+            ExNylas.ValidationError,
+            ExNylas.HostedAuthentication.Error
           ],
           "Grants": [
             ExNylas.Grants,
