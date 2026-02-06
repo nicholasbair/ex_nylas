@@ -5,11 +5,6 @@ defmodule ExNylas.TransportError do
   This exception represents transport-layer errors such as timeouts, connection
   refusals, DNS resolution failures, and other network issues that prevent a
   successful HTTP request/response cycle.
-
-  ## Fields
-
-    * `message` - Human-readable error message
-    * `reason` - Reason atom (`:timeout`, `:econnrefused`, `:nxdomain`, etc.)
   """
 
   @type t :: %__MODULE__{

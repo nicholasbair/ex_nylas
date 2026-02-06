@@ -118,7 +118,8 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "returns {:error, reason} for HTTP issues, e.g. timeout" do
-      assert ExNylas.ResponseHandler.handle_response({:error, "timeout"}) == {:error, "timeout"}
+      assert {:error, %ExNylas.Error{original: "timeout", reason: :unexpected_error}} =
+               ExNylas.ResponseHandler.handle_response({:error, "timeout"})
     end
 
     test "returns common response struct if use_common_response is true" do

@@ -78,6 +78,7 @@ message = ExNylas.Messages.first!(conn)
    - `ExNylas.DecodeError` - Response decoding failures (includes `reason`, `response`)
    - `ExNylas.FileError` - File operation errors (includes `path`, `reason`)
    - `ExNylas.HostedAuthentication.Error` - OAuth errors from hosted auth (includes `error`, `error_code`, `error_uri`, `request_id`)
+   - `ExNylas.Error` - Unexpected error conditions that don't fit other types (includes `reason`, `original`)
 
    **Exception Types**: Bang functions raise these exceptions on failure:
    - `ExNylas.APIError` - Raised for non-2xx API responses (includes `message`, `type`, `provider_error` from Nylas API)
@@ -86,6 +87,7 @@ message = ExNylas.Messages.first!(conn)
    - `ExNylas.DecodeError` - Raised for response decoding failures
    - `ExNylas.FileError` - Raised for file operation errors
    - `ExNylas.HostedAuthentication.Error` - Raised for OAuth errors
+   - `ExNylas.Error` - Raised for unexpected error conditions
 
    Handle errors idiomatically with pattern matching:
 

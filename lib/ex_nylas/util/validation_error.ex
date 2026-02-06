@@ -4,12 +4,6 @@ defmodule ExNylas.ValidationError do
 
   This exception is raised before making an API request when required parameters
   are missing, invalid, or when validation rules are violated.
-
-  ## Fields
-
-    * `message` - Human-readable error message
-    * `field` - Field name that failed validation (optional)
-    * `details` - Additional context (optional)
   """
 
   @type t :: %__MODULE__{

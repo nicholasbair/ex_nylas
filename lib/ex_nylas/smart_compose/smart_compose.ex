@@ -10,6 +10,7 @@ defmodule ExNylas.SmartCompose do
     Auth,
     Connection,
     DecodeError,
+    Error,
     ErrorHandler,
     Response,
     ResponseHandler,
@@ -31,7 +32,8 @@ defmodule ExNylas.SmartCompose do
           | {:error,
                Response.t()
                | TransportError.t()
-               | DecodeError.t()}
+               | DecodeError.t()
+               | Error.t()}
   def create(%Connection{} = conn, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",
@@ -71,7 +73,8 @@ defmodule ExNylas.SmartCompose do
           | {:error,
                Response.t()
                | TransportError.t()
-               | DecodeError.t()}
+               | DecodeError.t()
+               | Error.t()}
   def create_reply(%Connection{} = conn, message_id, prompt) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/#{message_id}/smart-compose",
@@ -115,7 +118,8 @@ defmodule ExNylas.SmartCompose do
           | {:error,
                Response.t()
                | TransportError.t()
-               | DecodeError.t()}
+               | DecodeError.t()
+               | Error.t()}
   def create_stream(%Connection{} = conn, prompt, stream_to) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/smart-compose",

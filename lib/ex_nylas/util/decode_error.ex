@@ -4,12 +4,6 @@ defmodule ExNylas.DecodeError do
 
   This exception is raised when the SDK cannot parse or decode a response,
   such as invalid JSON, unexpected response format, or other decoding issues.
-
-  ## Fields
-
-    * `message` - Human-readable error message
-    * `reason` - The underlying error reason
-    * `response` - The raw response that failed to decode (optional)
   """
 
   @type t :: %__MODULE__{

@@ -3,6 +3,7 @@ defmodule ExNylas.ResponseHandler do
 
   alias ExNylas.{
     DecodeError,
+    Error,
     Response,
     TransportError
   }
@@ -11,7 +12,7 @@ defmodule ExNylas.ResponseHandler do
   @success_codes Enum.to_list(200..299)
 
   @spec handle_response({atom(), Req.Response.t() | map()}, any(), boolean()) ::
-    {:ok, any()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | any()}
+    {:ok, any()} | {:error, Response.t() | TransportError.t() | DecodeError.t() | Error.t()}
   def handle_response(res, transform_to \\ nil, use_common_response \\ true) do
     res
     |> format_response()
@@ -36,7 +37,7 @@ defmodule ExNylas.ResponseHandler do
   end
 
   defp handle_formatted_response({:error, reason}, _res, _transform_to, _use_common_response) do
-    {:error, reason}
+    {:error, Error.exception(reason)}
   end
 
   defp handle_formatted_response(val, _res, _transform_to, _use_common_response) do
@@ -48,7 +49,7 @@ defmodule ExNylas.ResponseHandler do
 
   defp handle_error_transform(%Response{} = resp), do: {:error, resp}
   defp handle_error_transform(%DecodeError{} = error), do: {:error, error}
-  defp handle_error_transform(%{__struct__: _} = struct), do: {:error, struct}
+  defp handle_error_transform(%{__struct__: _} = struct), do: {:error, Error.exception(struct)}
   defp handle_error_transform(non_json_response) do
     {:error, DecodeError.exception({:invalid_response_format, non_json_response})}
   end

@@ -105,6 +105,7 @@ response = ExNylas.Messages.list!(conn)
 - `ExNylas.DecodeError` - Response decoding failures (fields: `reason`, `response`)
 - `ExNylas.FileError` - File operations (fields: `path`, `reason`)
 - `ExNylas.HostedAuthentication.Error` - OAuth errors from hosted auth (fields: `error`, `error_code`, `error_uri`, `request_id`)
+- `ExNylas.Error` - Unexpected error conditions (fields: `reason`, `original`)
 
 **Prefer non-bang functions with pattern matching** for idiomatic error handling:
 
