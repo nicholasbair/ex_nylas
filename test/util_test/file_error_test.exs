@@ -232,7 +232,7 @@ defmodule ExNylasTest.FileError do
     test "is an exception" do
       error = ExNylas.FileError.exception({"/file.txt", :enoent})
 
-      assert Exception.exception?(error)
+      assert is_exception(error)
     end
 
     test "implements Exception behavior" do

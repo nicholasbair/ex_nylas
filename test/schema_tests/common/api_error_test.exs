@@ -188,7 +188,7 @@ defmodule ExNylas.APIErrorTest do
     test "is an exception" do
       error = APIError.exception("test")
 
-      assert Exception.exception?(error)
+      assert is_exception(error)
     end
   end
 end

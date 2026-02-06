@@ -241,7 +241,7 @@ defmodule ExNylas.TransportErrorTest do
     test "is an exception" do
       error = TransportError.exception(:timeout)
 
-      assert Exception.exception?(error)
+      assert is_exception(error)
     end
 
     test "implements Exception behavior" do

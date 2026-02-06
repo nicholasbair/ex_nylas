@@ -276,7 +276,7 @@ defmodule ExNylas.ValidationErrorTest do
     test "is an exception" do
       error = ValidationError.exception("error")
 
-      assert Exception.exception?(error)
+      assert is_exception(error)
     end
 
     test "implements Exception behavior" do

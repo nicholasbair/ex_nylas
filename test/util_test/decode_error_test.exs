@@ -229,7 +229,7 @@ defmodule ExNylas.DecodeErrorTest do
     test "is an exception" do
       error = DecodeError.exception(:error)
 
-      assert Exception.exception?(error)
+      assert is_exception(error)
     end
 
     test "implements Exception behavior" do

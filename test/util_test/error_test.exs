@@ -170,7 +170,7 @@ defmodule ExNylas.ErrorTest do
     test "is an exception" do
       error = Error.exception("test")
 
-      assert Exception.exception?(error)
+      assert is_exception(error)
     end
 
     test "implements Exception behavior" do
