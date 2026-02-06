@@ -225,7 +225,12 @@ defmodule ExNylas.MixProject do
             ExNylas.Thread
           ],
           "Exceptions": [
-            ExNylasError
+            ExNylas.APIError,
+            ExNylas.DecodeError,
+            ExNylas.FileError,
+            ExNylas.TransportError,
+            ExNylas.ValidationError,
+            ExNylas.HostedAuthentication.Error
           ],
           "Grants": [
             ExNylas.Grants,

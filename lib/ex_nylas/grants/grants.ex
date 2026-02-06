@@ -81,9 +81,9 @@ defmodule ExNylas.Grants do
           {:ok, Response.t()}
           | {:error,
                Response.t()
-               | DecodeError.t()}
+               | DecodeError.t()
                | TransportError.t()
-               | ValidationError.t()
+               | ValidationError.t()}
   def refresh(%Connection{} = conn, refresh_token) do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do

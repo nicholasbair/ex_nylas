@@ -217,7 +217,7 @@ end
 def list!(%Connection{} = conn, params \\ []) do
   case list(conn, params) do
     {:ok, body} -> body
-    {:error, reason} -> raise ExNylasError, reason
+    {:error, error} -> ErrorHandler.raise_error(error)
   end
 end
 ```
