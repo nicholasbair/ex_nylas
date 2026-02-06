@@ -33,7 +33,7 @@ defmodule ExNylas.APIError do
   # Make the struct an exception by adding __exception__ field
   defoverridable __struct__: 0, __struct__: 1
 
-  def __struct__() do
+  def __struct__ do
     super() |> Map.put(:__exception__, true)
   end
 

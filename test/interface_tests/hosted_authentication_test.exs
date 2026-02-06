@@ -66,6 +66,34 @@ defmodule ExNylas.HostedAuthenticationTest do
              HostedAuthentication.get_auth_url(conn, options)
   end
 
+  test "get_auth_url/2 returns an error if redirect_uri is missing", %{bypass: bypass} do
+    conn = %Connection{
+      api_server: endpoint_url(bypass.port),
+      client_id: "client-id"
+    }
+
+    options = %{
+      response_type: "code"
+    }
+
+    assert {:error, %ExNylas.ValidationError{field: :redirect_uri}} =
+             HostedAuthentication.get_auth_url(conn, options)
+  end
+
+  test "get_auth_url/2 returns an error if response_type is missing", %{bypass: bypass} do
+    conn = %Connection{
+      api_server: endpoint_url(bypass.port),
+      client_id: "client-id"
+    }
+
+    options = %{
+      redirect_uri: "https://mycoolapp.com/auth"
+    }
+
+    assert {:error, %ExNylas.ValidationError{field: :response_type}} =
+             HostedAuthentication.get_auth_url(conn, options)
+  end
+
   test "get_auth_url!/2 returns the correct URL", %{bypass: bypass} do
     conn = %Connection{
       api_server: endpoint_url(bypass.port),
@@ -231,5 +259,56 @@ defmodule ExNylas.HostedAuthenticationTest do
     assert_raise ExNylas.HostedAuthentication.Error, fn ->
       HostedAuthentication.exchange_code_for_token!(conn, code, redirect_uri)
     end
+  end
+
+  test "exchange_code_for_token/4 works with explicit grant_type parameter", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "POST", "/v3/connect/token", fn conn ->
+      {:ok, body, conn} = Plug.Conn.read_body(conn)
+      decoded = Jason.decode!(body)
+      assert decoded["grant_type"] == "refresh_token"
+
+      conn
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(200, ~s<{"access_token": "new-token"}>)
+    end)
+
+    conn = %Connection{
+      api_server: endpoint_url(bypass.port),
+      client_id: "client-id",
+      api_key: "client-secret"
+    }
+
+    assert {:ok, %HostedAuthentication.Grant{access_token: "new-token"}} =
+             HostedAuthentication.exchange_code_for_token(conn, "code", "https://example.com", "refresh_token")
+  end
+
+  test "exchange_code_for_token/4 handles transport errors", %{bypass: bypass} do
+    Bypass.down(bypass)
+
+    conn = %Connection{
+      api_server: endpoint_url(bypass.port),
+      client_id: "client-id",
+      api_key: "client-secret"
+    }
+
+    assert {:error, %ExNylas.TransportError{}} =
+             HostedAuthentication.exchange_code_for_token(conn, "code", "https://example.com")
+  end
+
+  test "exchange_code_for_token/4 handles non-200 response with error body", %{bypass: bypass} do
+    Bypass.expect_once(bypass, "POST", "/v3/connect/token", fn conn ->
+      conn
+      |> put_resp_header("content-type", "application/json")
+      |> send_resp(401, ~s<{"error": "unauthorized", "error_description": "Invalid credentials"}>)
+    end)
+
+    conn = %Connection{
+      api_server: endpoint_url(bypass.port),
+      client_id: "client-id",
+      api_key: "client-secret"
+    }
+
+    assert {:error, %HostedAuthentication.Error{error: "unauthorized"}} =
+             HostedAuthentication.exchange_code_for_token(conn, "code", "https://example.com")
   end
 end
