@@ -9,15 +9,20 @@ defmodule ExNylas.Grants do
     API,
     Auth,
     Connection,
+    DecodeError,
+    ErrorHandler,
     Grant,
+    HostedAuthentication,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError,
+    ValidationError
   }
 
   use ExNylas,
     object: "grants",
-    struct: ExNylas.Grant,
+    struct: Grant,
     readable_name: "grant",
     include: [:list, :first, :find, :delete, :all],
     use_admin_url: true,
@@ -30,7 +35,8 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.me(conn)
   """
-  @spec me(Connection.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec me(Connection.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def me(%Connection{} = conn) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/me",
@@ -53,7 +59,7 @@ defmodule ExNylas.Grants do
   def me!(%Connection{} = conn) do
     case me(conn) do
       {:ok, response} -> response
-      {:error, response} -> raise ExNylasError, response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -67,15 +73,17 @@ defmodule ExNylas.Grants do
 
       iex> {:ok, result} = ExNylas.Grants.refresh(conn, "refresh-token")
   """
-  @spec refresh(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec refresh(Connection.t(), String.t()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | DecodeError.t()
+               | TransportError.t()
+               | ValidationError.t()}
   def refresh(%Connection{} = conn, refresh_token) do
     # Validate refresh token
     if is_nil(refresh_token) or refresh_token == "" do
-      {:error, %Response{
-        status: :bad_request,
-        data: nil,
-        error: %ExNylas.Error{message: "refresh_token cannot be nil or empty"}
-      }}
+      {:error, %ValidationError{message: "refresh_token cannot be nil or empty"}}
     else
       body = %{
         client_id: conn.client_id,
@@ -109,7 +117,7 @@ defmodule ExNylas.Grants do
   def refresh!(%Connection{} = conn, refresh_token) do
     case refresh(conn, refresh_token) do
       {:ok, response} -> response
-      {:error, response} -> raise ExNylasError, response
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -118,7 +126,7 @@ defmodule ExNylas.Grants do
   # For successful responses (status 200), we use the ExNylas.HostedAuthentication.Grant schema
   # which matches the structure of the token endpoint response
   defp conditional_transform({:ok, %{status: 200}} = res) do
-    ResponseHandler.handle_response(res, ExNylas.HostedAuthentication.Grant, false)
+    ResponseHandler.handle_response(res, HostedAuthentication.Grant, false)
   end
 
   # For error responses, we use the default error handling

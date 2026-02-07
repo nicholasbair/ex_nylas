@@ -9,21 +9,27 @@ defmodule ExNylas.Paging.Cursor do
   }
 
   @spec all(
-    Connection.t(),
-    (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
-    Keyword.t() | map()
-  ) :: {:ok, [struct()]} | {:error, Response.t()}
+          Connection.t(),
+          (Connection.t(), Keyword.t() | map() ->
+             {:ok, Response.t()} | {:error, ExNylas.error_reason()}),
+          Keyword.t() | map()
+        ) ::
+          {:ok, [struct()]}
+          | {:error, ExNylas.error_reason()}
   def all(conn, list_function, opts \\ []) do
     page_with_cursor(conn, list_function, Options.from_opts(opts))
   end
 
   @spec page_with_cursor(
           Connection.t(),
-          (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
+          (Connection.t(), Keyword.t() | map() ->
+             {:ok, Response.t()} | {:error, ExNylas.error_reason()}),
           Keyword.t() | map(),
           any() | nil,
           [any()]
-        ) :: {:ok, [any()]} | {:error, Response.t()}
+        ) ::
+          {:ok, [any()]}
+          | {:error, ExNylas.error_reason()}
   defp page_with_cursor(%Connection{} = conn, list_function, opts, next_cursor \\ nil, acc \\ []) do
     %{query: query, delay: delay, send_to: send_to, with_metadata: with_metadata} = opts
     query = put_in(query, [:page_token], next_cursor)

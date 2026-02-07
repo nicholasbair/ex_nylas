@@ -9,6 +9,7 @@ defmodule ExNylas.CustomAuthentication do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     Grant,
     Response,
     ResponseHandler,
@@ -27,7 +28,8 @@ defmodule ExNylas.CustomAuthentication do
 
       iex> {:ok, grant} = ExNylas.CustomAuthentication.connect(conn, body)
   """
-  @spec connect(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec connect(Connection.t(), map()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def connect(%Connection{} = conn, body) do
     Req.new(
       url: "#{conn.api_server}/v3/connect/custom",
@@ -51,7 +53,7 @@ defmodule ExNylas.CustomAuthentication do
   def connect!(%Connection{} = conn, body) do
     case connect(conn, body) do
       {:ok, res} -> res
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

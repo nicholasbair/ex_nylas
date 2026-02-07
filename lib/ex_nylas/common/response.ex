@@ -7,7 +7,7 @@ defmodule ExNylas.Response do
   import Ecto.Changeset
 
   alias ExNylas.{
-    Error,
+    APIError,
     Type.Atom,
     Type.MapOrList
   }
@@ -22,7 +22,7 @@ defmodule ExNylas.Response do
     field(:request_id, :string)
     field(:status, Atom)
 
-    embeds_one :error, Error
+    embeds_one :error, APIError
   end
 
   @doc false

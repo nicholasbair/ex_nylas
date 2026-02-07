@@ -45,7 +45,7 @@ defmodule ExNylas.APIKeysTest do
       expires_in: 90
     }
 
-    assert {:error, %Response{status: :bad_request}} =
+    assert {:error, %ExNylas.Response{status: :bad_request}} =
       APIKeys.create(
         default_connection(bypass),
         "app_id",
@@ -93,7 +93,7 @@ defmodule ExNylas.APIKeysTest do
       expires_in: 90
     }
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       APIKeys.create!(
         default_connection(bypass),
         "app_id",
@@ -131,7 +131,7 @@ defmodule ExNylas.APIKeysTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} =
+    assert {:error, %ExNylas.Response{status: :bad_request}} =
       APIKeys.list(
         default_connection(bypass),
         "app_id",
@@ -167,7 +167,7 @@ defmodule ExNylas.APIKeysTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       APIKeys.list!(
         default_connection(bypass),
         "app_id",
@@ -205,7 +205,7 @@ defmodule ExNylas.APIKeysTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} =
+    assert {:error, %ExNylas.Response{status: :bad_request}} =
       APIKeys.find(
         default_connection(bypass),
         "app_id",
@@ -243,7 +243,7 @@ defmodule ExNylas.APIKeysTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       APIKeys.find!(
         default_connection(bypass),
         "app_id",
@@ -282,7 +282,7 @@ defmodule ExNylas.APIKeysTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} =
+    assert {:error, %ExNylas.Response{status: :bad_request}} =
       APIKeys.delete(
         default_connection(bypass),
         "app_id",
@@ -320,7 +320,7 @@ defmodule ExNylas.APIKeysTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       APIKeys.delete!(
         default_connection(bypass),
         "app_id",

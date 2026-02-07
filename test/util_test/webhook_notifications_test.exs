@@ -3,19 +3,19 @@ defmodule ExNylasTest.WebhookNotifications do
 
   describe "signature validation" do
     test "validate_signature! raises an error if webhook secret is not included" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.validate_signature!(nil, "", "")
       end
     end
 
     test "validate_signature! raises an error if body is not a string" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.validate_signature!("1234", %{}, "")
       end
     end
 
     test "validate_signature! raises an error if signature is not a string" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.validate_signature!("1234", "", nil)
       end
     end
@@ -66,7 +66,7 @@ defmodule ExNylasTest.WebhookNotifications do
     end
 
     test "to_struct! raises an error if the notification type is not recognized" do
-      assert_raise ExNylasError, fn ->
+      assert_raise ExNylas.ValidationError, fn ->
         ExNylas.WebhookNotifications.to_struct!(bad_webhook_type())
       end
     end
@@ -105,6 +105,13 @@ defmodule ExNylasTest.WebhookNotifications do
         |> Map.put("type", "message.created.transformed.truncated")
         |> ExNylas.WebhookNotifications.to_struct()
 
+      assert res.data.object.__struct__ == ExNylas.Message
+    end
+
+    test "to_struct handles trigger without suffix modifiers" do
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(good_webhook_type())
+
+      # Regular message.created (no .truncated or .transformed suffix)
       assert res.data.object.__struct__ == ExNylas.Message
     end
 
@@ -302,6 +309,111 @@ defmodule ExNylasTest.WebhookNotifications do
       assert res.data.object.__struct__ == ExNylas.WebhookNotification.ThreadReplied
       assert res.data.object.thread_id == "thread_123"
       assert res.data.object.message_id == "msg_123"
+    end
+
+    test "message.link.clicked webhook notification" do
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(message_link_clicked_webhook())
+      assert res.data.object.__struct__ == ExNylas.WebhookNotification.MessageLinkClicked
+      assert res.data.object.message_id == "msg_123"
+      assert res.data.object.label == "link_clicked"
+      assert res.data.object.grant_id == "grant_123"
+      assert res.data.object.sender_app_id == "app_123"
+      assert res.data.object.timestamp == 1234567890
+
+      # Check link_data
+      assert length(res.data.object.link_data) == 2
+      [link1, link2] = res.data.object.link_data
+      assert link1.count == 5
+      assert link1.url == "https://example.com/link1"
+      assert link2.count == 3
+      assert link2.url == "https://example.com/link2"
+
+      # Check recents
+      assert length(res.data.object.recents) == 1
+      [recent] = res.data.object.recents
+      assert recent.click_id == 1
+      assert recent.ip == "192.168.1.1"
+      assert recent.link_index == 0
+      assert recent.timestamp == 1234567890
+      assert recent.user_agent == "Mozilla/5.0"
+    end
+
+    test "message.bounce.detected webhook notification" do
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(message_bounce_detected_webhook())
+      assert res.data.object.__struct__ == ExNylas.WebhookNotification.MessageBounceDetected
+      assert res.data.object.bounced_address == "bounce@example.com"
+      assert res.data.object.bounce_date == "2024-01-15"
+      assert res.data.object.bounce_reason == "Mailbox full"
+      assert res.data.object.code == "550"
+      assert res.data.object.grant_id == "grant_123"
+      assert res.data.object.type == "hard"
+
+      # Check origin
+      origin = res.data.object.origin
+      assert origin.from == "sender@example.com"
+      assert origin.id == "msg_123"
+      assert origin.subject == "Test Email"
+      assert origin.to == ["bounce@example.com"]
+      assert origin.cc == ["cc@example.com"]
+      assert origin.bcc == ["bcc@example.com"]
+    end
+
+    test "notetaker.media webhook notification" do
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(notetaker_media_webhook())
+      assert res.data.object.__struct__ == ExNylas.WebhookNotification.NotetakerMedia
+      assert res.data.object.id == "notetaker_media_123"
+      assert res.data.object.grant_id == "grant_123"
+      assert res.data.object.object == "notetaker.media"
+      assert res.data.object.state == :available
+
+      # Check media
+      media = res.data.object.media
+      assert media.recording == "https://example.com/recording.mp4"
+      assert media.transcript == "https://example.com/transcript.txt"
+    end
+
+    test "tracking webhook notification" do
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(tracking_webhook())
+      assert res.data.object.__struct__ == ExNylas.WebhookNotification.Tracking
+      assert res.data.object.grant_id == "grant_123"
+      assert res.data.object.status == "delivered"
+
+      # Check metadata
+      metadata = res.data.object.metadata
+      assert metadata.language == "en"
+
+      # Check merchant
+      merchant = res.data.object.merchant
+      assert merchant.name == "Test Merchant"
+      assert merchant.domain == "merchant.com"
+
+      # Check shippings
+      assert length(res.data.object.shippings) == 1
+      [shipping] = res.data.object.shippings
+      assert shipping.carrier == "UPS"
+      assert shipping.tracking_link == "https://ups.com/track?num=TRACK123"
+    end
+
+    test "order webhook notification" do
+      {:ok, res} = ExNylas.WebhookNotifications.to_struct(order_webhook())
+      assert res.data.object.__struct__ == ExNylas.WebhookNotification.Order
+      assert res.data.object.grant_id == "grant_123"
+      assert res.data.object.order_status == "confirmed"
+
+      # Check metadata
+      metadata = res.data.object.metadata
+      assert metadata.language == "en"
+
+      # Check merchant
+      merchant = res.data.object.merchant
+      assert merchant.name == "Amazon"
+      assert merchant.domain == "amazon.com"
+
+      # Check orders array
+      assert length(res.data.object.orders) == 1
+      [order] = res.data.object.orders
+      assert order.order_date == 1234567890
+      assert order.currency == "USD"
     end
   end
 
@@ -578,6 +690,156 @@ defmodule ExNylasTest.WebhookNotifications do
       "specversion" => "1.0",
       "time" => 1_234_567_891,
       "type" => "thread.replied",
+      "webhook_delivery_attempt" => 1
+    }
+  end
+
+  defp message_link_clicked_webhook do
+    %{
+      "data" => %{
+        "application_id" => "mock-application-id",
+        "object" => %{
+          "message_id" => "msg_123",
+          "label" => "link_clicked",
+          "grant_id" => "grant_123",
+          "sender_app_id" => "app_123",
+          "timestamp" => 1234567890,
+          "link_data" => [
+            %{"count" => 5, "url" => "https://example.com/link1"},
+            %{"count" => 3, "url" => "https://example.com/link2"}
+          ],
+          "recents" => [
+            %{
+              "click_id" => 1,
+              "ip" => "192.168.1.1",
+              "link_index" => 0,
+              "timestamp" => 1234567890,
+              "user_agent" => "Mozilla/5.0"
+            }
+          ]
+        }
+      },
+      "id" => "mock-id",
+      "source" => "/google/emails/realtime",
+      "specversion" => "1.0",
+      "time" => 1_234_567_891,
+      "type" => "message.link_clicked",
+      "webhook_delivery_attempt" => 1
+    }
+  end
+
+  defp message_bounce_detected_webhook do
+    %{
+      "data" => %{
+        "application_id" => "mock-application-id",
+        "object" => %{
+          "bounced_address" => "bounce@example.com",
+          "bounce_date" => "2024-01-15",
+          "bounce_reason" => "Mailbox full",
+          "code" => "550",
+          "grant_id" => "grant_123",
+          "type" => "hard",
+          "origin" => %{
+            "from" => "sender@example.com",
+            "id" => "msg_123",
+            "subject" => "Test Email",
+            "to" => ["bounce@example.com"],
+            "cc" => ["cc@example.com"],
+            "bcc" => ["bcc@example.com"]
+          }
+        }
+      },
+      "id" => "mock-id",
+      "source" => "/google/emails/realtime",
+      "specversion" => "1.0",
+      "time" => 1_234_567_891,
+      "type" => "message.bounce_detected",
+      "webhook_delivery_attempt" => 1
+    }
+  end
+
+  defp notetaker_media_webhook do
+    %{
+      "data" => %{
+        "application_id" => "mock-application-id",
+        "object" => %{
+          "id" => "notetaker_media_123",
+          "grant_id" => "grant_123",
+          "object" => "notetaker.media",
+          "state" => "available",
+          "media" => %{
+            "recording" => "https://example.com/recording.mp4",
+            "transcript" => "https://example.com/transcript.txt"
+          }
+        }
+      },
+      "id" => "mock-id",
+      "source" => "/google/emails/realtime",
+      "specversion" => "1.0",
+      "time" => 1_234_567_891,
+      "type" => "notetaker.media",
+      "webhook_delivery_attempt" => 1
+    }
+  end
+
+  defp tracking_webhook do
+    %{
+      "data" => %{
+        "application_id" => "mock-application-id",
+        "object" => %{
+          "grant_id" => "grant_123",
+          "status" => "delivered",
+          "metadata" => %{
+            "language" => "en"
+          },
+          "merchant" => %{
+            "name" => "Test Merchant",
+            "domain" => "merchant.com"
+          },
+          "shippings" => [
+            %{
+              "carrier" => "UPS",
+              "tracking_link" => "https://ups.com/track?num=TRACK123"
+            }
+          ]
+        }
+      },
+      "id" => "mock-id",
+      "source" => "/google/emails/realtime",
+      "specversion" => "1.0",
+      "time" => 1_234_567_891,
+      "type" => "message.intelligence.tracking",
+      "webhook_delivery_attempt" => 1
+    }
+  end
+
+  defp order_webhook do
+    %{
+      "data" => %{
+        "application_id" => "mock-application-id",
+        "object" => %{
+          "grant_id" => "grant_123",
+          "order_status" => "confirmed",
+          "metadata" => %{
+            "language" => "en"
+          },
+          "merchant" => %{
+            "name" => "Amazon",
+            "domain" => "amazon.com"
+          },
+          "orders" => [
+            %{
+              "order_date" => 1234567890,
+              "currency" => "USD"
+            }
+          ]
+        }
+      },
+      "id" => "mock-id",
+      "source" => "/google/emails/realtime",
+      "specversion" => "1.0",
+      "time" => 1_234_567_891,
+      "type" => "message.intelligence.order",
       "webhook_delivery_attempt" => 1
     }
   end
