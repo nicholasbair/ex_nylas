@@ -40,10 +40,6 @@ defmodule ExNylas.ResponseHandler do
     {:error, Error.exception(reason)}
   end
 
-  defp handle_formatted_response(val, _res, _transform_to, _use_common_response) do
-    val
-  end
-
   defp handle_success_transform(%DecodeError{} = error), do: {:error, error}
   defp handle_success_transform(result), do: {:ok, result}
 
@@ -54,19 +50,21 @@ defmodule ExNylas.ResponseHandler do
     {:error, DecodeError.exception({:invalid_response_format, non_json_response})}
   end
 
-  defp format_response({:ok, %{status: status, body: body, headers: headers}}) when status in @success_codes do
-    {:ok, body, status, headers}
+  defp format_response({:ok, %{status: status} = res}) when status in @success_codes do
+    {:ok, Map.get(res, :body), status, Map.get(res, :headers)}
   end
 
-  defp format_response({:ok, %{status: status, body: body, headers: headers}}) do
-    {:error, body, status, headers}
+  defp format_response({:ok, %{status: status} = res}) do
+    {:error, Map.get(res, :body), status, Map.get(res, :headers)}
   end
 
   defp format_response({:error, %{reason: reason}}) do
     {:error, reason}
   end
 
-  defp format_response(res), do: res
+  defp format_response({:error, reason}) do
+    {:error, reason}
+  end
 
   defp transform?({_, %{headers: %{"content-type" => content_type}}}) do
     Enum.any?(content_type, &String.contains?(&1, "application/json"))

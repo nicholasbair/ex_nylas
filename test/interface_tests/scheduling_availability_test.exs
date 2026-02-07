@@ -12,7 +12,7 @@ defmodule ExNylasTest.SchedulingAvailability do
     test "calls GET with correct path", %{bypass: bypass} do
       Bypass.expect_once(bypass, fn conn ->
         assert conn.method == "GET"
-        assert conn.request_path == "//v3/scheduling/availability"
+        assert conn.request_path == "/v3/scheduling/availability"
 
         conn
         |> Plug.Conn.resp(200, ~s<{"data": []}>)
@@ -120,7 +120,7 @@ defmodule ExNylasTest.SchedulingAvailability do
     test "calls GET with correct path", %{bypass: bypass} do
       Bypass.expect_once(bypass, fn conn ->
         assert conn.method == "GET"
-        assert conn.request_path == "//v3/scheduling/availability"
+        assert conn.request_path == "/v3/scheduling/availability"
 
         conn
         |> Plug.Conn.resp(200, ~s<{"data": []}>)

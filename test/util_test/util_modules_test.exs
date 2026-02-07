@@ -142,7 +142,8 @@ defmodule ExNylasTest.UtilModules do
 
     test "only decodes JSON responses" do
       res = ExNylas.ResponseHandler.handle_response({:ok, %{status: 200, body: "test"}})
-      assert res == {:ok, %{status: 200, body: "test"}}
+      # Without JSON content-type, returns the body without transformation
+      assert res == {:ok, "test"}
     end
 
     test "transforms into the requested struct" do

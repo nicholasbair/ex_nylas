@@ -87,7 +87,7 @@ defmodule ExNylasTest.Helper do
     end
   end
 
-  def endpoint_url(port), do: "http://localhost:#{port}/"
+  def endpoint_url(port), do: "http://localhost:#{port}"
 
   def default_connection(bypass) do
     %ExNylas.Connection{

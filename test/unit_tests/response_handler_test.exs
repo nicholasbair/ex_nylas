@@ -39,23 +39,14 @@ defmodule ExNylas.ResponseHandlerTest do
       assert {:error, %Error{}} = ResponseHandler.handle_response(response)
     end
 
-    test "handles unknown response format" do
-      response = {:unknown, "data"}
-
-      assert {:unknown, "data"} = ResponseHandler.handle_response(response)
-    end
-
     test "handles success response with DecodeError" do
-      # Simulate a response that looks successful but has invalid JSON
+      # Simulate a response that looks successful but has unexpected JSON structure
       response = {:ok, %{status: 200, body: %{"invalid" => "structure"}, headers: %{"content-type" => ["application/json"]}}}
 
-      # When transforming to a specific struct fails, it should return DecodeError
+      # Valid JSON with unexpected structure still succeeds but creates a Response with nil data
       result = ResponseHandler.handle_response(response, ExNylas.Message)
 
-      case result do
-        {:error, %DecodeError{}} -> assert true
-        {:ok, _} -> assert true  # Valid if structure matches
-      end
+      assert {:ok, %Response{}} = result
     end
 
     test "handles error response with struct" do
@@ -96,16 +87,13 @@ defmodule ExNylas.ResponseHandlerTest do
     end
 
     test "handles response where transform fails with DecodeError on success" do
-      # A successful response that fails to transform due to invalid structure
+      # A successful response with valid JSON but unexpected structure
       response = {:ok, %{status: 200, body: ~s({"invalid": "json"}), headers: %{"content-type" => ["application/json"]}}}
 
       result = ResponseHandler.handle_response(response, ExNylas.Message)
 
-      # Should return DecodeError because the JSON doesn't match Message schema
-      case result do
-        {:error, %DecodeError{}} -> assert true
-        {:ok, _} -> assert true  # Or might succeed if validation is lenient
-      end
+      # Valid JSON with unexpected structure still succeeds (validation is lenient)
+      assert {:ok, %Response{}} = result
     end
 
     test "handles success response with no JSON content-type" do
