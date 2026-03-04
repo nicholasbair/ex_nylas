@@ -52,8 +52,7 @@ defmodule ExNylas.Multipart do
   defp build_file(%Attachment{content: content, filename: filename, content_id: cid})
        when is_binary(content) do
     name = cid || :file
-    headers = build_headers(filename, name)
-    {:ok, Multipart.Part.binary_body(content, headers)}
+    {:ok, Multipart.Part.file_content_field(filename, content, name)}
   end
 
   defp build_file(%Attachment{content: content, filename: filename, size: size, content_id: cid}) do
