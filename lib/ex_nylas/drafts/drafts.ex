@@ -29,7 +29,13 @@ defmodule ExNylas.Drafts do
     include: [:list, :first, :find, :delete, :build, :all]
 
   @doc """
-  Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Create a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
@@ -61,7 +67,13 @@ defmodule ExNylas.Drafts do
   end
 
   @doc """
-  Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Create a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
@@ -116,7 +128,13 @@ defmodule ExNylas.Drafts do
   end
 
   @doc """
-  Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Update a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   To remove all attachments from a draft, use `update/3` or `update!/3`.
 
@@ -150,7 +168,13 @@ defmodule ExNylas.Drafts do
   end
 
   @doc """
-  Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Update a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   To remove all attachments from a draft, use `update/3` or `update!/3`.
 

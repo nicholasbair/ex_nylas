@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+- Added `ExNylas.Multipart.Attachment` struct for passing attachments to send/create/update functions
+  - Accepts binary content or any enumerable/stream (e.g., S3 download stream) for streaming uploads
+  - `from_file/1` and `from_file/2` helpers for constructing attachments from local files
+  - `content_id` field for inline images
 - Renamed `ExNylas.Error` to `ExNylas.APIError` and enhanced to implement Exception behavior
   - Can be parsed from API responses (via Ecto schema) AND raised as an exception
   - Fields match Nylas API error response: `message`, `type`, `provider_error`
@@ -30,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Now properly raisable by bang functions while preserving OAuth-specific fields
   - Fields: `message`, `error`, `error_code`, `error_uri`, `request_id`
   - Designed for compatibility with OAuth libraries per Nylas API design
+
+### Deprecated
+- Passing file path strings or `{content_id, file_path}` tuples as attachments is deprecated and will be removed in a future version. Use `%ExNylas.Multipart.Attachment{}` structs instead.
 
 ### Changed
 - **BREAKING** Error handling refactored for better semantics and type safety:

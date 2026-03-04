@@ -29,7 +29,13 @@ defmodule ExNylas.Messages do
     include: [:list, :first, :find, :update, :build, :all, :delete]
 
   @doc """
-  Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Send a message.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
@@ -61,7 +67,13 @@ defmodule ExNylas.Messages do
   end
 
   @doc """
-  Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Send a message.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
