@@ -86,7 +86,7 @@ defmodule ExNylasTest.Attachments do
           |> Plug.Conn.put_resp_header("content-type", "text/plain")
         end)
 
-        assert_raise ExNylasError, "Error: \"error message\"", fn ->
+        assert_raise ExNylas.DecodeError, fn ->
           Attachments.download!(default_connection(bypass), "1234", [message_id: "1234"])
         end
     end

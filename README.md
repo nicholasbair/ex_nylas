@@ -71,6 +71,48 @@ conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}
 message = ExNylas.Messages.first!(conn)
 ```
 
+   **Error Types**: Non-bang functions return these error types in error tuples:
+   - `ExNylas.Response` - Non-2xx API responses (includes `status`, `error` with API error details, `request_id`)
+   - `ExNylas.TransportError` - Network failures like timeouts or connection errors (includes `reason`)
+   - `ExNylas.ValidationError` - Pre-request validation errors (includes `field`, `details`)
+   - `ExNylas.DecodeError` - Response decoding failures (includes `reason`, `response`)
+   - `ExNylas.FileError` - File operation errors (includes `path`, `reason`)
+   - `ExNylas.HostedAuthentication.Error` - OAuth errors from hosted auth (includes `error`, `error_code`, `error_uri`, `request_id`)
+   - `ExNylas.Error` - Unexpected error conditions that don't fit other types (includes `reason`, `original`)
+
+   **Exception Types**: Bang functions raise these exceptions on failure:
+   - `ExNylas.APIError` - Raised for non-2xx API responses (includes `message`, `type`, `provider_error` from Nylas API)
+   - `ExNylas.TransportError` - Raised for network failures
+   - `ExNylas.ValidationError` - Raised for validation errors
+   - `ExNylas.DecodeError` - Raised for response decoding failures
+   - `ExNylas.FileError` - Raised for file operation errors
+   - `ExNylas.HostedAuthentication.Error` - Raised for OAuth errors
+   - `ExNylas.Error` - Raised for unexpected error conditions
+
+   Handle errors idiomatically with pattern matching:
+
+   ```elixir
+   case ExNylas.Grants.me(conn) do
+     {:ok, grant} ->
+       process_grant(grant)
+
+     {:error, %ExNylas.Response{status: :not_found}} ->
+       handle_not_found()
+
+     {:error, %ExNylas.Response{error: %ExNylas.APIError{type: "invalid_request"}}} ->
+       handle_invalid_request()
+
+     {:error, %ExNylas.TransportError{reason: :timeout}} ->
+       retry_with_backoff()
+
+     {:error, %ExNylas.ValidationError{field: field}} ->
+       prompt_user_for_field(field)
+
+     {:error, error} ->
+       Logger.error("Unexpected error: #{inspect(error)}")
+   end
+   ```
+
 3. Where supported, queries and filters can be passed as a map or keyword list:
 ```elixir
 conn = %ExNylas.Connection{api_key: "1234", grant_id: "1234"}

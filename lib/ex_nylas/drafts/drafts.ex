@@ -9,11 +9,14 @@ defmodule ExNylas.Drafts do
     API,
     Auth,
     Connection,
+    DecodeError,
     Draft,
+    ErrorHandler,
     Multipart,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -26,29 +29,51 @@ defmodule ExNylas.Drafts do
     include: [:list, :first, :find, :delete, :build, :all]
 
   @doc """
-  Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Create a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
       iex> {:ok, draft} = ExNylas.Drafts.create(conn, draft, ["path_to_attachment"])
   """
-  @spec create(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec create(Connection.t(), map(), list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()
+               | ExNylas.FileError.t()}
   def create(%Connection{} = conn, draft, attachments \\ []) do
-    {body, content_type, len} = Multipart.build_multipart(draft, attachments)
+    case Multipart.build_multipart(draft, attachments) do
+      {:ok, {body, content_type, len}} ->
+        Req.new(
+          url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
+          auth: Auth.auth_bearer(conn),
+          headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+          body: body
+        )
+        |> Telemetry.maybe_attach_telemetry(conn)
+        |> Req.post(conn.options)
+        |> ResponseHandler.handle_response(Draft)
 
-    Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts",
-      auth: Auth.auth_bearer(conn),
-      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
-      body: body
-    )
-    |> Telemetry.maybe_attach_telemetry(conn)
-    |> Req.post(conn.options)
-    |> ResponseHandler.handle_response(Draft)
+      {:error, _} = error ->
+        error
+    end
   end
 
   @doc """
-  Create a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Create a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
@@ -58,7 +83,7 @@ defmodule ExNylas.Drafts do
   def create!(%Connection{} = conn, draft, attachments \\ []) do
     case create(conn, draft, attachments) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -71,7 +96,8 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset)
   """
-  @spec update(Connection.t(), String.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec update(Connection.t(), String.t(), map()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def update(%Connection{} = conn, id, changeset) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
@@ -97,12 +123,18 @@ defmodule ExNylas.Drafts do
   def update!(%Connection{} = conn, id, changeset) do
     case update(conn, id, changeset) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
   @doc """
-  Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Update a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   To remove all attachments from a draft, use `update/3` or `update!/3`.
 
@@ -110,23 +142,39 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, draft} = ExNylas.Drafts.update(conn, id, changeset, ["path_to_attachment"])
   """
-  @spec update(Connection.t(), String.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec update(Connection.t(), String.t(), map(), list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()
+               | ExNylas.FileError.t()}
   def update(%Connection{} = conn, id, changeset, attachments) do
-    {body, content_type, len} = Multipart.build_multipart(changeset, attachments)
+    case Multipart.build_multipart(changeset, attachments) do
+      {:ok, {body, content_type, len}} ->
+        Req.new(
+          url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
+          auth: Auth.auth_bearer(conn),
+          headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+          body: body
+        )
+        |> Telemetry.maybe_attach_telemetry(conn)
+        |> Req.patch(conn.options)
+        |> ResponseHandler.handle_response(Draft)
 
-    Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{id}",
-      auth: Auth.auth_bearer(conn),
-      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
-      body: body
-    )
-    |> Telemetry.maybe_attach_telemetry(conn)
-    |> Req.patch(conn.options)
-    |> ResponseHandler.handle_response(Draft)
+      {:error, _} = error ->
+        error
+    end
   end
 
   @doc """
-  Update a draft.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Update a draft.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   To remove all attachments from a draft, use `update/3` or `update!/3`.
 
@@ -138,7 +186,7 @@ defmodule ExNylas.Drafts do
   def update!(%Connection{} = conn, id, changeset, attachments) do
     case update(conn, id, changeset, attachments) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -149,7 +197,8 @@ defmodule ExNylas.Drafts do
 
       iex> {:ok, sent_draft} = ExNylas.Drafts.send(conn, draft_id)
   """
-  @spec send(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec send(Connection.t(), String.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def send(%Connection{} = conn, draft_id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/drafts/#{draft_id}",
@@ -172,7 +221,7 @@ defmodule ExNylas.Drafts do
   def send!(%Connection{} = conn, draft_id) do
     case send(conn, draft_id) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

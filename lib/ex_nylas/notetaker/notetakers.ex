@@ -9,6 +9,7 @@ defmodule ExNylas.Notetakers do
     API,
     Auth,
     Connection,
+    ErrorHandler,
     Notetaker,
     Notetaker.Media,
     Response,
@@ -29,7 +30,8 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.cancel(conn, id)
   """
-  @spec cancel(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec cancel(Connection.t(), String.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def cancel(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/cancel",
@@ -52,7 +54,7 @@ defmodule ExNylas.Notetakers do
   def cancel!(%Connection{} = conn, id) do
     case cancel(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -63,7 +65,8 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.leave(conn, id)
   """
-  @spec leave(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec leave(Connection.t(), String.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def leave(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/leave",
@@ -86,7 +89,7 @@ defmodule ExNylas.Notetakers do
   def leave!(%Connection{} = conn, id) do
     case leave(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -97,7 +100,8 @@ defmodule ExNylas.Notetakers do
 
       iex> {:ok, response} = ExNylas.Notetakers.media(conn, id)
   """
-  @spec media(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec media(Connection.t(), String.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def media(%Connection{} = conn, id) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/notetakers/#{id}/media",
@@ -120,7 +124,7 @@ defmodule ExNylas.Notetakers do
   def media!(%Connection{} = conn, id) do
     case media(conn, id) do
       {:ok, response} -> response
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

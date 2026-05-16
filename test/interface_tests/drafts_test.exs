@@ -38,7 +38,7 @@ defmodule ExNylas.DraftsTest do
       to: [%{email: "recipient@example.com"}]
     }
 
-    assert {:error, %Response{status: :bad_request}} = Drafts.create(default_connection(bypass), draft)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.create(default_connection(bypass), draft)
   end
 
   test "create!/3 returns success on success", %{bypass: bypass} do
@@ -70,7 +70,7 @@ defmodule ExNylas.DraftsTest do
       to: [%{email: "recipient@example.com"}]
     }
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Drafts.create!(default_connection(bypass), draft)
     end
   end
@@ -101,7 +101,7 @@ defmodule ExNylas.DraftsTest do
       body: "Updated body"
     }
 
-    assert {:error, %Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset)
   end
 
   test "update!/3 returns success on success", %{bypass: bypass} do
@@ -131,7 +131,7 @@ defmodule ExNylas.DraftsTest do
       body: "Updated body"
     }
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Drafts.update!(default_connection(bypass), "draft-id", changeset)
     end
   end
@@ -167,7 +167,7 @@ defmodule ExNylas.DraftsTest do
 
     attachments = ["./test/fixtures/test_attachment.txt"]
 
-    assert {:error, %Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset, attachments)
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.update(default_connection(bypass), "draft-id", changeset, attachments)
   end
 
   test "update!/4 returns success on success", %{bypass: bypass} do
@@ -201,7 +201,7 @@ defmodule ExNylas.DraftsTest do
 
     attachments = ["./test/fixtures/test_attachment.txt"]
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Drafts.update!(default_connection(bypass), "draft-id", changeset, attachments)
     end
   end
@@ -223,7 +223,7 @@ defmodule ExNylas.DraftsTest do
       |> send_resp(400, ~s<{}>)
     end)
 
-    assert {:error, %Response{status: :bad_request}} = Drafts.send(default_connection(bypass), "draft-id")
+    assert {:error, %ExNylas.Response{status: :bad_request}} = Drafts.send(default_connection(bypass), "draft-id")
   end
 
   test "send!/2 returns success on success", %{bypass: bypass} do
@@ -243,8 +243,52 @@ defmodule ExNylas.DraftsTest do
       |> send_resp(400, ~s<{"message": "Bad Request"}>)
     end)
 
-    assert_raise ExNylasError, fn ->
+    assert_raise ExNylas.APIError, fn ->
       Drafts.send!(default_connection(bypass), "draft-id")
+    end
+  end
+
+  test "create/3 returns FileError when attachment file does not exist", %{bypass: bypass} do
+    draft = %{
+      subject: "Hello",
+      body: "Hello world",
+      to: [%{email: "recipient@example.com"}]
+    }
+
+    assert {:error, %ExNylas.FileError{} = error} = Drafts.create(default_connection(bypass), draft, ["./nonexistent.txt"])
+    assert error.path == "./nonexistent.txt"
+    assert error.reason == :enoent
+  end
+
+  test "create!/3 raises FileError when attachment file does not exist", %{bypass: bypass} do
+    draft = %{
+      subject: "Hello",
+      body: "Hello world",
+      to: [%{email: "recipient@example.com"}]
+    }
+
+    assert_raise ExNylas.FileError, ~r/Failed to read file at .*nonexistent\.txt: file does not exist/, fn ->
+      Drafts.create!(default_connection(bypass), draft, ["./nonexistent.txt"])
+    end
+  end
+
+  test "update/4 returns FileError when attachment file does not exist", %{bypass: bypass} do
+    changeset = %{
+      subject: "Updated Hello"
+    }
+
+    assert {:error, %ExNylas.FileError{} = error} = Drafts.update(default_connection(bypass), "draft-id", changeset, ["./nonexistent.txt"])
+    assert error.path == "./nonexistent.txt"
+    assert error.reason == :enoent
+  end
+
+  test "update!/4 raises FileError when attachment file does not exist", %{bypass: bypass} do
+    changeset = %{
+      subject: "Updated Hello"
+    }
+
+    assert_raise ExNylas.FileError, ~r/Failed to read file at .*nonexistent\.txt: file does not exist/, fn ->
+      Drafts.update!(default_connection(bypass), "draft-id", changeset, ["./nonexistent.txt"])
     end
   end
 end

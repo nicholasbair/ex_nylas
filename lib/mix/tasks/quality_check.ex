@@ -7,7 +7,7 @@ defmodule Mix.Tasks.QualityCheck do
 
   def run(_args) do
     Mix.Task.run("test")
-    Mix.Task.run("credo")
+    Mix.Task.run("credo", ["--strict"])
     Mix.Task.run("dialyzer")
   end
 end

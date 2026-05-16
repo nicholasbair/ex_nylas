@@ -1,6 +1,7 @@
 defmodule ExNylas.Transform do
   @moduledoc false
 
+  alias ExNylas.DecodeError
   alias ExNylas.Response
   import Ecto.Changeset
   import ExNylas, only: [format_module_name: 1]
@@ -33,13 +34,20 @@ defmodule ExNylas.Transform do
     504 => :gateway_timeout
   }
 
-  @spec transform(map() | binary(), integer(), map(), atom(), true, true) :: Response.t()
+  @spec transform(map() | binary(), integer(), map(), atom(), true, true) ::
+          Response.t() | DecodeError.t()
   @spec transform(map() | binary(), integer(), map(), atom(), false, true) :: [struct()] | struct()
   @spec transform(map() | binary(), integer(), map(), atom(), boolean(), false) :: any()
   def transform(body, status, headers, model, true = _use_common, true = _transform) do
-    %Response{}
-    |> Response.changeset(preprocess_body(model, body, status, headers))
-    |> apply_changes()
+    case preprocess_body(model, body, status, headers) do
+      {:decode_error, reason, raw_body} ->
+        DecodeError.exception({reason, raw_body})
+
+      processed_body ->
+        %Response{}
+        |> Response.changeset(processed_body)
+        |> apply_changes()
+    end
   end
 
   def transform(body, _status, _headers, model, false = _use_common, true = _transform) do
@@ -76,9 +84,13 @@ defmodule ExNylas.Transform do
 
   # SmartCompose stream response can be an event stream if succussful or a JSON object in case of an error.
   defp preprocess_body(model, body, status, headers) when is_bitstring(body) do
-    body
-    |> Jason.decode!()
-    |> then(&preprocess_body(model, &1, status, headers))
+    case Jason.decode(body) do
+      {:ok, decoded} ->
+        preprocess_body(model, decoded, status, headers)
+
+      {:error, reason} ->
+        {:decode_error, reason, body}
+    end
   end
 
   defp preprocess_body(_model, body, _status, _headers), do: body

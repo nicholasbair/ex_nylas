@@ -13,10 +13,12 @@ defmodule ExNylas.Paging.Offset do
   @limit 50
 
   @spec all(
-    Connection.t(),
-    (Connection.t(), Keyword.t() | map() -> {:ok, Response.t()} | {:error, Response.t()}),
-    Keyword.t() | map()
-  ) :: {:ok, [struct()]} | {:error, Response.t()}
+          Connection.t(),
+          (Connection.t(), Keyword.t() | map() ->
+             {:ok, Response.t()} | {:error, ExNylas.error_reason()}),
+          Keyword.t() | map()
+        ) ::
+          {:ok, [struct()]} | {:error, ExNylas.error_reason()}
   def all(conn, list_function, opts \\ []) do
     page_with_offset(conn, list_function, Options.from_opts(opts))
   end

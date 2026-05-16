@@ -9,11 +9,14 @@ defmodule ExNylas.Messages do
     API,
     Auth,
     Connection,
+    DecodeError,
+    ErrorHandler,
     Message,
     Multipart,
     Response,
     ResponseHandler,
-    Telemetry
+    Telemetry,
+    TransportError
   }
 
   # Avoid conflict between Kernel.send/2 and __MODULE__.send/2
@@ -26,29 +29,51 @@ defmodule ExNylas.Messages do
     include: [:list, :first, :find, :update, :build, :all, :delete]
 
   @doc """
-  Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Send a message.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
       iex> {:ok, sent_message} = ExNylas.Messages.send(conn, message, ["path_to_attachment"])
   """
-  @spec send(Connection.t(), map(), list()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec send(Connection.t(), map(), list()) ::
+          {:ok, Response.t()}
+          | {:error,
+               Response.t()
+               | TransportError.t()
+               | DecodeError.t()
+               | ExNylas.FileError.t()}
   def send(%Connection{} = conn, message, attachments \\ []) do
-    {body, content_type, len} = Multipart.build_multipart(message, attachments)
+    case Multipart.build_multipart(message, attachments) do
+      {:ok, {body, content_type, len}} ->
+        Req.new(
+          url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
+          auth: Auth.auth_bearer(conn),
+          headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
+          body: body
+        )
+        |> Telemetry.maybe_attach_telemetry(conn)
+        |> Req.post(conn.options)
+        |> ResponseHandler.handle_response(Message)
 
-    Req.new(
-      url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/send",
-      auth: Auth.auth_bearer(conn),
-      headers: API.base_headers(["content-type": content_type, "content-length": to_string(len)]),
-      body: body
-    )
-    |> Telemetry.maybe_attach_telemetry(conn)
-    |> Req.post(conn.options)
-    |> ResponseHandler.handle_response(Message)
+      {:error, _} = error ->
+        error
+    end
   end
 
   @doc """
-  Send a message.  Attachments must be either a list of file paths or a list of tuples with the content-id and file path.  The latter of which is needed in order to attach inline images.
+  Send a message.
+
+  Attachments should be a list of `%ExNylas.Multipart.Attachment{}` structs.
+  Use `ExNylas.Multipart.Attachment.from_file/1` or `from_file/2` for local files.
+  Set `content_id` on the struct for inline images.
+
+  Passing file path strings or `{content_id, file_path}` tuples is deprecated and will be removed in a future version.
 
   ## Examples
 
@@ -58,7 +83,7 @@ defmodule ExNylas.Messages do
   def send!(%Connection{} = conn, message, attachments \\ []) do
     case send(conn, message, attachments) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -69,7 +94,8 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, sent_message} = ExNylas.Messages.send_raw(conn, mime)
   """
-  @spec send_raw(Connection.t(), String.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec send_raw(Connection.t(), String.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def send_raw(%Connection{} = conn, mime) do
     {body, content_type, len} = Multipart.build_raw_multipart(mime)
 
@@ -95,7 +121,7 @@ defmodule ExNylas.Messages do
   def send_raw!(%Connection{} = conn, mime) do
     case send_raw(conn, mime) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 
@@ -106,7 +132,8 @@ defmodule ExNylas.Messages do
 
       iex> {:ok, message} = ExNylas.Messages.clean(conn, payload)
   """
-  @spec clean(Connection.t(), map()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec clean(Connection.t(), map()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def clean(%Connection{} = conn, payload) do
     Req.new(
       url: "#{conn.api_server}/v3/grants/#{conn.grant_id}/messages/clean",
@@ -130,7 +157,7 @@ defmodule ExNylas.Messages do
   def clean!(%Connection{} = conn, payload) do
     case clean(conn, payload) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 end

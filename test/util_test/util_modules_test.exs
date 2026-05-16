@@ -8,7 +8,7 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "raises an error if access_token is not present" do
-      assert_raise ExNylasError, "Error: \"access_token must be present when using grant_id='me'\"", fn ->
+      assert_raise ExNylas.ValidationError, "Validation failed for access_token: access_token must be present when using grant_id='me'", fn ->
         ExNylas.Auth.auth_bearer(%Conn{grant_id: "me"})
       end
     end
@@ -18,7 +18,7 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "raises an error if api_key is not present" do
-      assert_raise ExNylasError, "Error: \"missing value for api_key\"", fn ->
+      assert_raise ExNylas.ValidationError, "Validation failed for api_key: missing value for api_key", fn ->
         ExNylas.Auth.auth_bearer(%Conn{grant_id: "1234"})
       end
     end
@@ -37,40 +37,54 @@ defmodule ExNylasTest.UtilModules do
   end
 
   describe "Multipart.build_multipart/2 with attachments" do
-    test "returns a stream for the body" do
-      {stream, _, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
+    test "returns ok tuple with stream for the body" do
+      assert {:ok, {stream, _, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert is_function(stream)
     end
 
-    test "returns the content type with boundary" do
-      {_, content_type, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content type with boundary" do
+      assert {:ok, {_, content_type, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert String.contains?(content_type, "multipart/form-data") and String.contains?(content_type, "boundary")
     end
 
-    test "returns the content length" do
-      {_, _, content_length} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content length" do
+      assert {:ok, {_, _, content_length}} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./test/fixtures/test_attachment.txt"])
       assert content_length > 0
     end
 
     test "handles attachments with CID" do
-      {stream, _, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [{"cid:123", "./test/fixtures/test_attachment.txt"}])
+      assert {:ok, {stream, _, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [{"cid:123", "./test/fixtures/test_attachment.txt"}])
       assert is_function(stream)
+    end
+
+    test "returns error tuple with ExNylas.FileError when file does not exist" do
+      assert {:error, %ExNylas.FileError{} = error} = ExNylas.Multipart.build_multipart(%{test: "test"}, ["./nonexistent.txt"])
+      assert error.path == "./nonexistent.txt"
+      assert error.reason == :enoent
+      assert error.message =~ ~r/Failed to read file at .*nonexistent\.txt: file does not exist/
+    end
+
+    test "returns error tuple with ExNylas.FileError with CID when file does not exist" do
+      assert {:error, %ExNylas.FileError{} = error} = ExNylas.Multipart.build_multipart(%{test: "test"}, [{"cid:123", "./nonexistent.txt"}])
+      assert error.path == "./nonexistent.txt"
+      assert error.reason == :enoent
+      assert error.message =~ ~r/Failed to read file at .*nonexistent\.txt: file does not exist/
     end
   end
 
   describe "Multipart.build_multipart/2 without attachments" do
-    test "returns a stream for the body" do
-      {stream, _, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with stream for the body" do
+      assert {:ok, {stream, _, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
       assert is_function(stream)
     end
 
-    test "returns the content type with boundary" do
-      {_, content_type, _} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content type with boundary" do
+      assert {:ok, {_, content_type, _}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
       assert String.contains?(content_type, "multipart/form-data") and String.contains?(content_type, "boundary")
     end
 
-    test "returns the content length" do
-      {_, _, content_length} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
+    test "returns ok tuple with content length" do
+      assert {:ok, {_, _, content_length}} = ExNylas.Multipart.build_multipart(%{test: "test"}, [])
       assert content_length > 0
     end
   end
@@ -104,7 +118,8 @@ defmodule ExNylasTest.UtilModules do
     end
 
     test "returns {:error, reason} for HTTP issues, e.g. timeout" do
-      assert ExNylas.ResponseHandler.handle_response({:error, "timeout"}) == {:error, "timeout"}
+      assert {:error, %ExNylas.Error{original: "timeout", reason: :unexpected_error}} =
+               ExNylas.ResponseHandler.handle_response({:error, "timeout"})
     end
 
     test "returns common response struct if use_common_response is true" do
@@ -127,7 +142,8 @@ defmodule ExNylasTest.UtilModules do
 
     test "only decodes JSON responses" do
       res = ExNylas.ResponseHandler.handle_response({:ok, %{status: 200, body: "test"}})
-      assert res == {:ok, %{status: 200, body: "test"}}
+      # Without JSON content-type, returns the body without transformation
+      assert res == {:ok, "test"}
     end
 
     test "transforms into the requested struct" do

@@ -9,6 +9,7 @@ defmodule ExNylas.Scheduling.Availability do
     API,
     Availability,
     Connection,
+    ErrorHandler,
     Response,
     ResponseHandler,
     Telemetry
@@ -32,7 +33,8 @@ defmodule ExNylas.Scheduling.Availability do
 
       iex> {:ok, availability} = ExNylas.Scheduling.Availability.get(conn, 1614556800, 1614643200, config_id: "1234-5678")
   """
-  @spec get(Connection.t(), integer(), integer(), Keyword.t()) :: {:ok, Response.t()} | {:error, Response.t()}
+  @spec get(Connection.t(), integer(), integer(), Keyword.t()) ::
+          {:ok, Response.t()} | {:error, ExNylas.error_reason()}
   def get(%Connection{} = conn, start_time, end_time, params \\ []) do
     Req.new(
       url: "#{conn.api_server}/v3/scheduling/availability",
@@ -65,7 +67,7 @@ defmodule ExNylas.Scheduling.Availability do
   def get!(%Connection{} = conn, start_time, end_time, params \\ []) do
     case get(conn, start_time, end_time, params) do
       {:ok, body} -> body
-      {:error, reason} -> raise ExNylasError, reason
+      {:error, error} -> ErrorHandler.raise_error(error)
     end
   end
 

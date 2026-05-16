@@ -82,4 +82,20 @@ defmodule ExNylas.Scheduling.ConfigurationTest do
     changeset = Configuration.changeset(%Configuration{}, attrs)
     refute changeset.valid?
   end
+
+  test "valid changeset with email_template" do
+    attrs = put_in(@valid_attrs, [:scheduler, :email_template], %{
+      logo: "https://example.com/logo.png",
+      booking_confirmed: %{
+        title: "Booking Confirmed",
+        body: "Your booking has been confirmed"
+      }
+    })
+    changeset = Configuration.changeset(%Configuration{}, attrs)
+    assert changeset.valid?
+    struct = Ecto.Changeset.apply_changes(changeset)
+    assert struct.scheduler.email_template.logo == "https://example.com/logo.png"
+    assert struct.scheduler.email_template.booking_confirmed.title == "Booking Confirmed"
+    assert struct.scheduler.email_template.booking_confirmed.body == "Your booking has been confirmed"
+  end
 end
