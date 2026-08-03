@@ -4,19 +4,19 @@ defmodule ExNylasTest.WebhookNotifications do
   describe "signature validation" do
     test "validate_signature! raises an error if webhook secret is not included" do
       assert_raise ExNylasError, fn ->
-        ExNylas.WebhookNotifications.validate_signature!(nil, "", "")
+        ExNylas.WebhookNotifications.validate_signature!(invalid(nil), "", "")
       end
     end
 
     test "validate_signature! raises an error if body is not a string" do
       assert_raise ExNylasError, fn ->
-        ExNylas.WebhookNotifications.validate_signature!("1234", %{}, "")
+        ExNylas.WebhookNotifications.validate_signature!("1234", invalid(%{}), "")
       end
     end
 
     test "validate_signature! raises an error if signature is not a string" do
       assert_raise ExNylasError, fn ->
-        ExNylas.WebhookNotifications.validate_signature!("1234", "", nil)
+        ExNylas.WebhookNotifications.validate_signature!("1234", "", invalid(nil))
       end
     end
 
@@ -306,6 +306,15 @@ defmodule ExNylasTest.WebhookNotifications do
   end
 
   # Helper functions for test data
+
+  # Passes through an intentionally invalid argument, used to assert
+  # validate_signature!/3 raises. Sourced via Application.get_env/3 (spec'd to
+  # return term()) so the compile-time type checker cannot narrow it to a
+  # literal and flag the deliberate mismatch (Elixir 1.20+ --warnings-as-errors).
+  @spec invalid(term()) :: term()
+  defp invalid(value) do
+    Application.get_env(:ex_nylas, :__nonexistent_test_value__, value)
+  end
 
   defp good_webhook_type do
     %{
