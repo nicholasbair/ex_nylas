@@ -26,7 +26,7 @@ To get started, first sign up for a free Nylas account [here](https://nylas.com)
 ```elixir
 def deps do
   [
-    {:ex_nylas, "~> 0.10.1"}
+    {:ex_nylas, "~> 0.11.0"}
   ]
 end
 ```
