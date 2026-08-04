@@ -6,8 +6,8 @@ At this time, we support the latest patch release of each minor version. Securit
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.10.x (latest patch) | :white_check_mark: |
-| < 0.10.0              | :x:                |
+| 0.11.x (latest patch) | :white_check_mark: |
+| < 0.11.0              | :x:                |
 
 ## Reporting a Vulnerability
 
