@@ -13,9 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > maintained `req_tele` fork; the emitted telemetry events are unchanged
 > (`[:req, :request, :pipeline | :adapter, ...]`).
 >
-> **Minimum Elixir version is now 1.15** (was 1.14) and **minimum Erlang/OTP is
-> now 25** (was 24). This follows the `req`/`finch` HTTP stack: `finch` 0.22+
-> requires Elixir ~> 1.15 and uses an OTP 25+ `:ets` option.
+> **Minimum Elixir version is now 1.16** (was 1.14) and **minimum Erlang/OTP is
+> now 25** (was 24). The OTP floor follows the `req`/`finch` HTTP stack: `finch`
+> 0.22+ requires Elixir ~> 1.15 and uses an OTP 25+ `:ets` option. The Elixir
+> floor follows `multipart` 0.5+, which requires Elixir ~> 1.16. Elixir 1.15 is
+> also past end of life upstream — Elixir ships security patches only for the
+> last five minor branches, which is 1.16–1.20 as of Elixir 1.20.
 
 ### Security
 - Bumped runtime HTTP-stack dependencies to resolve reported advisories: `req` 0.5.17 → 0.7.2 (HIGH decompression CVE), `mint` 1.7.1 → 1.9.3 (CVE-2026-56810 HIGH), and `hpax` 1.0.3 → 1.0.4 (CVE-2026-58226 HIGH). Moving to `req` 0.7 required replacing `req_telemetry` (unmaintained, pinned `req ~> 0.5.0`) with the API-compatible `req_tele` fork, which allows current `req` — so no dependency `override` is needed.
@@ -27,13 +30,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Bumped `credo` from 1.7.7 to 1.7.18
   - Bumped `dialyxir` from 1.4.3 to 1.4.7
   - Bumped `ecto` from 3.13.3 to 3.13.6
-  - Bumped `ex_doc` from 0.38.4 to 0.40.2
+  - Bumped `ex_doc` from 0.38.4 to 0.40.3
   - Bumped `excoveralls` from 0.18.1 to 0.18.5
   - Bumped `finch` from 0.20.0 to 0.23.0
+  - Bumped `multipart` from 0.4.0 to 0.6.1 (requires Elixir ~> 1.16)
   - Bumped `polymorphic_embed` from 5.0.0 to 5.0.6
   - Bumped `typed_ecto_schema` from 0.4.1 to 0.4.3
-- Updated CI to include Elixir 1.18, 1.19, and 1.20; dropped Elixir 1.14 / OTP 24.
+- Updated CI to include Elixir 1.18, 1.19, and 1.20; dropped Elixir 1.14 / OTP 24 and Elixir 1.15.
 - Added a `mix hex.audit` security-advisory check to CI that fails the build on known advisories in the dependency tree.
+
+### Fixed
+- Fixed `ExNylas.Multipart` passing the attachment `filename` to `Multipart.Part.file_content_field/5` as a part header instead of an option, which emitted a stray `filename` header on each attachment part.
 
 ## [0.10.1] - 2025-10-17
 

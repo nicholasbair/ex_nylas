@@ -38,13 +38,13 @@ defmodule ExNylas.Multipart do
   defp build_file({cid, file_path}) do
     {filename, file_contents} = get_file_data(file_path)
 
-    Multipart.Part.file_content_field(filename, file_contents, cid, filename: filename)
+    Multipart.Part.file_content_field(filename, file_contents, cid, [], filename: filename)
   end
 
   defp build_file(file_path) do
     {filename, file_contents} = get_file_data(file_path)
 
-    Multipart.Part.file_content_field(filename, file_contents, :file, filename: filename)
+    Multipart.Part.file_content_field(filename, file_contents, :file, [], filename: filename)
   end
 
   defp get_file_data(file_path) do
