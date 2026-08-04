@@ -308,12 +308,14 @@ defmodule ExNylasTest.WebhookNotifications do
   # Helper functions for test data
 
   # Passes through an intentionally invalid argument, used to assert
-  # validate_signature!/3 raises. Sourced via Application.get_env/3 (spec'd to
-  # return term()) so the compile-time type checker cannot narrow it to a
-  # literal and flag the deliberate mismatch (Elixir 1.20+ --warnings-as-errors).
+  # validate_signature!/3 raises. Sourced via Process.get/2 (spec'd to return
+  # term()) so the compile-time type checker cannot narrow it to a literal and
+  # flag the deliberate mismatch (Elixir 1.20+ --warnings-as-errors). The
+  # process dictionary key is module-scoped and never set, so the default is
+  # always returned and no external configuration can override it.
   @spec invalid(term()) :: term()
   defp invalid(value) do
-    Application.get_env(:ex_nylas, :__nonexistent_test_value__, value)
+    Process.get({__MODULE__, :invalid}, value)
   end
 
   defp good_webhook_type do

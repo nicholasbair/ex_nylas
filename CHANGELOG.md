@@ -24,10 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated dependencies:
-  - Bumped `credo` from 1.7.7 to 1.7.15
+  - Bumped `credo` from 1.7.7 to 1.7.18
   - Bumped `dialyxir` from 1.4.3 to 1.4.7
-  - Bumped `ecto` from 3.13.3 to 3.13.5
-  - Bumped `ex_doc` from 0.38.4 to 0.39.3
+  - Bumped `ecto` from 3.13.3 to 3.13.6
+  - Bumped `ex_doc` from 0.38.4 to 0.40.2
   - Bumped `excoveralls` from 0.18.1 to 0.18.5
   - Bumped `finch` from 0.20.0 to 0.23.0
   - Bumped `polymorphic_embed` from 5.0.0 to 5.0.6
