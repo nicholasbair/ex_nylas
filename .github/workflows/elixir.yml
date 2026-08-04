@@ -17,21 +17,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        elixir: ['1.14', '1.15', '1.16', '1.17', '1.18', '1.19']
-        otp: ['24.3.4.13', '25.3.2.8', '26.2.1', '27.0.0', '28.1.0']
+        elixir: ['1.15', '1.16', '1.17', '1.18', '1.19', '1.20']
+        otp: ['25.3.2.8', '26.2.1', '27.0.0', '28.1.0']
         exclude:
-          - { elixir: '1.14', otp: '26.2.1' }
-          - { elixir: '1.14', otp: '27.0.0' }
-          - { elixir: '1.14', otp: '28.1.0' }
           - { elixir: '1.15', otp: '27.0.0' }
           - { elixir: '1.15', otp: '28.1.0' }
           - { elixir: '1.16', otp: '27.0.0' }
           - { elixir: '1.16', otp: '28.1.0' }
-          - { elixir: '1.17', otp: '24.3.4.13' }
           - { elixir: '1.17', otp: '28.1.0' }
-          - { elixir: '1.18', otp: '24.3.4.13' }
-          - { elixir: '1.19', otp: '24.3.4.13' }
           - { elixir: '1.19', otp: '25.3.2.8' }
+          - { elixir: '1.20', otp: '25.3.2.8' }
+          - { elixir: '1.20', otp: '26.2.1' }
 
     steps:
       - uses: actions/checkout@v4
@@ -79,7 +75,7 @@ jobs:
         run: mix test --warnings-as-errors
 
       - name: Upload coverage to Coveralls
-        if: matrix.elixir == '1.19' && matrix.otp == '28.1.0'
+        if: matrix.elixir == '1.20' && matrix.otp == '28.1.0'
         env:
           MIX_ENV: test
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -90,3 +86,12 @@ jobs:
 
       - name: Dialyzer
         run: mix dialyzer
+
+      - name: Security audit (deps)
+        if: matrix.elixir == '1.20' && matrix.otp == '28.1.0'
+        # Fails the build on known advisories (OSV) in the dependency tree.
+        # Ignored: cowlib CVEs are test-only (pulled in via bypass) with no
+        # upstream fix released yet; revisit when a patched cowlib ships.
+        env:
+          HEX_IGNORE_ADVISORIES: "CVE-2026-43966,CVE-2026-43969"
+        run: mix hex.audit
