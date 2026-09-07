@@ -387,7 +387,7 @@ defmodule ExNylas.MixProject do
       {:polymorphic_embed, "~> 5.0"},
       {:req, "~> 0.7"},
       {:req_tele, "~> 0.3.0"},
-      {:typed_ecto_schema, "~> 0.4.1", runtime: false}
+      {:typed_ecto_schema, "~> 0.5.0", runtime: false}
     ]
   end
 
